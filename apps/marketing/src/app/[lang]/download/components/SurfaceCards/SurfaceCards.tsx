@@ -2,9 +2,7 @@
 
 import { Trans } from "@lingui/react/macro";
 import { COMPANY } from "@superset/shared/constants";
-import Link from "next/link";
 import { HiMiniArrowRight } from "react-icons/hi2";
-import { useIsMobileLaunched } from "../../../providers/MobileLaunchProvider";
 import { CliMock } from "../CliMock";
 import { CopyCommand } from "../CopyCommand";
 import { DesktopDownloadButton } from "../DesktopDownloadButton";
@@ -29,7 +27,6 @@ const CARD_COPY_CLASS =
 const CARD_ACTION_CLASS = "mt-5 flex min-h-10 w-full items-start";
 
 export function SurfaceCards() {
-	const isMobileLaunched = useIsMobileLaunched();
 	return (
 		<section className="border-border border-t pt-12 sm:pt-16">
 			<h2 className="font-mono text-brand text-xs uppercase tracking-wider">
@@ -98,11 +95,6 @@ export function SurfaceCards() {
 					<div className={CARD_BODY_CLASS}>
 						<h3 className="flex items-center gap-2 font-medium text-base text-foreground">
 							<Trans>Mobile</Trans>
-							{isMobileLaunched ? null : (
-								<span className="rounded-[2px] border border-border px-2 py-0.5 font-mono font-normal text-muted-foreground text-xs">
-									<Trans>Coming soon</Trans>
-								</span>
-							)}
 						</h3>
 						<p className={CARD_COPY_CLASS}>
 							<Trans>
@@ -110,17 +102,15 @@ export function SurfaceCards() {
 								phone.
 							</Trans>
 						</p>
-						{isMobileLaunched ? (
-							<div className={CARD_ACTION_CLASS}>
-								<Link
-									href="/mobile"
-									className="group flex items-center gap-2 bg-foreground px-5 py-2.5 font-normal text-background text-sm transition-colors hover:bg-brand hover:text-white"
-								>
-									<Trans>Get the iPhone app</Trans>
-									<HiMiniArrowRight className="size-4 transition-transform group-hover:translate-x-0.5" />
-								</Link>
-							</div>
-						) : null}
+						<div className={CARD_ACTION_CLASS}>
+							<a
+								href={COMPANY.APP_STORE_URL}
+								className="group flex items-center gap-2 bg-foreground px-5 py-2.5 font-normal text-background text-sm transition-colors hover:bg-brand hover:text-white"
+							>
+								<Trans>Get the iPhone app</Trans>
+								<HiMiniArrowRight className="size-4 transition-transform group-hover:translate-x-0.5" />
+							</a>
+						</div>
 					</div>
 				</article>
 			</div>

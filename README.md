@@ -247,7 +247,7 @@ curl -fsSL https://superset.sh/cli/install.sh | sh
 brew install superset-sh/tap/superset
 ```
 
-An iOS app is coming soon so you can check on your agents from your phone.
+[Download Superset for iPhone on the App Store](https://apps.apple.com/app/id6788926383) to check on your agents from your phone.
 
 ## Install
 

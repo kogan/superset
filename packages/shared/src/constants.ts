@@ -106,7 +106,7 @@ export const FEATURE_FLAGS = {
 	/**
 	 * The public Superset Mobile launch. Off, unloaded, or unreachable all mean
 	 * "not launched": the marketing site hides /mobile from navigation and the
-	 * sitemap and renders it as coming soon. Evaluated per site, not per
+	 * sitemap and disables indexing. Evaluated per site, not per
 	 * visitor, so keep it a plain on/off flag — a percentage rollout would
 	 * hash the site's single distinct id to one side.
 	 */
