@@ -612,13 +612,7 @@ interface TerminalSession {
 	 */
 	modeTracker: ModeTracker;
 
-	/**
-	 * Resolves once the daemon's post-adoption ring-buffer replay has
-	 * quiesced (immediately for non-adopted sessions). Attach paths await it
-	 * before delivering to a socket, so the mode preamble is built from a
-	 * tracker that has actually seen the program's mode bytes and replayed
-	 * bytes never broadcast to a just-attached client.
-	 */
+	/** Replay and its mode checkpoint must finish before attach or text input. */
 	adoptionReplaySettled: Promise<void>;
 
 	/**
@@ -1026,11 +1020,7 @@ export function writeInputToSession({
 	return { success: true };
 }
 
-// Ring-buffer replay after adoption arrives asynchronously over the daemon
-// socket, and it is what rebuilds the mode tracker (bracketed paste, screen
-// content). Protocol v2 has no replay-complete signal, so watch the replayed
-// bytes accumulate — they land in session.buffer, since no renderer is
-// attached right after adoption — and return once they quiesce.
+// Compatibility with daemons predating the replay-complete checkpoint.
 const ADOPTION_REPLAY_WAIT_MS = 500;
 
 async function waitForAdoptionReplay(session: TerminalSession): Promise<void> {
@@ -1077,6 +1067,7 @@ async function getOrAdoptSession({
 					error: "Terminal session does not belong to this workspace",
 				};
 			}
+			await existing.adoptionReplaySettled;
 			return existing;
 		}
 
@@ -3172,15 +3163,19 @@ async function createTerminalSessionUnlocked({
 	// bytes, but the session literal below needs the tracker — close over a
 	// ref assigned right after construction.
 	let reclaimSession: TerminalSession | null = null;
-	const modeTracker = createModeTracker(cols, rows, {
-		onLeakedInputModeDisarm(bytes) {
-			const s = reclaimSession;
-			if (!s || !isCurrentLiveSession(s)) return;
-			// deliverOutput feeds the tracker too, so its modes (and the next
-			// attach preamble) converge with what clients were just told.
-			deliverOutput(s, bytes);
-		},
-	});
+	const modeTracker = createModeTracker(
+		cols,
+		rows,
+		daemon.supportsModeSnapshots
+			? {}
+			: {
+					onLeakedInputModeDisarm(bytes) {
+						const s = reclaimSession;
+						if (!s || !isCurrentLiveSession(s)) return;
+						deliverOutput(s, bytes);
+					},
+				},
+	);
 
 	const session: TerminalSession = {
 		terminalId,
@@ -3256,18 +3251,15 @@ async function createTerminalSessionUnlocked({
 		);
 	}
 
-	// Always request the daemon's ring on subscribe: it is the only way to
-	// rebuild the mode tracker after adoption (a tracker that never sees the
-	// program's `?25l`/`?1004h`/kitty bytes builds wrong preambles and
-	// disables host-side focus forwarding). Whether the replayed BYTES reach
-	// any client is decided per-attach: seq clients are protected by
-	// reanchor/anchor accounting, legacy `?replay=0` clients get the FIFO
-	// dropped at attach. Fresh (non-adopted) sessions have an empty ring, so
-	// replay is a no-op there.
+	// Replay carries screen contents; the following checkpoint restores modes
+	// even when the program set them before the retained output begins.
 	session.unsubscribeDaemon = daemon.subscribe(
 		terminalId,
 		{ replay: true },
 		{
+			onReplayComplete(modes) {
+				session.modeTracker.restoreModes(modes);
+			},
 			onOutput(chunk) {
 				// Bytes flow daemon → host → xterm without UTF-8 decoding;
 				// per-chunk `.toString("utf8")` here would mangle codepoints
@@ -3384,9 +3376,11 @@ async function createTerminalSessionUnlocked({
 
 	// The ring replay lands asynchronously after subscribe; attach paths
 	// await this so the first preamble reflects the rebuilt tracker.
-	if (isAdopted) {
-		session.adoptionReplaySettled = waitForAdoptionReplay(session);
-	}
+	session.adoptionReplaySettled = daemon.supportsModeSnapshots
+		? daemon.waitForReplay(terminalId)
+		: isAdopted
+			? waitForAdoptionReplay(session)
+			: Promise.resolve();
 
 	if (initialCommand) {
 		queueInitialCommand(session, initialCommand);

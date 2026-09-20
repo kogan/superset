@@ -670,6 +670,44 @@ describe("terminal.send / terminal.snapshot tRPC procedures", () => {
 		} as unknown as Parameters<typeof appRouter.createCaller>[0]);
 	}
 
+	test("send preserves paste framing after startup output is evicted and the host restarts", async () => {
+		const caller = await makeCaller();
+		const terminalId = `e2e-evicted-mode-${randomUUID().slice(0, 8)}`;
+		const captureFile = path.join(TEST_HOME, `evicted-${terminalId}`);
+		const session = await createTerminalSessionInternal({
+			terminalId,
+			workspaceId,
+			db,
+			listed: true,
+			initialCommand: `printf '\\033[?2004h'; yes padding | head -c 131072; printf '\\nREADY-FOR-PASTE\\n'; stty raw -echo; cat > "${captureFile}"`,
+		});
+		assert.ok(!("error" in session));
+		if ("error" in session) return;
+		await waitForSnapshotText(terminalId, "READY-FOR-PASTE", 5000);
+		await waitFor(() => fs.existsSync(captureFile), 5000);
+		assert.equal(session.modeTracker.isBracketedPasteActive(), true);
+		__resetSessionsForTesting();
+		await disposeDaemonClient();
+
+		const text = `Create a page.\n\n${"Source material — 日本語\n".repeat(80)}\nEnd of request.`;
+		const result = await caller.terminal.send({
+			terminalId,
+			workspaceId,
+			text,
+			submit: true,
+		});
+		assert.deepEqual(result, { terminalId, submitted: true });
+		await waitFor(
+			() => fs.readFileSync(captureFile, "utf8").endsWith("\r"),
+			5000,
+		);
+		assert.equal(
+			fs.readFileSync(captureFile, "utf8"),
+			`\x1b[200~${text}\x1b[201~\r`,
+		);
+		await disposeSessionAndWait(terminalId, db);
+	});
+
 	test("send defaults submit to true and snapshot round-trips", async () => {
 		const caller = await makeCaller();
 		const terminalId = `e2e-rpc-${randomUUID().slice(0, 8)}`;
@@ -742,7 +780,12 @@ describe("terminal.send / terminal.snapshot tRPC procedures", () => {
 		);
 
 		await assert.rejects(
-			caller.terminal.send({ terminalId, workspaceId, text: "" }),
+			caller.terminal.send({
+				terminalId,
+				workspaceId,
+				text: "",
+				submit: false,
+			}),
 			(err: { code?: string }) => err.code === "BAD_REQUEST",
 		);
 
