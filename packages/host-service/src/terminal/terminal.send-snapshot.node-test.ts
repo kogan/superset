@@ -22,11 +22,12 @@ import { randomUUID } from "node:crypto";
 import * as fs from "node:fs";
 import * as os from "node:os";
 import * as path from "node:path";
-import { after, before, describe, test } from "node:test";
+import { after, before, describe, mock, test } from "node:test";
 import { fileURLToPath } from "node:url";
 import { Server } from "@superset/pty-daemon";
 import { createDb, type HostDb } from "../db/index.ts";
 import { projects, workspaces } from "../db/schema.ts";
+import { DaemonUnavailableError } from "./DaemonClient/index.ts";
 import {
 	disposeDaemonClient,
 	getDaemonClient,
@@ -117,6 +118,104 @@ after(async () => {
 });
 
 describe("writeFramedInputToSession / snapshotSession", () => {
+	for (const failure of [
+		new DaemonUnavailableError("Replay timed out"),
+		new DaemonUnavailableError("Disconnected during replay"),
+		new Error("Invalid replay checkpoint"),
+	]) {
+		test(`replay failure is typed and a retry preserves the PTY: ${failure.message}`, async () => {
+			const terminalId = `e2e-retry-${randomUUID().slice(0, 8)}`;
+			const daemon = await getDaemonClient();
+			const replay = Promise.withResolvers<void>();
+			const stub = mock.method(daemon, "waitForReplay", () => replay.promise);
+			try {
+				const session = await createTerminalSessionInternal({
+					terminalId,
+					workspaceId,
+					db,
+				});
+				assert.ok(!("error" in session));
+				if ("error" in session) return;
+				const pending = snapshotSession({ terminalId, workspaceId, db });
+				replay.reject(failure);
+				const result = await pending;
+				assert.deepEqual(result, {
+					kind:
+						failure instanceof DaemonUnavailableError
+							? "DAEMON_UNAVAILABLE"
+							: "TERMINAL_START_FAILED",
+					error: failure.message,
+					transient: failure instanceof DaemonUnavailableError,
+				});
+				stub.mock.restore();
+				const sentinelFile = path.join(TEST_HOME, `retry-${terminalId}`);
+				const retry = await writeFramedInputToSession({
+					terminalId,
+					workspaceId,
+					db,
+					text: `echo recovered > "${sentinelFile}"`,
+					submit: true,
+				});
+				assert.deepEqual(retry, { success: true });
+				await waitFor(() => fs.existsSync(sentinelFile), 5000);
+				assert.equal(
+					(await daemon.list()).find((entry) => entry.id === terminalId)?.pid,
+					session.pty.pid,
+				);
+			} finally {
+				stub.mock.restore();
+				await disposeSessionAndWait(terminalId, db);
+			}
+		});
+	}
+
+	test("concurrent adoption failure returns typed errors and retries with a fresh checkpoint", async () => {
+		const terminalId = `e2e-adopt-retry-${randomUUID().slice(0, 8)}`;
+		const daemon = await getDaemonClient();
+		const original = await createTerminalSessionInternal({
+			terminalId,
+			workspaceId,
+			db,
+		});
+		assert.ok(!("error" in original));
+		if ("error" in original) return;
+		await original.adoptionReplaySettled;
+		__resetSessionsForTesting();
+		const replay = Promise.withResolvers<void>();
+		const stub = mock.method(daemon, "waitForReplay", () => replay.promise);
+		try {
+			const pending = Promise.all([
+				snapshotSession({ terminalId, workspaceId, db }),
+				writeFramedInputToSession({
+					terminalId,
+					workspaceId,
+					db,
+					text: "echo must-not-run",
+					submit: true,
+				}),
+			]);
+			await waitFor(() => stub.mock.callCount() === 1, 5000);
+			replay.reject(new DaemonUnavailableError("Replay timed out"));
+			for (const result of await pending) {
+				assert.deepEqual(result, {
+					kind: "DAEMON_UNAVAILABLE",
+					error: "Replay timed out",
+					transient: true,
+				});
+			}
+			stub.mock.restore();
+			const retry = await snapshotSession({ terminalId, workspaceId, db });
+			assert.ok(!("error" in retry), JSON.stringify(retry));
+			assert.equal(
+				(await daemon.list()).find((entry) => entry.id === terminalId)?.pid,
+				original.pty.pid,
+			);
+		} finally {
+			stub.mock.restore();
+			await disposeSessionAndWait(terminalId, db);
+		}
+	});
+
 	test("send delivers text + Enter into a live shell", async () => {
 		const terminalId = `e2e-send-${randomUUID().slice(0, 8)}`;
 		const sentinelFile = path.join(TEST_HOME, `send-${terminalId}`);

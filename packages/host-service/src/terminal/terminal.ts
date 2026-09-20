@@ -1042,6 +1042,36 @@ async function waitForAdoptionReplay(session: TerminalSession): Promise<void> {
  */
 const adoptionsInFlight = new Map<string, Promise<unknown>>();
 
+async function waitForSessionReplay(
+	session: TerminalSession,
+): Promise<TerminalSession | TerminalSessionError> {
+	try {
+		await session.adoptionReplaySettled;
+		return session;
+	} catch (error) {
+		if (sessions.get(session.terminalId) === session) {
+			sessions.delete(session.terminalId);
+			cancelShellReady(session);
+			try {
+				session.unsubscribeDaemon?.();
+			} catch (unsubscribeError) {
+				console.warn(
+					"[terminal] failed to unsubscribe after replay failure",
+					unsubscribeError,
+				);
+			}
+			session.unsubscribeDaemon = null;
+			session.modeTracker.dispose();
+		}
+		const transient = error instanceof DaemonUnavailableError;
+		return {
+			kind: transient ? "DAEMON_UNAVAILABLE" : "TERMINAL_START_FAILED",
+			error: error instanceof Error ? error.message : "Terminal replay failed",
+			transient,
+		};
+	}
+}
+
 /**
  * Resolve a session for headless IO. The in-memory map empties on every
  * host-service restart while the detached daemon keeps PTYs alive, so a
@@ -1067,8 +1097,7 @@ async function getOrAdoptSession({
 					error: "Terminal session does not belong to this workspace",
 				};
 			}
-			await existing.adoptionReplaySettled;
-			return existing;
+			return waitForSessionReplay(existing);
 		}
 
 		// Another caller is mid-adoption: wait it out, then re-resolve so
@@ -1090,8 +1119,7 @@ async function getOrAdoptSession({
 			});
 			if ("error" in adopted) return adopted;
 
-			await adopted.adoptionReplaySettled;
-			return adopted;
+			return waitForSessionReplay(adopted);
 		})();
 		adoptionsInFlight.set(terminalId, attempt);
 		try {
@@ -3648,26 +3676,25 @@ export function registerWorkspaceTerminalRoute({
 					}
 
 					void (async () => {
-						const session = await resolveSessionForAttach();
+						const resolved = await resolveSessionForAttach();
+						const session =
+							"error" in resolved
+								? resolved
+								: await waitForSessionReplay(resolved);
 						if ("error" in session) {
-							const transient = !session.code && session.transient;
+							const code = "code" in session ? session.code : undefined;
+							const transient = !code && session.transient;
 							sendMessage(ws, {
 								type: "error",
 								message: session.error,
-								code:
-									session.code ?? (transient ? "attach-retryable" : undefined),
+								code: code ?? (transient ? "attach-retryable" : undefined),
 							});
 							// 1013 "try again later" for transient failures; the renderer
 							// keys off the JSON code, the close code is for log readers.
 							ws.close(transient ? 1013 : 1011, toWsCloseReason(session.error));
 							return;
 						}
-						// A just-adopted session may still be receiving the daemon's
-						// ring replay: wait for it to quiesce so the mode preamble
-						// reflects the program's real state and the replayed bytes
-						// don't broadcast to this socket. Resolved immediately in
-						// every other case.
-						await session.adoptionReplaySettled;
+
 						if (ws.readyState !== SOCKET_OPEN) return;
 						attachSocketToSession(session, ws);
 					})().catch((error) => {
