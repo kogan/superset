@@ -66,7 +66,7 @@ export function HeroSection() {
 								className="size-3.5 text-foreground shrink-0"
 							/>
 							<span>
-								<Trans>Superset Mobile is here. Learn more</Trans>
+								<Trans>Superset Mobile is here</Trans>
 							</span>
 							<span
 								aria-hidden="true"

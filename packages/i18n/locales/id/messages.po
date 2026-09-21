@@ -1245,6 +1245,9 @@ msgstr "Perombakan gaya menyeluruh: baris lebih padat, chip port dan agen di baw
 msgid "A gateway is signed in with an API key."
 msgstr "Gateway masuk menggunakan kunci API."
 
+msgid "A guilty habit I have is waking up with an idea in the middle of the night and opening the app. By morning it's ready for review."
+msgstr "Kebiasaan buruk saya adalah terbangun dengan sebuah ide di tengah malam lalu membuka aplikasi. Paginya sudah siap ditinjau."
+
 msgid "A host must have at least one owner."
 msgstr "Sebuah host harus punya setidaknya satu pemilik."
 
@@ -3557,6 +3560,9 @@ msgstr "Sandbox cloud belum diaktifkan untuk {account}. Minta akses kepada tim S
 msgid "Cloud workspace"
 msgstr "Workspace cloud"
 
+msgid "Co-founder & CTO, TrainLoop (YC W25)"
+msgstr "Pendiri bersama & CTO, TrainLoop (YC W25)"
+
 msgid "Code"
 msgstr "Kode"
 
@@ -3879,6 +3885,9 @@ msgstr "Hubungkan Slack"
 
 msgid "Connect Slack to manage tasks from conversations. Mention the bot in any channel or send it a direct message to create and update tasks."
 msgstr "Hubungkan Slack untuk mengelola tugas dari percakapan. Sebut bot-nya di channel mana pun atau kirim pesan langsung untuk membuat dan memperbarui tugas."
+
+msgid "Connect this computer"
+msgstr "Hubungkan komputer ini"
 
 msgid "Connect your GitHub repositories and sync pull requests. Track CI status and reviews across your team."
 msgstr "Hubungkan repositori GitHub Anda dan sinkronkan pull request. Lacak status CI dan review di seluruh tim Anda."
@@ -4847,6 +4856,9 @@ msgstr "Membuat worktree"
 
 msgid "Creating..."
 msgstr "Membuat..."
+
+msgid "Creative Manager, Valid"
+msgstr "Manajer Kreatif, Valid"
 
 msgid "Credentials stay on the server"
 msgstr "Kredensial tetap di server"
@@ -5872,8 +5884,8 @@ msgstr "Aktifkan akses relay…"
 msgid "Enable remote access"
 msgstr "Aktifkan akses jarak jauh"
 
-msgid "Enable remote access to reach this computer from your phone. Keep this computer awake and Superset running."
-msgstr "Aktifkan akses jarak jauh untuk mengakses komputer ini dari ponsel. Pastikan komputer tetap aktif dan Superset tetap berjalan."
+msgid "Enable Remote Access and keep this computer awake with Superset running."
+msgstr "Aktifkan akses jarak jauh dan biarkan komputer ini tetap aktif dengan Superset berjalan."
 
 msgid "Enable skill"
 msgstr "Aktifkan skill"
@@ -6914,9 +6926,6 @@ msgstr "Tampilan folder"
 msgid "Folders to check out into new worktrees, one per line, relative to the repo root. Files at the root are always included. Empty checks out everything."
 msgstr "Folder yang di-checkout ke worktree baru, satu per baris, relatif terhadap root repo. File di root selalu disertakan. Kosong berarti checkout semuanya."
 
-msgid "Follow every session"
-msgstr "Ikuti setiap sesi"
-
 msgid "FOLLOW ON X"
 msgstr "IKUTI DI X"
 
@@ -7028,14 +7037,20 @@ msgstr "Maju"
 msgid "Found 12 tooltip call sites"
 msgstr "Menemukan 12 call site tooltip"
 
+msgid "Founder & CEO, WowMakers"
+msgstr "Pendiri & CEO, WowMakers"
+
+msgid "Founding Engineer"
+msgstr "Engineer Pendiri"
+
 msgid "Free"
 msgstr "Gratis"
 
 msgid "Free for everyone"
 msgstr "Gratis untuk semua orang"
 
-msgid "Free plan available · No credit card required"
-msgstr "Paket gratis tersedia · Tanpa kartu kredit"
+msgid "Free to start · No credit card required"
+msgstr "Mulai gratis · Tidak perlu kartu kredit"
 
 msgid "Frequently<0/>asked questions"
 msgstr "Pertanyaan<0/>yang sering diajukan"
@@ -7300,6 +7315,9 @@ msgstr "Kelompokkan branch baru di bawah satu folder."
 
 msgid "Growth"
 msgstr "Pertumbuhan"
+
+msgid "GTM & AI Automation Architect, Mistral AI"
+msgstr "Arsitek GTM & Otomatisasi AI, Mistral AI"
 
 msgid "Guide"
 msgstr "Panduan"
@@ -7610,11 +7628,14 @@ msgstr "Manusia menulis tiap baris. Alat mengompilasi, menge-lint, dan mengeluh.
 msgid "I already use an IDE like Cursor, is this for me?"
 msgstr "Saya sudah pakai IDE seperti Cursor, apakah ini untuk saya?"
 
+msgid "I can be in a café with my coffee while the work keeps moving forward."
+msgstr "Saya bisa duduk di kafe sambil minum kopi sementara pekerjaan terus berjalan."
+
+msgid "I start my morning walks with an idea, and end with a pull request."
+msgstr "Saya memulai jalan pagi dengan sebuah ide dan mengakhirinya dengan sebuah pull request."
+
 msgid "I'm #{rank} on the {company} leaderboard with {tokens} tokens of agent usage."
 msgstr "Saya peringkat #{rank} di papan peringkat {company} dengan {tokens} token penggunaan agen."
-
-msgid "I've signed in on my phone"
-msgstr "Saya sudah masuk di ponsel"
 
 msgid "Icon"
 msgstr "Ikon"
@@ -7863,6 +7884,9 @@ msgstr "Pemasangan gagal"
 
 msgid "Install GitHub App"
 msgstr "Pasang GitHub App"
+
+msgid "Install on your iPhone"
+msgstr "Instal di iPhone Anda"
 
 msgid "Install plugin"
 msgstr "Instal plugin"
@@ -8334,9 +8358,6 @@ msgstr "Peluncuran"
 msgid "Launch agents across features, bug fixes, and refactors, all in parallel. Status at a glance shows which agents are working, which are blocked, and which are waiting on you."
 msgstr "Jalankan agen untuk fitur, perbaikan bug, dan refactor, semuanya paralel. Status sekilas menunjukkan agen mana yang bekerja, mana yang terhambat, dan mana yang menunggu Anda."
 
-msgid "Launch an agent on any connected machine the moment an idea lands. Every session gets its own isolated workspace."
-msgstr "Jalankan agen di mesin mana pun yang terhubung begitu ide muncul. Setiap sesi mendapat workspace terisolasinya sendiri."
-
 msgid "Launch mode"
 msgstr "Mode peluncuran"
 
@@ -8360,9 +8381,6 @@ msgstr "Daun"
 
 msgid "Learn how to use scripts"
 msgstr "Pelajari cara memakai skrip"
-
-msgid "Learn more"
-msgstr "Pelajari lebih lanjut"
 
 msgid "Learn the workflow that fits this repo — parallel workspaces and agent setup."
 msgstr "Pelajari alur kerja yang cocok untuk repo ini — workspace paralel dan penyiapan agen."
@@ -9104,9 +9122,6 @@ msgstr "Aplikasi mobile"
 
 msgid "Mobile App"
 msgstr "Aplikasi Mobile"
-
-msgid "Mobile setup confirmed"
-msgstr "Penyiapan seluler dikonfirmasi"
 
 msgid "model"
 msgstr "model"
@@ -10258,6 +10273,9 @@ msgstr "sekarang"
 msgid "Now"
 msgstr "Sekarang"
 
+msgid "Now I open the workspace on my phone, type the one line it's waiting for, and it carries on."
+msgstr "Sekarang saya membuka ruang kerja di ponsel, mengetik satu baris yang ditunggunya, dan pekerjaan pun berlanjut."
+
 #. placeholder {0}: versions.expected
 #. placeholder {1}: versions.running
 msgid "Now running {0} (was {1}). All sessions preserved."
@@ -11170,6 +11188,9 @@ msgstr "Sebagian"
 msgid "Partial results"
 msgstr "Hasil sebagian"
 
+msgid "Partner, Transpose Platform"
+msgstr "Mitra, Transpose Platform"
+
 msgid "Passed"
 msgstr "Lulus"
 
@@ -12011,9 +12032,6 @@ msgstr "Baca changelog"
 msgid "Read the changelog →"
 msgstr "Baca changelog →"
 
-msgid "Read the full diff file by file, check the PR status, and open a terminal when you need the raw output."
-msgstr "Baca diff lengkap file demi file, periksa status PR, dan buka terminal saat Anda memerlukan output mentah."
-
 msgid "Read the guide to parallel coding agents"
 msgstr "Baca panduan agen coding paralel"
 
@@ -12772,9 +12790,6 @@ msgstr "Antrean review dan CI memakan keuntungan yang dihasilkan agen."
 msgid "Review becomes the bottleneck"
 msgstr "Review menjadi hambatan utama"
 
-msgid "Review before you merge"
-msgstr "Tinjau sebelum merge"
-
 msgid "Review Dismissed"
 msgstr "Review Diabaikan"
 
@@ -13086,14 +13101,11 @@ msgstr "Melihat paywall"
 msgid "Scale to 100+ agents"
 msgstr "Tingkatkan hingga lebih dari 100 agen"
 
+msgid "Scan the QR code, then sign in with the same Superset account and select this organization."
+msgstr "Pindai kode QR, lalu masuk dengan akun Superset yang sama dan pilih organisasi ini."
+
 msgid "Scan to download Superset for iPhone"
 msgstr "Pindai untuk mengunduh Superset untuk iPhone"
-
-msgid "Scan to get the app"
-msgstr "Pindai untuk mendapatkan aplikasi"
-
-msgid "Scan with your iPhone camera, then sign in with the same Superset account and organization."
-msgstr "Pindai dengan kamera iPhone, lalu masuk dengan akun dan organisasi Superset yang sama."
 
 msgid "Scanning transcript logs…"
 msgstr "Memindai log transkrip…"
@@ -14366,6 +14378,9 @@ msgstr "Peningkatan stabilitas"
 msgid "Stacked"
 msgstr "Bertumpuk"
 
+msgid "Staff Software Engineer, Vori"
+msgstr "Staff Software Engineer, Vori"
+
 msgid "Stage all"
 msgstr "Stage semua"
 
@@ -14789,8 +14804,11 @@ msgstr "Memori Superset"
 msgid "Superset memory · last 5 min"
 msgstr "Memori Superset · 5 menit terakhir"
 
-msgid "Superset Mobile is here. Learn more"
-msgstr "Superset seluler telah hadir. Pelajari lebih lanjut"
+msgid "Superset mobile gives me the power of my desktop anywhere I go."
+msgstr "Superset mobile memberi saya kekuatan desktop ke mana pun saya pergi."
+
+msgid "Superset Mobile is here"
+msgstr "Superset Mobile telah hadir"
 
 msgid "Superset Mobile is part of Pro"
 msgstr "Superset Mobile termasuk dalam Pro"
@@ -14831,6 +14849,9 @@ msgstr "Superset bekerja dengan agen coding berbasis CLI mana pun, termasuk Clau
 
 msgid "superset.sh"
 msgstr "superset.sh"
+
+msgid "Superset's mobile app lets me keep my agents moving and unblock them from anywhere, even when I'm nowhere near my computer."
+msgstr "Aplikasi seluler Superset memungkinkan saya menjaga agen tetap bekerja dan mengatasi hambatannya dari mana saja, bahkan saat saya jauh dari komputer."
 
 msgid "Supervised"
 msgstr "Diawasi"
@@ -16863,9 +16884,6 @@ msgstr "Warning"
 msgid "Warning occurred."
 msgstr "Terjadi peringatan."
 
-msgid "Watch agents work in real time and step in with a follow-up, a photo, or a dictated message when they need direction."
-msgstr "Saksikan agen bekerja secara real time dan turun tangan dengan pesan lanjutan, foto, atau pesan yang didiktekan saat mereka butuh arahan."
-
 msgid "Watchers"
 msgstr "Pengamat"
 
@@ -17026,6 +17044,9 @@ msgstr "Apa kata builder tentang Superset"
 msgid "What do you want to do?"
 msgstr "Apa yang ingin Anda lakukan?"
 
+msgid "What early users say"
+msgstr "Kata para pengguna awal"
+
 msgid "What Google shows us for and how much of it is not our own name."
 msgstr "Untuk pencarian apa Google menampilkan kami dan seberapa banyak yang bukan nama kami sendiri."
 
@@ -17163,6 +17184,9 @@ msgstr "Dengan label"
 
 msgid "with or without attachments"
 msgstr "dengan atau tanpa lampiran"
+
+msgid "With the Superset mobile app, I can address production issues from anywhere."
+msgstr "Dengan aplikasi seluler Superset, saya bisa menangani masalah produksi dari mana saja."
 
 msgid "Work email"
 msgstr "Email kerja"
@@ -17489,9 +17513,6 @@ msgstr "Akun Anda dinonaktifkan dan akan segera dihapus permanen. Aktifkan kemba
 
 msgid "Your account is managed by your organization. Contact your admin to create a new organization."
 msgstr "Akun Anda dikelola oleh organisasi Anda. Hubungi admin Anda untuk membuat organisasi baru."
-
-msgid "Your agents, wherever you are."
-msgstr "Agen Anda, di mana pun Anda berada."
 
 msgid "Your Agents, Your Accounts"
 msgstr "Agen Anda, Akun Anda"

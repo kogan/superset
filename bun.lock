@@ -1166,16 +1166,18 @@
     },
     "packages/pty-daemon": {
       "name": "@superset/pty-daemon",
-      "version": "0.3.3",
+      "version": "0.3.4",
       "bin": {
         "pty-daemon": "./src/main.ts",
       },
       "dependencies": {
+        "@superset/shared": "workspace:*",
         "node-pty": "1.2.0-beta.14",
       },
       "devDependencies": {
         "@superset/typescript": "workspace:*",
         "@types/node": "24.12.0",
+        "@xterm/headless": "6.1.0-beta.302",
         "bun-types": "1.3.14",
         "typescript": "6.0.3",
       },

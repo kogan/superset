@@ -1245,6 +1245,9 @@ msgstr "A full restyle: denser rows, port and agent chips under each workspace, 
 msgid "A gateway is signed in with an API key."
 msgstr "A gateway is signed in with an API key."
 
+msgid "A guilty habit I have is waking up with an idea in the middle of the night and opening the app. By morning it's ready for review."
+msgstr "A guilty habit I have is waking up with an idea in the middle of the night and opening the app. By morning it's ready for review."
+
 msgid "A host must have at least one owner."
 msgstr "A host must have at least one owner."
 
@@ -3557,6 +3560,9 @@ msgstr "Cloud sandboxes are not enabled for {account}. Ask the Superset team for
 msgid "Cloud workspace"
 msgstr "Cloud workspace"
 
+msgid "Co-founder & CTO, TrainLoop (YC W25)"
+msgstr "Co-founder & CTO, TrainLoop (YC W25)"
+
 msgid "Code"
 msgstr "Code"
 
@@ -3879,6 +3885,9 @@ msgstr "Connect Slack"
 
 msgid "Connect Slack to manage tasks from conversations. Mention the bot in any channel or send it a direct message to create and update tasks."
 msgstr "Connect Slack to manage tasks from conversations. Mention the bot in any channel or send it a direct message to create and update tasks."
+
+msgid "Connect this computer"
+msgstr "Connect this computer"
 
 msgid "Connect your GitHub repositories and sync pull requests. Track CI status and reviews across your team."
 msgstr "Connect your GitHub repositories and sync pull requests. Track CI status and reviews across your team."
@@ -4847,6 +4856,9 @@ msgstr "Creating worktree"
 
 msgid "Creating..."
 msgstr "Creating..."
+
+msgid "Creative Manager, Valid"
+msgstr "Creative Manager, Valid"
 
 msgid "Credentials stay on the server"
 msgstr "Credentials stay on the server"
@@ -5872,8 +5884,8 @@ msgstr "Enable relay access…"
 msgid "Enable remote access"
 msgstr "Enable remote access"
 
-msgid "Enable remote access to reach this computer from your phone. Keep this computer awake and Superset running."
-msgstr "Enable remote access to reach this computer from your phone. Keep this computer awake and Superset running."
+msgid "Enable Remote Access and keep this computer awake with Superset running."
+msgstr "Enable Remote Access and keep this computer awake with Superset running."
 
 msgid "Enable skill"
 msgstr "Enable skill"
@@ -6914,9 +6926,6 @@ msgstr "Folder view"
 msgid "Folders to check out into new worktrees, one per line, relative to the repo root. Files at the root are always included. Empty checks out everything."
 msgstr "Folders to check out into new worktrees, one per line, relative to the repo root. Files at the root are always included. Empty checks out everything."
 
-msgid "Follow every session"
-msgstr "Follow every session"
-
 msgid "FOLLOW ON X"
 msgstr "FOLLOW ON X"
 
@@ -7028,14 +7037,20 @@ msgstr "Forward"
 msgid "Found 12 tooltip call sites"
 msgstr "Found 12 tooltip call sites"
 
+msgid "Founder & CEO, WowMakers"
+msgstr "Founder & CEO, WowMakers"
+
+msgid "Founding Engineer"
+msgstr "Founding Engineer"
+
 msgid "Free"
 msgstr "Free"
 
 msgid "Free for everyone"
 msgstr "Free for everyone"
 
-msgid "Free plan available · No credit card required"
-msgstr "Free plan available · No credit card required"
+msgid "Free to start · No credit card required"
+msgstr "Free to start · No credit card required"
 
 msgid "Frequently<0/>asked questions"
 msgstr "Frequently<0/>asked questions"
@@ -7300,6 +7315,9 @@ msgstr "Group new branches under a folder."
 
 msgid "Growth"
 msgstr "Growth"
+
+msgid "GTM & AI Automation Architect, Mistral AI"
+msgstr "GTM & AI Automation Architect, Mistral AI"
 
 msgid "Guide"
 msgstr "Guide"
@@ -7610,11 +7628,14 @@ msgstr "Humans write every line. Tools compile, lint, and complain. The keyboard
 msgid "I already use an IDE like Cursor, is this for me?"
 msgstr "I already use an IDE like Cursor, is this for me?"
 
+msgid "I can be in a café with my coffee while the work keeps moving forward."
+msgstr "I can be in a café with my coffee while the work keeps moving forward."
+
+msgid "I start my morning walks with an idea, and end with a pull request."
+msgstr "I start my morning walks with an idea, and end with a pull request."
+
 msgid "I'm #{rank} on the {company} leaderboard with {tokens} tokens of agent usage."
 msgstr "I'm #{rank} on the {company} leaderboard with {tokens} tokens of agent usage."
-
-msgid "I've signed in on my phone"
-msgstr "I've signed in on my phone"
 
 msgid "Icon"
 msgstr "Icon"
@@ -7863,6 +7884,9 @@ msgstr "Install failed"
 
 msgid "Install GitHub App"
 msgstr "Install GitHub App"
+
+msgid "Install on your iPhone"
+msgstr "Install on your iPhone"
 
 msgid "Install plugin"
 msgstr "Install plugin"
@@ -8334,9 +8358,6 @@ msgstr "Launch"
 msgid "Launch agents across features, bug fixes, and refactors, all in parallel. Status at a glance shows which agents are working, which are blocked, and which are waiting on you."
 msgstr "Launch agents across features, bug fixes, and refactors, all in parallel. Status at a glance shows which agents are working, which are blocked, and which are waiting on you."
 
-msgid "Launch an agent on any connected machine the moment an idea lands. Every session gets its own isolated workspace."
-msgstr "Launch an agent on any connected machine the moment an idea lands. Every session gets its own isolated workspace."
-
 msgid "Launch mode"
 msgstr "Launch mode"
 
@@ -8360,9 +8381,6 @@ msgstr "Leaf"
 
 msgid "Learn how to use scripts"
 msgstr "Learn how to use scripts"
-
-msgid "Learn more"
-msgstr "Learn more"
 
 msgid "Learn the workflow that fits this repo — parallel workspaces and agent setup."
 msgstr "Learn the workflow that fits this repo — parallel workspaces and agent setup."
@@ -9104,9 +9122,6 @@ msgstr "Mobile app"
 
 msgid "Mobile App"
 msgstr "Mobile App"
-
-msgid "Mobile setup confirmed"
-msgstr "Mobile setup confirmed"
 
 msgid "model"
 msgstr "model"
@@ -10258,6 +10273,9 @@ msgstr "now"
 msgid "Now"
 msgstr "Now"
 
+msgid "Now I open the workspace on my phone, type the one line it's waiting for, and it carries on."
+msgstr "Now I open the workspace on my phone, type the one line it's waiting for, and it carries on."
+
 #. placeholder {0}: versions.expected
 #. placeholder {1}: versions.running
 msgid "Now running {0} (was {1}). All sessions preserved."
@@ -11170,6 +11188,9 @@ msgstr "Partial"
 msgid "Partial results"
 msgstr "Partial results"
 
+msgid "Partner, Transpose Platform"
+msgstr "Partner, Transpose Platform"
+
 msgid "Passed"
 msgstr "Passed"
 
@@ -12011,9 +12032,6 @@ msgstr "Read the changelog"
 msgid "Read the changelog →"
 msgstr "Read the changelog →"
 
-msgid "Read the full diff file by file, check the PR status, and open a terminal when you need the raw output."
-msgstr "Read the full diff file by file, check the PR status, and open a terminal when you need the raw output."
-
 msgid "Read the guide to parallel coding agents"
 msgstr "Read the guide to parallel coding agents"
 
@@ -12772,9 +12790,6 @@ msgstr "Review and CI queues eat the gains agents create."
 msgid "Review becomes the bottleneck"
 msgstr "Review becomes the bottleneck"
 
-msgid "Review before you merge"
-msgstr "Review before you merge"
-
 msgid "Review Dismissed"
 msgstr "Review Dismissed"
 
@@ -13086,14 +13101,11 @@ msgstr "Saw the paywall"
 msgid "Scale to 100+ agents"
 msgstr "Scale to 100+ agents"
 
+msgid "Scan the QR code, then sign in with the same Superset account and select this organization."
+msgstr "Scan the QR code, then sign in with the same Superset account and select this organization."
+
 msgid "Scan to download Superset for iPhone"
 msgstr "Scan to download Superset for iPhone"
-
-msgid "Scan to get the app"
-msgstr "Scan to get the app"
-
-msgid "Scan with your iPhone camera, then sign in with the same Superset account and organization."
-msgstr "Scan with your iPhone camera, then sign in with the same Superset account and organization."
 
 msgid "Scanning transcript logs…"
 msgstr "Scanning transcript logs…"
@@ -14366,6 +14378,9 @@ msgstr "Stability improvements"
 msgid "Stacked"
 msgstr "Stacked"
 
+msgid "Staff Software Engineer, Vori"
+msgstr "Staff Software Engineer, Vori"
+
 msgid "Stage all"
 msgstr "Stage all"
 
@@ -14789,8 +14804,11 @@ msgstr "Superset memory"
 msgid "Superset memory · last 5 min"
 msgstr "Superset memory · last 5 min"
 
-msgid "Superset Mobile is here. Learn more"
-msgstr "Superset Mobile is here. Learn more"
+msgid "Superset mobile gives me the power of my desktop anywhere I go."
+msgstr "Superset mobile gives me the power of my desktop anywhere I go."
+
+msgid "Superset Mobile is here"
+msgstr "Superset Mobile is here"
 
 msgid "Superset Mobile is part of Pro"
 msgstr "Superset Mobile is part of Pro"
@@ -14831,6 +14849,9 @@ msgstr "Superset works with any CLI-based coding agent, including Claude Code, O
 
 msgid "superset.sh"
 msgstr "superset.sh"
+
+msgid "Superset's mobile app lets me keep my agents moving and unblock them from anywhere, even when I'm nowhere near my computer."
+msgstr "Superset's mobile app lets me keep my agents moving and unblock them from anywhere, even when I'm nowhere near my computer."
 
 msgid "Supervised"
 msgstr "Supervised"
@@ -16863,9 +16884,6 @@ msgstr "Warning"
 msgid "Warning occurred."
 msgstr "Warning occurred."
 
-msgid "Watch agents work in real time and step in with a follow-up, a photo, or a dictated message when they need direction."
-msgstr "Watch agents work in real time and step in with a follow-up, a photo, or a dictated message when they need direction."
-
 msgid "Watchers"
 msgstr "Watchers"
 
@@ -17026,6 +17044,9 @@ msgstr "What builders say about Superset"
 msgid "What do you want to do?"
 msgstr "What do you want to do?"
 
+msgid "What early users say"
+msgstr "What early users say"
+
 msgid "What Google shows us for and how much of it is not our own name."
 msgstr "What Google shows us for and how much of it is not our own name."
 
@@ -17163,6 +17184,9 @@ msgstr "With label"
 
 msgid "with or without attachments"
 msgstr "with or without attachments"
+
+msgid "With the Superset mobile app, I can address production issues from anywhere."
+msgstr "With the Superset mobile app, I can address production issues from anywhere."
 
 msgid "Work email"
 msgstr "Work email"
@@ -17489,9 +17513,6 @@ msgstr "Your account is deactivated and will be permanently deleted soon. Reacti
 
 msgid "Your account is managed by your organization. Contact your admin to create a new organization."
 msgstr "Your account is managed by your organization. Contact your admin to create a new organization."
-
-msgid "Your agents, wherever you are."
-msgstr "Your agents, wherever you are."
 
 msgid "Your Agents, Your Accounts"
 msgstr "Your Agents, Your Accounts"

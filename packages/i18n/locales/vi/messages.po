@@ -1245,6 +1245,9 @@ msgstr "Thiết kế lại toàn bộ: hàng dày hơn, chip cổng và agent d�
 msgid "A gateway is signed in with an API key."
 msgstr "Gateway đăng nhập bằng khóa API."
 
+msgid "A guilty habit I have is waking up with an idea in the middle of the night and opening the app. By morning it's ready for review."
+msgstr "Tôi có thói quen khó bỏ là tỉnh giấc giữa đêm với một ý tưởng rồi mở ứng dụng. Đến sáng là đã sẵn sàng để xem xét."
+
 msgid "A host must have at least one owner."
 msgstr "Mỗi host phải có ít nhất một chủ sở hữu."
 
@@ -3557,6 +3560,9 @@ msgstr "Sandbox trên cloud chưa được bật cho {account}. Hãy yêu cầu 
 msgid "Cloud workspace"
 msgstr "Workspace cloud"
 
+msgid "Co-founder & CTO, TrainLoop (YC W25)"
+msgstr "Đồng sáng lập & CTO, TrainLoop (YC W25)"
+
 msgid "Code"
 msgstr "Code"
 
@@ -3879,6 +3885,9 @@ msgstr "Kết nối Slack"
 
 msgid "Connect Slack to manage tasks from conversations. Mention the bot in any channel or send it a direct message to create and update tasks."
 msgstr "Kết nối Slack để quản lý tác vụ ngay trong hội thoại. Nhắc bot ở bất kỳ kênh nào hoặc nhắn tin trực tiếp cho nó để tạo và cập nhật tác vụ."
+
+msgid "Connect this computer"
+msgstr "Kết nối máy tính này"
 
 msgid "Connect your GitHub repositories and sync pull requests. Track CI status and reviews across your team."
 msgstr "Kết nối các repository GitHub của bạn và đồng bộ pull request. Theo dõi trạng thái CI và review trong cả nhóm."
@@ -4847,6 +4856,9 @@ msgstr "Đang tạo worktree"
 
 msgid "Creating..."
 msgstr "Đang tạo..."
+
+msgid "Creative Manager, Valid"
+msgstr "Quản lý sáng tạo, Valid"
 
 msgid "Credentials stay on the server"
 msgstr "Thông tin xác thực được giữ trên máy chủ"
@@ -5872,8 +5884,8 @@ msgstr "Bật truy cập relay…"
 msgid "Enable remote access"
 msgstr "Bật truy cập từ xa"
 
-msgid "Enable remote access to reach this computer from your phone. Keep this computer awake and Superset running."
-msgstr "Bật truy cập từ xa để kết nối với máy tính này từ điện thoại. Giữ máy tính hoạt động và Superset đang chạy."
+msgid "Enable Remote Access and keep this computer awake with Superset running."
+msgstr "Bật truy cập từ xa và giữ máy tính này hoạt động với Superset đang chạy."
 
 msgid "Enable skill"
 msgstr "Bật skill"
@@ -6914,9 +6926,6 @@ msgstr "Xem theo thư mục"
 msgid "Folders to check out into new worktrees, one per line, relative to the repo root. Files at the root are always included. Empty checks out everything."
 msgstr "Các thư mục sẽ được checkout vào worktree mới, mỗi dòng một thư mục, tính từ gốc repo. Tệp ở gốc luôn được đưa vào. Để trống sẽ checkout tất cả."
 
-msgid "Follow every session"
-msgstr "Theo dõi mọi phiên"
-
 msgid "FOLLOW ON X"
 msgstr "THEO DÕI TRÊN X"
 
@@ -7028,14 +7037,20 @@ msgstr "Tiến"
 msgid "Found 12 tooltip call sites"
 msgstr "Tìm thấy 12 chỗ gọi tooltip"
 
+msgid "Founder & CEO, WowMakers"
+msgstr "Nhà sáng lập & CEO, WowMakers"
+
+msgid "Founding Engineer"
+msgstr "Kỹ sư sáng lập"
+
 msgid "Free"
 msgstr "Free"
 
 msgid "Free for everyone"
 msgstr "Miễn phí cho tất cả"
 
-msgid "Free plan available · No credit card required"
-msgstr "Có gói miễn phí · Không cần thẻ tín dụng"
+msgid "Free to start · No credit card required"
+msgstr "Bắt đầu miễn phí · Không cần thẻ tín dụng"
 
 msgid "Frequently<0/>asked questions"
 msgstr "Câu hỏi<0/>thường gặp"
@@ -7300,6 +7315,9 @@ msgstr "Gom các nhánh mới vào một thư mục."
 
 msgid "Growth"
 msgstr "Tăng trưởng"
+
+msgid "GTM & AI Automation Architect, Mistral AI"
+msgstr "Kiến trúc sư GTM & tự động hóa AI, Mistral AI"
 
 msgid "Guide"
 msgstr "Hướng dẫn"
@@ -7610,11 +7628,14 @@ msgstr "Con người viết từng dòng. Công cụ biên dịch, lint và phà
 msgid "I already use an IDE like Cursor, is this for me?"
 msgstr "Tôi đã dùng IDE như Cursor, Superset có hợp với tôi không?"
 
+msgid "I can be in a café with my coffee while the work keeps moving forward."
+msgstr "Tôi có thể ngồi trong quán cà phê thưởng thức cà phê trong khi công việc vẫn tiếp tục tiến triển."
+
+msgid "I start my morning walks with an idea, and end with a pull request."
+msgstr "Tôi bắt đầu buổi đi bộ sáng với một ý tưởng và kết thúc với một pull request."
+
 msgid "I'm #{rank} on the {company} leaderboard with {tokens} tokens of agent usage."
 msgstr "Tôi đang xếp hạng #{rank} trên bảng xếp hạng {company} với {tokens} token dùng agent."
-
-msgid "I've signed in on my phone"
-msgstr "Tôi đã đăng nhập trên điện thoại"
 
 msgid "Icon"
 msgstr "Biểu tượng"
@@ -7863,6 +7884,9 @@ msgstr "Cài đặt thất bại"
 
 msgid "Install GitHub App"
 msgstr "Cài GitHub App"
+
+msgid "Install on your iPhone"
+msgstr "Cài đặt trên iPhone"
 
 msgid "Install plugin"
 msgstr "Cài đặt plugin"
@@ -8334,9 +8358,6 @@ msgstr "Khởi chạy"
 msgid "Launch agents across features, bug fixes, and refactors, all in parallel. Status at a glance shows which agents are working, which are blocked, and which are waiting on you."
 msgstr "Khởi chạy agent cho tính năng, sửa lỗi và refactor, tất cả song song. Trạng thái hiển thị ngay cho biết agent nào đang làm, agent nào bị chặn và agent nào đang chờ bạn."
 
-msgid "Launch an agent on any connected machine the moment an idea lands. Every session gets its own isolated workspace."
-msgstr "Khởi chạy agent trên bất kỳ máy nào đã kết nối ngay khi ý tưởng xuất hiện. Mỗi phiên có workspace biệt lập riêng."
-
 msgid "Launch mode"
 msgstr "Chế độ chạy"
 
@@ -8360,9 +8381,6 @@ msgstr "Chiếc lá"
 
 msgid "Learn how to use scripts"
 msgstr "Tìm hiểu cách dùng script"
-
-msgid "Learn more"
-msgstr "Tìm hiểu thêm"
 
 msgid "Learn the workflow that fits this repo — parallel workspaces and agent setup."
 msgstr "Tìm hiểu quy trình phù hợp với repo này — workspace song song và thiết lập agent."
@@ -9104,9 +9122,6 @@ msgstr "Ứng dụng di động"
 
 msgid "Mobile App"
 msgstr "Ứng dụng di động"
-
-msgid "Mobile setup confirmed"
-msgstr "Đã xác nhận thiết lập di động"
 
 msgid "model"
 msgstr "mô hình"
@@ -10258,6 +10273,9 @@ msgstr "vừa xong"
 msgid "Now"
 msgstr "Hiện tại"
 
+msgid "Now I open the workspace on my phone, type the one line it's waiting for, and it carries on."
+msgstr "Giờ tôi mở không gian làm việc trên điện thoại, gõ đúng dòng mà nó đang chờ, rồi nó tiếp tục làm việc."
+
 #. placeholder {0}: versions.expected
 #. placeholder {1}: versions.running
 msgid "Now running {0} (was {1}). All sessions preserved."
@@ -11170,6 +11188,9 @@ msgstr "Một phần"
 msgid "Partial results"
 msgstr "Kết quả chưa đầy đủ"
 
+msgid "Partner, Transpose Platform"
+msgstr "Đối tác, Transpose Platform"
+
 msgid "Passed"
 msgstr "Đã qua"
 
@@ -12011,9 +12032,6 @@ msgstr "Đọc changelog"
 msgid "Read the changelog →"
 msgstr "Đọc changelog →"
 
-msgid "Read the full diff file by file, check the PR status, and open a terminal when you need the raw output."
-msgstr "Đọc toàn bộ diff theo từng tệp, kiểm tra trạng thái PR và mở terminal khi bạn cần đầu ra thô."
-
 msgid "Read the guide to parallel coding agents"
 msgstr "Đọc hướng dẫn về coding agent chạy song song"
 
@@ -12772,9 +12790,6 @@ msgstr "Hàng đợi review và CI ăn mất phần lợi mà agent tạo ra."
 msgid "Review becomes the bottleneck"
 msgstr "Review trở thành nút thắt"
 
-msgid "Review before you merge"
-msgstr "Xem xét trước khi merge"
-
 msgid "Review Dismissed"
 msgstr "Review đã bị bỏ qua"
 
@@ -13086,14 +13101,11 @@ msgstr "Đã thấy paywall"
 msgid "Scale to 100+ agents"
 msgstr "Mở rộng lên hơn 100 tác nhân"
 
+msgid "Scan the QR code, then sign in with the same Superset account and select this organization."
+msgstr "Quét mã QR, sau đó đăng nhập bằng cùng tài khoản Superset và chọn tổ chức này."
+
 msgid "Scan to download Superset for iPhone"
 msgstr "Quét để tải Superset cho iPhone"
-
-msgid "Scan to get the app"
-msgstr "Quét để tải ứng dụng"
-
-msgid "Scan with your iPhone camera, then sign in with the same Superset account and organization."
-msgstr "Quét bằng camera iPhone, sau đó đăng nhập bằng cùng tài khoản và tổ chức Superset."
 
 msgid "Scanning transcript logs…"
 msgstr "Đang quét log transcript…"
@@ -14366,6 +14378,9 @@ msgstr "Cải thiện độ ổn định"
 msgid "Stacked"
 msgstr "Xếp chồng"
 
+msgid "Staff Software Engineer, Vori"
+msgstr "Kỹ sư phần mềm cấp Staff, Vori"
+
 msgid "Stage all"
 msgstr "Stage tất cả"
 
@@ -14789,8 +14804,11 @@ msgstr "Bộ nhớ của Superset"
 msgid "Superset memory · last 5 min"
 msgstr "Bộ nhớ của Superset · 5 phút gần nhất"
 
-msgid "Superset Mobile is here. Learn more"
-msgstr "Superset dành cho di động đã ra mắt. Tìm hiểu thêm"
+msgid "Superset mobile gives me the power of my desktop anywhere I go."
+msgstr "Superset mobile mang sức mạnh của máy tính để bàn đến bất cứ đâu tôi đi."
+
+msgid "Superset Mobile is here"
+msgstr "Superset Mobile đã ra mắt"
 
 msgid "Superset Mobile is part of Pro"
 msgstr "Superset Mobile thuộc gói Pro"
@@ -14831,6 +14849,9 @@ msgstr "Superset làm việc với mọi coding agent dạng CLI, gồm Claude C
 
 msgid "superset.sh"
 msgstr "superset.sh"
+
+msgid "Superset's mobile app lets me keep my agents moving and unblock them from anywhere, even when I'm nowhere near my computer."
+msgstr "Ứng dụng di động Superset giúp tôi duy trì công việc của các agent và gỡ vướng cho chúng từ bất cứ đâu, ngay cả khi tôi ở xa máy tính."
 
 msgid "Supervised"
 msgstr "Có giám sát"
@@ -16863,9 +16884,6 @@ msgstr "Cảnh báo"
 msgid "Warning occurred."
 msgstr "Có cảnh báo."
 
-msgid "Watch agents work in real time and step in with a follow-up, a photo, or a dictated message when they need direction."
-msgstr "Xem agent làm việc theo thời gian thực và can thiệp bằng tin nhắn tiếp theo, ảnh hoặc tin nhắn đọc chính tả khi chúng cần định hướng."
-
 msgid "Watchers"
 msgstr "Người theo dõi"
 
@@ -17026,6 +17044,9 @@ msgstr "Các nhà phát triển nói gì về Superset"
 msgid "What do you want to do?"
 msgstr "Bạn muốn làm gì?"
 
+msgid "What early users say"
+msgstr "Người dùng đầu tiên nói gì"
+
 msgid "What Google shows us for and how much of it is not our own name."
 msgstr "Google hiển thị chúng tôi cho những tìm kiếm nào và bao nhiêu trong đó không phải tên của chúng tôi."
 
@@ -17163,6 +17184,9 @@ msgstr "Có nhãn"
 
 msgid "with or without attachments"
 msgstr "có hoặc không có tệp đính kèm"
+
+msgid "With the Superset mobile app, I can address production issues from anywhere."
+msgstr "Với ứng dụng di động Superset, tôi có thể xử lý sự cố trên môi trường production từ bất cứ đâu."
 
 msgid "Work email"
 msgstr "Email công việc"
@@ -17489,9 +17513,6 @@ msgstr "Tài khoản của bạn đã bị vô hiệu hóa và sẽ sớm bị x
 
 msgid "Your account is managed by your organization. Contact your admin to create a new organization."
 msgstr "Tài khoản của bạn do tổ chức quản lý. Hãy liên hệ admin để tạo tổ chức mới."
-
-msgid "Your agents, wherever you are."
-msgstr "Các tác tử của bạn, dù bạn ở đâu."
 
 msgid "Your Agents, Your Accounts"
 msgstr "Agent của bạn, tài khoản của bạn"
