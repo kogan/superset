@@ -3,13 +3,37 @@ on:
   push:
     branches: [main]
   pull_request:
+  workflow_call:
+    inputs:
+      candidate-artifact:
+        type: string
+        default: ""
+      candidate-sha:
+        type: string
+        default: ""
 permissions:
   contents: read
 jobs:
   checks:
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     steps:
       - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+        with:
+          persist-credentials: false
+      - name: Load upstream sync candidate
+        if: inputs.candidate-artifact != ''
+        uses: ./.github/actions/checkout-sync-candidate
+        with:
+          artifact: ${{ inputs.candidate-artifact }}
+          sha: ${{ inputs.candidate-sha }}
+      - uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444
+        if: inputs.candidate-artifact != ''
+        with:
+          node-version: 22
+      - name: Test upstream sync candidate automation
+        if: inputs.candidate-artifact != ''
+        run: node --test scripts/upstream-sync/sync.test.mjs
       - uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2.2.0
         with:
           bun-version-file: .bun-version

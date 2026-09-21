@@ -13,14 +13,14 @@ The resolver receives the base, ours, and theirs versions of each conflicted fil
 and can change only those paths. Refusals, incomplete responses, binary files,
 symlinks, unresolved markers, and oversized inputs stop the run.
 
-Normal fork PRs run `fork-checks.yml`. The inherited `ci.yml` and `build-cli.yml`
-remain callable workflows for upstream-candidate validation, without automatic
-push or pull-request triggers.
+Fork PRs and upstream merge candidates both run `fork-checks.yml`, the fork's
+active CI suite. The inherited `ci.yml` and `build-cli.yml` remain available as
+callable workflows without automatic push or pull-request triggers.
 
-The candidate is saved as an immutable Git bundle. The reusable CI workflow runs
-all its jobs against that exact commit, including lint, tests, typecheck, desktop
-build, and all four CLI builds. No App private key or AIMC key is passed to these
-validation jobs. The CI definition comes from the trusted main commit that
+The candidate is saved as an immutable Git bundle. The reusable fork CI workflow
+runs its plugin, version, translation, and regression checks against that exact
+commit, together with the upstream sync fixture tests. No App private key or AIMC
+key is passed to these validation jobs. The CI definition comes from the trusted main commit that
 started the run, rather than the candidate being tested.
 
 After all checks pass, a fresh job imports the bundle without checking out or
@@ -84,6 +84,6 @@ not bypass protection automatically.
 
 ```sh
 node --test scripts/upstream-sync/sync.test.mjs
-actionlint -shellcheck= .github/workflows/sync-upstream.yml .github/workflows/ci.yml .github/workflows/build-cli.yml
+actionlint -shellcheck= .github/workflows/sync-upstream.yml .github/workflows/fork-checks.yml
 shellcheck scripts/upstream-sync/sync.sh
 ```

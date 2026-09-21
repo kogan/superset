@@ -84,7 +84,7 @@ jobs:
     name: Validate upstream merge
     needs: prepare
     if: needs.prepare.outputs.changed == 'true'
-    uses: ./.github/workflows/ci.yml
+    uses: ./.github/workflows/fork-checks.yml
     with:
       candidate-artifact: upstream-sync-candidate
       candidate-sha: ${{ needs.prepare.outputs.candidate_sha }}
