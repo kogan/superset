@@ -13,7 +13,8 @@ export async function singleFlight<T>(
 	job: string,
 	fn: (database: SingleFlightTx) => Promise<T>,
 ): Promise<SingleFlightResult<T>> {
-	const running = (globalThis.__superestsetRunningJobs ??= new Set());
+	globalThis.__superestsetRunningJobs ??= new Set();
+	const running = globalThis.__superestsetRunningJobs;
 	if (running.has(job)) return { ran: false };
 	running.add(job);
 	try {

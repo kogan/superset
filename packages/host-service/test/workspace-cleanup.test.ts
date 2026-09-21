@@ -14,11 +14,11 @@ import {
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { cleanupGitOps } from "../src/trpc/router/workspace-cleanup/git-ops";
-import { getWorkspaceCleanupState } from "../src/trpc/router/workspace-cleanup/workspace-cleanup-state";
 import {
 	__testDestroysInFlight,
 	workspaceCleanupRouter,
 } from "../src/trpc/router/workspace-cleanup/workspace-cleanup";
+import { getWorkspaceCleanupState } from "../src/trpc/router/workspace-cleanup/workspace-cleanup-state";
 import type { HostServiceContext } from "../src/types";
 import { WorkerTaskError } from "../src/workers/WorkerTaskRunner";
 

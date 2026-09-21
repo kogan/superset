@@ -29,8 +29,8 @@ import { getHostWorktreeBaseDir } from "../settings/worktree-location";
 import { isInsideSessionsRoot } from "../workspace-creation/shared/session-paths";
 import { isInsideProjectWorktreesRoot } from "../workspace-creation/shared/worktree-paths";
 import { cleanupGitOps, isIndeterminateGitTaskFailure } from "./git-ops";
-import { getWorkspaceCleanupState } from "./workspace-cleanup-state";
 import { removeDirectoryTree } from "./remove-directory-tree";
+import { getWorkspaceCleanupState } from "./workspace-cleanup-state";
 
 /**
  * Process-local guard against concurrent destroys of the same workspace.

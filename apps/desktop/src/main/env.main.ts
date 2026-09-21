@@ -6,9 +6,10 @@
  *
  * For renderer process env vars, use src/renderer/env.renderer.ts instead.
  */
+
+import { publicLocalEnvironment } from "@superset/shared/standalone";
 import { createEnv } from "@t3-oss/env-core";
 import { z } from "zod/v4";
-import { publicLocalEnvironment } from "@superset/shared/standalone";
 
 export const env = createEnv({
 	server: {

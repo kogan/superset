@@ -1,6 +1,7 @@
 name: CI
 
 on:
+  workflow_dispatch:
   workflow_call:
     inputs:
       candidate-artifact:
@@ -198,6 +199,9 @@ jobs:
 
       - name: Install dependencies
         run: bun install --frozen --ignore-scripts
+
+      - name: Install content-search test dependency
+        run: sudo apt-get update && sudo apt-get install -y ripgrep
 
       - name: Test
         env:

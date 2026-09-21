@@ -13,10 +13,10 @@ import {
 	workspaces,
 	workspaceTags,
 } from "@superset/host-service/db";
+import { SESSIONS_TAG_SCOPE } from "@superset/shared/workspace-tags";
 import Database from "better-sqlite3";
 import { eq } from "drizzle-orm";
 import { z } from "zod";
-import { SESSIONS_TAG_SCOPE } from "@superset/shared/workspace-tags";
 
 const projectSchema = z.object({
 	id: z.string(),

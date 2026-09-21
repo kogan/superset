@@ -3,7 +3,7 @@ import { statfsSync } from "node:fs";
 import { msg } from "@lingui/core/macro";
 import * as Sentry from "@sentry/electron/main";
 import { i18n } from "@superset/i18n";
-import { app, shell, dialog } from "electron";
+import { app, dialog, shell } from "electron";
 import log from "electron-log/main";
 import { autoUpdater, type UpdateCheckResult } from "electron-updater";
 import { env } from "main/env.main";

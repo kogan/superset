@@ -44,12 +44,12 @@
 		"test": "bun test src"
 	},
 	"dependencies": {
+		"@electric-sql/pglite": "0.5.8",
 		"@superset/shared": "workspace:*",
 		"@t3-oss/env-core": "0.13.11",
 		"dotenv": "17.3.1",
 		"drizzle-orm": "0.45.2",
-		"zod": "4.4.3",
-		"@electric-sql/pglite": "0.5.8"
+		"zod": "4.4.3"
 	},
 	"devDependencies": {
 		"@superset/typescript": "workspace:*",

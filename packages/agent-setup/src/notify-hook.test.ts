@@ -106,7 +106,9 @@ function writeHookManifest(home: string, orgId: string, endpoint: string) {
 
 describe("getNotifyScriptContent", () => {
 	it("bumps the notify hook marker when hook semantics change", () => {
-		expect(NOTIFY_SCRIPT_MARKER).toBe("# SuperestSet agent notification hook v19");
+		expect(NOTIFY_SCRIPT_MARKER).toBe(
+			"# SuperestSet agent notification hook v19",
+		);
 	});
 
 	it("forwards hooks fired inside a subagent (agent_id present) to the host roster only", async () => {

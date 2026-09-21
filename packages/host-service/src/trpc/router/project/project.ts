@@ -23,6 +23,10 @@ import {
 	upsertTagFolderSetting,
 } from "../../../tag-folders";
 import {
+	externalWorkspacePathSet,
+	isExternalWorkspacePath,
+} from "../../../workspaces/external-workspace-paths";
+import {
 	emitLocalWorkspaceDeleted,
 	updateLocalWorkspace,
 } from "../../../workspaces/local-workspace-store";
@@ -33,10 +37,6 @@ import {
 	serializeSparseCheckoutPaths,
 } from "../workspace-creation/shared/sparse-checkout";
 import { normalizeWorktreeBaseDir } from "../workspace-creation/shared/worktree-paths";
-import {
-	externalWorkspacePathSet,
-	isExternalWorkspacePath,
-} from "../../../workspaces/external-workspace-paths";
 import {
 	createFromClone,
 	createFromEmpty,
