@@ -1085,3 +1085,84 @@ test("Freshdesk remote links share the PR lookup and survive its cache", async (
 	await caller.listPullRequests({ issueKeys: ["SL-1"] });
 	expect(reads).toBe(2);
 });
+
+for (const kind of ["pat", "cloud-api-token"] as const) {
+	test(`reads actual board columns and resolves status mappings for ${kind}`, async () => {
+		let qaName = "QA";
+		let missingStatus = false;
+		const paths: string[] = [];
+		const baseUrl = serve((request) => {
+			const path = new URL(request.url).pathname;
+			paths.push(path);
+			if (path.endsWith("/board/99/configuration"))
+				return Response.json({
+					id: 99,
+					name: "Team board",
+					filter: { id: "1" },
+					columnConfig: {
+						columns: [
+							{ name: "IN DEV", statuses: [{ id: "10" }, { id: "11" }] },
+							{ name: qaName, statuses: [{ id: "12" }] },
+							{ name: "Unmapped", statuses: [] },
+							{ name: "Another empty column", statuses: [] },
+						],
+					},
+				});
+			if (path.endsWith("/status"))
+				return Response.json([
+					{
+						id: "10",
+						name: "In Development",
+						statusCategory: { key: "indeterminate" },
+					},
+					{
+						id: "11",
+						name: "Needs QA",
+						statusCategory: { key: "indeterminate" },
+					},
+					...(missingStatus
+						? []
+						: [
+								{
+									id: "12",
+									name: "Being QA'd",
+									statusCategory: { key: "indeterminate" },
+								},
+							]),
+				]);
+			return new Response("missing", { status: 404 });
+		});
+		const { directory, storage } = await storageFixture();
+		await storage.write({
+			...savedConnection,
+			kind,
+			baseUrl,
+			email: "test@example.com",
+		});
+		const caller = createJiraRouter({
+			storage,
+			preferences: createJiraPreferences(directory),
+			client: createJiraClient({ request: fetch }),
+		}).createCaller({ senderWindow: null });
+		const columns = await caller.getBoardColumns(99);
+		expect(columns.map(({ name }) => name)).toEqual([
+			"IN DEV",
+			"QA",
+			"Unmapped",
+			"Another empty column",
+		]);
+		expect(columns[0]?.statuses).toEqual(["In Development", "Needs QA"]);
+		expect(columns[1]?.statuses).toEqual(["Being QA'd"]);
+		expect(columns[1]?.category).toBe("indeterminate");
+		expect(new Set(columns.map(({ key }) => key)).size).toBe(4);
+		expect(paths).toContain(`/jira/rest/api/${kind === "pat" ? 2 : 3}/status`);
+		qaName = "Testing";
+		const refreshed = await caller.getBoardColumns(99);
+		expect(refreshed[1]?.name).toBe("Testing");
+		expect(refreshed[1]?.key).toBe(columns[1]?.key);
+		missingStatus = true;
+		await expect(caller.getBoardColumns(99)).rejects.toMatchObject({
+			code: "BAD_GATEWAY",
+		});
+	});
+}

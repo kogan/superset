@@ -38,7 +38,23 @@ const jiraBoardsSchema = z.object({
 	startAt: z.number().int().nonnegative().safe(),
 	isLast: z.boolean(),
 });
+const jiraBoardColumnsSchema = z.object({
+	columns: z.array(
+		z.object({
+			name: z.string().min(1),
+			statuses: z.array(z.object({ id: z.string().regex(/^\d+$/) })),
+		}),
+	),
+});
+const jiraWorkflowStatusesSchema = z.array(
+	z.object({
+		id: z.string().regex(/^\d+$/),
+		name: z.string().min(1),
+		statusCategory: z.object({ key: z.string() }),
+	}),
+);
 const jiraBoardConfigurationSchema = jiraBoardSchema.extend({
+	columnConfig: jiraBoardColumnsSchema.optional(),
 	filter: z.object({
 		id: z
 			.string()
@@ -292,6 +308,42 @@ export function createJiraClient({
 
 	return {
 		getBoard,
+		async getBoardColumns(input: {
+			credentials: JiraCredentials;
+			boardId: number;
+		}) {
+			const board = await getBoard(input);
+			if (!board.columnConfig) throw invalidResponse();
+			const version = input.credentials.kind === "pat" ? 2 : 3;
+			const result = jiraWorkflowStatusesSchema.safeParse(
+				await requestJson({
+					credentials: input.credentials,
+					url: new URL(
+						`rest/api/${version}/status`,
+						apiBaseUrl(input.credentials),
+					),
+				}),
+			);
+			if (!result.success) throw invalidResponse();
+			const byId = new Map(result.data.map((status) => [status.id, status]));
+			return board.columnConfig.columns.map((column) => {
+				const statuses = column.statuses.map(({ id }) => {
+					const status = byId.get(id);
+					if (!status) throw invalidResponse();
+					return status;
+				});
+				return {
+					key: JSON.stringify([
+						"board",
+						board.id,
+						statuses.length ? statuses.map(({ id }) => id).sort() : column.name,
+					]),
+					name: column.name,
+					statuses: statuses.map(({ name }) => name),
+					category: statuses[0]?.statusCategory.key ?? "new",
+				};
+			});
+		},
 		listTransitions,
 		async transitionIssue(
 			input: { credentials: JiraCredentials } & Pick<
