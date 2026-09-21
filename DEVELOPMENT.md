@@ -1,6 +1,6 @@
 # Developing superset++
 
-To use the app, download its [Mac installer](https://github.com/kogan/superset/releases). This guide builds that installer from this repository without an original Superset installation or Docker services.
+To use the app, follow the [download and installation instructions](README.md#download-and-install). This guide builds that installer from this repository without an original Superset installation or Docker services.
 
 ## Requirements
 
@@ -55,7 +55,24 @@ Only the API process opens PGlite. It initializes the unmodified upstream SQL mi
 
 Before starting the workspace host, the app connects existing Superset workspace folders in place. Source host databases are read-only. The local host's `external_workspace_paths` table records canonical paths independently of workspace and project lifetimes. It prevents deleted entries from reappearing and protects original folders during cleanup, project removal, and archived reconciliation. Original paths use a distinct ID namespace; earlier copies keep their IDs and paths under Previous copies groups. `superset-connections-report.json` records the latest discovery result. File > Refresh Superset Workspaces… restarts before rescanning. Default Git folders live under `~/.superset`, while runtime data remains under `~/.superestset`. An explicit custom `SUPERSET_HOME_DIR` keeps isolated development and test folders under that custom home.
 
-## Releases
+## Publish a download for the team
+
+Build an Apple Silicon DMG from the release branch with `bun run build:mac`, then run the verification commands above. The installer is written to `apps/desktop/release/superset++-<version>-arm64.dmg`. A `--dir` build produces an app bundle, not a DMG.
+
+To publish the verified installer:
+
+1. Open [the repository's Releases page](https://github.com/kogan/superset/releases) and choose **Draft a new release**.
+2. Create a tag such as `superset-plus-plus-v1.30.0` at the exact commit used for the build. Use the app's version in the tag and release title.
+3. Describe the changes and state that this installer is for Apple Silicon Macs. Identify whether the build is ad-hoc signed or Developer ID signed and notarized.
+4. Attach the `.dmg` under **Attach binaries**. Attach its SHA-256 checksum file if one was generated.
+5. Publish the release and mark it as the latest release when it is ready for general use.
+6. Download the attached DMG to confirm the file is available. Share the release page with the team.
+
+GitHub's automatic **Source code** archives are not installers. Pushing commits or creating a release without attaching the DMG does not provide a usable app download. Do not upload a configured app data folder, credentials, or worktrees.
+
+For an immediate handoff before publishing, share the verified DMG itself. The recipient follows the same drag-to-Applications installation steps in the README.
+
+## Release builds and signing
 
 The fork's manual Mac workflow uses `macos-14`, an Apple Silicon label in [GitHub's runner reference](https://docs.github.com/en/actions/reference/runners/github-hosted-runners). It uploads build artifacts for review. Publishing a GitHub release is a separate maintainer action.
 
@@ -74,7 +91,7 @@ Do not run old SuperestSet and new superset++ helpers together. They share `com.
 
 To continue with an agent inside superset++, open a checkout of `kogan/superset`, then ask it to implement, test, commit, push, and rebuild your change. Cut each release on a dedicated release branch and keep desktop, host-service, and CLI versions equal. Build and run the verification commands above before uploading the `.dmg` to a release in **kogan/superset**. Install that release to update the app you run. Use this fork's build workflow; the inherited release scripts describe upstream infrastructure.
 
-Inherited deployment workflows are preserved under `.github/upstream-workflows` as reference. They are not active workflows in this fork. Fork checks and Mac packaging live under `.github/workflows`.
+Inherited deployment workflows are preserved under `.github/upstream-workflows` as reference. Fork checks and Mac packaging live under `.github/workflows`, alongside reusable CI workflows called by the upstream-sync automation.
 
 ## Historical source launcher
 

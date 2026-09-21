@@ -1,6 +1,6 @@
 # Using superset++
 
-Install the standalone app from [this fork’s releases](https://github.com/kogan/superset/releases). The app includes its local services; it does not need the original Superset app, Docker, or Bun. See [README.md](README.md) for installation and [DEVELOPMENT.md](DEVELOPMENT.md) for building.
+Follow the [download and installation instructions](README.md#download-and-install) for the standalone app. The app includes its local services; it does not need the original Superset app, Docker, or Bun. See [README.md](README.md) for installation and [DEVELOPMENT.md](DEVELOPMENT.md) for building.
 
 ## Jira and team PRs
 
@@ -8,13 +8,13 @@ Open **Settings > Integrations** to enter your Jira server URL and credentials. 
 
 1. Open **Settings > Integrations** and the Jira card.
 2. Choose **API token**, enter the email address of the Atlassian account that created it, and enter the token in the app. Choose **API token with scopes** if that is how you created the token at id.atlassian.com.
-3. Open **Jira** in the sidebar. **Team** shows issues from your selected board. The board selector remembers your choice and can also be changed in Settings. Columns reflect your saved configuration or the statuses returned by Jira.
+3. Open **Jira** in the sidebar. **Team** shows issues from your selected board. The board selector remembers your choice and can also be changed in Settings. Team columns use Jira's board names and status mappings, including empty columns.
 4. Use **All assignees** to choose a member, yourself, or unassigned issues. Search finds people beyond the currently loaded tickets. **All statuses**, **Unfinished**, and **In progress** narrow the status.
 5. Use **Columns** to show or hide columns and move them left or right. **Save** remembers the layout on this Mac; **Cancel** discards edits and **Restore defaults** resets visibility and order. Reselecting the same board preserves its layout; choosing a different board starts with its default layout. **Load more** retrieves the next page using the same filters; the footer shows how many tickets have loaded.
 
 Epics are excluded from every status in both Team and My work, on the board.
 
-**My work** includes tickets assigned to you and tickets where you are the Code Reviewer. It uses your saved column configuration. Every card shows its assignee and reviewers, with **Unassigned** for an empty reviewer field. In Kanban, a **Needs QA** card with an empty reviewer field has an amber background, a thick amber border, and a **Reviewer needed** badge. An unavailable reviewer field is not treated as empty.
+**My work** includes tickets assigned to you and tickets where you are the Code Reviewer. It groups the loaded issues by status. Every card shows its assignee and reviewers, with **Unassigned** for an empty reviewer field. In Kanban, a **Needs QA** card with an empty reviewer field has an amber background, a thick amber border, and a **Reviewer needed** badge. An unavailable reviewer field is not treated as empty.
 
 Cards show matching workspaces when the Jira key appears in the workspace name or branch. Use **Workspaces > New workspace** to start workspace creation with the ticket key and context, or link or unlink an existing workspace manually. Successful creation links the new workspace; cancellation leaves the ticket unlinked. Click a linked workspace name to open it. These associations are saved locally in SQLite.
 
