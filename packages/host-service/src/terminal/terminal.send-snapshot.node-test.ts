@@ -742,7 +742,12 @@ describe("terminal.send / terminal.snapshot tRPC procedures", () => {
 		);
 
 		await assert.rejects(
-			caller.terminal.send({ terminalId, workspaceId, text: "" }),
+			caller.terminal.send({
+				terminalId,
+				workspaceId,
+				text: "",
+				submit: false,
+			}),
 			(err: { code?: string }) => err.code === "BAD_REQUEST",
 		);
 

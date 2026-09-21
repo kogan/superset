@@ -18,45 +18,56 @@ import { Resend } from "resend";
 import { z } from "zod";
 import { env } from "../../env";
 import { posthog } from "../../lib/analytics";
+import {
+	createLocalSlidingWindowRateLimit,
+	isLocalRuntime,
+	type LocalRateLimit,
+} from "../../lib/local-runtime/cache";
 import { createTRPCRouter, protectedProcedure, userError } from "../../trpc";
 
 const resend = new Resend(env.RESEND_API_KEY);
 const SUPPORT_EMAIL = COMPANY.MAIL_TO.replace(/^mailto:/, "");
-const supportReportRateLimit =
-	env.KV_REST_API_URL && env.KV_REST_API_TOKEN
-		? new Ratelimit({
-				redis: new Redis({
-					url: env.KV_REST_API_URL,
-					token: env.KV_REST_API_TOKEN,
-				}),
-				limiter: Ratelimit.slidingWindow(3, "1 h"),
-				prefix: "ratelimit:support:migration-report",
-			})
-		: null;
+type RateLimit = Pick<Ratelimit, "limit"> | LocalRateLimit;
 
-const submitFeedbackRateLimit =
-	env.KV_REST_API_URL && env.KV_REST_API_TOKEN
-		? new Ratelimit({
-				redis: new Redis({
-					url: env.KV_REST_API_URL,
-					token: env.KV_REST_API_TOKEN,
-				}),
-				limiter: Ratelimit.slidingWindow(5, "1 h"),
-				prefix: "ratelimit:support:submit-feedback",
-			})
-		: null;
+function rateLimit({
+	prefix,
+	limit,
+}: {
+	prefix: string;
+	limit: number;
+}): RateLimit | null {
+	if (isLocalRuntime()) {
+		return createLocalSlidingWindowRateLimit({
+			prefix,
+			limit,
+			windowSeconds: 60 * 60,
+		});
+	}
+	if (!env.KV_REST_API_URL || !env.KV_REST_API_TOKEN) return null;
+	return new Ratelimit({
+		redis: new Redis({
+			url: env.KV_REST_API_URL,
+			token: env.KV_REST_API_TOKEN,
+		}),
+		limiter: Ratelimit.slidingWindow(limit, "1 h"),
+		prefix,
+	});
+}
 
-const submitPromptRateLimit =
-	env.KV_REST_API_URL && env.KV_REST_API_TOKEN
-		? new Ratelimit({
-				redis: new Redis({
-					url: env.KV_REST_API_URL,
-					token: env.KV_REST_API_TOKEN,
-				}),
-				limiter: Ratelimit.slidingWindow(5, "1 h"),
-				prefix: "ratelimit:support:submit-prompt",
-			})
-		: null;
+const supportReportRateLimit = rateLimit({
+	prefix: "ratelimit:support:migration-report",
+	limit: 3,
+});
+
+const submitFeedbackRateLimit = rateLimit({
+	prefix: "ratelimit:support:submit-feedback",
+	limit: 5,
+});
+
+const submitPromptRateLimit = rateLimit({
+	prefix: "ratelimit:support:submit-prompt",
+	limit: 5,
+});
 
 async function assertSupportReportRateLimit({
 	userId,

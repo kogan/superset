@@ -1,5 +1,15 @@
 import type { AgentDefinitionId } from "@superset/shared/agent-catalog";
-import { and, desc, eq, inArray, isNotNull, isNull, ne, or } from "drizzle-orm";
+import {
+	and,
+	desc,
+	eq,
+	inArray,
+	isNotNull,
+	isNull,
+	ne,
+	or,
+	sql,
+} from "drizzle-orm";
 import type { HostDb } from "../db";
 import { terminalAgentBindings, terminalSessions } from "../db/schema.ts";
 import type {
@@ -567,6 +577,7 @@ export class SqliteTerminalAgentBindingPersistence
 			.onConflictDoUpdate({
 				target: terminalAgentBindings.terminalId,
 				set: {
+					subagentNames: sql`CASE WHEN ${terminalAgentBindings.startedAt} = ${binding.startedAt} AND ${terminalAgentBindings.agentId} = ${binding.agentId} AND ${terminalAgentBindings.agentSessionId} IS ${binding.agentSessionId ?? null} THEN ${terminalAgentBindings.subagentNames} ELSE '{}' END`,
 					workspaceId: binding.workspaceId,
 					agentId: binding.agentId,
 					agentSessionId: binding.agentSessionId ?? null,
@@ -579,6 +590,40 @@ export class SqliteTerminalAgentBindingPersistence
 				},
 			})
 			.run();
+	}
+
+	getSubagentName(terminalId: string, subagentId: string): string | undefined {
+		const row = this.db
+			.select({ names: terminalAgentBindings.subagentNames })
+			.from(terminalAgentBindings)
+			.where(eq(terminalAgentBindings.terminalId, terminalId))
+			.get();
+		return row && Object.hasOwn(row.names, subagentId)
+			? row.names[subagentId]
+			: undefined;
+	}
+
+	setSubagentName(input: {
+		terminalId: string;
+		subagentId: string;
+		name: string | null;
+	}): void {
+		this.db.transaction((tx) => {
+			const row = tx
+				.select({ names: terminalAgentBindings.subagentNames })
+				.from(terminalAgentBindings)
+				.where(eq(terminalAgentBindings.terminalId, input.terminalId))
+				.get();
+			if (!row) return;
+			const names = new Map(Object.entries(row.names));
+			names.delete(input.subagentId);
+			if (input.name !== null) names.set(input.subagentId, input.name);
+			const bounded = Object.fromEntries([...names].slice(-64));
+			tx.update(terminalAgentBindings)
+				.set({ subagentNames: bounded })
+				.where(eq(terminalAgentBindings.terminalId, input.terminalId))
+				.run();
+		});
 	}
 
 	delete(terminalId: string): void {

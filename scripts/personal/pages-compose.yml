@@ -1,0 +1,19 @@
+services:
+  pages-storage:
+    image: ministackorg/ministack:1.4.3
+    ports:
+      - "127.0.0.1:9000:4566"
+    environment:
+      PERSIST_STATE: "1"
+      S3_PERSIST: "1"
+      S3_DATA_DIR: /tmp/ministack-state/objects
+    volumes:
+      - pages_storage:/tmp/ministack-state
+    healthcheck:
+      test: ["CMD", "python3", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:4566/_ministack/ready')"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+volumes:
+  pages_storage:

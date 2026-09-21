@@ -26,7 +26,7 @@ function resolveAgentTemplatesDir(): string | undefined {
 }
 
 /**
- * Provisions agent lifecycle hooks (~/.superset/hooks/notify.sh + managed
+ * Provisions agent lifecycle hooks (~/.superestset/hooks/superestset-notify.sh + managed
  * entries in each agent's global config), PATH wrappers, and the zsh/bash
  * bootstrap files host-service's shell-launch path expects. The Electron app
  * does this at boot for hosts it spawns; a standalone (CLI-launched) host has

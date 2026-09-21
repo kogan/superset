@@ -222,8 +222,8 @@ describe("installed_plugins.json location", () => {
 		expect(pluginsRoot()).toBe(path.join(root, "data", "plugins"));
 	});
 
-	test("an unset SUPERSET_HOME_DIR falls back to ~/.superset, not the prefix", () => {
+	test("an unset SUPERSET_HOME_DIR falls back to ~/.superestset, not the prefix", () => {
 		delete process.env.SUPERSET_HOME_DIR;
-		expect(supersetHome()).toBe(path.join(os.homedir(), ".superset"));
+		expect(supersetHome()).toBe(path.join(os.homedir(), ".superestset"));
 	});
 });

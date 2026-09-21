@@ -1,5 +1,5 @@
-import fs from "node:fs";
 import path from "node:path";
+import { readTranscriptHead } from "../subagent-description";
 import {
 	clip,
 	isRecord,
@@ -134,7 +134,7 @@ export const claudeSubagentHarness = defineSubagentHarness({
 	readDescription(transcriptPath) {
 		const metaPath = transcriptPath.replace(/\.jsonl$/, ".meta.json");
 		try {
-			const meta = JSON.parse(fs.readFileSync(metaPath, "utf8"));
+			const meta: unknown = JSON.parse(readTranscriptHead(metaPath) ?? "null");
 			return isRecord(meta) && typeof meta.description === "string"
 				? meta.description
 				: undefined;

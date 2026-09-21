@@ -13,6 +13,7 @@ import {
 	LuUnfoldVertical,
 } from "react-icons/lu";
 import { useSettings } from "renderer/stores/settings";
+import { DiffContextToggle } from "./components/DiffContextToggle";
 
 export interface DiffViewToolbarCommentNav {
 	/** Index into the ordered thread list, or null before any navigation. */
@@ -29,6 +30,7 @@ export interface DiffViewToolbarTreeToggle {
 }
 
 interface DiffViewToolbarProps {
+	showContextToggle?: boolean;
 	/** File-tree pill; omitted where the file list lives outside the diff (the
 	 * workspace Changes pane defers to the sidebar's Changes tab). */
 	tree?: DiffViewToolbarTreeToggle | null;
@@ -54,6 +56,7 @@ interface DiffViewToolbarProps {
  * every existing translation valid.
  */
 export function DiffViewToolbar({
+	showContextToggle = true,
 	tree,
 	areAllFilesCollapsed,
 	onToggleCollapseAll,
@@ -143,6 +146,7 @@ export function DiffViewToolbar({
 						)}
 					</TooltipContent>
 				</Tooltip>
+				{showContextToggle && <DiffContextToggle />}
 				{children != null && (
 					<>
 						<div className="mx-0.5 h-4 w-px bg-border" />

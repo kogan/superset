@@ -45,6 +45,7 @@ import {
 	resolveSessionOrganizationState,
 	type SessionOrganizationContext,
 } from "./lib/resolve-session-organization-state";
+import { localMode } from "./local-mode";
 import { stripeClient } from "./stripe";
 import {
 	countBillableSeats,
@@ -54,7 +55,12 @@ import {
 } from "./utils";
 import { previewNextInvoice } from "./utils/invoice-preview";
 
-const qstash = new Client({ token: env.QSTASH_TOKEN });
+const qstash = new Client({
+	token: localMode ? "local-disabled" : env.QSTASH_TOKEN,
+});
+const apiOrigin = localMode
+	? (process.env.SUPERESTSET_API_ORIGIN ?? "http://127.0.0.1:1")
+	: env.NEXT_PUBLIC_API_URL;
 
 const userOptions = {
 	additionalFields: {
@@ -83,7 +89,7 @@ const PENDING_DELETION_ALLOWED_PATH_PREFIXES = [
 	"/sign-out",
 ];
 
-const NOTIFY_SLACK_URL = `${env.NEXT_PUBLIC_API_URL}/api/integrations/stripe/jobs/notify-slack`;
+const NOTIFY_SLACK_URL = `${apiOrigin}/api/integrations/stripe/jobs/notify-slack`;
 const desktopDevPort = process.env.DESKTOP_VITE_PORT || "5173";
 const desktopDevOrigins =
 	process.env.NODE_ENV === "development"
@@ -134,33 +140,38 @@ function serializeCancellationDetails(
 }
 
 export const auth = betterAuth({
-	baseURL: env.NEXT_PUBLIC_API_URL,
+	baseURL: apiOrigin,
 	secret: env.BETTER_AUTH_SECRET,
 	onAPIError: {
 		// Without this, production better-auth sends OAuth failures to the API root, a 404.
-		errorURL: `${env.NEXT_PUBLIC_WEB_URL}/sign-in`,
+		errorURL: `${localMode ? apiOrigin : env.NEXT_PUBLIC_WEB_URL}/sign-in`,
 	},
-	disabledPaths: [],
+	disabledPaths: localMode
+		? ["/organization/invite-member", "/accept-invitation"]
+		: [],
 	database: drizzleAdapter(db, {
 		provider: "pg",
 		usePlural: true,
 		schema: { ...authSchema, subscriptions },
 	}),
-	trustedOrigins: async (request) => [
-		env.NEXT_PUBLIC_WEB_URL,
-		env.NEXT_PUBLIC_API_URL,
-		env.NEXT_PUBLIC_MARKETING_URL,
-		env.NEXT_PUBLIC_ADMIN_URL,
-		...(env.NEXT_PUBLIC_DESKTOP_URL ? [env.NEXT_PUBLIC_DESKTOP_URL] : []),
-		...getTrustedVercelPreviewOrigins(request?.url ?? env.NEXT_PUBLIC_API_URL),
-		...desktopDevOrigins,
-		"superset://app",
-		"superset://",
-		"https://appleid.apple.com",
-		...(process.env.NODE_ENV === "development"
-			? ["exp://", "exp://**", "exp://192.168.*.*:*/**"]
-			: []),
-	],
+	trustedOrigins: async (request) =>
+		localMode
+			? [apiOrigin, "superestset://app", "superestset://"]
+			: [
+					env.NEXT_PUBLIC_WEB_URL,
+					apiOrigin,
+					env.NEXT_PUBLIC_MARKETING_URL,
+					env.NEXT_PUBLIC_ADMIN_URL,
+					...(env.NEXT_PUBLIC_DESKTOP_URL ? [env.NEXT_PUBLIC_DESKTOP_URL] : []),
+					...getTrustedVercelPreviewOrigins(request?.url ?? apiOrigin),
+					...desktopDevOrigins,
+					"superset://app",
+					"superset://",
+					"https://appleid.apple.com",
+					...(process.env.NODE_ENV === "development"
+						? ["exp://", "exp://**", "exp://192.168.*.*:*/**"]
+						: []),
+				],
 	session: {
 		expiresIn: 60 * 60 * 24 * 30,
 		updateAge: 60 * 60 * 24,
@@ -230,7 +241,7 @@ export const auth = betterAuth({
 	},
 	advanced: {
 		crossSubDomainCookies: {
-			enabled: true,
+			enabled: !localMode,
 			domain: env.NEXT_PUBLIC_COOKIE_DOMAIN,
 		},
 		database: {
@@ -241,32 +252,35 @@ export const auth = betterAuth({
 	// review demo account (see seed-review-account.ts); sign-UP remains
 	// dev/preview-only.
 	emailAndPassword: {
-		enabled: true,
+		enabled: !localMode,
 		disableSignUp:
 			process.env.NODE_ENV !== "development" &&
 			process.env.VERCEL_ENV !== "preview",
 		autoSignIn: true,
 	},
-	socialProviders: {
-		github: {
-			clientId: env.GH_CLIENT_ID,
-			clientSecret: env.GH_CLIENT_SECRET,
-		},
-		google: {
-			clientId: env.GOOGLE_CLIENT_ID,
-			clientSecret: env.GOOGLE_CLIENT_SECRET,
-			prompt: "select_account",
-		},
-		apple: {
-			clientId: env.APPLE_CLIENT_ID,
-			clientSecret: env.APPLE_CLIENT_SECRET,
-			appBundleIdentifier: env.APPLE_APP_BUNDLE_IDENTIFIER,
-		},
-	},
+	socialProviders: localMode
+		? {}
+		: {
+				github: {
+					clientId: env.GH_CLIENT_ID,
+					clientSecret: env.GH_CLIENT_SECRET,
+				},
+				google: {
+					clientId: env.GOOGLE_CLIENT_ID,
+					clientSecret: env.GOOGLE_CLIENT_SECRET,
+					prompt: "select_account",
+				},
+				apple: {
+					clientId: env.APPLE_CLIENT_ID,
+					clientSecret: env.APPLE_CLIENT_SECRET,
+					appBundleIdentifier: env.APPLE_APP_BUNDLE_IDENTIFIER,
+				},
+			},
 	databaseHooks: {
 		user: {
 			create: {
 				after: async (user) => {
+					if (localMode) return;
 					const domain = user.email.split("@")[1]?.toLowerCase();
 					let enrolledOrgId: string | null = null;
 
@@ -396,8 +410,8 @@ export const auth = betterAuth({
 			},
 			adapter: jwksAdapter(),
 			jwt: {
-				issuer: env.NEXT_PUBLIC_API_URL,
-				audience: env.NEXT_PUBLIC_API_URL,
+				issuer: apiOrigin,
+				audience: apiOrigin,
 				expirationTime: "1h",
 				definePayload: async ({
 					user,
@@ -417,16 +431,16 @@ export const auth = betterAuth({
 			},
 		}),
 		oauthProvider({
-			loginPage: `${env.NEXT_PUBLIC_WEB_URL}/sign-in`,
-			consentPage: `${env.NEXT_PUBLIC_WEB_URL}/oauth/consent`,
+			loginPage: `${localMode ? apiOrigin : env.NEXT_PUBLIC_WEB_URL}/sign-in`,
+			consentPage: `${localMode ? apiOrigin : env.NEXT_PUBLIC_WEB_URL}/oauth/consent`,
 			allowDynamicClientRegistration: true,
 			allowUnauthenticatedClientRegistration: true,
 			accessTokenExpiresIn: 60 * 60 * 24 * 7,
 			validAudiences: [
-				env.NEXT_PUBLIC_API_URL,
-				`${env.NEXT_PUBLIC_API_URL}/`,
-				`${env.NEXT_PUBLIC_API_URL}/api/v2/agent/mcp`,
-				`${env.NEXT_PUBLIC_API_URL}/mcp`,
+				apiOrigin,
+				`${apiOrigin}/`,
+				`${apiOrigin}/api/v2/agent/mcp`,
+				`${apiOrigin}/mcp`,
 			],
 			silenceWarnings: {
 				oauthAuthServerConfig: true,
@@ -434,7 +448,7 @@ export const auth = betterAuth({
 			},
 			postLogin: {
 				// Org selection is handled in the consent page, so never redirect to a separate page
-				page: `${env.NEXT_PUBLIC_WEB_URL}/oauth/consent`,
+				page: `${localMode ? apiOrigin : env.NEXT_PUBLIC_WEB_URL}/oauth/consent`,
 				shouldRedirect: () => false,
 				consentReferenceId: async ({ user, session }) => {
 					const { activeOrganizationId } =
@@ -502,6 +516,10 @@ export const auth = betterAuth({
 				},
 			},
 			sendInvitationEmail: async (data) => {
+				if (localMode)
+					throw new Error(
+						"Email invitations require an independent hosted service.",
+					);
 				const token = await generateMagicTokenForInvite({
 					invitationId: data.id,
 				});
@@ -573,7 +591,7 @@ export const auth = betterAuth({
 				},
 
 				afterCreateOrganization: async ({ organization, user }) => {
-					if (process.env.NODE_ENV !== "development") {
+					if (!localMode && process.env.NODE_ENV !== "development") {
 						const customer = await stripeClient.customers.create({
 							name: organization.name,
 							email: user.email,
@@ -683,6 +701,7 @@ export const auth = betterAuth({
 				},
 
 				beforeDeleteOrganization: async ({ organization }) => {
+					if (localMode) return;
 					if (!organization.stripeCustomerId) return;
 
 					const subs = await stripeClient.subscriptions.list({
@@ -695,6 +714,7 @@ export const auth = betterAuth({
 				},
 
 				afterUpdateOrganization: async ({ organization }) => {
+					if (localMode) return;
 					if (!organization?.stripeCustomerId) return;
 
 					await stripeClient.customers.update(organization.stripeCustomerId, {
@@ -703,6 +723,7 @@ export const auth = betterAuth({
 				},
 
 				beforeAddMember: async ({ organization, user }) => {
+					if (localMode) return;
 					// Domain-allowlisted users bypass the free-plan member limit.
 					// If an admin put the user's domain in allowedDomains, they've
 					// already explicitly opted in to letting those users join.
@@ -767,6 +788,8 @@ export const auth = betterAuth({
 							})
 							.onConflictDoNothing();
 					}
+
+					if (localMode) return;
 
 					const subscription = await db.query.subscriptions.findFirst({
 						where: and(
@@ -896,6 +919,7 @@ export const auth = betterAuth({
 				},
 
 				afterRemoveMember: async ({ user, organization }) => {
+					if (localMode) return;
 					await resend.emails.send({
 						from: "Superset <noreply@superset.sh>",
 						to: user.email,
@@ -1068,568 +1092,605 @@ export const auth = betterAuth({
 						activeOrganizationId,
 						organizationIds,
 						role: membership?.role,
-						plan,
+						plan: localMode ? "enterprise" : plan,
 					},
 				};
 			},
 			{ user: userOptions },
 		),
-		stripe({
-			stripeClient,
-			stripeWebhookSecret: env.STRIPE_WEBHOOK_SECRET,
-			createCustomerOnSignUp: false,
+		...(localMode
+			? []
+			: [
+					stripe({
+						stripeClient,
+						stripeWebhookSecret: env.STRIPE_WEBHOOK_SECRET,
+						createCustomerOnSignUp: false,
 
-			subscription: {
-				enabled: true,
-				plans: [
-					{
-						name: "pro",
-						priceId: env.STRIPE_PRO_MONTHLY_PRICE_ID,
-						annualDiscountPriceId: env.STRIPE_PRO_YEARLY_PRICE_ID,
-					},
-					{
-						name: "enterprise",
-						priceId: env.STRIPE_ENTERPRISE_YEARLY_PRICE_ID,
-					},
-				],
+						subscription: {
+							enabled: true,
+							plans: [
+								{
+									name: "pro",
+									priceId: env.STRIPE_PRO_MONTHLY_PRICE_ID,
+									annualDiscountPriceId: env.STRIPE_PRO_YEARLY_PRICE_ID,
+								},
+								{
+									name: "enterprise",
+									priceId: env.STRIPE_ENTERPRISE_YEARLY_PRICE_ID,
+								},
+							],
 
-				authorizeReference: async ({ user, referenceId, action }) => {
-					const member = await db.query.members.findFirst({
-						where: and(
-							eq(members.userId, user.id),
-							eq(members.organizationId, referenceId),
-						),
-					});
+							authorizeReference: async ({ user, referenceId, action }) => {
+								const member = await db.query.members.findFirst({
+									where: and(
+										eq(members.userId, user.id),
+										eq(members.organizationId, referenceId),
+									),
+								});
 
-					if (!member) return false;
+								if (!member) return false;
 
-					if (
-						action === "upgrade-subscription" ||
-						action === "cancel-subscription" ||
-						action === "restore-subscription"
-					) {
-						const subscription = await db.query.subscriptions.findFirst({
-							where: and(
-								eq(subscriptions.referenceId, referenceId),
-								eq(subscriptions.status, "active"),
-							),
-						});
-						if (subscription?.plan === "enterprise") return false;
-					}
+								if (
+									action === "upgrade-subscription" ||
+									action === "cancel-subscription" ||
+									action === "restore-subscription"
+								) {
+									const subscription = await db.query.subscriptions.findFirst({
+										where: and(
+											eq(subscriptions.referenceId, referenceId),
+											eq(subscriptions.status, "active"),
+										),
+									});
+									if (subscription?.plan === "enterprise") return false;
+								}
 
-					switch (action) {
-						case "upgrade-subscription":
-						case "cancel-subscription":
-						case "restore-subscription":
-							return member.role === "owner";
-						case "list-subscription":
-							return member.role === "owner" || member.role === "admin";
-						default:
-							return false;
-					}
-				},
+								switch (action) {
+									case "upgrade-subscription":
+									case "cancel-subscription":
+									case "restore-subscription":
+										return member.role === "owner";
+									case "list-subscription":
+										return member.role === "owner" || member.role === "admin";
+									default:
+										return false;
+								}
+							},
 
-				getCheckoutSessionParams: async (
-					{ user, plan, subscription },
-					_request,
-					ctx,
-				) => {
-					if (plan.name === "enterprise") {
-						throw new Error(
-							"Enterprise subscriptions are managed by admins. Contact support@superset.sh.",
-						);
-					}
+							getCheckoutSessionParams: async (
+								{ user, plan, subscription },
+								_request,
+								ctx,
+							) => {
+								if (plan.name === "enterprise") {
+									throw new Error(
+										"Enterprise subscriptions are managed by admins. Contact support@superset.sh.",
+									);
+								}
 
-					const org = await db.query.organizations.findFirst({
-						where: eq(
-							authSchema.organizations.id,
-							subscription?.referenceId ?? "",
-						),
-					});
+								const org = await db.query.organizations.findFirst({
+									where: eq(
+										authSchema.organizations.id,
+										subscription?.referenceId ?? "",
+									),
+								});
 
-					const annual = Boolean(
-						(ctx?.body as { annual?: boolean } | undefined)?.annual,
-					);
+								const annual = Boolean(
+									(ctx?.body as { annual?: boolean } | undefined)?.annual,
+								);
 
-					return {
-						params: {
-							customer: org?.stripeCustomerId ?? undefined,
-							allow_promotion_codes: !annual,
-							billing_address_collection: "required",
-							metadata: {
-								organizationId: org?.id ?? "",
-								initiatedByUserId: user.id,
+								return {
+									params: {
+										customer: org?.stripeCustomerId ?? undefined,
+										allow_promotion_codes: !annual,
+										billing_address_collection: "required",
+										metadata: {
+											organizationId: org?.id ?? "",
+											initiatedByUserId: user.id,
+										},
+									},
+								};
+							},
+
+							onSubscriptionComplete: async ({
+								subscription,
+								stripeSubscription,
+								plan,
+							}) => {
+								const org = await db.query.organizations.findFirst({
+									where: eq(
+										authSchema.organizations.id,
+										subscription.referenceId,
+									),
+								});
+
+								if (!org) return;
+
+								if (plan.name === "enterprise") return;
+
+								const owners = await getOrganizationOwners(
+									subscription.referenceId,
+								);
+
+								const interval = stripeSubscription.items.data[0]?.price
+									?.recurring?.interval as "month" | "year" | undefined;
+								const billingInterval =
+									interval === "year" ? "yearly" : "monthly";
+
+								const pricePerSeat =
+									stripeSubscription.items.data[0]?.price?.unit_amount ?? 0;
+								const currency =
+									stripeSubscription.items.data[0]?.price?.currency ?? "usd";
+								const amount = formatPrice(pricePerSeat, currency);
+
+								await resend.batch.send(
+									owners.map((owner) => ({
+										from: "Superset <noreply@superset.sh>",
+										to: owner.email,
+										subject: `Welcome to Superset ${plan.name}!`,
+										react: SubscriptionStartedEmail({
+											ownerName: owner.name,
+											organizationName: org.name,
+											planName: plan.name,
+											billingInterval,
+											amount,
+											seatCount: subscription.seats ?? 1,
+										}),
+									})),
+								);
+
+								try {
+									await qstash.publishJSON({
+										url: NOTIFY_SLACK_URL,
+										body: {
+											eventType: "subscription_started",
+											stripeSubscriptionId: stripeSubscription.id,
+										},
+										retries: 3,
+									});
+								} catch (error) {
+									console.error(
+										"[stripe/subscription-complete] Failed to queue Slack notification:",
+										error,
+									);
+								}
+
+								// The paid conversion. Emitted here rather than from an
+								// `onEvent` case for `checkout.session.completed` because Better
+								// Auth calls both for that one webhook, and this hook is the side
+								// that already knows the plan, seat count and interval.
+								await captureBillingEvent({
+									event: "subscription_started",
+									organizationId: subscription.referenceId,
+									initiatedByUserId: stripeSubscription.metadata?.userId,
+									// This hook is handed the subscription, not the webhook event, so
+									// the subscription id is the stable key. One `subscription_started`
+									// per subscription is the intended meaning anyway.
+									idempotencyKey: stripeSubscription.id,
+									occurredAt: new Date(stripeSubscription.created * 1000),
+									properties: {
+										plan: plan.name,
+										billing_interval: billingInterval,
+										seats: subscription.seats ?? 1,
+										// Deliberately not `revenue`: that property is what PostHog
+										// revenue analytics sums, and `payment_succeeded` below is the
+										// one event where money actually moved. Naming it here too
+										// would double-count every subscription.
+										subscription_value:
+											pricePerSeat * (subscription.seats ?? 1),
+										currency,
+										stripe_subscription_id: stripeSubscription.id,
+									},
+								});
+							},
+
+							onSubscriptionCancel: async ({
+								subscription,
+								stripeSubscription,
+								cancellationDetails,
+							}) => {
+								const org = await db.query.organizations.findFirst({
+									where: eq(
+										authSchema.organizations.id,
+										subscription.referenceId,
+									),
+								});
+
+								if (!org?.stripeCustomerId) return;
+
+								const recipients = await getOrganizationBillingRecipients(
+									subscription.referenceId,
+								);
+								const accessEndsAt = subscription.periodEnd ?? new Date();
+
+								// periodEnd is the period Stripe was trying to bill for, so on a
+								// collection failure it sits weeks in the future while access has
+								// already stopped. Only a voluntary cancel keeps access until then.
+								const dueToPaymentFailure =
+									(
+										cancellationDetails ??
+										stripeSubscription.cancellation_details
+									)?.reason === "payment_failed";
+
+								if (
+									subscription.plan === "pro" &&
+									!dueToPaymentFailure &&
+									stripeSubscription.canceled_at
+								) {
+									try {
+										await qstash.publishJSON({
+											url: `${apiOrigin}/api/integrations/stripe/jobs/cancellation-feedback`,
+											body: {
+												stripeSubscriptionId: stripeSubscription.id,
+												canceledAt: stripeSubscription.canceled_at,
+											},
+											delay: 2700,
+											retries: 3,
+											deduplicationId: `pro-cancellation-feedback-${stripeSubscription.id}-${stripeSubscription.canceled_at}`,
+										});
+									} catch (error) {
+										console.error(
+											"[stripe/cancellation-feedback] Failed to queue feedback:",
+											error,
+										);
+									}
+								}
+
+								await resend.batch.send(
+									recipients.map((recipient) => ({
+										from: "Superset <noreply@superset.sh>",
+										to: recipient.email,
+										subject: dueToPaymentFailure
+											? `Your ${subscription.plan} subscription ended`
+											: `Your ${subscription.plan} subscription has been cancelled`,
+										react: SubscriptionCancelledEmail({
+											recipientName: recipient.name,
+											organizationName: org.name,
+											planName: subscription.plan,
+											accessEndsAt,
+											dueToPaymentFailure,
+										}),
+									})),
+								);
+
+								try {
+									await qstash.publishJSON({
+										url: NOTIFY_SLACK_URL,
+										body: {
+											eventType: "subscription_cancelled",
+											stripeSubscriptionId: stripeSubscription.id,
+											cancellationDetails: serializeCancellationDetails(
+												cancellationDetails ??
+													stripeSubscription.cancellation_details,
+											),
+										},
+										retries: 3,
+										// portal collects the cancellation survey after cancel confirms; give it time
+										delay: 120,
+									});
+								} catch (error) {
+									console.error(
+										"[stripe/subscription-cancel] Failed to queue Slack notification:",
+										error,
+									);
+								}
+							},
+
+							onEvent: async (event: Stripe.Event) => {
+								if (event.type === "invoice.payment_failed") {
+									const invoice = event.data.object as Stripe.Invoice;
+
+									const customerId =
+										typeof invoice.customer === "string"
+											? invoice.customer
+											: invoice.customer?.id;
+
+									if (!customerId) return;
+
+									const org = await db.query.organizations.findFirst({
+										where: eq(
+											authSchema.organizations.stripeCustomerId,
+											customerId,
+										),
+									});
+
+									if (!org?.stripeCustomerId) return;
+
+									const subscription = await db.query.subscriptions.findFirst({
+										where: eq(subscriptions.referenceId, org.id),
+									});
+
+									// The invoice names the subscription this event is about, so it
+									// wins. The organization-level row is only a fallback: the lookup
+									// above is unordered and an organization that resubscribed has
+									// several, so preferring it can check — or notify Slack about —
+									// a subscription that has nothing to do with this invoice.
+									const stripeSubId =
+										(invoice.parent?.subscription_details?.subscription as
+											| string
+											| undefined) ?? subscription?.stripeSubscriptionId;
+
+									const isFinalAttempt = invoice.next_payment_attempt == null;
+									const isFirstAttempt = (invoice.attempt_count ?? 0) <= 1;
+
+									// Stripe keeps retrying the closing invoice after someone cancels,
+									// so this still fires for subscriptions that are already gone.
+									// Warning them they are about to lose access would be false, and
+									// nagging someone who already left is worse than saying nothing.
+									const alreadyCancelled = stripeSubId
+										? await isStripeSubscriptionCancelled(stripeSubId)
+										: false;
+
+									// Stripe fires this on every retry. Mailing all of them trains
+									// people to ignore the one that matters, so only the opening
+									// notice and the last-chance notice go out.
+									if (!alreadyCancelled && (isFirstAttempt || isFinalAttempt)) {
+										const recipients = await getOrganizationBillingRecipients(
+											org.id,
+										);
+										const amount = formatPrice(
+											invoice.amount_due,
+											invoice.currency,
+										);
+										const nextRetryDate = invoice.next_payment_attempt
+											? new Date(invoice.next_payment_attempt * 1000)
+											: null;
+
+										await resend.batch.send(
+											recipients.map((recipient) => ({
+												from: "Superset <noreply@superset.sh>",
+												to: recipient.email,
+												subject: isFinalAttempt
+													? `Final notice: payment failed for ${org.name}`
+													: `Payment failed for ${org.name}`,
+												react: PaymentFailedEmail({
+													recipientName: recipient.name,
+													organizationName: org.name,
+													planName: subscription?.plan ?? "Pro",
+													amount,
+													nextRetryDate,
+													// Anyone holding the link can settle a hosted invoice,
+													// so every billing recipient gets it. The old
+													// owners-only gate existed because this used to be a
+													// billing portal session, which needs ownership.
+													payInvoiceUrl:
+														invoice.hosted_invoice_url ?? undefined,
+												}),
+											})),
+										);
+									}
+
+									if (stripeSubId) {
+										try {
+											await qstash.publishJSON({
+												url: NOTIFY_SLACK_URL,
+												body: {
+													eventType: "payment_failed",
+													stripeSubscriptionId: stripeSubId,
+													amountCents: invoice.amount_due,
+													currency: invoice.currency,
+												},
+												retries: 3,
+											});
+										} catch (error) {
+											console.error(
+												"[stripe/payment-failed] Failed to queue Slack notification:",
+												error,
+											);
+										}
+									}
+
+									await captureBillingEvent({
+										event: "payment_failed",
+										organizationId: org.id,
+										initiatedByUserId:
+											invoice.parent?.subscription_details?.metadata?.userId,
+										idempotencyKey: event.id,
+										occurredAt: new Date(event.created * 1000),
+										properties: {
+											// No money moved, so this must not be `revenue`.
+											amount_due: invoice.amount_due,
+											currency: invoice.currency,
+											attempt_count: invoice.attempt_count ?? 0,
+											is_final_attempt: isFinalAttempt,
+											already_cancelled: alreadyCancelled,
+											stripe_subscription_id: stripeSubId ?? null,
+										},
+									});
+								}
+
+								if (event.type === "invoice.upcoming") {
+									const invoice = event.data.object as Stripe.Invoice;
+
+									const customerId =
+										typeof invoice.customer === "string"
+											? invoice.customer
+											: invoice.customer?.id;
+
+									if (!customerId) return;
+
+									const stripeSubId = invoice.parent?.subscription_details
+										?.subscription as string | undefined;
+
+									if (!stripeSubId) return;
+
+									// Matched on the Stripe id, not the organization: an organization
+									// that resubscribed has several rows and the wrong one can win.
+									const subscription = await db.query.subscriptions.findFirst({
+										where: eq(subscriptions.stripeSubscriptionId, stripeSubId),
+									});
+
+									// Annual only — see RenewalUpcomingEmail for why monthly plans and
+									// seat changes are deliberately left out.
+									if (subscription?.billingInterval !== "yearly") return;
+
+									const renewsAtSeconds =
+										invoice.next_payment_attempt ?? invoice.period_end;
+
+									if (!renewsAtSeconds) return;
+
+									const org = await db.query.organizations.findFirst({
+										where: eq(
+											authSchema.organizations.stripeCustomerId,
+											customerId,
+										),
+									});
+
+									if (!org) return;
+
+									const recipients = await getOrganizationBillingRecipients(
+										org.id,
+									);
+									// Max, not sum: a proration line carries its own quantity and
+									// adding them together reports more seats than exist.
+									const seatCount = invoice.lines.data.reduce(
+										(largest, line) => Math.max(largest, line.quantity ?? 0),
+										0,
+									);
+
+									await resend.batch.send(
+										recipients.map((recipient) => ({
+											from: "Superset <noreply@superset.sh>",
+											to: recipient.email,
+											subject: `${org.name}'s ${subscription.plan} plan renews soon`,
+											react: RenewalUpcomingEmail({
+												recipientName: recipient.name,
+												organizationName: org.name,
+												planName: subscription.plan,
+												amount: formatPrice(
+													invoice.amount_due,
+													invoice.currency,
+												),
+												renewsAt: new Date(renewsAtSeconds * 1000),
+												seatCount: Math.max(1, seatCount),
+												isOwner: recipient.role === "owner",
+											}),
+										})),
+									);
+								}
+
+								if (event.type === "invoice.paid") {
+									const invoice = event.data.object as Stripe.Invoice;
+
+									const subscriptionDetails =
+										invoice.parent?.subscription_details ?? undefined;
+									const stripeSubId = subscriptionDetails?.subscription as
+										| string
+										| undefined;
+
+									if (stripeSubId) {
+										try {
+											await qstash.publishJSON({
+												url: NOTIFY_SLACK_URL,
+												body: {
+													eventType: "payment_succeeded",
+													stripeSubscriptionId: stripeSubId,
+													amountCents: invoice.amount_paid,
+													currency: invoice.currency,
+													periodStart: invoice.period_start ?? 0,
+													periodEnd: invoice.period_end ?? 0,
+												},
+												retries: 3,
+											});
+										} catch (error) {
+											console.error(
+												"[stripe/payment-succeeded] Failed to queue Slack notification:",
+												error,
+											);
+										}
+									}
+
+									// `referenceId` is the organization id — Better Auth writes it
+									// onto the subscription, and Stripe copies subscription metadata
+									// onto every invoice it raises, so this needs no lookup.
+									const organizationId =
+										subscriptionDetails?.metadata?.referenceId;
+
+									if (organizationId) {
+										await captureBillingEvent({
+											event: "payment_succeeded",
+											organizationId,
+											initiatedByUserId: subscriptionDetails?.metadata?.userId,
+											idempotencyKey: event.id,
+											occurredAt: new Date(event.created * 1000),
+											properties: {
+												revenue: invoice.amount_paid,
+												currency: invoice.currency,
+												// `subscription_create` is the first payment, everything
+												// else is a renewal or a seat change.
+												billing_reason: invoice.billing_reason,
+												stripe_subscription_id: stripeSubId ?? null,
+											},
+										});
+									}
+								}
+
+								// Stripe expires an unpaid Checkout session ~24h after it opens, so
+								// this arrives late by design. It is the only signal that someone
+								// reached the payment page and did not pay — the paid side comes
+								// through `onSubscriptionComplete` instead.
+								if (event.type === "checkout.session.expired") {
+									const session = event.data.object as Stripe.Checkout.Session;
+									const organizationId = session.metadata?.organizationId;
+
+									if (organizationId) {
+										await captureBillingEvent({
+											event: "checkout_abandoned",
+											organizationId,
+											initiatedByUserId: session.metadata?.userId,
+											idempotencyKey: event.id,
+											occurredAt: new Date(event.created * 1000),
+											properties: {
+												// No money moved, so this must not be `revenue`.
+												abandoned_value: session.amount_total ?? 0,
+												currency: session.currency ?? "usd",
+												stripe_session_id: session.id,
+											},
+										});
+									}
+								}
+
+								if (event.type === "customer.subscription.updated") {
+									const stripeSubscription = event.data
+										.object as Stripe.Subscription;
+									const previousAttributes = event.data.previous_attributes as
+										| Partial<Stripe.Subscription>
+										| undefined;
+
+									const previousPriceId =
+										previousAttributes?.items?.data?.[0]?.price?.id;
+									const currentPriceId =
+										stripeSubscription.items.data[0]?.price?.id;
+
+									if (!previousPriceId || previousPriceId === currentPriceId)
+										return;
+
+									const previousInterval =
+										previousAttributes?.items?.data?.[0]?.price?.recurring
+											?.interval === "year"
+											? "yearly"
+											: "monthly";
+
+									try {
+										await qstash.publishJSON({
+											url: NOTIFY_SLACK_URL,
+											body: {
+												eventType: "plan_changed",
+												stripeSubscriptionId: stripeSubscription.id,
+												previousInterval,
+											},
+											retries: 3,
+										});
+									} catch (error) {
+										console.error(
+											"[stripe/plan-changed] Failed to queue Slack notification:",
+											error,
+										);
+									}
+								}
 							},
 						},
-					};
-				},
-
-				onSubscriptionComplete: async ({
-					subscription,
-					stripeSubscription,
-					plan,
-				}) => {
-					const org = await db.query.organizations.findFirst({
-						where: eq(authSchema.organizations.id, subscription.referenceId),
-					});
-
-					if (!org) return;
-
-					if (plan.name === "enterprise") return;
-
-					const owners = await getOrganizationOwners(subscription.referenceId);
-
-					const interval = stripeSubscription.items.data[0]?.price?.recurring
-						?.interval as "month" | "year" | undefined;
-					const billingInterval = interval === "year" ? "yearly" : "monthly";
-
-					const pricePerSeat =
-						stripeSubscription.items.data[0]?.price?.unit_amount ?? 0;
-					const currency =
-						stripeSubscription.items.data[0]?.price?.currency ?? "usd";
-					const amount = formatPrice(pricePerSeat, currency);
-
-					await resend.batch.send(
-						owners.map((owner) => ({
-							from: "Superset <noreply@superset.sh>",
-							to: owner.email,
-							subject: `Welcome to Superset ${plan.name}!`,
-							react: SubscriptionStartedEmail({
-								ownerName: owner.name,
-								organizationName: org.name,
-								planName: plan.name,
-								billingInterval,
-								amount,
-								seatCount: subscription.seats ?? 1,
-							}),
-						})),
-					);
-
-					try {
-						await qstash.publishJSON({
-							url: NOTIFY_SLACK_URL,
-							body: {
-								eventType: "subscription_started",
-								stripeSubscriptionId: stripeSubscription.id,
-							},
-							retries: 3,
-						});
-					} catch (error) {
-						console.error(
-							"[stripe/subscription-complete] Failed to queue Slack notification:",
-							error,
-						);
-					}
-
-					// The paid conversion. Emitted here rather than from an
-					// `onEvent` case for `checkout.session.completed` because Better
-					// Auth calls both for that one webhook, and this hook is the side
-					// that already knows the plan, seat count and interval.
-					await captureBillingEvent({
-						event: "subscription_started",
-						organizationId: subscription.referenceId,
-						initiatedByUserId: stripeSubscription.metadata?.userId,
-						// This hook is handed the subscription, not the webhook event, so
-						// the subscription id is the stable key. One `subscription_started`
-						// per subscription is the intended meaning anyway.
-						idempotencyKey: stripeSubscription.id,
-						occurredAt: new Date(stripeSubscription.created * 1000),
-						properties: {
-							plan: plan.name,
-							billing_interval: billingInterval,
-							seats: subscription.seats ?? 1,
-							// Deliberately not `revenue`: that property is what PostHog
-							// revenue analytics sums, and `payment_succeeded` below is the
-							// one event where money actually moved. Naming it here too
-							// would double-count every subscription.
-							subscription_value: pricePerSeat * (subscription.seats ?? 1),
-							currency,
-							stripe_subscription_id: stripeSubscription.id,
-						},
-					});
-				},
-
-				onSubscriptionCancel: async ({
-					subscription,
-					stripeSubscription,
-					cancellationDetails,
-				}) => {
-					const org = await db.query.organizations.findFirst({
-						where: eq(authSchema.organizations.id, subscription.referenceId),
-					});
-
-					if (!org?.stripeCustomerId) return;
-
-					const recipients = await getOrganizationBillingRecipients(
-						subscription.referenceId,
-					);
-					const accessEndsAt = subscription.periodEnd ?? new Date();
-
-					// periodEnd is the period Stripe was trying to bill for, so on a
-					// collection failure it sits weeks in the future while access has
-					// already stopped. Only a voluntary cancel keeps access until then.
-					const dueToPaymentFailure =
-						(cancellationDetails ?? stripeSubscription.cancellation_details)
-							?.reason === "payment_failed";
-
-					if (
-						subscription.plan === "pro" &&
-						!dueToPaymentFailure &&
-						stripeSubscription.canceled_at
-					) {
-						try {
-							await qstash.publishJSON({
-								url: `${env.NEXT_PUBLIC_API_URL}/api/integrations/stripe/jobs/cancellation-feedback`,
-								body: {
-									stripeSubscriptionId: stripeSubscription.id,
-									canceledAt: stripeSubscription.canceled_at,
-								},
-								delay: 2700,
-								retries: 3,
-								deduplicationId: `pro-cancellation-feedback-${stripeSubscription.id}-${stripeSubscription.canceled_at}`,
-							});
-						} catch (error) {
-							console.error(
-								"[stripe/cancellation-feedback] Failed to queue feedback:",
-								error,
-							);
-						}
-					}
-
-					await resend.batch.send(
-						recipients.map((recipient) => ({
-							from: "Superset <noreply@superset.sh>",
-							to: recipient.email,
-							subject: dueToPaymentFailure
-								? `Your ${subscription.plan} subscription ended`
-								: `Your ${subscription.plan} subscription has been cancelled`,
-							react: SubscriptionCancelledEmail({
-								recipientName: recipient.name,
-								organizationName: org.name,
-								planName: subscription.plan,
-								accessEndsAt,
-								dueToPaymentFailure,
-							}),
-						})),
-					);
-
-					try {
-						await qstash.publishJSON({
-							url: NOTIFY_SLACK_URL,
-							body: {
-								eventType: "subscription_cancelled",
-								stripeSubscriptionId: stripeSubscription.id,
-								cancellationDetails: serializeCancellationDetails(
-									cancellationDetails ??
-										stripeSubscription.cancellation_details,
-								),
-							},
-							retries: 3,
-							// portal collects the cancellation survey after cancel confirms; give it time
-							delay: 120,
-						});
-					} catch (error) {
-						console.error(
-							"[stripe/subscription-cancel] Failed to queue Slack notification:",
-							error,
-						);
-					}
-				},
-
-				onEvent: async (event: Stripe.Event) => {
-					if (event.type === "invoice.payment_failed") {
-						const invoice = event.data.object as Stripe.Invoice;
-
-						const customerId =
-							typeof invoice.customer === "string"
-								? invoice.customer
-								: invoice.customer?.id;
-
-						if (!customerId) return;
-
-						const org = await db.query.organizations.findFirst({
-							where: eq(authSchema.organizations.stripeCustomerId, customerId),
-						});
-
-						if (!org?.stripeCustomerId) return;
-
-						const subscription = await db.query.subscriptions.findFirst({
-							where: eq(subscriptions.referenceId, org.id),
-						});
-
-						// The invoice names the subscription this event is about, so it
-						// wins. The organization-level row is only a fallback: the lookup
-						// above is unordered and an organization that resubscribed has
-						// several, so preferring it can check — or notify Slack about —
-						// a subscription that has nothing to do with this invoice.
-						const stripeSubId =
-							(invoice.parent?.subscription_details?.subscription as
-								| string
-								| undefined) ?? subscription?.stripeSubscriptionId;
-
-						const isFinalAttempt = invoice.next_payment_attempt == null;
-						const isFirstAttempt = (invoice.attempt_count ?? 0) <= 1;
-
-						// Stripe keeps retrying the closing invoice after someone cancels,
-						// so this still fires for subscriptions that are already gone.
-						// Warning them they are about to lose access would be false, and
-						// nagging someone who already left is worse than saying nothing.
-						const alreadyCancelled = stripeSubId
-							? await isStripeSubscriptionCancelled(stripeSubId)
-							: false;
-
-						// Stripe fires this on every retry. Mailing all of them trains
-						// people to ignore the one that matters, so only the opening
-						// notice and the last-chance notice go out.
-						if (!alreadyCancelled && (isFirstAttempt || isFinalAttempt)) {
-							const recipients = await getOrganizationBillingRecipients(org.id);
-							const amount = formatPrice(invoice.amount_due, invoice.currency);
-							const nextRetryDate = invoice.next_payment_attempt
-								? new Date(invoice.next_payment_attempt * 1000)
-								: null;
-
-							await resend.batch.send(
-								recipients.map((recipient) => ({
-									from: "Superset <noreply@superset.sh>",
-									to: recipient.email,
-									subject: isFinalAttempt
-										? `Final notice: payment failed for ${org.name}`
-										: `Payment failed for ${org.name}`,
-									react: PaymentFailedEmail({
-										recipientName: recipient.name,
-										organizationName: org.name,
-										planName: subscription?.plan ?? "Pro",
-										amount,
-										nextRetryDate,
-										// Anyone holding the link can settle a hosted invoice,
-										// so every billing recipient gets it. The old
-										// owners-only gate existed because this used to be a
-										// billing portal session, which needs ownership.
-										payInvoiceUrl: invoice.hosted_invoice_url ?? undefined,
-									}),
-								})),
-							);
-						}
-
-						if (stripeSubId) {
-							try {
-								await qstash.publishJSON({
-									url: NOTIFY_SLACK_URL,
-									body: {
-										eventType: "payment_failed",
-										stripeSubscriptionId: stripeSubId,
-										amountCents: invoice.amount_due,
-										currency: invoice.currency,
-									},
-									retries: 3,
-								});
-							} catch (error) {
-								console.error(
-									"[stripe/payment-failed] Failed to queue Slack notification:",
-									error,
-								);
-							}
-						}
-
-						await captureBillingEvent({
-							event: "payment_failed",
-							organizationId: org.id,
-							initiatedByUserId:
-								invoice.parent?.subscription_details?.metadata?.userId,
-							idempotencyKey: event.id,
-							occurredAt: new Date(event.created * 1000),
-							properties: {
-								// No money moved, so this must not be `revenue`.
-								amount_due: invoice.amount_due,
-								currency: invoice.currency,
-								attempt_count: invoice.attempt_count ?? 0,
-								is_final_attempt: isFinalAttempt,
-								already_cancelled: alreadyCancelled,
-								stripe_subscription_id: stripeSubId ?? null,
-							},
-						});
-					}
-
-					if (event.type === "invoice.upcoming") {
-						const invoice = event.data.object as Stripe.Invoice;
-
-						const customerId =
-							typeof invoice.customer === "string"
-								? invoice.customer
-								: invoice.customer?.id;
-
-						if (!customerId) return;
-
-						const stripeSubId = invoice.parent?.subscription_details
-							?.subscription as string | undefined;
-
-						if (!stripeSubId) return;
-
-						// Matched on the Stripe id, not the organization: an organization
-						// that resubscribed has several rows and the wrong one can win.
-						const subscription = await db.query.subscriptions.findFirst({
-							where: eq(subscriptions.stripeSubscriptionId, stripeSubId),
-						});
-
-						// Annual only — see RenewalUpcomingEmail for why monthly plans and
-						// seat changes are deliberately left out.
-						if (subscription?.billingInterval !== "yearly") return;
-
-						const renewsAtSeconds =
-							invoice.next_payment_attempt ?? invoice.period_end;
-
-						if (!renewsAtSeconds) return;
-
-						const org = await db.query.organizations.findFirst({
-							where: eq(authSchema.organizations.stripeCustomerId, customerId),
-						});
-
-						if (!org) return;
-
-						const recipients = await getOrganizationBillingRecipients(org.id);
-						// Max, not sum: a proration line carries its own quantity and
-						// adding them together reports more seats than exist.
-						const seatCount = invoice.lines.data.reduce(
-							(largest, line) => Math.max(largest, line.quantity ?? 0),
-							0,
-						);
-
-						await resend.batch.send(
-							recipients.map((recipient) => ({
-								from: "Superset <noreply@superset.sh>",
-								to: recipient.email,
-								subject: `${org.name}'s ${subscription.plan} plan renews soon`,
-								react: RenewalUpcomingEmail({
-									recipientName: recipient.name,
-									organizationName: org.name,
-									planName: subscription.plan,
-									amount: formatPrice(invoice.amount_due, invoice.currency),
-									renewsAt: new Date(renewsAtSeconds * 1000),
-									seatCount: Math.max(1, seatCount),
-									isOwner: recipient.role === "owner",
-								}),
-							})),
-						);
-					}
-
-					if (event.type === "invoice.paid") {
-						const invoice = event.data.object as Stripe.Invoice;
-
-						const subscriptionDetails =
-							invoice.parent?.subscription_details ?? undefined;
-						const stripeSubId = subscriptionDetails?.subscription as
-							| string
-							| undefined;
-
-						if (stripeSubId) {
-							try {
-								await qstash.publishJSON({
-									url: NOTIFY_SLACK_URL,
-									body: {
-										eventType: "payment_succeeded",
-										stripeSubscriptionId: stripeSubId,
-										amountCents: invoice.amount_paid,
-										currency: invoice.currency,
-										periodStart: invoice.period_start ?? 0,
-										periodEnd: invoice.period_end ?? 0,
-									},
-									retries: 3,
-								});
-							} catch (error) {
-								console.error(
-									"[stripe/payment-succeeded] Failed to queue Slack notification:",
-									error,
-								);
-							}
-						}
-
-						// `referenceId` is the organization id — Better Auth writes it
-						// onto the subscription, and Stripe copies subscription metadata
-						// onto every invoice it raises, so this needs no lookup.
-						const organizationId = subscriptionDetails?.metadata?.referenceId;
-
-						if (organizationId) {
-							await captureBillingEvent({
-								event: "payment_succeeded",
-								organizationId,
-								initiatedByUserId: subscriptionDetails?.metadata?.userId,
-								idempotencyKey: event.id,
-								occurredAt: new Date(event.created * 1000),
-								properties: {
-									revenue: invoice.amount_paid,
-									currency: invoice.currency,
-									// `subscription_create` is the first payment, everything
-									// else is a renewal or a seat change.
-									billing_reason: invoice.billing_reason,
-									stripe_subscription_id: stripeSubId ?? null,
-								},
-							});
-						}
-					}
-
-					// Stripe expires an unpaid Checkout session ~24h after it opens, so
-					// this arrives late by design. It is the only signal that someone
-					// reached the payment page and did not pay — the paid side comes
-					// through `onSubscriptionComplete` instead.
-					if (event.type === "checkout.session.expired") {
-						const session = event.data.object as Stripe.Checkout.Session;
-						const organizationId = session.metadata?.organizationId;
-
-						if (organizationId) {
-							await captureBillingEvent({
-								event: "checkout_abandoned",
-								organizationId,
-								initiatedByUserId: session.metadata?.userId,
-								idempotencyKey: event.id,
-								occurredAt: new Date(event.created * 1000),
-								properties: {
-									// No money moved, so this must not be `revenue`.
-									abandoned_value: session.amount_total ?? 0,
-									currency: session.currency ?? "usd",
-									stripe_session_id: session.id,
-								},
-							});
-						}
-					}
-
-					if (event.type === "customer.subscription.updated") {
-						const stripeSubscription = event.data.object as Stripe.Subscription;
-						const previousAttributes = event.data.previous_attributes as
-							| Partial<Stripe.Subscription>
-							| undefined;
-
-						const previousPriceId =
-							previousAttributes?.items?.data?.[0]?.price?.id;
-						const currentPriceId = stripeSubscription.items.data[0]?.price?.id;
-
-						if (!previousPriceId || previousPriceId === currentPriceId) return;
-
-						const previousInterval =
-							previousAttributes?.items?.data?.[0]?.price?.recurring
-								?.interval === "year"
-								? "yearly"
-								: "monthly";
-
-						try {
-							await qstash.publishJSON({
-								url: NOTIFY_SLACK_URL,
-								body: {
-									eventType: "plan_changed",
-									stripeSubscriptionId: stripeSubscription.id,
-									previousInterval,
-								},
-								retries: 3,
-							});
-						} catch (error) {
-							console.error(
-								"[stripe/plan-changed] Failed to queue Slack notification:",
-								error,
-							);
-						}
-					}
-				},
-			},
-		}),
+					}),
+				]),
 		acceptInvitationEndpoint,
 	],
 });

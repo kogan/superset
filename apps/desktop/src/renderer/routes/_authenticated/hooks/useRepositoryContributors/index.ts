@@ -1,0 +1,1 @@
+export { useRepositoryContributors } from "./useRepositoryContributors";

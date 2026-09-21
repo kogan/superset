@@ -128,7 +128,7 @@ describe("parseCodexRolloutTranscript", () => {
 		const parsed = parseCodexRolloutTranscript(
 			lines.map((line) => JSON.stringify(line)).join("\n"),
 		);
-		expect(parsed.description).toBe("Carver · /root/summarize");
+		expect(parsed.description).toBe("Summarize");
 		expect(
 			parsed.entries.map((e) => [e.kind, e.toolName ?? "", e.text]),
 		).toEqual([

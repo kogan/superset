@@ -12,6 +12,9 @@ if (process.env.NODE_ENV !== "production") {
 }
 
 const config: NextConfig = {
+	output: "standalone",
+	outputFileTracingRoot: join(process.cwd(), "../.."),
+	serverExternalPackages: ["@electric-sql/pglite"],
 	reactCompiler: true,
 	typescript: { ignoreBuildErrors: true },
 	// Compiles @lingui/core/macro, reached through @superset/shared, at build
@@ -21,13 +24,15 @@ const config: NextConfig = {
 	},
 };
 
-export default withSentryConfig(config, {
-	org: "superset-sh",
-	project: "api",
-	silent: !process.env.CI,
-	authToken: process.env.SENTRY_AUTH_TOKEN,
-	widenClientFileUpload: true,
-	tunnelRoute: "/monitoring",
-	disableLogger: true,
-	automaticVercelMonitors: true,
-});
+export default process.env.SUPERESTSET_LOCAL === "1"
+	? config
+	: withSentryConfig(config, {
+			org: "superset-sh",
+			project: "api",
+			silent: !process.env.CI,
+			authToken: process.env.SENTRY_AUTH_TOKEN,
+			widenClientFileUpload: true,
+			tunnelRoute: "/monitoring",
+			disableLogger: true,
+			automaticVercelMonitors: true,
+		});

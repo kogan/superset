@@ -25,9 +25,9 @@ const TEST_OPENCODE_PLUGIN_DIR = path.join(TEST_OPENCODE_CONFIG_DIR, "plugin");
 let mockedHomeDir = path.join(TEST_ROOT, "home");
 
 mock.module("./notify-hook", () => ({
-	NOTIFY_SCRIPT_NAME: "notify.sh",
-	NOTIFY_SCRIPT_MARKER: "# Superset agent notification hook v19",
-	getNotifyScriptPath: () => path.join(TEST_HOOKS_DIR, "notify.sh"),
+	NOTIFY_SCRIPT_NAME: "superestset-notify.sh",
+	NOTIFY_SCRIPT_MARKER: "# SuperestSet agent notification hook v19",
+	getNotifyScriptPath: () => path.join(TEST_HOOKS_DIR, "superestset-notify.sh"),
 	getNotifyScriptContent: () => "#!/bin/bash\nexit 0\n",
 	createNotifyScript: () => {},
 }));
@@ -138,9 +138,9 @@ describe("agent-wrappers opencode", () => {
 	beforeEach(() => {
 		delete (
 			globalThis as typeof globalThis & {
-				__supersetOpencodeNotifyPluginV11?: boolean;
+				__superestsetOpencodeNotifyPluginV11?: boolean;
 			}
-		).__supersetOpencodeNotifyPluginV11;
+		).__superestsetOpencodeNotifyPluginV11;
 	});
 
 	afterEach(() => {
@@ -428,10 +428,10 @@ describe("agent-wrappers copilot", () => {
 		rmSync(TEST_ROOT, { recursive: true, force: true });
 	});
 
-	it("rewrites stale superset-notify.json with current hook path", () => {
+	it("rewrites stale superestset-notify.json with current hook path", () => {
 		const projectDir = path.join(TEST_ROOT, "project");
 		const hooksDir = path.join(projectDir, ".github", "hooks");
-		const hookFile = path.join(hooksDir, "superset-notify.json");
+		const hookFile = path.join(hooksDir, "superestset-notify.json");
 		const gitInfoDir = path.join(projectDir, ".git", "info");
 		const realBinDir = path.join(TEST_ROOT, "real-bin");
 		const realCopilot = path.join(realBinDir, "copilot");
@@ -484,7 +484,7 @@ describe("agent-wrappers copilot", () => {
 		expect(wrapper).not.toContain("-c 'notify=");
 		expect(wrapper).toContain('export SUPERSET_AGENT_ID="codex"');
 
-		expect(wrapper).toContain("# Superset agent-wrapper v5");
+		expect(wrapper).toContain("# SuperestSet agent-wrapper v5");
 
 		// Native hooks remain enabled, but the process-scoped TUI session log is
 		// the reliable Start signal for installed Codex TUI builds.
@@ -519,7 +519,7 @@ describe("agent-wrappers copilot", () => {
 		expect(wrapper).toContain("_approval_request");
 
 		const execLine = buildCodexWrapperExecLine(
-			path.join(TEST_HOOKS_DIR, "notify.sh"),
+			path.join(TEST_HOOKS_DIR, "superestset-notify.sh"),
 		);
 		expect(execLine).not.toContain("{{NOTIFY_PATH}}");
 		expect(wrapper).toContain(execLine);
@@ -691,7 +691,7 @@ exit 0
 		const realBinDir = path.join(TEST_ROOT, "real-bin");
 		const realCodex = path.join(realBinDir, "codex");
 		const wrapperPath = path.join(TEST_BIN_DIR, "codex");
-		const notifyPath = path.join(TEST_HOOKS_DIR, "notify.sh");
+		const notifyPath = path.join(TEST_HOOKS_DIR, "superestset-notify.sh");
 		const notifyCapturePath = path.join(TEST_ROOT, "codex-notify-events.txt");
 		const debugLogPath = path.join(TEST_ROOT, "codex-debug.log");
 
@@ -747,7 +747,7 @@ exit 0
 		const realBinDir = path.join(TEST_ROOT, "real-bin");
 		const realCodex = path.join(realBinDir, "codex");
 		const wrapperPath = path.join(TEST_BIN_DIR, "codex");
-		const notifyPath = path.join(TEST_HOOKS_DIR, "notify.sh");
+		const notifyPath = path.join(TEST_HOOKS_DIR, "superestset-notify.sh");
 		const notifyCapturePath = path.join(
 			TEST_ROOT,
 			"codex-legacy-notify-events.txt",
@@ -807,7 +807,7 @@ exit 0
 		const realBinDir = path.join(TEST_ROOT, "real-bin");
 		const realCodex = path.join(realBinDir, "codex");
 		const wrapperPath = path.join(TEST_BIN_DIR, "codex");
-		const notifyPath = path.join(TEST_HOOKS_DIR, "notify.sh");
+		const notifyPath = path.join(TEST_HOOKS_DIR, "superestset-notify.sh");
 		const notifyCapturePath = path.join(
 			TEST_ROOT,
 			"codex-rollout-notify-events.txt",
@@ -867,7 +867,7 @@ exit 0
 		const realBinDir = path.join(TEST_ROOT, "real-bin");
 		const realCodex = path.join(realBinDir, "codex");
 		const wrapperPath = path.join(TEST_BIN_DIR, "codex");
-		const notifyPath = path.join(TEST_HOOKS_DIR, "notify.sh");
+		const notifyPath = path.join(TEST_HOOKS_DIR, "superestset-notify.sh");
 		const notifyCapturePath = path.join(
 			TEST_ROOT,
 			"codex-session-end-events.txt",
@@ -951,7 +951,7 @@ exit 0
 				".config",
 				"amp",
 				"plugins",
-				"superset-lifecycle.ts",
+				"superestset-lifecycle.ts",
 			),
 		);
 		expect(plugin).toBe(getAmpPluginContent());
@@ -986,8 +986,8 @@ exit 0
 	it("replaces stale Cursor hook commands from old superset paths", () => {
 		const cursorHooksPath = path.join(mockedHomeDir, ".cursor", "hooks.json");
 		const staleHookPath =
-			"/tmp/worktree/superset-dev-data/hooks/cursor-hook.sh";
-		const currentHookPath = "/tmp/.superset-new/hooks/cursor-hook.sh";
+			"/tmp/worktree/superestset-dev-data/hooks/cursor-hook.sh";
+		const currentHookPath = "/tmp/.superestset-new/hooks/cursor-hook.sh";
 
 		mkdirSync(path.dirname(cursorHooksPath), { recursive: true });
 		writeFileSync(
@@ -1066,8 +1066,8 @@ exit 0
 			"settings.json",
 		);
 		const staleHookPath =
-			"/tmp/worktree/superset-dev-data/hooks/gemini-hook.sh";
-		const currentHookPath = "/tmp/.superset-new/hooks/gemini-hook.sh";
+			"/tmp/worktree/superestset-dev-data/hooks/gemini-hook.sh";
+		const currentHookPath = "/tmp/.superestset-new/hooks/gemini-hook.sh";
 
 		mkdirSync(path.dirname(geminiSettingsPath), { recursive: true });
 		writeFileSync(
@@ -1196,8 +1196,8 @@ exit 0
 			".mastracode",
 			"hooks.json",
 		);
-		const staleHookPath = "/tmp/.superset-old/hooks/notify.sh";
-		const currentHookPath = "/tmp/.superset-new/hooks/notify.sh";
+		const staleHookPath = "/tmp/.superestset-old/hooks/superestset-notify.sh";
+		const currentHookPath = "/tmp/.superestset-new/hooks/superestset-notify.sh";
 
 		mkdirSync(path.dirname(mastraHooksPath), { recursive: true });
 		writeFileSync(
@@ -1263,8 +1263,8 @@ exit 0
 			".factory",
 			"settings.json",
 		);
-		const staleHookPath = "/tmp/.superset-old/hooks/notify.sh";
-		const currentHookPath = "/tmp/.superset-new/hooks/notify.sh";
+		const staleHookPath = "/tmp/.superestset-old/hooks/superestset-notify.sh";
+		const currentHookPath = "/tmp/.superestset-new/hooks/superestset-notify.sh";
 
 		mkdirSync(path.dirname(droidSettingsPath), { recursive: true });
 		writeFileSync(
@@ -1371,7 +1371,9 @@ exit 0
 		writeFileSync(droidSettingsPath, invalidJson);
 
 		expect(
-			getDroidSettingsJsonContent("/tmp/.superset-new/hooks/notify.sh"),
+			getDroidSettingsJsonContent(
+				"/tmp/.superestset-new/hooks/superestset-notify.sh",
+			),
 		).toBeNull();
 
 		createDroidSettingsJson();
@@ -1390,7 +1392,9 @@ exit 0
 		writeFileSync(droidSettingsPath, JSON.stringify("not-an-object"));
 
 		expect(
-			getDroidSettingsJsonContent("/tmp/.superset-new/hooks/notify.sh"),
+			getDroidSettingsJsonContent(
+				"/tmp/.superestset-new/hooks/superestset-notify.sh",
+			),
 		).toBeNull();
 	});
 });
@@ -1430,7 +1434,7 @@ describe("agent-wrappers claude settings.json", () => {
 	});
 
 	it("points Muse settings.json at the managed hooks file and allowlists Superset's env", () => {
-		const managed = "/Users/me/.superset/hooks/muse/hooks.json";
+		const managed = "/Users/me/.superestset/hooks/muse/hooks.json";
 		const content = getMuseSettingsJsonContent(
 			JSON.stringify({
 				schema_version: 1,
@@ -1463,16 +1467,17 @@ describe("agent-wrappers claude settings.json", () => {
 					schema_version: 1,
 					managed_hooks_path: "/etc/muse/hooks.json",
 				}),
-				"/Users/me/.superset/hooks/muse/hooks.json",
+				"/Users/me/.superestset/hooks/muse/hooks.json",
 			),
 		).toBeNull();
 		// A previous Superset home (dev data, another install) is ours to replace.
 		expect(
 			getMuseSettingsJsonContent(
 				JSON.stringify({
-					managed_hooks_path: "/tmp/w/superset-dev-data/hooks/muse/hooks.json",
+					managed_hooks_path:
+						"/tmp/w/superestset-dev-data/hooks/muse/hooks.json",
 				}),
-				"/Users/me/.superset/hooks/muse/hooks.json",
+				"/Users/me/.superestset/hooks/muse/hooks.json",
 			),
 		).not.toBeNull();
 	});
@@ -1482,7 +1487,7 @@ describe("agent-wrappers claude settings.json", () => {
 			JSON.stringify({
 				schema_version: 1,
 				tui: { theme: "dark" },
-				managed_hooks_path: "/Users/me/.superset/hooks/muse/hooks.json",
+				managed_hooks_path: "/Users/me/.superestset/hooks/muse/hooks.json",
 				managed_hooks_env_vars: ["MY_VAR", ...MUSE_HOOK_ENV_VARS],
 			}),
 		);
@@ -1502,7 +1507,7 @@ describe("agent-wrappers claude settings.json", () => {
 	});
 
 	it("creates Devin config.json with its schema version and Claude-shaped hooks", () => {
-		const notifyPath = "/tmp/.superset/hooks/notify.sh";
+		const notifyPath = "/tmp/.superestset/hooks/superestset-notify.sh";
 		const content = requireContent(getDevinConfigJsonContent(notifyPath));
 		const parsed = JSON.parse(content) as {
 			version?: number;
@@ -1538,7 +1543,7 @@ describe("agent-wrappers claude settings.json", () => {
 	});
 
 	it("creates Claude settings.json with hooks when no file exists", () => {
-		const notifyPath = "/tmp/.superset/hooks/notify.sh";
+		const notifyPath = "/tmp/.superestset/hooks/superestset-notify.sh";
 		const content = getClaudeGlobalSettingsJsonContent(notifyPath);
 		expect(content).not.toBeNull();
 		if (content === null) throw new Error("Expected content");
@@ -1578,7 +1583,9 @@ describe("agent-wrappers claude settings.json", () => {
 
 	it("registers the Artifact guard as a PreToolUse hook", () => {
 		const content = requireContent(
-			getClaudeGlobalSettingsJsonContent("/tmp/.superset/hooks/notify.sh"),
+			getClaudeGlobalSettingsJsonContent(
+				"/tmp/.superestset/hooks/superestset-notify.sh",
+			),
 		);
 		const parsed = JSON.parse(content) as {
 			hooks: Record<
@@ -1596,9 +1603,9 @@ describe("agent-wrappers claude settings.json", () => {
 		expect(guards).toHaveLength(1);
 		expect(guards[0]?.hooks[0]?.command).toBe(managedArtifactGuardCommand);
 		expect(managedArtifactGuardCommand).toContain(
-			"$SUPERSET_HOME_DIR/hooks/artifact-guard.sh",
+			"$SUPERSET_HOME_DIR/hooks/superestset-artifact-guard.sh",
 		);
-		expect(managedArtifactGuardCommand).not.toContain("notify.sh");
+		expect(managedArtifactGuardCommand).not.toContain("superestset-notify.sh");
 	});
 
 	it("does not duplicate the Artifact guard when merging over its own output", () => {
@@ -1609,7 +1616,7 @@ describe("agent-wrappers claude settings.json", () => {
 		);
 		mkdirSync(path.dirname(claudeSettingsPath), { recursive: true });
 
-		const notifyPath = "/tmp/.superset/hooks/notify.sh";
+		const notifyPath = "/tmp/.superestset/hooks/superestset-notify.sh";
 		const first = requireContent(
 			getClaudeGlobalSettingsJsonContent(notifyPath),
 		);
@@ -1637,7 +1644,9 @@ describe("agent-wrappers claude settings.json", () => {
 		writeFileSync(
 			claudeSettingsPath,
 			requireContent(
-				getClaudeGlobalSettingsJsonContent("/tmp/.superset/hooks/notify.sh"),
+				getClaudeGlobalSettingsJsonContent(
+					"/tmp/.superestset/hooks/superestset-notify.sh",
+				),
 			),
 		);
 		const withUserHook = JSON.parse(
@@ -1665,7 +1674,9 @@ describe("agent-wrappers claude settings.json", () => {
 		const remaining = parsed.hooks?.PreToolUse ?? [];
 		expect(
 			remaining.some((def) =>
-				def.hooks.some((hook) => hook.command.includes("artifact-guard.sh")),
+				def.hooks.some((hook) =>
+					hook.command.includes("superestset-artifact-guard.sh"),
+				),
 			),
 		).toBe(false);
 		expect(
@@ -1700,7 +1711,7 @@ describe("agent-wrappers claude settings.json", () => {
 			),
 		);
 
-		const notifyPath = "/tmp/.superset/hooks/notify.sh";
+		const notifyPath = "/tmp/.superestset/hooks/superestset-notify.sh";
 		const content = getClaudeGlobalSettingsJsonContent(notifyPath);
 		expect(content).not.toBeNull();
 		if (content === null) throw new Error("Expected content");
@@ -1739,8 +1750,8 @@ describe("agent-wrappers claude settings.json", () => {
 			".claude",
 			"settings.json",
 		);
-		const staleHookPath = "/tmp/.superset-old/hooks/notify.sh";
-		const currentHookPath = "/tmp/.superset-new/hooks/notify.sh";
+		const staleHookPath = "/tmp/.superestset-old/hooks/superestset-notify.sh";
+		const currentHookPath = "/tmp/.superestset-new/hooks/superestset-notify.sh";
 
 		mkdirSync(path.dirname(claudeSettingsPath), { recursive: true });
 		writeFileSync(
@@ -1837,7 +1848,9 @@ describe("agent-wrappers claude settings.json", () => {
 		writeFileSync(claudeSettingsPath, invalidJson);
 
 		expect(
-			getClaudeGlobalSettingsJsonContent("/tmp/.superset/hooks/notify.sh"),
+			getClaudeGlobalSettingsJsonContent(
+				"/tmp/.superestset/hooks/superestset-notify.sh",
+			),
 		).toBeNull();
 
 		createClaudeSettingsJson();
@@ -1857,7 +1870,9 @@ describe("agent-wrappers claude settings.json", () => {
 		writeFileSync(claudeSettingsPath, JSON.stringify("not-an-object"));
 
 		expect(
-			getClaudeGlobalSettingsJsonContent("/tmp/.superset/hooks/notify.sh"),
+			getClaudeGlobalSettingsJsonContent(
+				"/tmp/.superestset/hooks/superestset-notify.sh",
+			),
 		).toBeNull();
 	});
 });
@@ -1874,7 +1889,7 @@ describe("agent-wrappers codex hooks.json", () => {
 	});
 
 	it("creates Codex hooks.json with prompt and lifecycle hooks when no file exists", () => {
-		const notifyPath = "/tmp/.superset/hooks/notify.sh";
+		const notifyPath = "/tmp/.superestset/hooks/superestset-notify.sh";
 		const content = getCodexGlobalHooksJsonContent(notifyPath);
 		expect(content).not.toBeNull();
 		if (content === null) throw new Error("Expected content");
@@ -1974,7 +1989,7 @@ describe("agent-wrappers codex hooks.json", () => {
 			),
 		);
 
-		const notifyPath = "/tmp/.superset/hooks/notify.sh";
+		const notifyPath = "/tmp/.superestset/hooks/superestset-notify.sh";
 		const content = getCodexGlobalHooksJsonContent(notifyPath);
 		expect(content).not.toBeNull();
 		if (content === null) throw new Error("Expected content");
@@ -2052,8 +2067,8 @@ describe("agent-wrappers codex hooks.json", () => {
 
 	it("replaces stale Codex hook commands from old superset paths", () => {
 		const codexHooksPath = path.join(mockedHomeDir, ".codex", "hooks.json");
-		const staleHookPath = "/tmp/.superset-old/hooks/notify.sh";
-		const currentHookPath = "/tmp/.superset-new/hooks/notify.sh";
+		const staleHookPath = "/tmp/.superestset-old/hooks/superestset-notify.sh";
+		const currentHookPath = "/tmp/.superestset-new/hooks/superestset-notify.sh";
 
 		mkdirSync(path.dirname(codexHooksPath), { recursive: true });
 		writeFileSync(
@@ -2138,8 +2153,8 @@ describe("agent-wrappers codex hooks.json", () => {
 	it("removes stale Superset-managed UserPromptSubmit hooks without touching user hooks", () => {
 		const codexHooksPath = path.join(mockedHomeDir, ".codex", "hooks.json");
 		const staleHookPath =
-			"/Users/test/.superset/worktrees/repo/superset-dev-data/hooks/notify.sh";
-		const currentHookPath = "/tmp/.superset-new/hooks/notify.sh";
+			"/Users/test/.superestset/worktrees/repo/superestset-dev-data/hooks/superestset-notify.sh";
+		const currentHookPath = "/tmp/.superestset-new/hooks/superestset-notify.sh";
 
 		mkdirSync(path.dirname(codexHooksPath), { recursive: true });
 		writeFileSync(
@@ -2203,11 +2218,11 @@ describe("agent-wrappers codex hooks.json", () => {
 	it("reaps stale notify.sh paths from in-repo dev worktrees", () => {
 		const codexHooksPath = path.join(mockedHomeDir, ".codex", "hooks.json");
 		// Real-world layout: a dev worktree lives under <repo>/.worktrees/<name>
-		// and its dev setup writes SUPERSET_HOME_DIR=<worktree>/superset-dev-data.
-		// There is no /.superset/ segment anywhere in the path.
+		// and its dev setup writes SUPERSET_HOME_DIR=<worktree>/superestset-dev-data.
+		// There is no /.superestset/ segment anywhere in the path.
 		const staleHookPath =
-			"/Users/test/code/superset/.worktrees/old-branch/superset-dev-data/hooks/notify.sh";
-		const currentHookPath = "/tmp/.superset-new/hooks/notify.sh";
+			"/Users/test/code/superset/.worktrees/old-branch/superestset-dev-data/hooks/superestset-notify.sh";
+		const currentHookPath = "/tmp/.superestset-new/hooks/superestset-notify.sh";
 
 		mkdirSync(path.dirname(codexHooksPath), { recursive: true });
 		writeFileSync(
@@ -2272,7 +2287,9 @@ describe("agent-wrappers codex hooks.json", () => {
 		writeFileSync(codexHooksPath, invalidJson);
 
 		expect(
-			getCodexGlobalHooksJsonContent("/tmp/.superset/hooks/notify.sh"),
+			getCodexGlobalHooksJsonContent(
+				"/tmp/.superestset/hooks/superestset-notify.sh",
+			),
 		).toBeNull();
 
 		createCodexHooksJson();
@@ -2287,7 +2304,9 @@ describe("agent-wrappers codex hooks.json", () => {
 		writeFileSync(codexHooksPath, JSON.stringify("not-an-object"));
 
 		expect(
-			getCodexGlobalHooksJsonContent("/tmp/.superset/hooks/notify.sh"),
+			getCodexGlobalHooksJsonContent(
+				"/tmp/.superestset/hooks/superestset-notify.sh",
+			),
 		).toBeNull();
 	});
 });
@@ -2340,7 +2359,7 @@ describe("vibe hooks.toml", () => {
 			"",
 			VIBE_HOOKS_MARKER_START,
 			"[[hooks]]",
-			'name = "superset-notify-before-tool"',
+			'name = "superestset-notify-before-tool"',
 			'type = "before_tool"',
 			"",
 		].join("\n");
@@ -2358,7 +2377,7 @@ describe("vibe hooks.toml", () => {
 		const partial = [
 			VIBE_HOOKS_MARKER_START,
 			"[[hooks]]",
-			'name = "superset-notify-before-tool"',
+			'name = "superestset-notify-before-tool"',
 			'type = "before_tool"',
 			"command = 'true'",
 			// NO end marker
@@ -2375,9 +2394,9 @@ describe("vibe hooks.toml", () => {
 		// Exactly one complete managed block, no dangling/duplicate markers.
 		expect(out.split(VIBE_HOOKS_MARKER_START).length - 1).toBe(1);
 		expect(out.split(VIBE_HOOKS_MARKER_END).length - 1).toBe(1);
-		expect(out.split('name = "superset-notify-before-tool"').length - 1).toBe(
-			1,
-		);
+		expect(
+			out.split('name = "superestset-notify-before-tool"').length - 1,
+		).toBe(1);
 	});
 });
 
@@ -2588,7 +2607,7 @@ describe("agent-wrappers pi", () => {
 				".pi",
 				"agent",
 				"extensions",
-				"superset-hooks.ts",
+				"superestset-hooks.ts",
 			),
 		);
 
@@ -2638,7 +2657,7 @@ describe("managed hooks teardown", () => {
 									{
 										type: "command",
 										command:
-											"SUPERSET_AGENT_ID=droid '/tmp/.superset/hooks/notify.sh'",
+											"SUPERSET_AGENT_ID=droid '/tmp/.superestset/hooks/superestset-notify.sh'",
 									},
 								],
 							},
@@ -2761,9 +2780,11 @@ describe("managed hooks teardown", () => {
 		mkdirSync(path.dirname(hooksPath), { recursive: true });
 		writeFileSync(hooksPath, "{not-json");
 
-		expect(getMastraHooksJsonContent("/tmp/.superset/hooks/notify.sh")).toBe(
-			null,
-		);
+		expect(
+			getMastraHooksJsonContent(
+				"/tmp/.superestset/hooks/superestset-notify.sh",
+			),
+		).toBe(null);
 	});
 
 	it("removes the kimi managed block, deleting the file only when nothing else remains", () => {
@@ -2815,7 +2836,7 @@ describe("managed hooks junk tolerance", () => {
 		);
 
 		const content = getDroidSettingsJsonContent(
-			"/tmp/.superset/hooks/notify.sh",
+			"/tmp/.superestset/hooks/superestset-notify.sh",
 		);
 		expect(content).not.toBeNull();
 		const parsed = JSON.parse(content as string);
@@ -2903,7 +2924,7 @@ describe("agent-wrappers omp", () => {
 				".omp",
 				"agent",
 				"extensions",
-				"superset-hooks.ts",
+				"superestset-hooks.ts",
 			),
 		);
 
@@ -2919,7 +2940,7 @@ describe("agent-wrappers omp", () => {
 		process.env.OMP_CODING_AGENT_DIR = customAgentDir;
 
 		expect(getOmpExtensionPath()).toBe(
-			path.join(customAgentDir, "extensions", "superset-hooks.ts"),
+			path.join(customAgentDir, "extensions", "superestset-hooks.ts"),
 		);
 	});
 
@@ -2930,7 +2951,7 @@ describe("agent-wrappers omp", () => {
 				mockedHomeDir,
 				"custom-omp-agent",
 				"extensions",
-				"superset-hooks.ts",
+				"superestset-hooks.ts",
 			),
 		);
 
@@ -2939,7 +2960,7 @@ describe("agent-wrappers omp", () => {
 			path.join(
 				`${mockedHomeDir}\\custom-omp-agent`,
 				"extensions",
-				"superset-hooks.ts",
+				"superestset-hooks.ts",
 			),
 		);
 	});
@@ -2953,7 +2974,7 @@ describe("agent-wrappers omp", () => {
 				".omp",
 				"agent",
 				"extensions",
-				"superset-hooks.ts",
+				"superestset-hooks.ts",
 			),
 		);
 		expect(getOmpExtensionPath()).not.toBe(getPiExtensionPath());

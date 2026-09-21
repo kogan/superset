@@ -1,7 +1,7 @@
 import { realpathSync } from "node:fs";
-import { homedir } from "node:os";
 import { join, resolve, sep } from "node:path";
 import { TRPCError } from "@trpc/server";
+import { defaultWorkspaceFilesHomeDir } from "../../../../superset-home.ts";
 
 /**
  * Managed home for project-less "session" workspace folders. Sibling of
@@ -9,7 +9,7 @@ import { TRPCError } from "@trpc/server";
  * exactly one session workspace, created and removed by the host.
  */
 export function defaultSessionsRoot(): string {
-	return join(homedir(), ".superset", "sessions");
+	return join(defaultWorkspaceFilesHomeDir(), "sessions");
 }
 
 /** Resolve `<sessionsRoot>/<folderName>` with a path-traversal guard. */

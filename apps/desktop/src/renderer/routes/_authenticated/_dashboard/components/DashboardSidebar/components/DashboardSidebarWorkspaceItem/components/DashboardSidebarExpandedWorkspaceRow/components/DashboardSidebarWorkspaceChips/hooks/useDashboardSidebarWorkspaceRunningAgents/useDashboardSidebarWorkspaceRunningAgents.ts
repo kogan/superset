@@ -3,7 +3,8 @@ import {
 	type AgentIdentityId,
 } from "@superset/shared/agent-catalog";
 import { useMemo } from "react";
-import { useSidebarWorkspaceStatus } from "renderer/routes/_authenticated/_dashboard/components/DashboardSidebar/providers/DashboardSidebarWorkspaceStatusProvider";
+import { useSidebarWorkspaceStatus } from "renderer/routes/_authenticated/_dashboard/providers/DashboardWorkspaceStatusProvider";
+import type { SubagentDisplay } from "renderer/routes/_authenticated/_dashboard/utils/subagent-label";
 import type { V2NotificationSource } from "renderer/stores/v2-notifications";
 import type { PaneStatus } from "shared/tabs-types";
 
@@ -13,12 +14,7 @@ import type { PaneStatus } from "shared/tabs-types";
  */
 export type RunningAgentStatus = PaneStatus;
 
-/** A subagent the bound agent spawned, as reported by its hooks. */
-export interface DashboardSidebarRunningSubagent {
-	id: string;
-	/** Harness agent type (`Explore`, `general-purpose`, a Codex role), when known. */
-	agentType?: string;
-}
+export type DashboardSidebarRunningSubagent = SubagentDisplay;
 
 export interface DashboardSidebarRunningAgent {
 	/** Stable key for React lists, derived from the notification source. */
@@ -61,14 +57,31 @@ export function useDashboardSidebarWorkspaceRunningAgents(
 				agentId: binding.agentId,
 				status: statuses.get(binding.terminalId) ?? "idle",
 				startedAt: binding.startedAt,
-				label: AGENT_IDENTITY_LABELS[binding.agentId] ?? binding.agentId,
+				label:
+					binding.title ||
+					AGENT_IDENTITY_LABELS[binding.agentId] ||
+					binding.agentId,
 				subagents: (binding.subagents ?? []).map((subagent) => ({
 					id: subagent.id,
+					description: subagent.description,
+					customName: subagent.customName,
 					...(subagent.agentType ? { agentType: subagent.agentType } : {}),
 				})),
 			});
 		}
-		agents.sort((a, b) => a.startedAt - b.startedAt);
-		return agents;
+		agents.sort(
+			(a, b) =>
+				a.startedAt - b.startedAt || a.terminalId.localeCompare(b.terminalId),
+		);
+		const counts = new Map<string, number>();
+		for (const agent of agents)
+			counts.set(agent.label, (counts.get(agent.label) ?? 0) + 1);
+		const occurrences = new Map<string, number>();
+		return agents.map((agent) => {
+			if ((counts.get(agent.label) ?? 0) < 2) return agent;
+			const occurrence = (occurrences.get(agent.label) ?? 0) + 1;
+			occurrences.set(agent.label, occurrence);
+			return { ...agent, label: `${agent.label} ${occurrence}` };
+		});
 	}, [bindings, statuses]);
 }

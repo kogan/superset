@@ -1,10 +1,13 @@
 import { useLingui } from "@lingui/react/macro";
+import { errorMessage } from "@superset/i18n/errors";
 import { startableCloudEnvironments } from "@superset/shared/cloud-environments";
 import { toast } from "@superset/ui/sonner";
 import { useMatchRoute, useNavigate } from "@tanstack/react-router";
 import { useCallback, useRef, useState } from "react";
 import { useActiveOrganizationId } from "renderer/hooks/useActiveOrganizationId";
 import { cloudTrpc, cloudTrpcClient } from "renderer/lib/cloud-trpc";
+import { electronTrpc } from "renderer/lib/electron-trpc";
+import { electronTrpcClient } from "renderer/lib/trpc-client";
 import { useLocalHostService } from "renderer/routes/_authenticated/providers/LocalHostServiceProvider";
 import type { NewWorkspacePromptContextApi } from "renderer/stores/new-workspace-prompt-context";
 import { usePromptHistoryStore } from "renderer/stores/prompt-history";
@@ -13,6 +16,7 @@ import { useDashboardNewWorkspaceDraft } from "../../../../../DashboardNewWorksp
 import { CLOUD_HOST_ID } from "../../../components/DevicePicker/DevicePicker";
 import type { WorkspaceCreateAgent } from "../../types";
 import type { UseUploadAttachmentsApi } from "../useUploadAttachments";
+import { linkCreatedJiraWorkspace } from "./linkCreatedJiraWorkspace";
 import { resolveNames } from "./resolveNames";
 
 /**
@@ -39,6 +43,28 @@ export function useSubmitWorkspace(
 	const activeOrganizationId = useActiveOrganizationId();
 	const createCloudWorkspace = cloudTrpc.cloudWorkspace.create.useMutation();
 	const utils = cloudTrpc.useUtils();
+	const electronUtils = electronTrpc.useUtils();
+	const linkJira = useCallback(
+		(
+			linkedIssues: typeof draft.linkedIssues,
+			hostId: string,
+			completed: Parameters<typeof linkCreatedJiraWorkspace>[0]["completed"],
+		) => {
+			void linkCreatedJiraWorkspace({
+				linkedIssues,
+				hostId,
+				completed,
+				link: (input) => electronTrpcClient.jira.setWorkspaceLink.mutate(input),
+				refresh: () => electronUtils.jira.listWorkspaceLinks.invalidate(),
+			}).catch((error) =>
+				toast.error(
+					t({ message: "Workspace created, but linking it to Jira failed." }),
+					{ description: errorMessage(error) },
+				),
+			);
+		},
+		[electronUtils, t],
+	);
 
 	const isSession = draft.isSession;
 
@@ -170,6 +196,11 @@ export function useSubmitWorkspace(
 							}
 						: {}),
 				});
+				linkJira(
+					draft.linkedIssues,
+					created.id,
+					Promise.resolve({ ok: true, workspaceId: created.id }),
+				);
 				closeAndResetDraft();
 				// The cloud list is what both the sidebar and the workspace route
 				// read, and nothing used to tell it a workspace had been created —
@@ -302,6 +333,7 @@ export function useSubmitWorkspace(
 
 		closeAndResetDraft();
 		const { completed } = submit({ hostId, snapshot });
+		linkJira(draft.linkedIssues, hostId, completed);
 		void navigate({
 			to: "/v2-workspace/$workspaceId",
 			params: { workspaceId },
@@ -343,6 +375,7 @@ export function useSubmitWorkspace(
 		draft,
 		isSession,
 		matchRoute,
+		linkJira,
 		machineId,
 		navigate,
 		projectId,

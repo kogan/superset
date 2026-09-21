@@ -1,7 +1,9 @@
+import { Trans, useLingui } from "@lingui/react/macro";
 import { Workspace } from "@superset/panes";
 import { FEATURE_FLAGS } from "@superset/shared/constants";
 import { workspaceTrpc } from "@superset/workspace-client";
 import { createFileRoute } from "@tanstack/react-router";
+import { FolderTree } from "lucide-react";
 import { useFeatureFlagEnabled } from "posthog-js/react";
 import { useCallback, useMemo, useState } from "react";
 import { createPortal } from "react-dom";
@@ -147,6 +149,7 @@ function V2WorkspacePage() {
 }
 
 function V2WorkspaceContent() {
+	const { t } = useLingui();
 	const {
 		terminalId,
 		focusRequestId,
@@ -186,6 +189,25 @@ function V2WorkspaceContent() {
 	const showPresetsBar = v2UserPreferences.showPresetsBar;
 	const sidebarOpen = v2UserPreferences.rightSidebarOpen;
 	const { store, isLayoutReady } = useV2WorkspacePaneLayout();
+	const openFiles = useCallback(() => {
+		const state = store.getState();
+		const existing = state.tabs.find((tab) =>
+			Object.values(tab.panes).some((pane) => pane.kind === "file-explorer"),
+		);
+		if (existing) state.setActiveTab(existing.id);
+		else
+			state.addTab({
+				titleOverride: t({ message: "Files" }),
+				panes: [
+					{
+						kind: "file-explorer",
+						pinned: true,
+						data: { kind: "file-explorer" },
+					},
+				],
+			});
+		setRightSidebarOpen(false);
+	}, [store, setRightSidebarOpen, t]);
 	useClearActivePaneAttention({ store });
 	const launcher = useV2TerminalLauncher();
 	const {
@@ -244,6 +266,7 @@ function V2WorkspaceContent() {
 	});
 
 	const {
+		openFilePane,
 		openFilePaneFromTreeClick,
 		revealPath,
 		selectedFilePath,
@@ -334,14 +357,18 @@ function V2WorkspaceContent() {
 		},
 		[closeQuickOpen],
 	);
-	// Picking a file from Quick Open should surface the sidebar/Files tab so
-	// the reveal (expand + highlight + scroll) is actually visible.
 	const handleQuickOpenSelectFile = useCallback(
-		(filePath: string, openInNewTab?: boolean) => {
-			setRightSidebarOpen(true);
-			openFilePaneFromTreeClick(filePath, openInNewTab);
+		(filePath: string, location?: { line: number; column: number }) => {
+			const state = store.getState();
+			const activeTab = state.tabs.find((tab) => tab.id === state.activeTabId);
+			const hasExplorer = Object.values(activeTab?.panes ?? {}).some(
+				(pane) => pane.kind === "file-explorer",
+			);
+			if (!hasExplorer) setRightSidebarOpen(true);
+			if (location) openFilePane(filePath, false, location);
+			else openFilePaneFromTreeClick(filePath);
 		},
-		[openFilePaneFromTreeClick, setRightSidebarOpen],
+		[openFilePane, openFilePaneFromTreeClick, setRightSidebarOpen, store],
 	);
 	const defaultPaneActions = useDefaultPaneActions({ launcher });
 	const onBeforeCloseTab = useTabCloseGuard();
@@ -435,6 +462,7 @@ function V2WorkspaceContent() {
 							renderBelowTabBar={() =>
 								showPresetsBar ? (
 									<V2PresetsBar
+										onOpenFiles={openFiles}
 										matchedPresets={matchedPresets}
 										executePreset={executePreset}
 										showPresetsBar={showPresetsBar}
@@ -447,6 +475,7 @@ function V2WorkspaceContent() {
 									onAddTerminal={addTerminalTab}
 									onAddChatV3={isChatV3Enabled ? addChatV3Tab : undefined}
 									onAddBrowser={addBrowserTab}
+									onAddFiles={openFiles}
 									onAddChanges={openChangesPane}
 									onAddDesktop={isSandbox ? addDesktopTab : undefined}
 									showPresetsBar={showPresetsBar}
@@ -483,6 +512,16 @@ function V2WorkspaceContent() {
 							}
 							renderTabBarTrailing={() => (
 								<div className="flex items-center gap-1">
+									<button
+										type="button"
+										onClick={openFiles}
+										aria-label={t({ message: "Browse files" })}
+										title={t({ message: "Browse files" })}
+										className="no-drag flex h-7 shrink-0 items-center gap-1.5 rounded-md border border-border/60 bg-muted/30 px-2 text-xs text-muted-foreground outline-none transition-colors hover:bg-accent/60 hover:text-foreground focus-visible:bg-accent/60 focus-visible:text-foreground"
+									>
+										<FolderTree className="size-3.5" aria-hidden="true" />
+										<Trans>Files</Trans>
+									</button>
 									{/* The expanded sidebar's header owns the ports pill; the
 									    tab bar only hosts it for the collapsed rail, where
 									    neither the header cluster nor the TopBar is visible. */}
@@ -515,6 +554,7 @@ function V2WorkspaceContent() {
 							)}
 							renderEmptyState={() => (
 								<WorkspaceEmptyState
+									onOpenFiles={openFiles}
 									onOpenBrowser={addBrowserTab}
 									onOpenChanges={openChangesPane}
 									onOpenChatV3={isChatV3Enabled ? addChatV3Tab : undefined}

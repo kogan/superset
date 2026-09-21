@@ -195,8 +195,8 @@ export function useDestroyDialogState({
 		setDeleteBranch,
 		hasChanges: preview?.hasChanges ?? false,
 		hasUnpushedCommits: preview?.hasUnpushedCommits ?? false,
-		sharesProjectCheckout:
-			preview?.canDelete === true && preview.sharesProjectCheckout === true,
+		preservesFiles:
+			preview?.canDelete === true && preview.preservesFiles === true,
 		canConfirm: preview ? preview.canDelete : true,
 		blockingReason: preview && !preview.canDelete ? preview.reason : null,
 		isCheckingStatus: open && inspectState.status === "loading",

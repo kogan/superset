@@ -2,13 +2,20 @@ import { Trans, useLingui } from "@lingui/react/macro";
 import { Button } from "@superset/ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "@superset/ui/popover";
 import { cn } from "@superset/ui/utils";
+import { useState } from "react";
 import { LuListFilter } from "react-icons/lu";
 import { ProjectFilter } from "renderer/routes/_authenticated/_dashboard/components/ProjectFilter";
 import { WindowControlsInset } from "renderer/routes/_authenticated/_dashboard/components/WindowControlsInset";
 import { WorkItemsSearch } from "renderer/routes/_authenticated/_dashboard/components/WorkItemsSearch";
 import type { ProjectQueryTarget } from "renderer/routes/_authenticated/_dashboard/hooks/useProjectQueryTargets";
 import { PullRequestDetailToggle } from "renderer/routes/_authenticated/_dashboard/pull-requests/components/PullRequestDetailToggle";
+import { usePullRequestsFilterStore } from "renderer/routes/_authenticated/_dashboard/pull-requests/stores/pullRequestsFilterStore";
 import type { PullRequestReviewFilter } from "renderer/routes/_authenticated/_dashboard/pull-requests/utils/pullRequestReviewFilter";
+import {
+	getTeamAuthors,
+	isTeamAuthorFilter,
+} from "renderer/routes/_authenticated/_dashboard/pull-requests/utils/pullRequestTeam";
+import { TeamMembersDialog } from "renderer/routes/_authenticated/components/TeamMembersDialog";
 import { AuthorFilter } from "./components/AuthorFilter";
 import { ReviewFilter } from "./components/ReviewFilter";
 
@@ -42,6 +49,14 @@ export function PullRequestsTopBar({
 	onStateFilterChange,
 }: PullRequestsTopBarProps) {
 	const { t } = useLingui();
+	const teamMembers = usePullRequestsFilterStore((state) => state.teamMembers);
+	const setTeamMembers = usePullRequestsFilterStore(
+		(state) => state.setTeamMembers,
+	);
+	const [editingTeam, setEditingTeam] = useState<"edit" | "select" | null>(
+		null,
+	);
+	const isTeamSelected = isTeamAuthorFilter(authorFilter, teamMembers);
 	const stateTabs: ReadonlyArray<{
 		value: PullRequestsStateFilter;
 		label: string;
@@ -123,6 +138,34 @@ export function PullRequestsTopBar({
 						className="bg-muted"
 					/>
 				</div>
+				<Button
+					variant={isTeamSelected ? "secondary" : "ghost"}
+					size="sm"
+					className="h-8 shrink-0 px-2"
+					aria-pressed={isTeamSelected}
+					title={teamMembers
+						.map(({ name, login }) =>
+							name ? `${name} (@${login})` : `@${login}`,
+						)
+						.join(", ")}
+					onClick={() =>
+						teamMembers.length === 0
+							? setEditingTeam("select")
+							: onAuthorFilterChange(
+									isTeamSelected ? null : getTeamAuthors(teamMembers),
+								)
+					}
+				>
+					<Trans>My team</Trans>
+				</Button>
+				<Button
+					variant="ghost"
+					size="sm"
+					className="h-8 shrink-0 px-2"
+					onClick={() => setEditingTeam(isTeamSelected ? "select" : "edit")}
+				>
+					<Trans>Edit team</Trans>
+				</Button>
 				<Popover>
 					<PopoverTrigger asChild>
 						<Button
@@ -169,6 +212,7 @@ export function PullRequestsTopBar({
 								<Trans>Author</Trans>
 							</span>
 							<AuthorFilter
+								teamMembers={teamMembers}
 								value={authorFilter}
 								onChange={onAuthorFilterChange}
 								projectTargets={projectTargets}
@@ -186,6 +230,19 @@ export function PullRequestsTopBar({
 					</PopoverContent>
 				</Popover>
 			</div>
+			{editingTeam && (
+				<TeamMembersDialog
+					members={teamMembers}
+					projectTargets={projectTargets}
+					onClose={() => setEditingTeam(null)}
+					onSave={(members) => {
+						setTeamMembers(members);
+						if (editingTeam === "select")
+							onAuthorFilterChange(getTeamAuthors(members));
+						setEditingTeam(null);
+					}}
+				/>
+			)}
 		</div>
 	);
 }

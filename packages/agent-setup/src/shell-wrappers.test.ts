@@ -336,6 +336,11 @@ echo system
 		};
 		createBashWrapper(fallbackPaths);
 
+		writeFileSync(
+			path.join(homeDir, ".bash_profile"),
+			`export PATH=${quoteShellLiteral(`${systemBinDir}:/usr/bin:/bin`)}\n`,
+		);
+
 		const args = getCommandShellArgs("/bin/bash", "claude", fallbackPaths);
 		const output = execFileSync("bash", args, {
 			encoding: "utf-8",
@@ -382,6 +387,11 @@ echo wrapper
 			BASH_DIR: TEST_BASH_DIR,
 		};
 		createBashWrapper(fallbackPaths);
+
+		writeFileSync(
+			path.join(homeDir, ".bash_profile"),
+			`export PATH=${quoteShellLiteral(`${systemBinDir}:/usr/bin:/bin`)}\n`,
+		);
 
 		const args = getCommandShellArgs("/bin/bash", "claude", fallbackPaths);
 		const output = execFileSync("bash", args, {

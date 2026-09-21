@@ -4,8 +4,9 @@ import { getTemplatePath } from "./config";
 import { getHooksDir } from "./paths";
 import { writeFileIfChanged } from "./write-file-if-changed";
 
-export const ARTIFACT_GUARD_SCRIPT_NAME = "artifact-guard.sh";
-export const ARTIFACT_GUARD_SCRIPT_MARKER = "# Superset artifact guard hook v1";
+export const ARTIFACT_GUARD_SCRIPT_NAME = "superestset-artifact-guard.sh";
+export const ARTIFACT_GUARD_SCRIPT_MARKER =
+	"# SuperestSet artifact guard hook v1";
 
 export function getArtifactGuardScriptPath(): string {
 	return path.join(getHooksDir(), ARTIFACT_GUARD_SCRIPT_NAME);

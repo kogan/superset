@@ -1,6 +1,6 @@
 import { auth } from "@superset/auth/server";
 import { stripeClient } from "@superset/auth/stripe";
-import { db, dbWs } from "@superset/db/client";
+import { db } from "@superset/db/client";
 import {
 	accounts,
 	members,
@@ -130,7 +130,7 @@ export const adminRouter = {
 			// connections and its GitHub install with it — including for orgs the
 			// loop above deliberately kept alive because other members remain.
 			// neon-http has no transactions; the pooled client does.
-			await dbWs.transaction(async (tx) => {
+			await db.transaction(async (tx) => {
 				// Everything that lets this person sign in or act on anything.
 				await tx.delete(sessions).where(eq(sessions.userId, input.userId));
 				await tx.delete(accounts).where(eq(accounts.userId, input.userId));

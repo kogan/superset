@@ -2,7 +2,7 @@ import { useLingui } from "@lingui/react/macro";
 import { useMemo } from "react";
 import type { IconType } from "react-icons";
 import { BsTerminalPlus } from "react-icons/bs";
-import { LuGitCompareArrows, LuSearch } from "react-icons/lu";
+import { LuFolderTree, LuGitCompareArrows, LuSearch } from "react-icons/lu";
 import { TbMessageCirclePlus, TbWorld } from "react-icons/tb";
 import { GitHubStarPill } from "renderer/components/GitHubStarPill";
 import { useHotkeyDisplay } from "renderer/hotkeys";
@@ -11,6 +11,7 @@ import { EmptyTabActionButton } from "renderer/screens/main/components/Workspace
 import { useTheme } from "renderer/stores/theme";
 
 interface WorkspaceEmptyStateProps {
+	onOpenFiles: () => void;
 	onOpenBrowser: () => void;
 	onOpenChanges: () => void;
 	onOpenChatV3?: (() => void) | undefined;
@@ -27,6 +28,7 @@ interface WorkspaceEmptyStateAction {
 }
 
 export function WorkspaceEmptyState({
+	onOpenFiles,
 	onOpenBrowser,
 	onOpenChanges,
 	onOpenChatV3,
@@ -42,6 +44,13 @@ export function WorkspaceEmptyState({
 
 	const actions = useMemo<Array<WorkspaceEmptyStateAction>>(
 		() => [
+			{
+				id: "browse-files",
+				label: t({ message: "Browse files" }),
+				display: [],
+				icon: LuFolderTree,
+				onClick: onOpenFiles,
+			},
 			{
 				id: "terminal",
 				label: t({
@@ -95,6 +104,7 @@ export function WorkspaceEmptyState({
 		[
 			newBrowserDisplay,
 			newGroupDisplay,
+			onOpenFiles,
 			onOpenBrowser,
 			onOpenChanges,
 			onOpenChatV3,

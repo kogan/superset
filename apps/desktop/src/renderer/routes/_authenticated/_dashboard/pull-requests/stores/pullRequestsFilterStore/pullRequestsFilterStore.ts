@@ -8,13 +8,21 @@ import {
 	normalizePullRequestReviewFilter,
 	type PullRequestReviewFilter,
 } from "renderer/routes/_authenticated/_dashboard/pull-requests/utils/pullRequestReviewFilter";
+import { z } from "zod";
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
+import {
+	getTeamAuthors,
+	isTeamAuthorFilter,
+	normalizeTeamMembers,
+	type TeamMember,
+} from "../../utils/pullRequestTeam";
 
 interface PullRequestsFilterState {
 	search: string;
 	projectFilters: string[];
 	authorFilter: string | null;
+	teamMembers: TeamMember[];
 	reviewFilter: PullRequestReviewFilter | null;
 	includeClosed: boolean;
 	/** Narrows further to merged-only — independent of includeClosed, which
@@ -23,6 +31,7 @@ interface PullRequestsFilterState {
 	setSearch: (search: string) => void;
 	setProjectFilters: (projectFilters: string[]) => void;
 	setAuthorFilter: (authorFilter: string | null) => void;
+	setTeamMembers: (members: readonly TeamMember[]) => void;
 	setReviewFilter: (reviewFilter: PullRequestReviewFilter | null) => void;
 	setIncludeClosed: (includeClosed: boolean) => void;
 	setMergedOnly: (mergedOnly: boolean) => void;
@@ -32,18 +41,27 @@ type PersistedPullRequestsFilterState = Pick<
 	PullRequestsFilterState,
 	| "projectFilters"
 	| "authorFilter"
+	| "teamMembers"
 	| "reviewFilter"
 	| "includeClosed"
 	| "mergedOnly"
 >;
 
+const persistedFiltersSchema = z.object({
+	projectFilter: z.unknown().optional(),
+	projectFilters: z.unknown().optional(),
+	authorFilter: z.unknown().optional(),
+	teamMembers: z.unknown().optional(),
+	reviewFilter: z.unknown().optional(),
+	includeClosed: z.unknown().optional(),
+	mergedOnly: z.unknown().optional(),
+});
+
 export function migratePullRequestsFilterState(
 	persistedState: unknown,
 ): PersistedPullRequestsFilterState {
-	const state =
-		persistedState && typeof persistedState === "object"
-			? (persistedState as Record<string, unknown>)
-			: {};
+	const parsed = persistedFiltersSchema.safeParse(persistedState);
+	const state = parsed.success ? parsed.data : {};
 	const legacyProject =
 		typeof state.projectFilter === "string" ? state.projectFilter : null;
 	return {
@@ -51,6 +69,7 @@ export function migratePullRequestsFilterState(
 			state.projectFilters ?? (legacyProject ? [legacyProject] : []),
 		),
 		authorFilter: normalizeAuthorFilters(state.authorFilter),
+		teamMembers: normalizeTeamMembers(state.teamMembers),
 		reviewFilter: normalizePullRequestReviewFilter(state.reviewFilter),
 		includeClosed: state.includeClosed === true,
 		mergedOnly: state.mergedOnly === true,
@@ -63,6 +82,7 @@ export const usePullRequestsFilterStore = create<PullRequestsFilterState>()(
 			search: "",
 			projectFilters: [],
 			authorFilter: null,
+			teamMembers: [],
 			reviewFilter: null,
 			includeClosed: false,
 			mergedOnly: false,
@@ -78,6 +98,19 @@ export const usePullRequestsFilterStore = create<PullRequestsFilterState>()(
 				}),
 			setAuthorFilter: (authorFilter) =>
 				set({ authorFilter: normalizeAuthorFilters(authorFilter) }),
+			setTeamMembers: (members) =>
+				set((state) => {
+					const teamMembers = normalizeTeamMembers(members);
+					return {
+						teamMembers,
+						authorFilter: isTeamAuthorFilter(
+							state.authorFilter,
+							state.teamMembers,
+						)
+							? getTeamAuthors(teamMembers)
+							: state.authorFilter,
+					};
+				}),
 			setReviewFilter: (reviewFilter) =>
 				set({
 					reviewFilter: normalizePullRequestReviewFilter(reviewFilter),
@@ -87,11 +120,16 @@ export const usePullRequestsFilterStore = create<PullRequestsFilterState>()(
 		}),
 		{
 			name: "pull-requests-filter-state",
-			version: 7,
+			version: 8,
 			migrate: migratePullRequestsFilterState,
+			merge: (persisted, current) => ({
+				...current,
+				...migratePullRequestsFilterState(persisted),
+			}),
 			partialize: (state) => ({
 				projectFilters: state.projectFilters,
 				authorFilter: state.authorFilter,
+				teamMembers: state.teamMembers,
 				reviewFilter: state.reviewFilter,
 				includeClosed: state.includeClosed,
 				mergedOnly: state.mergedOnly,

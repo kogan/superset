@@ -24,9 +24,9 @@ import {
 import { getNotifyScriptPath } from "./notify-hook";
 import { getOpenCodeConfigDir, getOpenCodePluginDir } from "./paths";
 
-export const OPENCODE_PLUGIN_FILE = "superset-notify.js";
+export const OPENCODE_PLUGIN_FILE = "superestset-notify.js";
 
-const OPENCODE_PLUGIN_SIGNATURE = "// Superset opencode plugin";
+const OPENCODE_PLUGIN_SIGNATURE = "// SuperestSet opencode plugin";
 const OPENCODE_PLUGIN_VERSION = "v11";
 export const OPENCODE_PLUGIN_MARKER = `${OPENCODE_PLUGIN_SIGNATURE} ${OPENCODE_PLUGIN_VERSION}`;
 
@@ -283,6 +283,7 @@ export function getOpenCodePluginContent(notifyPath: string): string {
 		"utf-8",
 	);
 	return template
+		.replaceAll("__superset", "__superestset")
 		.replace("{{MARKER}}", OPENCODE_PLUGIN_MARKER)
 		.replace("{{NOTIFY_PATH}}", notifyPath);
 }

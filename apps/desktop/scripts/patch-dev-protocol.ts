@@ -25,6 +25,7 @@ import {
 import { homedir } from "node:os";
 import { isAbsolute, relative, resolve, sep } from "node:path";
 import { config } from "dotenv";
+import { productName } from "../package.json";
 
 // override: true ensures .env values take precedence over inherited env vars
 config({
@@ -214,7 +215,7 @@ export function main() {
 		process.exit(0);
 	}
 
-	const DISPLAY_NAME = `Superset (${bundleDisplayWorkspaceName})`;
+	const DISPLAY_NAME = productName;
 
 	try {
 		const currentBundleId = execSync(

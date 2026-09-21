@@ -25,6 +25,7 @@ import { createServer, type Server, Socket } from "node:net";
 import { homedir } from "node:os";
 import { join } from "node:path";
 import { SUPERSET_DIR_NAME } from "shared/constants";
+import { terminalHostSocketPath } from "shared/terminal-host-socket";
 import { isTerminalSpawnFailedError } from "../lib/terminal/errors";
 import {
 	type CancelCreateOrAttachRequest,
@@ -59,10 +60,11 @@ const DAEMON_VERSION = "1.0.0";
 
 // SUPERSET_DIR_NAME is imported from shared/constants for multi-worktree support
 // This allows workspace-specific home directories (e.g., ~/.superset-my-feature)
-const SUPERSET_HOME_DIR = join(homedir(), SUPERSET_DIR_NAME);
+const SUPERSET_HOME_DIR =
+	process.env.SUPERSET_HOME_DIR || join(homedir(), SUPERSET_DIR_NAME);
 
 // Socket and token paths
-const SOCKET_PATH = join(SUPERSET_HOME_DIR, "terminal-host.sock");
+const SOCKET_PATH = terminalHostSocketPath(SUPERSET_HOME_DIR);
 const TOKEN_PATH = join(SUPERSET_HOME_DIR, "terminal-host.token");
 const PID_PATH = join(SUPERSET_HOME_DIR, "terminal-host.pid");
 

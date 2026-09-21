@@ -37,6 +37,8 @@ export type TerminalAgentEndReason =
  */
 export interface TerminalSubagent {
 	id: string;
+	description?: string;
+	customName?: string;
 	/** Harness agent type (`Explore`, `general-purpose`, a Codex role), if reported. */
 	agentType?: string;
 	startedAt: number;

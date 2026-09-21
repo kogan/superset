@@ -1,5 +1,6 @@
 import { useMemo } from "react";
 import { useResolvedTheme } from "renderer/stores/theme";
+import type { DiffAnnotationMetadata } from "../useDiffAnnotations";
 import { diffCardUnsafeCss } from "./diffCardUnsafeCss";
 import { useDiffCodeViewTheme } from "./useDiffCodeViewTheme";
 
@@ -9,8 +10,10 @@ import { useDiffCodeViewTheme } from "./useDiffCodeViewTheme";
  * real gap between files, PullRequestRow's additions/deletions colors, and
  * the app background instead of the terminal theme's.
  */
-export function useDiffCardCodeViewTheme() {
-	const { options, style } = useDiffCodeViewTheme();
+export function useDiffCardCodeViewTheme<
+	Annotation = DiffAnnotationMetadata,
+>() {
+	const { options, style } = useDiffCodeViewTheme<Annotation>();
 	// Matches PullRequestRow's diff-stat colors exactly (text-emerald-600 /
 	// [.dark_&]:text-[#34d399], text-red-600 / [.dark_&]:text-[#f87171]) so
 	// the same file reads with the same additions/deletions colors in the PR

@@ -13,7 +13,7 @@ export interface BulkWorkspaceInspectionItem {
 	hasChanges: boolean;
 	hasUnpushedCommits: boolean;
 	/** Known only once inspected: the row lives on the project checkout. */
-	sharesProjectCheckout: boolean | null;
+	preservesFiles: boolean | null;
 }
 
 export async function executeBulkWorkspaceDeleteTargets<
@@ -92,7 +92,7 @@ export function buildBulkWorkspaceInspectionSummary(
 				reason: null,
 				hasChanges: false,
 				hasUnpushedCommits: false,
-				sharesProjectCheckout: null,
+				preservesFiles: null,
 			};
 		}
 		if (inspection.status === "error") {
@@ -104,7 +104,7 @@ export function buildBulkWorkspaceInspectionSummary(
 				reason: "Couldn’t verify workspace",
 				hasChanges: false,
 				hasUnpushedCommits: false,
-				sharesProjectCheckout: null,
+				preservesFiles: null,
 			};
 		}
 		if (!inspection.preview.canDelete) {
@@ -120,7 +120,7 @@ export function buildBulkWorkspaceInspectionSummary(
 				reason: inspection.preview.reason,
 				hasChanges: false,
 				hasUnpushedCommits: false,
-				sharesProjectCheckout: false,
+				preservesFiles: false,
 			};
 		}
 
@@ -133,12 +133,12 @@ export function buildBulkWorkspaceInspectionSummary(
 			reason: null,
 			hasChanges: inspection.preview.hasChanges,
 			hasUnpushedCommits: inspection.preview.hasUnpushedCommits,
-			sharesProjectCheckout: inspection.preview.sharesProjectCheckout === true,
+			preservesFiles: inspection.preview.preservesFiles === true,
 		};
 	});
 	// Unknown rows count as worktrees: the destructive copy is the safe default.
 	const worktreeCount = items.filter(
-		(item) => item.sharesProjectCheckout !== true,
+		(item) => item.preservesFiles !== true,
 	).length;
 
 	return {

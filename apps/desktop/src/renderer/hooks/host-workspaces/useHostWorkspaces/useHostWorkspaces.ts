@@ -65,6 +65,7 @@ export interface UseHostWorkspacesResult {
 	 * empty states only — existing rows always render (cache-first rule).
 	 */
 	isReady: boolean;
+	isComplete: boolean;
 	/**
 	 * The org's host list itself is trustworthy (useKnownHosts settled) —
 	 * weaker than isReady: it does not wait for any host's list to answer, so
@@ -460,5 +461,16 @@ export function useHostWorkspacesSource(
 		};
 	}, [targets, queryClient]);
 
-	return { workspaces, isReady, hostsSettled: knownHostsSettled, cache };
+	return {
+		workspaces,
+		isReady,
+		hostsSettled: knownHostsSettled,
+		cache,
+		isComplete:
+			isReady &&
+			targets.length > 0 &&
+			queries.every(
+				(query, index) => query.isSuccess && targets[index]?.hostUrl !== null,
+			),
+	};
 }

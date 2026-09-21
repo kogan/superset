@@ -9,7 +9,7 @@ function readNotifyHookTemplate(): string {
 	return readFileSync(getTemplatePath("notify-hook.template.sh"), "utf-8");
 }
 
-// The script scans ${SUPERSET_HOME_DIR:-$HOME/.superset}/host/*/manifest.json
+// The script scans ${SUPERSET_HOME_DIR:-$HOME/.superestset}/host/*/manifest.json
 // at call time. Tests must never resolve the developer's real manifests (this
 // test process can itself run inside a Superset terminal), so the default env
 // points at an empty home.
@@ -28,6 +28,8 @@ function hookEnv(envOverrides: Record<string, string>) {
 		SUPERSET_DEBUG_HOOKS: "1",
 		SUPERSET_TERMINAL_ID: "terminal-test",
 		SUPERSET_HOME_DIR: emptyHome,
+		SUPERSET_ACCOUNT_ATTRIBUTION_TOKEN: "",
+		SUPERSET_AGENT_LAUNCH_ID: "",
 		...envOverrides,
 	};
 }
@@ -104,7 +106,7 @@ function writeHookManifest(home: string, orgId: string, endpoint: string) {
 
 describe("getNotifyScriptContent", () => {
 	it("bumps the notify hook marker when hook semantics change", () => {
-		expect(NOTIFY_SCRIPT_MARKER).toBe("# Superset agent notification hook v19");
+		expect(NOTIFY_SCRIPT_MARKER).toBe("# SuperestSet agent notification hook v19");
 	});
 
 	it("forwards hooks fired inside a subagent (agent_id present) to the host roster only", async () => {
@@ -285,7 +287,7 @@ describe("getNotifyScriptContent", () => {
 	it("resolves the endpoint at call time from org manifests, not only the frozen env URL", () => {
 		const script = readNotifyHookTemplate();
 
-		expect(script).toContain("SUPERSET_HOME_DIR:-$HOME/.superset");
+		expect(script).toContain("SUPERSET_HOME_DIR:-$HOME/.superestset");
 		expect(script).toContain("/host/*/manifest.json; do");
 		expect(script).toContain(
 			'HOOK_CANDIDATE_URLS="$SUPERSET_HOST_AGENT_HOOK_URL"',
@@ -399,7 +401,7 @@ describe("per-agent hook scripts dispatch to v2", () => {
 			);
 			expect(script).toContain(buildExpectedV2Payload(agentIdVar));
 			expect(script).toContain('curl -sX POST "$HOOK_URL"');
-			expect(script).toContain("SUPERSET_HOME_DIR:-$HOME/.superset");
+			expect(script).toContain("SUPERSET_HOME_DIR:-$HOME/.superestset");
 			expect(script).toContain("/host/*/manifest.json; do");
 			expect(script).toContain('if [ -n "$SUPERSET_TERMINAL_ID" ]; then');
 			expect(script).toContain("/hook/complete");

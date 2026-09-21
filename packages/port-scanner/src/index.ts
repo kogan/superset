@@ -18,3 +18,7 @@ export {
 } from "./static-ports.ts";
 export { readTerminalIdsFromEnv } from "./terminal-env.ts";
 export type { DetectedPort } from "./types.ts";
+export {
+	WorkspacePortScanner,
+	workspacePortTerminalId,
+} from "./workspace-ports.ts";

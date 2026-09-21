@@ -4,6 +4,9 @@ import { cn } from "@superset/ui/utils";
 import { workspaceTrpc } from "@superset/workspace-client";
 import { useEffect, useRef } from "react";
 import { LuCornerLeftUp } from "react-icons/lu";
+import { useTerminalAgentBinding } from "renderer/hooks/host-service/useTerminalAgentBindings";
+import { getSubagentLabel } from "renderer/routes/_authenticated/_dashboard/utils/subagent-label";
+import { useWorkspace } from "renderer/routes/_authenticated/_dashboard/v2-workspace/providers/WorkspaceProvider";
 import type { SubagentPaneData } from "../../../../types";
 import { SubagentTranscriptRow } from "./components/SubagentTranscriptRow";
 
@@ -25,6 +28,11 @@ const LIVE_POLL_MS = 1_000;
  */
 export function SubagentPane({ data, onOpenParent }: SubagentPaneProps) {
 	const { t } = useLingui();
+	const { workspace } = useWorkspace();
+	const binding = useTerminalAgentBinding(workspace.id, data.terminalId);
+	const liveSubagent = binding?.subagents?.find(
+		(child) => child.id === data.subagentId,
+	);
 	const parentLabel = AGENT_IDENTITY_LABELS[data.agentId] ?? data.agentId;
 	const query = workspaceTrpc.terminalAgents.subagentTranscript.useQuery(
 		{ terminalId: data.terminalId, subagentId: data.subagentId },
@@ -58,8 +66,14 @@ export function SubagentPane({ data, onOpenParent }: SubagentPaneProps) {
 		el.scrollTop = el.scrollHeight;
 	}, [lastEntryId]);
 
-	const title =
-		transcript?.description ?? subagent?.agentType ?? data.agentType ?? null;
+	const title = getSubagentLabel(
+		liveSubagent ?? {
+			id: data.subagentId,
+			customName: subagent?.customName,
+			description: subagent?.description ?? transcript?.description,
+			agentType: subagent?.agentType ?? data.agentType,
+		},
+	);
 
 	return (
 		<div className="flex min-h-0 min-w-0 flex-1 flex-col">
@@ -73,14 +87,7 @@ export function SubagentPane({ data, onOpenParent }: SubagentPaneProps) {
 					<LuCornerLeftUp className="size-3" />
 					<span>{parentLabel}</span>
 				</button>
-				<span className="min-w-0 flex-1 truncate font-medium">
-					{title ?? <Trans>Subagent</Trans>}
-				</span>
-				{subagent?.agentType && subagent.agentType !== title && (
-					<span className="shrink-0 text-muted-foreground">
-						{subagent.agentType}
-					</span>
-				)}
+				<span className="min-w-0 flex-1 truncate font-medium">{title}</span>
 				<span
 					className={cn(
 						"shrink-0 text-[10px]",

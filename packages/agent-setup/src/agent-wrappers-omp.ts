@@ -7,9 +7,9 @@ import {
 } from "./agent-wrappers-common";
 import { getTemplatePath } from "./config";
 
-export const OMP_EXTENSION_FILE = "superset-hooks.ts";
+export const OMP_EXTENSION_FILE = "superestset-hooks.ts";
 
-const OMP_EXTENSION_SIGNATURE = "// Superset Oh My Pi extension";
+const OMP_EXTENSION_SIGNATURE = "// SuperestSet Oh My Pi extension";
 const OMP_EXTENSION_VERSION = "v1";
 export const OMP_EXTENSION_MARKER = `${OMP_EXTENSION_SIGNATURE} ${OMP_EXTENSION_VERSION}`;
 
@@ -43,7 +43,11 @@ export function getOmpExtensionContent(): string {
 		getTemplatePath("omp-extension.template.ts"),
 		"utf-8",
 	);
-	return template.replace("{{MARKER}}", OMP_EXTENSION_MARKER);
+	return template
+		.replaceAll("notify.sh", "superestset-notify.sh")
+		.replaceAll(".superset", ".superestset")
+		.replaceAll("__superset", "__superestset")
+		.replace("{{MARKER}}", OMP_EXTENSION_MARKER);
 }
 
 /**

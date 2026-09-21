@@ -49,8 +49,14 @@ export function parseCodexRolloutTranscript(text: string): {
 					: "";
 			const agentPath =
 				typeof payload.agent_path === "string" ? payload.agent_path : "";
-			description =
-				[nickname, agentPath].filter(Boolean).join(" · ") || undefined;
+			const task = agentPath.split("/").filter(Boolean).at(-1);
+			const name =
+				task && !/^(root|default|worker|agent|subagent)$/i.test(task)
+					? task.replace(/[_-]+/g, " ")
+					: nickname;
+			description = name
+				? name.charAt(0).toUpperCase() + name.slice(1)
+				: undefined;
 			continue;
 		}
 		if (record.type !== "response_item") continue;

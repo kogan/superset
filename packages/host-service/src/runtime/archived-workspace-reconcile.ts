@@ -3,6 +3,10 @@ import { and, eq, isNotNull, isNull } from "drizzle-orm";
 import { workspaces } from "../db/schema";
 import { destroyWorkspace } from "../trpc/router/workspace-cleanup";
 import type { HostServiceContext } from "../types";
+import {
+	externalWorkspacePathSet,
+	isExternalWorkspacePath,
+} from "../workspaces/external-workspace-paths";
 
 /**
  * Finish crash-interrupted deletes. The destroy pipeline archives the row
@@ -32,7 +36,10 @@ export async function runArchivedWorkspaceReconcile(
 			.map((row) => row.worktreePath),
 	);
 
-	const stranded = selectStranded(archived, livePaths, existsSync);
+	const externalPaths = externalWorkspacePathSet(ctx.db);
+	const stranded = selectStranded(archived, livePaths, existsSync).filter(
+		(row) => !isExternalWorkspacePath(externalPaths, row.worktreePath),
+	);
 
 	for (const row of stranded) {
 		// Re-check ownership at destroy time: a workspace re-created on the

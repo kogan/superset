@@ -162,7 +162,11 @@ async function main(): Promise<void> {
 			});
 		}
 
-		if (env.RELAY_URL && env.SUPERSET_HOST_RUN_MODE !== "sandbox") {
+		if (
+			process.env.SUPERESTSET_LOCAL !== "1" &&
+			env.RELAY_URL &&
+			env.SUPERSET_HOST_RUN_MODE !== "sandbox"
+		) {
 			tunnelPromise = connectRelay({
 				signal: relayAbort.signal,
 				api,

@@ -1,0 +1,38 @@
+name: superset++ checks
+on:
+  push:
+    branches: [main]
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  checks:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+      - uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2.2.0
+        with:
+          bun-version-file: .bun-version
+      - run: bun install --frozen-lockfile --ignore-scripts
+      - run: bun run check:plugins
+      - run: bun run check:versions
+      - run: bun run check:i18n
+      - run: sudo apt-get update && sudo apt-get install -y ripgrep
+      - run: bun test packages/port-scanner/src/
+      - run: bun test packages/workspace-fs/src/search.test.ts packages/workspace-fs/src/search-content.test.ts
+      - run: bun test packages/db/src/runtime.test.ts packages/auth/src/local-bootstrap.test.ts
+      - run: bun test packages/trpc/src/lib/local-runtime/cache.test.ts packages/trpc/src/lib/local-objects/local-objects.test.ts apps/usercontent/scripts/standalone.test.ts
+      - run: bun test src/lib/trpc/routers/jira/jira.test.ts src/lib/trpc/routers/jira/jira-transitions.test.ts src/renderer/routes/_authenticated/_dashboard/jira/components/JiraView/components/JiraIssueList/utils/columnLayout src/renderer/routes/_authenticated/_dashboard/jira/components/JiraView/components/JiraIssueList/components/JiraColumnsDialog src/renderer/routes/_authenticated/_dashboard/jira/components/JiraView/components/JiraIssueList/components/JiraKanban/utils/groupIssuesByStatus.test.ts src/renderer/routes/_authenticated/_dashboard/jira/components/JiraView/components/JiraIssueList/hooks/useJiraMovement/movement.test.ts src/renderer/routes/_authenticated/_dashboard/attention/hooks/useAttentionInbox/attention-items.test.ts src/renderer/routes/_authenticated/_dashboard/attention/hooks/useAttentionInbox/attention-projects.test.ts
+        working-directory: apps/desktop
+      - run: bun test src/renderer/routes/_authenticated/_dashboard/pull-requests/stores/pullRequestsFilterStore/pullRequestsFilterStore.test.ts src/renderer/routes/_authenticated/_dashboard/pull-requests/utils/pullRequestTeam/pullRequestTeam.test.ts src/renderer/routes/_authenticated/_dashboard/pull-requests/utils/normalizeAuthorFilter src/renderer/routes/_authenticated/_dashboard/pull-requests/components/PullRequestsView/components/PullRequestsTopBar/components/AuthorFilter/AuthorFilter.test.tsx src/renderer/routes/_authenticated/components/TeamMembersDialog/TeamMembersDialog.test.tsx
+        working-directory: apps/desktop
+      - run: bun test test/integration/workspace-ports.integration.test.ts
+        working-directory: packages/host-service
+      - run: bun test test/integration/workspace-creation-github.integration.test.ts test/integration/external-workspaces.integration.test.ts test/integration/sidebar-agents.integration.test.ts test/workspace-cleanup.test.ts src/trpc/router/workspace-creation/shared/worktree-paths.test.ts src/trpc/router/workspace-creation/shared/default-worktree-location.test.ts src/trpc/router/workspace-creation/shared/session-paths.test.ts
+        working-directory: packages/host-service
+      - run: bun test src/terminal-agents/
+        working-directory: packages/host-service
+      - run: bun test src/renderer/stores/sidebar-agent-expansion.test.ts
+        working-directory: apps/desktop
+      - run: bun test src/renderer/routes/_authenticated/_dashboard/utils/subagent-label src/renderer/routes/_authenticated/_dashboard/components/DashboardSidebar/components/DashboardSidebarWorkspaceItem/components/DashboardSidebarExpandedWorkspaceRow/components/DashboardSidebarWorkspaceChips/components/DashboardSidebarAgentsList/components/DashboardSidebarAgentRow/components/RenameSubagentDialog
+        working-directory: apps/desktop

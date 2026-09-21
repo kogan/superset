@@ -1,6 +1,13 @@
 import { Redis } from "@upstash/redis";
 
 import { env } from "../env";
+import {
+	claimLocalCache,
+	clearLocalCache,
+	isLocalRuntime,
+	readLocalCache,
+	writeLocalCache,
+} from "./local-runtime/cache";
 
 /**
  * Shared cache for the admin dashboard's third-party metrics.
@@ -22,10 +29,11 @@ const redis =
 const PREFIX = "admin:metrics";
 
 export function isMetricCacheAvailable(): boolean {
-	return redis !== null;
+	return isLocalRuntime() || redis !== null;
 }
 
 export async function readMetricCache<T>(key: string): Promise<T | null> {
+	if (isLocalRuntime()) return await readLocalCache<T>(`${PREFIX}:${key}`);
 	if (!redis) return null;
 	try {
 		return await redis.get<T>(`${PREFIX}:${key}`);
@@ -40,6 +48,10 @@ export async function writeMetricCache<T>(
 	value: T,
 	ttlSeconds: number,
 ): Promise<void> {
+	if (isLocalRuntime()) {
+		await writeLocalCache(`${PREFIX}:${key}`, value, ttlSeconds);
+		return;
+	}
 	if (!redis) return;
 	try {
 		await redis.set(`${PREFIX}:${key}`, value, { ex: ttlSeconds });
@@ -57,6 +69,9 @@ export async function claimMetricCache<T>(
 	value: T,
 	ttlSeconds: number,
 ): Promise<boolean> {
+	if (isLocalRuntime()) {
+		return await claimLocalCache(`${PREFIX}:${key}`, value, ttlSeconds);
+	}
 	// No shared cache means no way to agree on an owner, and claiming anyway
 	// would let every caller start the work the claim exists to serialise.
 	if (!redis) return false;
@@ -73,6 +88,10 @@ export async function claimMetricCache<T>(
 }
 
 export async function clearMetricCache(key: string): Promise<void> {
+	if (isLocalRuntime()) {
+		await clearLocalCache(`${PREFIX}:${key}`);
+		return;
+	}
 	if (!redis) return;
 	try {
 		await redis.del(`${PREFIX}:${key}`);

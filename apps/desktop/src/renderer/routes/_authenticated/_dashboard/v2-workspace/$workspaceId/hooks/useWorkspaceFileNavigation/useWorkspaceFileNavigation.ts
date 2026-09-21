@@ -31,7 +31,11 @@ export function useWorkspaceFileNavigation({
 	store: StoreApi<WorkspaceStore<PaneViewerData>>;
 	setRightSidebarOpen: V2UserPreferencesApi["setRightSidebarOpen"];
 }): {
-	openFilePane: (filePath: string, openInNewTab?: boolean) => void;
+	openFilePane: (
+		filePath: string,
+		openInNewTab?: boolean,
+		location?: FilePaneData["revealPosition"],
+	) => void;
 	openFilePaneFromTreeClick: (filePath: string, openInNewTab?: boolean) => void;
 	revealPath: (
 		path: string,
@@ -96,7 +100,11 @@ export function useWorkspaceFileNavigation({
 	);
 
 	const openFilePane = useCallback(
-		(filePath: string, openInNewTab?: boolean) => {
+		(
+			filePath: string,
+			openInNewTab?: boolean,
+			location?: FilePaneData["revealPosition"],
+		) => {
 			const absoluteFilePath = worktreePath
 				? toAbsoluteWorkspacePath(worktreePath, filePath)
 				: filePath;
@@ -110,32 +118,40 @@ export function useWorkspaceFileNavigation({
 				}
 			}
 			const state = store.getState();
+			const fileData: FilePaneData = {
+				filePath: absoluteFilePath,
+				mode: "editor",
+				...(location
+					? { revealPosition: location, viewId: "code", forceViewId: "code" }
+					: {}),
+			};
 			if (openInNewTab) {
 				state.addTab({
 					panes: [
 						{
 							kind: "file",
-							data: {
-								filePath: absoluteFilePath,
-								mode: "editor",
-							} as FilePaneData,
+							data: fileData,
 						},
 					],
 				});
 				return;
 			}
-			// Focus an existing pane for this file (anywhere in any tab) before
-			// opening anything new. The previous pin-on-same-file branch turned
-			// re-picks into pin operations — which broke the preview/overwrite
-			// flow: once pinned, the next pick couldn't find an unpinned pane
-			// to replace and got split into a new pane. Pinning is now
-			// explicit only (header click, dirty edit).
-			for (const tab of state.tabs) {
+			const activeTab = state.tabs.find((tab) => tab.id === state.activeTabId);
+			const tabs =
+				activeTab &&
+				Object.values(activeTab.panes).some(
+					(pane) => pane.kind === "file-explorer",
+				)
+					? [activeTab]
+					: state.tabs;
+			for (const tab of tabs) {
 				for (const pane of Object.values(tab.panes)) {
 					if (
 						pane.kind === "file" &&
 						(pane.data as FilePaneData).filePath === absoluteFilePath
 					) {
+						if (location)
+							state.setPaneData({ paneId: pane.id, data: fileData });
 						state.setActiveTab(tab.id);
 						state.setActivePane({ tabId: tab.id, paneId: pane.id });
 						return;
@@ -145,10 +161,7 @@ export function useWorkspaceFileNavigation({
 			state.openPane({
 				pane: {
 					kind: "file",
-					data: {
-						filePath: absoluteFilePath,
-						mode: "editor",
-					} as FilePaneData,
+					data: fileData,
 				},
 			});
 		},

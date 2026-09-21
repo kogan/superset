@@ -1,4 +1,4 @@
-import { db, dbWs } from "@superset/db/client";
+import { db } from "@superset/db/client";
 import {
 	agentCredentialKindValues,
 	agentCredentials,
@@ -125,7 +125,7 @@ export const agentCredentialRouter = {
 				accountLabel: input.accountLabel ?? null,
 				lastValidatedAt: new Date(),
 			};
-			await dbWs
+			await db
 				.insert(agentCredentials)
 				.values(row)
 				.onConflictDoUpdate({
@@ -145,7 +145,7 @@ export const agentCredentialRouter = {
 	remove: jwtProcedure
 		.input(z.object({ agent: agentId }))
 		.mutation(async ({ ctx, input }) => {
-			await dbWs
+			await db
 				.delete(agentCredentials)
 				.where(
 					and(

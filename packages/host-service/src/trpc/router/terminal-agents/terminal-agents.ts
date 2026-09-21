@@ -2,11 +2,12 @@ import {
 	type AgentDefinitionId,
 	BUILTIN_AGENT_IDS,
 } from "@superset/shared/agent-catalog";
+import { normalizeTerminalTitle } from "@superset/shared/terminal-title-scanner";
 import { TRPCError } from "@trpc/server";
 import { eq } from "drizzle-orm";
 import { z } from "zod";
 import type { HostDb } from "../../../db";
-import { workspaces } from "../../../db/schema";
+import { terminalSessions, workspaces } from "../../../db/schema";
 import type { EventBus } from "../../../events";
 import {
 	hasHarnessSession,
@@ -408,10 +409,26 @@ export const terminalAgentsRouter = router({
 		)
 		.query(({ ctx, input }) => {
 			const { workspaceId, agentId, definitionId } = input;
-			return ctx.terminalAgentStore.listByWorkspace(workspaceId, {
-				...(agentId ? { agentId } : {}),
-				...(definitionId ? { definitionId } : {}),
-			});
+			const titles = new Map(
+				ctx.db
+					.select({
+						id: terminalSessions.id,
+						title: terminalSessions.customTitle,
+					})
+					.from(terminalSessions)
+					.where(eq(terminalSessions.originWorkspaceId, workspaceId))
+					.all()
+					.map((session) => [session.id, session.title]),
+			);
+			return ctx.terminalAgentStore
+				.listByWorkspace(workspaceId, {
+					...(agentId ? { agentId } : {}),
+					...(definitionId ? { definitionId } : {}),
+				})
+				.map((binding) => ({
+					...binding,
+					title: titles.get(binding.terminalId) ?? null,
+				}));
 		}),
 
 	/**
@@ -427,6 +444,38 @@ export const terminalAgentsRouter = router({
 				input.subagentId,
 			),
 		),
+
+	renameSubagent: protectedProcedure
+		.input(
+			z.object({
+				workspaceId: z.string(),
+				terminalId: z.string(),
+				subagentId: z.string().min(1).max(256),
+				name: z.string().max(1_000).transform(normalizeTerminalTitle),
+			}),
+		)
+		.mutation(({ ctx, input }) => {
+			const session = ctx.db.query.terminalSessions
+				.findFirst({
+					where: eq(terminalSessions.id, input.terminalId),
+				})
+				.sync();
+			if (!session || session.originWorkspaceId !== input.workspaceId)
+				throw new TRPCError({
+					code: "NOT_FOUND",
+					message: "Terminal session not found in this workspace",
+				});
+			if (!ctx.terminalAgentStore.renameSubagent(input))
+				throw new TRPCError({
+					code: "NOT_FOUND",
+					message: "Subagent is no longer available",
+				});
+			ctx.eventBus.broadcastAgentBindingsChanged({
+				workspaceId: input.workspaceId,
+				occurredAt: Date.now(),
+			});
+			return { subagentId: input.subagentId, name: input.name };
+		}),
 
 	findActive: protectedProcedure
 		.input(

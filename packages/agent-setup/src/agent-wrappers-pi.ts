@@ -7,9 +7,9 @@ import {
 } from "./agent-wrappers-common";
 import { getTemplatePath } from "./config";
 
-export const PI_EXTENSION_FILE = "superset-hooks.ts";
+export const PI_EXTENSION_FILE = "superestset-hooks.ts";
 
-const PI_EXTENSION_SIGNATURE = "// Superset pi extension";
+const PI_EXTENSION_SIGNATURE = "// SuperestSet pi extension";
 const PI_EXTENSION_VERSION = "v2";
 export const PI_EXTENSION_MARKER = `${PI_EXTENSION_SIGNATURE} ${PI_EXTENSION_VERSION}`;
 
@@ -44,7 +44,11 @@ export function getPiExtensionContent(): string {
 		getTemplatePath("pi-extension.template.ts"),
 		"utf-8",
 	);
-	return template.replace("{{MARKER}}", PI_EXTENSION_MARKER);
+	return template
+		.replaceAll("notify.sh", "superestset-notify.sh")
+		.replaceAll(".superset", ".superestset")
+		.replaceAll("__superset", "__superestset")
+		.replace("{{MARKER}}", PI_EXTENSION_MARKER);
 }
 
 /**

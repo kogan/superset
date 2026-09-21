@@ -5,9 +5,9 @@ import {
 	rmSync,
 	writeFileSync,
 } from "node:fs";
-import { homedir } from "node:os";
 import { join } from "node:path";
 import mimeTypes from "mime-types";
+import { defaultSupersetHomeDir } from "../../../superset-home.ts";
 
 export interface AttachmentMetadata {
 	attachmentId: string;
@@ -21,7 +21,7 @@ export interface AttachmentMetadata {
  * Resolves the per-org attachment storage root. Honors
  * `HOST_MANIFEST_DIR` (set by host-service-coordinator with the active
  * org id baked in) so attachments live alongside that org's `host.db`.
- * Falls back to `~/.superset/host/standalone` when the host service is
+ * Falls back to `~/.superestset/host/standalone` when the host service is
  * run outside the desktop coordinator.
  *
  * Override with `baseDirOverride` in tests.
@@ -32,7 +32,7 @@ export function getAttachmentsRoot(baseDirOverride?: string): string {
 	const base =
 		envBase && envBase.length > 0
 			? envBase
-			: join(homedir(), ".superset", "host", "standalone");
+			: join(defaultSupersetHomeDir(), "host", "standalone");
 	return join(base, "attachments");
 }
 

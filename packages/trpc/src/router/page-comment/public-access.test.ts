@@ -13,7 +13,7 @@ const forbidDb = new Proxy(
 	},
 );
 
-mock.module("@superset/db/client", () => ({ db: forbidDb, dbWs: forbidDb }));
+mock.module("@superset/db/client", () => ({ db: forbidDb }));
 mock.module("../../lib/analytics", () => ({ posthog: { capture: () => {} } }));
 
 const { pageCommentRouter } = await import("./page-comment");

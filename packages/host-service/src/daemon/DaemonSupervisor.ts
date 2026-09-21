@@ -27,6 +27,10 @@ import {
 } from "@superset/pty-daemon/protocol";
 import { probeTrustdHealthy } from "@superset/pty-daemon/trustd-probe";
 import semver from "semver";
+import {
+	defaultSupersetHomeDir,
+	isDefaultSupersetHomeDir,
+} from "../superset-home.ts";
 import { DaemonClient } from "../terminal/DaemonClient/index.ts";
 import { EXPECTED_DAEMON_VERSION } from "./expected-version.ts";
 import { MAX_DAEMON_LOG_BYTES, openRotatingLogFd } from "./log-fd.ts";
@@ -170,8 +174,8 @@ export function shouldKillStaleDaemonForDev(
  * namespaces the socket by home as well as org — two instances of the same
  * org must never share a socket, or one instance's supervisor/reaper acts
  * on the other's PTYs. All default-home (production) paths deliberately
- * keep the legacy org-only socket so existing packaged daemons remain
- * adoptable across updates.
+ * keep an org-only socket, with a fork-specific filename prefix so it cannot
+ * collide with the original app's daemon.
  */
 export function ptyDaemonSocketPath(
 	organizationId: string,
@@ -182,17 +186,15 @@ export function ptyDaemonSocketPath(
 	// the boot runner clears, so a socket from the previous session never
 	// looks live on a restored disk.
 	if (env.SUPERSET_RUN_DIR) return path.join(env.SUPERSET_RUN_DIR, "ptyd.sock");
-	const home = env.SUPERSET_HOME_DIR;
-	const defaultHome = path.join(os.homedir(), ".superset");
-	const isDefaultHome =
-		!home || path.resolve(home) === path.resolve(defaultHome);
+	const home = defaultSupersetHomeDir(env);
+	const isDefaultHome = isDefaultSupersetHomeDir(home);
 	// Hash the RESOLVED home so equivalent spellings of one custom home
 	// (trailing slash, relative segments) land on the same socket.
 	const key = isDefaultHome
 		? organizationId
 		: `${organizationId}:${path.resolve(home)}`;
 	const shortId = createHash("sha256").update(key).digest("hex").slice(0, 12);
-	return path.join(os.tmpdir(), `superset-ptyd-${shortId}.sock`);
+	return path.join(os.tmpdir(), `superestset-ptyd-${shortId}.sock`);
 }
 
 /**

@@ -150,7 +150,7 @@ export default command({
 			"Organization id or slug — required for non-TTY logins when you belong to multiple orgs",
 		),
 		apiKey: string().desc(
-			"Store a Superset API key (sk_live_…) at ~/.superset/config.json instead of running the OAuth flow",
+			"Store a Superset API key (sk_live_…) at ~/.superestset/config.json instead of running the OAuth flow",
 		),
 	},
 	run: async (opts) => {

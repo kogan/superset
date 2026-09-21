@@ -54,7 +54,7 @@ function writeUserOverride(
 	projectId: string,
 	content: object,
 ) {
-	const dir = join(homeDir, ".superset", "projects", projectId);
+	const dir = join(homeDir, ".superestset", "projects", projectId);
 	mkdirSync(dir, { recursive: true });
 	writeFileSync(join(dir, "config.json"), JSON.stringify(content), "utf-8");
 }
@@ -64,7 +64,7 @@ function writeUserOverrideByPath(
 	repoPath: string,
 	content: object,
 ) {
-	const dir = join(homeDir, ".superset", "projects", repoPath);
+	const dir = join(homeDir, ".superestset", "projects", repoPath);
 	mkdirSync(dir, { recursive: true });
 	writeFileSync(join(dir, "config.json"), JSON.stringify(content), "utf-8");
 }
@@ -219,6 +219,33 @@ describe("loadSetupConfig", () => {
 
 		const result = load();
 		expect(result?.setup).toEqual(["from-path-override"]);
+	});
+
+	it("uses SUPERSET_HOME_DIR for user overrides when it is set", () => {
+		const previous = process.env.SUPERSET_HOME_DIR;
+		const supersetHome = join(sandbox.homeDir, "custom-superestset-home");
+		process.env.SUPERSET_HOME_DIR = supersetHome;
+		try {
+			writeRepoConfig(sandbox.repoPath, { setup: ["from-repo"] });
+			const dir = join(supersetHome, "projects", sandbox.repoPath);
+			mkdirSync(dir, { recursive: true });
+			writeFileSync(
+				join(dir, "config.json"),
+				JSON.stringify({ setup: ["from-env-home"] }),
+				"utf-8",
+			);
+
+			const result = loadSetupConfig({
+				repoPath: sandbox.repoPath,
+				projectId: PROJECT_ID,
+				homeDir: sandbox.homeDir,
+			});
+
+			expect(result?.setup).toEqual(["from-env-home"]);
+		} finally {
+			if (previous === undefined) delete process.env.SUPERSET_HOME_DIR;
+			else process.env.SUPERSET_HOME_DIR = previous;
+		}
 	});
 
 	it("path-keyed user override wins over the legacy id-keyed one", () => {

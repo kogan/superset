@@ -117,7 +117,7 @@ describe("provisionClaudeProfile", () => {
 		// Hooks are provisioned per profile, not copied from the default's file.
 		const hooks = settings.hooks as Record<string, unknown[]>;
 		expect(JSON.stringify(hooks)).not.toContain("user-hook");
-		expect(JSON.stringify(hooks)).toContain("notify.sh");
+		expect(JSON.stringify(hooks)).toContain("superestset-notify.sh");
 	});
 
 	it("shares MCP servers and completes onboarding without touching identity", async () => {
@@ -174,9 +174,9 @@ describe("provisionClaudeProfile", () => {
 		expect(existsSync(path.join(PROFILE, "skills", "mine", "SKILL.md"))).toBe(
 			true,
 		);
-		expect(existsSync(path.join(PROFILE, "skills", "superset", "skills"))).toBe(
-			true,
-		);
+		expect(
+			existsSync(path.join(PROFILE, "skills", "superestset", "skills")),
+		).toBe(true);
 	});
 
 	it("does nothing to the default account itself", async () => {
@@ -185,9 +185,9 @@ describe("provisionClaudeProfile", () => {
 		const report = await provisionClaudeProfile(DEFAULT_DIR, { homeDir: HOME });
 
 		expect(report.surfaces).toEqual({});
-		expect(existsSync(path.join(DEFAULT_DIR, ".superset-profile.json"))).toBe(
-			false,
-		);
+		expect(
+			existsSync(path.join(DEFAULT_DIR, ".superestset-profile.json")),
+		).toBe(false);
 	});
 });
 
@@ -220,7 +220,7 @@ describe("provisionCodexProfile", () => {
 		expect(existsSync(path.join(CODEX_PROFILE, "auth.json"))).toBe(false);
 		expect(
 			readFileSync(path.join(CODEX_PROFILE, "hooks.json"), "utf-8"),
-		).toContain("notify.sh");
+		).toContain("superestset-notify.sh");
 	});
 });
 
@@ -233,6 +233,8 @@ describe("default homes are never provisioning targets", () => {
 			expect(report.surfaces).toEqual({});
 		}
 		expect(existsSync(path.join(configClaude, "skills"))).toBe(false);
-		expect(existsSync(path.join(HOME, ".superset-profile.json"))).toBe(false);
+		expect(existsSync(path.join(HOME, ".superestset-profile.json"))).toBe(
+			false,
+		);
 	});
 });

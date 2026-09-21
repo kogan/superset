@@ -15,7 +15,7 @@ const getDiffInputSchema = z.object({
 const PULL_REQUEST_DIFF_CACHE_TTL_MS = 30_000;
 const pullRequestDiffCache = new Map<
 	string,
-	{ promise: Promise<string>; fetchedAt: number }
+	{ promise: Promise<{ patch: string; headSha: string }>; fetchedAt: number }
 >();
 
 export const getDiff = protectedProcedure
@@ -32,13 +32,28 @@ export const getDiff = protectedProcedure
 			cached &&
 			Date.now() - cached.fetchedAt < PULL_REQUEST_DIFF_CACHE_TTL_MS
 		) {
-			return { patch: await cached.promise };
+			return await cached.promise;
 		}
 
 		const fetchedAt = Date.now();
-		const promise = (async (): Promise<string> => {
+		const promise = (async () => {
 			try {
 				const repo = await resolveGithubRepo(ctx, input.projectId);
+				const readHead = async () =>
+					z
+						.object({ headRefOid: z.string().regex(/^[a-f0-9]{40}$/i) })
+						.parse(
+							await execGh([
+								"pr",
+								"view",
+								String(input.prNumber),
+								"--repo",
+								`${repo.owner}/${repo.name}`,
+								"--json",
+								"headRefOid",
+							]),
+						).headRefOid;
+				const headSha = await readHead();
 				const raw = await execGh(
 					[
 						"pr",
@@ -56,7 +71,11 @@ export const getDiff = protectedProcedure
 				);
 				// `gh pr diff` prints a raw unified diff, not JSON — execGh only
 				// JSON-parses when it can, so this is already the plain string.
-				return typeof raw === "string" ? raw : "";
+				if (headSha !== (await readHead()))
+					throw new Error(
+						"The pull request changed while loading its diff. Try again.",
+					);
+				return { patch: typeof raw === "string" ? raw : "", headSha };
 			} catch (err) {
 				throw new TRPCError({
 					code: "INTERNAL_SERVER_ERROR",
@@ -72,5 +91,5 @@ export const getDiff = protectedProcedure
 			}
 		});
 		pullRequestDiffCache.set(cacheKey, { promise, fetchedAt });
-		return { patch: await promise };
+		return await promise;
 	});

@@ -81,7 +81,7 @@ export function createMuseManagedHooksFile(): void {
 }
 
 const SUPERSET_OWNED_MUSE_HOOKS_PATTERN =
-	/\/(?:\.superset(?:-[^/'"\s\\]+)?|superset-dev-data)\/hooks\/muse\/hooks\.json$/;
+	/\/(?:\.superestset(?:-[^/'"\s\\]+)?|superestset-dev-data)\/hooks\/muse\/hooks\.json$/;
 
 function isSupersetOwnedMuseHooksPath(value: unknown): value is string {
 	return (
@@ -145,7 +145,8 @@ export function getMuseSettingsJsonWithoutManagedHooks(
 	existingRaw: string,
 ): string | null {
 	const root = parseSettingsRoot(existingRaw);
-	if (root === null) return null;
+	if (root === null || !isSupersetOwnedMuseHooksPath(root.managed_hooks_path))
+		return null;
 	let changed = false;
 	if (isSupersetOwnedMuseHooksPath(root.managed_hooks_path)) {
 		delete root.managed_hooks_path;

@@ -95,8 +95,7 @@ mock.module("@superset/db/client", () => {
 					log.push(`organization.delete ${firstParam(condition)}`);
 				},
 			}),
-		},
-		dbWs: {
+
 			transaction: async (run: (transaction: typeof tx) => Promise<void>) => {
 				await run(tx);
 				log.push("tombstone");

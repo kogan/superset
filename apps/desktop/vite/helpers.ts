@@ -109,6 +109,8 @@ export function linguiMacroPlugin(): Plugin {
  * same host, and a bare `ws:` would admit one to any host.
  */
 function connectSrcOrigins(): string {
+	if (process.env.SUPERESTSET_LOCAL === "1")
+		return "http://127.0.0.1:* ws://127.0.0.1:* http://frame.usercontent.localhost:*";
 	const origins = [
 		process.env.NEXT_PUBLIC_API_URL || "https://api.superset.sh",
 		process.env.RELAY_URL || "https://relay.superset.sh",

@@ -1,11 +1,9 @@
 import { useLingui } from "@lingui/react/macro";
-import { FEATURE_FLAGS } from "@superset/shared/constants";
 import { toast } from "@superset/ui/sonner";
 import { createFileRoute } from "@tanstack/react-router";
-import { useFeatureFlagEnabled } from "posthog-js/react";
 import { useEffect } from "react";
 import { Redirect } from "renderer/components/Redirect";
-import { env } from "renderer/env.renderer";
+import { usePluginsEnabled } from "renderer/hooks/usePluginsEnabled";
 import { usePluginCatalog } from "renderer/routes/_authenticated/_dashboard/plugins/hooks/usePluginCatalog";
 import { PluginDetail } from "./components/PluginDetail";
 
@@ -64,16 +62,14 @@ function useConnectOutcome(plugin: string) {
 
 function PluginDetailPage() {
 	const { pluginName } = Route.useParams();
-	const isEnabled = useFeatureFlagEnabled(FEATURE_FLAGS.PLUGINS);
+	const isEnabled = usePluginsEnabled();
 	const { plugins, isLoading } = usePluginCatalog();
 	const plugin = plugins.find((entry) => entry.name === pluginName);
 
 	useConnectOutcome(pluginName);
 
-	if (env.NODE_ENV !== "development") {
-		if (isEnabled === undefined) return null;
-		if (!isEnabled) return <Redirect to="/v2-workspaces" />;
-	}
+	if (isEnabled === undefined) return null;
+	if (!isEnabled) return <Redirect to="/v2-workspaces" />;
 	if (isLoading) return null;
 	if (!plugin) return <Redirect to="/plugins" />;
 

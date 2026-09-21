@@ -1,0 +1,1 @@
+ALTER TABLE `terminal_agent_bindings` ADD `subagent_names` text DEFAULT '{}' NOT NULL;

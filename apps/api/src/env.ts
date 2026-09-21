@@ -83,7 +83,7 @@ export const env = createEnv({
 		NEXT_PUBLIC_ADMIN_URL: z.string().url(),
 		NEXT_PUBLIC_MARKETING_URL: z.string().url(),
 		NEXT_PUBLIC_DESKTOP_URL: z.string().url().optional(),
-		NEXT_PUBLIC_POSTHOG_KEY: z.string().min(1),
+		NEXT_PUBLIC_POSTHOG_KEY: z.string().default(""),
 		NEXT_PUBLIC_POSTHOG_HOST: z.string().url(),
 		NEXT_PUBLIC_SENTRY_DSN_API: z.string().optional(),
 		NEXT_PUBLIC_SENTRY_ENVIRONMENT: z
@@ -92,9 +92,12 @@ export const env = createEnv({
 	},
 	experimental__runtimeEnv: {
 		NODE_ENV: process.env.NODE_ENV,
-		NEXT_PUBLIC_API_URL: process.env.NEXT_PUBLIC_API_URL,
-		NEXT_PUBLIC_WEB_URL: process.env.NEXT_PUBLIC_WEB_URL,
-		NEXT_PUBLIC_ADMIN_URL: process.env.NEXT_PUBLIC_ADMIN_URL,
+		NEXT_PUBLIC_API_URL:
+			process.env.SUPERESTSET_API_ORIGIN || process.env.NEXT_PUBLIC_API_URL,
+		NEXT_PUBLIC_WEB_URL:
+			process.env.SUPERESTSET_API_ORIGIN || process.env.NEXT_PUBLIC_WEB_URL,
+		NEXT_PUBLIC_ADMIN_URL:
+			process.env.SUPERESTSET_API_ORIGIN || process.env.NEXT_PUBLIC_ADMIN_URL,
 		NEXT_PUBLIC_MARKETING_URL: process.env.NEXT_PUBLIC_MARKETING_URL,
 		NEXT_PUBLIC_DESKTOP_URL: process.env.NEXT_PUBLIC_DESKTOP_URL,
 		NEXT_PUBLIC_POSTHOG_KEY: process.env.NEXT_PUBLIC_POSTHOG_KEY,

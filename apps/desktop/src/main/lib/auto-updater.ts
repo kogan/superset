@@ -3,7 +3,7 @@ import { statfsSync } from "node:fs";
 import { msg } from "@lingui/core/macro";
 import * as Sentry from "@sentry/electron/main";
 import { i18n } from "@superset/i18n";
-import { app, dialog } from "electron";
+import { app, shell, dialog } from "electron";
 import log from "electron-log/main";
 import { autoUpdater, type UpdateCheckResult } from "electron-updater";
 import { env } from "main/env.main";
@@ -64,8 +64,8 @@ const IS_AUTO_UPDATE_PLATFORM = PLATFORM.IS_MAC || PLATFORM.IS_LINUX;
 // - Stable: fetches from /releases/latest/download/ (latest non-prerelease)
 // - Canary: fetches from /releases/download/desktop-canary/ (rolling canary tag)
 const UPDATE_FEED_URL = IS_PRERELEASE
-	? "https://github.com/superset-sh/superset/releases/download/desktop-canary"
-	: "https://github.com/superset-sh/superset/releases/latest/download";
+	? "https://github.com/kogan/superset/releases/download/desktop-canary"
+	: "https://github.com/kogan/superset/releases/latest/download";
 
 export type { AutoUpdateStatusEvent } from "shared/auto-update";
 
@@ -220,6 +220,7 @@ export function dismissUpdate(): void {
 }
 
 export function checkForUpdates(): void {
+	if (process.env.SUPERESTSET_LOCAL === "1") return;
 	if (env.NODE_ENV === "development" || !IS_AUTO_UPDATE_PLATFORM) {
 		return;
 	}
@@ -255,6 +256,10 @@ export function checkForUpdates(): void {
 }
 
 export function checkForUpdatesInteractive(): void {
+	if (process.env.SUPERESTSET_LOCAL === "1") {
+		void shell.openExternal("https://github.com/kogan/superset/releases");
+		return;
+	}
 	if (env.NODE_ENV === "development") {
 		dialog.showMessageBox({
 			type: "info",
@@ -437,6 +442,8 @@ export function simulateError(): void {
 }
 
 export function setupAutoUpdater(): void {
+	// Private GitHub releases require a signed-in browser. Never hand a GitHub token to the updater.
+	if (process.env.SUPERESTSET_LOCAL === "1") return;
 	if (env.NODE_ENV === "development" || !IS_AUTO_UPDATE_PLATFORM) {
 		return;
 	}

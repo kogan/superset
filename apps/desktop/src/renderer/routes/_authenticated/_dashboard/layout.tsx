@@ -37,6 +37,7 @@ import { AddRepositoryModals } from "./components/AddRepositoryModals";
 import { CrossVersionMismatchState } from "./components/CrossVersionMismatchState";
 import { RemotePortForwarder } from "./components/RemotePortForwarder";
 import { TopBar } from "./components/TopBar";
+import { DashboardWorkspaceStatusProvider } from "./providers/DashboardWorkspaceStatusProvider";
 
 export const Route = createFileRoute("/_authenticated/_dashboard")({
 	component: DashboardLayout,
@@ -94,6 +95,7 @@ function DashboardLayout() {
 	const onV2WorkspaceRoute = v2WorkspaceMatch !== false;
 	const onNewWorkspaceRoute = matchRoute({ to: "/new-workspace" }) !== false;
 	const onDashboardViewRoute =
+		matchRoute({ to: "/attention", fuzzy: true }) !== false ||
 		matchRoute({ to: "/automations", fuzzy: true }) !== false ||
 		matchRoute({ to: "/tasks", fuzzy: true }) !== false ||
 		matchRoute({ to: "/pull-requests", fuzzy: true }) !== false ||
@@ -269,52 +271,57 @@ function DashboardLayout() {
 					selectedWorkspaceIsRemote)
 			}
 		>
-			<PortForwardsProvider>
-				<RemotePortForwarder />
-				<div className="flex h-full w-full overflow-hidden">
-					<CommandPaletteHost />
-					{sidebarOutsideColumn && sidebarPanel}
-					<div className="flex flex-1 flex-col min-w-0 min-h-0">
-						{!hideTopBar && <TopBar />}
-						<div className="flex flex-1 min-h-0 min-w-0 overflow-hidden">
-							{!sidebarOutsideColumn && sidebarPanel}
-							<div className="relative flex flex-1 min-h-0 min-w-0">
-								{versionMismatch ? (
-									// A v2 user on a stale v1 workspace route has nothing to go
-									// back to, so send them somewhere actionable instead of a
-									// dead-end "pick a workspace" screen. v1 users keep the
-									// static state — /new-workspace is a v2-only surface.
-									isV2CloudEnabled ? (
-										<Redirect to="/new-workspace" replace />
+			<DashboardWorkspaceStatusProvider
+				enabled={isV2CloudEnabled}
+				activeWorkspaceId={currentV2WorkspaceId}
+			>
+				<PortForwardsProvider>
+					<RemotePortForwarder />
+					<div className="flex h-full w-full overflow-hidden">
+						<CommandPaletteHost />
+						{sidebarOutsideColumn && sidebarPanel}
+						<div className="flex flex-1 flex-col min-w-0 min-h-0">
+							{!hideTopBar && <TopBar />}
+							<div className="flex flex-1 min-h-0 min-w-0 overflow-hidden">
+								{!sidebarOutsideColumn && sidebarPanel}
+								<div className="relative flex flex-1 min-h-0 min-w-0">
+									{versionMismatch ? (
+										// A v2 user on a stale v1 workspace route has nothing to go
+										// back to, so send them somewhere actionable instead of a
+										// dead-end "pick a workspace" screen. v1 users keep the
+										// static state — /new-workspace is a v2-only surface.
+										isV2CloudEnabled ? (
+											<Redirect to="/new-workspace" replace />
+										) : (
+											<CrossVersionMismatchState />
+										)
 									) : (
-										<CrossVersionMismatchState />
-									)
-								) : (
-									<ContentBoundary>
-										<Outlet />
-									</ContentBoundary>
-								)}
+										<ContentBoundary>
+											<Outlet />
+										</ContentBoundary>
+									)}
+								</div>
 							</div>
 						</div>
-					</div>
-					<div
-						id="workspace-right-sidebar-slot"
-						className="flex h-full shrink-0"
-					/>
-					<AddRepositoryModals />
-					{deleteTarget && (
-						<DeleteWorkspaceDialog
-							workspaceId={deleteTarget.workspaceId}
-							workspaceName={deleteTarget.workspaceName}
-							workspaceType={deleteTarget.workspaceType}
-							open={true}
-							onOpenChange={(open) => {
-								if (!open) setDeleteTarget(null);
-							}}
+						<div
+							id="workspace-right-sidebar-slot"
+							className="flex h-full shrink-0"
 						/>
-					)}
-				</div>
-			</PortForwardsProvider>
+						<AddRepositoryModals />
+						{deleteTarget && (
+							<DeleteWorkspaceDialog
+								workspaceId={deleteTarget.workspaceId}
+								workspaceName={deleteTarget.workspaceName}
+								workspaceType={deleteTarget.workspaceType}
+								open={true}
+								onOpenChange={(open) => {
+									if (!open) setDeleteTarget(null);
+								}}
+							/>
+						)}
+					</div>
+				</PortForwardsProvider>
+			</DashboardWorkspaceStatusProvider>
 		</DashboardSidebarPortsProvider>
 	);
 }

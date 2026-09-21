@@ -17,7 +17,7 @@ import {
 
 const TEST_ROOT = path.join(
 	os.tmpdir(),
-	`superset-managed-mcp-${process.pid}-${Date.now()}`,
+	`superestset-managed-mcp-${process.pid}-${Date.now()}`,
 );
 const HOME_DIR = path.join(TEST_ROOT, "home");
 const SUPERSET_HOME = path.join(TEST_ROOT, "superset-home");
@@ -205,7 +205,7 @@ describe("syncManagedMcpServers — Codex", () => {
 		const content = readFileSync(codexToml, "utf-8");
 		expect(content).toContain('model = "gpt-5"');
 		expect(content).not.toContain("[mcp_servers.linear]");
-		expect(content).not.toContain("superset managed mcp servers");
+		expect(content).not.toContain("superestset managed mcp servers");
 	});
 
 	it("deletes a file that held only the managed block", () => {
@@ -246,7 +246,7 @@ describe("syncManagedMcpServers — per-agent external scoping", () => {
 		// Codex side stays the user's single table, no managed block added.
 		const content = readFileSync(codexToml, "utf-8");
 		expect(content.match(/\[mcp_servers\.linear\]/g)?.length).toBe(1);
-		expect(content).not.toContain("superset managed mcp servers");
+		expect(content).not.toContain("superestset managed mcp servers");
 	});
 
 	it("a Claude-scope user server suppresses Claude but not Codex", () => {

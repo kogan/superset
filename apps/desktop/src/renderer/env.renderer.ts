@@ -46,6 +46,7 @@ const rawEnv = {
 	SENTRY_DSN_DESKTOP: import.meta.env.SENTRY_DSN_DESKTOP as string | undefined,
 	RELAY_URL: process.env.RELAY_URL,
 	REALTIME_URL: process.env.REALTIME_URL,
+	...(typeof window !== "undefined" ? window.App?.localEnvironment : undefined),
 };
 
 // Only allow skipping validation in development (never in production)

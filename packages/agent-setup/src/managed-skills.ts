@@ -6,16 +6,16 @@ import { writeFileIfChanged } from "./agent-wrappers-common";
 import { getBundledPluginDir } from "./config";
 import { readInstalledPluginSources } from "./installed-plugins";
 
-export const MANAGED_SKILL_MARKER = "<!-- superset-managed-skill v1 -->";
+export const MANAGED_SKILL_MARKER = "<!-- superestset-managed-skill v1 -->";
 
 /**
  * Sentinel file marking a directory as Superset-managed (used for the Claude
  * plugin dir, whose manifest is JSON and can't carry the markdown marker).
  */
-export const MANAGED_SENTINEL_NAME = ".superset-managed";
+export const MANAGED_SENTINEL_NAME = ".superestset-managed";
 
 /** Namespace subdirectory for managed commands under ~/.agents/commands. */
-export const MANAGED_COMMAND_NAMESPACE = "superset";
+export const MANAGED_COMMAND_NAMESPACE = "superestset";
 
 /**
  * Claude Code loads any ~/.claude/skills/<name> directory containing a
@@ -25,7 +25,7 @@ export const MANAGED_COMMAND_NAMESPACE = "superset";
  * rather than each claiming a directory of its own, so Claude sees a single
  * Superset plugin however many plugins are installed.
  */
-const BUNDLED_SOURCE_NAME = "superset";
+const BUNDLED_SOURCE_NAME = "superestset";
 
 /**
  * Skills exposed as slash commands to the in-app chat. Deliberately a curated
@@ -63,7 +63,12 @@ export interface ManagedSkillsOptions {
  * Inserts the managed marker right after the frontmatter block so both the
  * writer and the reaper can tell managed files apart from user-authored ones.
  */
+function forkSkillContent(content: string): string {
+	return content.replace(/(?<![\w/.-])superset(?=[ \t`])/g, "superestset");
+}
+
 export function withManagedMarker(content: string): string {
+	content = forkSkillContent(content);
 	if (content.includes(MANAGED_SKILL_MARKER)) return content;
 	const frontmatterEnd = content.startsWith("---\n")
 		? content.indexOf("\n---\n", 4)
@@ -95,7 +100,7 @@ function isSkillDisabled(
 function resolvePluginSources(
 	pluginSources: readonly PluginSkillSource[] = [],
 ): ResolvedSource[] {
-	const seen = new Set([BUNDLED_SOURCE_NAME]);
+	const seen = new Set([BUNDLED_SOURCE_NAME, "superset"]);
 	const resolved: ResolvedSource[] = [];
 	for (const source of pluginSources) {
 		if (seen.has(source.name)) {
@@ -183,7 +188,16 @@ async function syncDir(
 		const executable = (fs.statSync(source).mode & 0o111) !== 0;
 		writeFileIfChanged(
 			target,
-			contents ?? fs.readFileSync(source, "utf-8"),
+			relative === path.join(".claude-plugin", "plugin.json")
+				? JSON.stringify(
+						{
+							...JSON.parse(fs.readFileSync(source, "utf-8")),
+							name: BUNDLED_SOURCE_NAME,
+						},
+						null,
+						2,
+					)
+				: forkSkillContent(contents ?? fs.readFileSync(source, "utf-8")),
 			executable ? 0o755 : 0o644,
 		);
 	}
@@ -338,6 +352,12 @@ async function copyBundledExtras(
 	}
 }
 
+function skillPrefix(sourceName: string): string {
+	return sourceName === BUNDLED_SOURCE_NAME
+		? sourceName
+		: `${BUNDLED_SOURCE_NAME}-${sourceName}`;
+}
+
 function provisionedDirsFor(root: string, sourceName: string): string[] {
 	if (!fs.existsSync(root)) return [];
 	try {
@@ -345,7 +365,8 @@ function provisionedDirsFor(root: string, sourceName: string): string[] {
 			.readdirSync(root, { withFileTypes: true })
 			.filter(
 				(entry) =>
-					entry.isDirectory() && entry.name.startsWith(`${sourceName}-`),
+					entry.isDirectory() &&
+					entry.name.startsWith(`${skillPrefix(sourceName)}-`),
 			)
 			.map((entry) => entry.name);
 	} catch {
@@ -451,7 +472,7 @@ export async function createManagedSkills(
 				agentsSkillsRoot,
 				source.name,
 			)) {
-				const skillName = existing.slice(source.name.length + 1);
+				const skillName = existing.slice(skillPrefix(source.name).length + 1);
 				if (isSkillDisabled(disabledSkills, source.name, skillName)) continue;
 				desiredAgentsDirs.add(existing);
 			}
@@ -460,7 +481,7 @@ export async function createManagedSkills(
 
 		for (const pluginSkill of skills) {
 			if (isSkillDisabled(disabledSkills, source.name, pluginSkill)) continue;
-			const dirName = `${source.name}-${pluginSkill}`;
+			const dirName = `${skillPrefix(source.name)}-${pluginSkill}`;
 			try {
 				const raw = readPluginSkill(source.dir, pluginSkill);
 				if (raw === null) continue;

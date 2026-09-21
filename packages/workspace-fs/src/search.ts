@@ -506,7 +506,7 @@ function isBinaryContent(buffer: Buffer): boolean {
 	return false;
 }
 
-function formatPreviewLine(line: string): string {
+function formatPreviewLine(line: string, column: number): string {
 	const normalized = line.trim();
 	if (!normalized) {
 		return "";
@@ -514,7 +514,10 @@ function formatPreviewLine(line: string): string {
 	if (normalized.length <= MAX_PREVIEW_LENGTH) {
 		return normalized;
 	}
-	return `${normalized.slice(0, MAX_PREVIEW_LENGTH - 3)}...`;
+	const leadingWhitespace = line.length - line.trimStart().length;
+	const start = Math.max(0, column - 1 - leadingWhitespace - 60);
+	const preview = normalized.slice(start, start + MAX_PREVIEW_LENGTH - 6);
+	return `${start > 0 ? "..." : ""}${preview}${start + preview.length < normalized.length ? "..." : ""}`;
 }
 
 function rankContentMatches(
@@ -597,7 +600,7 @@ async function searchContentWithRipgrep({
 		args.push("--glob", `!${normalizePathForGlob(pattern)}`);
 	}
 
-	args.push(query, ".");
+	args.push("--", query, ".");
 
 	try {
 		const { stdout } = await runRipgrep(args, {
@@ -641,7 +644,7 @@ async function searchContentWithRipgrep({
 				pathData !== null &&
 				"text" in pathData &&
 				typeof pathData.text === "string"
-					? pathData.text
+					? normalizePathForGlob(pathData.text)
 					: null;
 
 			if (!relativePath) {
@@ -672,7 +675,10 @@ async function searchContentWithRipgrep({
 					"start" in firstSubmatch &&
 					typeof firstSubmatch.start === "number"
 				) {
-					column = firstSubmatch.start + 1;
+					column =
+						Buffer.from(lineText, "utf8")
+							.subarray(0, firstSubmatch.start)
+							.toString("utf8").length + 1;
 				}
 			}
 
@@ -692,7 +698,7 @@ async function searchContentWithRipgrep({
 				name: path.basename(relativePath),
 				line: lineNumber,
 				column,
-				preview: formatPreviewLine(lineText.replace(/\r?\n$/, "")),
+				preview: formatPreviewLine(lineText.replace(/\r?\n$/, ""), column),
 			});
 		}
 
@@ -775,7 +781,7 @@ async function searchContentWithScan({
 						name: item.name,
 						line: lineIndex + 1,
 						column: matchIndex + 1,
-						preview: formatPreviewLine(line),
+						preview: formatPreviewLine(line, matchIndex + 1),
 					});
 
 					fromIndex = matchIndex + lowerNeedle.length;

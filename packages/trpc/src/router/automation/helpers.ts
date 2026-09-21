@@ -1,5 +1,5 @@
 import { createHash } from "node:crypto";
-import { db, type dbWs } from "@superset/db/client";
+import { db } from "@superset/db/client";
 import {
 	type AutomationPromptSource,
 	automationPromptVersions,
@@ -31,8 +31,8 @@ export function promptSourceFromSession(session: {
 }
 
 export type AutomationDbExecutor =
-	| typeof dbWs
-	| Parameters<Parameters<typeof dbWs.transaction>[0]>[0];
+	| typeof db
+	| Parameters<Parameters<typeof db.transaction>[0]>[0];
 
 /**
  * Mirrors an automation's schedule onto its `schedule` trigger. The dispatcher

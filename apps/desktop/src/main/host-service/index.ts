@@ -155,7 +155,11 @@ async function main(): Promise<void> {
 				manifestReclaimTimer.unref();
 			}
 
-			if (env.RELAY_URL && env.ORGANIZATION_ID) {
+			if (
+				process.env.SUPERESTSET_LOCAL !== "1" &&
+				env.RELAY_URL &&
+				env.ORGANIZATION_ID
+			) {
 				void connectRelay({
 					api,
 					relayUrl: env.RELAY_URL,

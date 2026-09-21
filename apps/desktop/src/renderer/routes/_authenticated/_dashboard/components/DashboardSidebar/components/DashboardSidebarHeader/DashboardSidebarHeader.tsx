@@ -1,5 +1,4 @@
 import { Trans, useLingui } from "@lingui/react/macro";
-import { FEATURE_FLAGS } from "@superset/shared/constants";
 import {
 	DropdownMenu,
 	DropdownMenuContent,
@@ -10,19 +9,17 @@ import { toast } from "@superset/ui/sonner";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@superset/ui/tooltip";
 import { cn } from "@superset/ui/utils";
 import { useMatchRoute, useNavigate } from "@tanstack/react-router";
-import { useFeatureFlagEnabled } from "posthog-js/react";
 import { useRef } from "react";
 import { GoGitPullRequest } from "react-icons/go";
-import { HiOutlineClipboardDocumentList } from "react-icons/hi2";
 import {
 	LuClock,
 	LuFileText,
 	LuGauge,
-	LuLayers,
 	LuPlus,
 	LuPuzzle,
 	LuSearch,
 } from "react-icons/lu";
+import { SiJira } from "react-icons/si";
 import {
 	VscFolderOpened,
 	VscGithubAlt,
@@ -33,11 +30,12 @@ import { useFrameStackStore } from "renderer/commandPalette";
 import { GATED_FEATURES, usePaywall } from "renderer/components/Paywall";
 import { SidebarKbdHint } from "renderer/components/SidebarKbdHint";
 import { ZoomStable } from "renderer/components/ZoomStable";
-import { env } from "renderer/env.renderer";
 import {
 	useOpenNewWorkspace,
 	useOpenNewWorkspaceForLocalProject,
 } from "renderer/hooks/useOpenNewWorkspace";
+import { usePagesEnabled } from "renderer/hooks/usePagesEnabled";
+import { usePluginsEnabled } from "renderer/hooks/usePluginsEnabled";
 import { useZoomFactor } from "renderer/hooks/useZoomFactor";
 import { useHotkeyDisplay } from "renderer/hotkeys";
 import { electronTrpc } from "renderer/lib/electron-trpc";
@@ -51,10 +49,6 @@ import {
 	pullRequestsSearchFromFilters,
 	usePullRequestsFilterStore,
 } from "renderer/routes/_authenticated/_dashboard/pull-requests/stores/pullRequestsFilterStore";
-import {
-	tasksSearchFromFilters,
-	useTasksFilterStore,
-} from "renderer/routes/_authenticated/_dashboard/tasks/stores/tasks-filter-state";
 import { useHostWorkspaces } from "renderer/routes/_authenticated/providers/HostWorkspacesProvider";
 import {
 	getUsageLastSection,
@@ -66,6 +60,9 @@ import {
 	useOpenNewProjectModal,
 	useOpenTemplateGalleryModal,
 } from "renderer/stores/add-repository-modal";
+import { useFeaturePreferences } from "renderer/stores/feature-preferences";
+
+import { AttentionNavigation } from "./components/AttentionNavigation";
 
 interface DashboardSidebarHeaderProps {
 	isCollapsed?: boolean;
@@ -141,7 +138,6 @@ export function DashboardSidebarHeader({
 	const zoomFactor = useZoomFactor();
 	const matchRoute = useMatchRoute();
 	const { gateFeature } = usePaywall();
-	const isWorkspacesListOpen = !!matchRoute({ to: "/v2-workspaces" });
 	const v2WorkspaceMatch = matchRoute({
 		to: "/v2-workspace/$workspaceId",
 		fuzzy: true,
@@ -155,7 +151,11 @@ export function DashboardSidebarHeader({
 					(workspace) => workspace.id === v2WorkspaceMatch.workspaceId,
 				)?.projectId ?? undefined)
 			: undefined;
-	const isTasksOpen = !!matchRoute({ to: "/tasks", fuzzy: true });
+	const jiraEnabled = useFeaturePreferences((state) => state.jira);
+	const pullRequestsEnabled = useFeaturePreferences(
+		(state) => state.pullRequests,
+	);
+	const isJiraOpen = !!matchRoute({ to: "/jira", fuzzy: true });
 	const isPullRequestsOpen = !!matchRoute({
 		to: "/pull-requests",
 		fuzzy: true,
@@ -163,24 +163,10 @@ export function DashboardSidebarHeader({
 	const isAutomationsOpen = !!matchRoute({ to: "/automations", fuzzy: true });
 	const isPluginsOpen = !!matchRoute({ to: "/plugins", fuzzy: true });
 	const isPagesOpen = !!matchRoute({ to: "/pages", fuzzy: true });
-	// `?? false`: the hook returns undefined until PostHog flags resolve.
-	// Dev builds bypass the flag — the local dev account isn't in the
-	// @superset.sh release condition.
-	const isPluginsEnabled =
-		(useFeatureFlagEnabled(FEATURE_FLAGS.PLUGINS) ?? false) ||
-		env.NODE_ENV === "development";
+	const isPluginsEnabled = usePluginsEnabled() ?? false;
 	const { myFailedCount, hasAutomations, automationsPending } =
 		useFailedAutomations();
 
-	const {
-		tab: lastTab,
-		assignee: lastAssignee,
-		search: lastSearch,
-		typeTab: lastTypeTab,
-		projectFilters: lastProjectFilters,
-		linearProjectFilter: lastLinearProjectFilter,
-		includeClosedIssues: lastIncludeClosedIssues,
-	} = useTasksFilterStore();
 	const {
 		search: lastPullRequestsSearch,
 		projectFilters: lastPullRequestsProjectFilters,
@@ -189,10 +175,6 @@ export function DashboardSidebarHeader({
 		includeClosed: lastPullRequestsIncludeClosed,
 		mergedOnly: lastPullRequestsMergedOnly,
 	} = usePullRequestsFilterStore();
-
-	const handleWorkspacesClick = () => {
-		navigate({ to: "/v2-workspaces" });
-	};
 
 	// Automations are Pro, but an org that already has some (a downgrade) can
 	// still reach the list to pause, edit, or delete them; the page gates the
@@ -210,24 +192,7 @@ export function DashboardSidebarHeader({
 		});
 	};
 
-	const handleTasksClick = () => {
-		gateFeature(GATED_FEATURES.TASKS, () => {
-			navigate({
-				to: "/tasks",
-				search: tasksSearchFromFilters({
-					tab: lastTab,
-					assignee: lastAssignee,
-					search: lastSearch,
-					typeTab: lastTypeTab,
-					projectFilters: lastProjectFilters,
-					linearProjectFilter: lastLinearProjectFilter,
-					includeClosedIssues: lastIncludeClosedIssues,
-				}),
-			});
-		});
-	};
-
-	const isPagesEnabled = useFeatureFlagEnabled(FEATURE_FLAGS.PAGES) ?? false;
+	const isPagesEnabled = usePagesEnabled() ?? false;
 	const { data: isUsageInSidebarEnabled } =
 		electronTrpc.settings.getShowUsageInSidebar.useQuery();
 
@@ -251,6 +216,9 @@ export function DashboardSidebarHeader({
 				mergedOnly: lastPullRequestsMergedOnly,
 			}),
 		});
+	};
+	const handleJiraClick = () => {
+		void navigate({ to: "/jira" });
 	};
 
 	const handleUsageClick = () => {
@@ -321,26 +289,6 @@ export function DashboardSidebarHeader({
 						<TooltipTrigger asChild>
 							<button
 								type="button"
-								onClick={handleWorkspacesClick}
-								className={cn(
-									"flex size-7 items-center justify-center rounded-md transition-colors",
-									isWorkspacesListOpen
-										? "bg-fill-selected text-muted-foreground"
-										: "text-muted-foreground hover:bg-fill-hover",
-								)}
-							>
-								<LuLayers className="size-3.5" strokeWidth={1.5} />
-							</button>
-						</TooltipTrigger>
-						<TooltipContent side="right">
-							<Trans>Workspaces</Trans>
-						</TooltipContent>
-					</Tooltip>
-
-					<Tooltip delayDuration={300}>
-						<TooltipTrigger asChild>
-							<button
-								type="button"
 								onClick={handleAutomationsClick}
 								aria-label={
 									myFailedCount > 0
@@ -376,53 +324,56 @@ export function DashboardSidebarHeader({
 						</TooltipContent>
 					</Tooltip>
 
-					<Tooltip delayDuration={300}>
-						<TooltipTrigger asChild>
-							<button
-								type="button"
-								onClick={handleTasksClick}
-								aria-label={t({
-									message: "Tasks",
-								})}
-								aria-current={isTasksOpen ? "page" : undefined}
-								className={cn(
-									"flex size-7 items-center justify-center rounded-md transition-colors",
-									isTasksOpen
-										? "bg-fill-selected text-muted-foreground"
-										: "text-muted-foreground hover:bg-fill-hover",
-								)}
-							>
-								<HiOutlineClipboardDocumentList className="size-3.5" />
-							</button>
-						</TooltipTrigger>
-						<TooltipContent side="right">
-							<Trans>Tasks</Trans>
-						</TooltipContent>
-					</Tooltip>
+					<AttentionNavigation collapsed />
+					{jiraEnabled && (
+						<Tooltip delayDuration={300}>
+							<TooltipTrigger asChild>
+								<button
+									type="button"
+									onClick={handleJiraClick}
+									aria-label={t({ message: "Jira" })}
+									aria-current={isJiraOpen ? "page" : undefined}
+									className={cn(
+										"flex size-7 items-center justify-center rounded-md transition-colors",
+										isJiraOpen
+											? "bg-fill-selected text-muted-foreground"
+											: "text-muted-foreground hover:bg-fill-hover",
+									)}
+								>
+									<SiJira className="size-3.5" />
+								</button>
+							</TooltipTrigger>
+							<TooltipContent side="right">
+								<Trans>Jira</Trans>
+							</TooltipContent>
+						</Tooltip>
+					)}
 
-					<Tooltip delayDuration={300}>
-						<TooltipTrigger asChild>
-							<button
-								type="button"
-								onClick={handlePullRequestsClick}
-								aria-label={t({
-									message: "Pull requests",
-								})}
-								aria-current={isPullRequestsOpen ? "page" : undefined}
-								className={cn(
-									"flex size-7 items-center justify-center rounded-md transition-colors",
-									isPullRequestsOpen
-										? "bg-fill-selected text-muted-foreground"
-										: "text-muted-foreground hover:bg-fill-hover",
-								)}
-							>
-								<GoGitPullRequest className="size-3.5" />
-							</button>
-						</TooltipTrigger>
-						<TooltipContent side="right">
-							<Trans>Pull requests</Trans>
-						</TooltipContent>
-					</Tooltip>
+					{pullRequestsEnabled && (
+						<Tooltip delayDuration={300}>
+							<TooltipTrigger asChild>
+								<button
+									type="button"
+									onClick={handlePullRequestsClick}
+									aria-label={t({
+										message: "Pull requests",
+									})}
+									aria-current={isPullRequestsOpen ? "page" : undefined}
+									className={cn(
+										"flex size-7 items-center justify-center rounded-md transition-colors",
+										isPullRequestsOpen
+											? "bg-fill-selected text-muted-foreground"
+											: "text-muted-foreground hover:bg-fill-hover",
+									)}
+								>
+									<GoGitPullRequest className="size-3.5" />
+								</button>
+							</TooltipTrigger>
+							<TooltipContent side="right">
+								<Trans>Pull requests</Trans>
+							</TooltipContent>
+						</Tooltip>
+					)}
 
 					{isUsageInSidebarEnabled && (
 						<Tooltip delayDuration={300}>
@@ -614,25 +565,6 @@ export function DashboardSidebarHeader({
 
 			<button
 				type="button"
-				onClick={handleWorkspacesClick}
-				className={cn(
-					"flex h-7 w-full items-center gap-2 rounded-md px-2 text-[13px] font-medium transition-colors",
-					isWorkspacesListOpen
-						? "bg-fill-selected text-foreground"
-						: "text-muted-foreground hover:bg-fill-hover hover:text-foreground",
-				)}
-			>
-				<LuLayers
-					className="size-4 shrink-0 text-muted-foreground"
-					strokeWidth={1.5}
-				/>
-				<span className="flex-1 text-left">
-					<Trans>Workspaces</Trans>
-				</span>
-			</button>
-
-			<button
-				type="button"
 				onClick={handleAutomationsClick}
 				className={cn(
 					"flex h-7 w-full items-center gap-2 rounded-md px-2 text-[13px] font-medium transition-colors",
@@ -660,45 +592,47 @@ export function DashboardSidebarHeader({
 				)}
 			</button>
 
-			<button
-				type="button"
-				onClick={handleTasksClick}
-				aria-label={t({
-					message: "Tasks",
-				})}
-				aria-current={isTasksOpen ? "page" : undefined}
-				className={cn(
-					"flex h-7 w-full items-center gap-2 rounded-md px-2 text-[13px] font-medium transition-colors",
-					isTasksOpen
-						? "bg-fill-selected text-foreground"
-						: "text-muted-foreground hover:bg-fill-hover hover:text-foreground",
-				)}
-			>
-				<HiOutlineClipboardDocumentList className="size-4 shrink-0 text-muted-foreground" />
-				<span className="flex-1 text-left">
-					<Trans>Tasks</Trans>
-				</span>
-			</button>
+			<AttentionNavigation />
+			{jiraEnabled && (
+				<button
+					type="button"
+					onClick={handleJiraClick}
+					aria-current={isJiraOpen ? "page" : undefined}
+					className={cn(
+						"flex h-7 w-full items-center gap-2 rounded-md px-2 text-[13px] font-medium transition-colors",
+						isJiraOpen
+							? "bg-fill-selected text-foreground"
+							: "text-muted-foreground hover:bg-fill-hover hover:text-foreground",
+					)}
+				>
+					<SiJira className="size-4 shrink-0 text-muted-foreground" />
+					<span className="flex-1 text-left">
+						<Trans>Jira</Trans>
+					</span>
+				</button>
+			)}
 
-			<button
-				type="button"
-				onClick={handlePullRequestsClick}
-				aria-label={t({
-					message: "Pull requests",
-				})}
-				aria-current={isPullRequestsOpen ? "page" : undefined}
-				className={cn(
-					"flex h-7 w-full items-center gap-2 rounded-md px-2 text-[13px] font-medium transition-colors",
-					isPullRequestsOpen
-						? "bg-fill-selected text-foreground"
-						: "text-muted-foreground hover:bg-fill-hover hover:text-foreground",
-				)}
-			>
-				<GoGitPullRequest className="size-4 shrink-0 text-muted-foreground" />
-				<span className="flex-1 text-left">
-					<Trans>Pull requests</Trans>
-				</span>
-			</button>
+			{pullRequestsEnabled && (
+				<button
+					type="button"
+					onClick={handlePullRequestsClick}
+					aria-label={t({
+						message: "Pull requests",
+					})}
+					aria-current={isPullRequestsOpen ? "page" : undefined}
+					className={cn(
+						"flex h-7 w-full items-center gap-2 rounded-md px-2 text-[13px] font-medium transition-colors",
+						isPullRequestsOpen
+							? "bg-fill-selected text-foreground"
+							: "text-muted-foreground hover:bg-fill-hover hover:text-foreground",
+					)}
+				>
+					<GoGitPullRequest className="size-4 shrink-0 text-muted-foreground" />
+					<span className="flex-1 text-left">
+						<Trans>Pull requests</Trans>
+					</span>
+				</button>
+			)}
 
 			{isUsageInSidebarEnabled && (
 				<button

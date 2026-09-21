@@ -12,8 +12,10 @@ import {
 } from "./auto-updater";
 import { menuEmitter } from "./menu-events";
 import { confirmAndQuitCompletely } from "./quit-completely";
+import { requestWorkspaceRefresh } from "./workspace-connections/startup";
 
 export function createApplicationMenu() {
+	const appName = app.name;
 	const reloadAccelerator = "CmdOrCtrl+R";
 	const closeAccelerator = "CmdOrCtrl+Shift+Q";
 	const showHotkeysAccelerator = "CmdOrCtrl+/";
@@ -51,6 +53,16 @@ export function createApplicationMenu() {
 					},
 				},
 				{ type: "separator" },
+				...(process.env.SUPERESTSET_LOCAL === "1"
+					? [
+							{
+								label: i18n._(msg({ message: "Refresh Superset Workspaces…" })),
+								click: () => {
+									void requestWorkspaceRefresh();
+								},
+							},
+						]
+					: []),
 				// Explicit click handler (not `role: "close"`) — `role: "close"` adds
 				// an implicit CmdOrCtrl+W accelerator that overrides browser-manager's
 				// `before-input-event` interception and closes the window instead of
@@ -86,7 +98,7 @@ export function createApplicationMenu() {
 							{ type: "separator" },
 							{ role: "quit" },
 							{
-								label: i18n._(msg({ message: "Quit Superset Completely" })),
+								label: i18n._(msg({ message: `Quit ${appName} Completely` })),
 								click: () => {
 									void confirmAndQuitCompletely();
 								},
@@ -320,7 +332,7 @@ export function createApplicationMenu() {
 				{
 					label: i18n._(
 						msg({
-							message: "Quit Superset Completely",
+							message: `Quit ${appName} Completely`,
 						}),
 					),
 					click: () => {

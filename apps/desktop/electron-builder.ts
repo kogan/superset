@@ -24,7 +24,7 @@ const dmgBackgroundPath = join(
 );
 
 const config: Configuration = {
-	appId: "com.superset.desktop",
+	appId: "com.deexi333.superestset",
 	productName,
 	copyright: `Copyright © ${currentYear} — ${author}`,
 	electronVersion: pkg.devDependencies.electron.replace(/^\^/, ""),
@@ -36,7 +36,7 @@ const config: Configuration = {
 	// Generate latest-mac.yml for auto-update (workflow handles actual upload)
 	publish: {
 		provider: "github",
-		owner: "superset-sh",
+		owner: "kogan",
 		repo: "superset",
 	},
 
@@ -58,6 +58,7 @@ const config: Configuration = {
 
 	// Extra resources placed outside asar archive (accessible via process.resourcesPath)
 	extraResources: [
+		{ from: "dist/local-runtime", to: "local-runtime", filter: ["**/*"] },
 		// Database migrations - must be outside asar for drizzle-orm to read
 		{
 			from: "dist/resources/migrations",
@@ -83,6 +84,7 @@ const config: Configuration = {
 
 	files: [
 		"dist/**/*",
+		"!dist/local-runtime/**/*",
 		"package.json",
 		{
 			from: pkg.resources,
@@ -116,7 +118,7 @@ const config: Configuration = {
 		target: "default",
 		hardenedRuntime: true,
 		gatekeeperAssess: false,
-		notarize: true,
+		notarize: !!process.env.APPLE_API_KEY,
 		entitlements: join(pkg.resources, "build/entitlements.mac.plist"),
 		entitlementsInherit: join(
 			pkg.resources,
@@ -126,16 +128,13 @@ const config: Configuration = {
 			CFBundleName: productName,
 			CFBundleDisplayName: productName,
 			// Required for macOS microphone permission prompt
-			NSMicrophoneUsageDescription:
-				"Superset needs microphone access so voice-enabled tools like Codex transcription can capture audio input.",
+			NSMicrophoneUsageDescription: `${productName} needs microphone access so voice-enabled tools like Codex transcription can capture audio input.`,
 			// Required for macOS local network permission prompt
-			NSLocalNetworkUsageDescription:
-				"Superset needs access to your local network to discover and connect to development servers running on your network.",
+			NSLocalNetworkUsageDescription: `${productName} needs access to your local network to discover and connect to development servers running on your network.`,
 			// Bonjour service types to browse for (triggers the permission prompt)
 			NSBonjourServices: ["_http._tcp", "_https._tcp"],
 			// Required for Apple Events / Automation permission prompt
-			NSAppleEventsUsageDescription:
-				"Superset needs to interact with other applications to run terminal commands and development tools.",
+			NSAppleEventsUsageDescription: `${productName} needs to interact with other applications to run terminal commands and development tools.`,
 		},
 	},
 
@@ -146,7 +145,7 @@ const config: Configuration = {
 	// Deep linking protocol
 	protocols: {
 		name: productName,
-		schemes: ["superset"],
+		schemes: ["superestset"],
 	},
 
 	// Linux

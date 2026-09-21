@@ -13,7 +13,11 @@ The resolver receives the base, ours, and theirs versions of each conflicted fil
 and can change only those paths. Refusals, incomplete responses, binary files,
 symlinks, unresolved markers, and oversized inputs stop the run.
 
-The candidate is saved as an immutable Git bundle. The existing CI workflow runs
+Normal fork PRs run `fork-checks.yml`. The inherited `ci.yml` and `build-cli.yml`
+remain callable workflows for upstream-candidate validation, without automatic
+push or pull-request triggers.
+
+The candidate is saved as an immutable Git bundle. The reusable CI workflow runs
 all its jobs against that exact commit, including lint, tests, typecheck, desktop
 build, and all four CLI builds. No App private key or AIMC key is passed to these
 validation jobs. The CI definition comes from the trusted main commit that

@@ -433,7 +433,7 @@ describe("local workspaces: deletion edge cases", () => {
 			reason: null,
 			hasChanges: false,
 			hasUnpushedCommits: false,
-			sharesProjectCheckout: true,
+			preservesFiles: true,
 		});
 	});
 
@@ -451,7 +451,7 @@ describe("local workspaces: deletion edge cases", () => {
 		const preview = await scenario.host.trpc.workspaceCleanup.inspect.query({
 			workspaceId: id,
 		});
-		expect(preview.sharesProjectCheckout).toBe(true);
+		expect(preview.preservesFiles).toBe(true);
 
 		const result = await scenario.host.trpc.workspaceCleanup.destroy.mutate({
 			workspaceId: id,
@@ -721,6 +721,6 @@ describe("local workspaces: sessions and sandbox seed", () => {
 		const preview = await host.trpc.workspaceCleanup.inspect.query({
 			workspaceId: identity.workspaceId,
 		});
-		expect(preview.sharesProjectCheckout).toBe(true);
+		expect(preview.preservesFiles).toBe(true);
 	});
 });

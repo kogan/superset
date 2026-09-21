@@ -1,4 +1,4 @@
-import { db, dbWs } from "@superset/db/client";
+import { db } from "@superset/db/client";
 import {
 	automationPromptVersions,
 	automations,
@@ -126,7 +126,7 @@ export const automationVersionsRouter = {
 				});
 			}
 
-			const restored = await dbWs.transaction(async (tx) => {
+			const restored = await db.transaction(async (tx) => {
 				await tx
 					.update(automations)
 					.set({ prompt: version.content })

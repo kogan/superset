@@ -11,6 +11,7 @@ import {
 	useState,
 } from "react";
 import { cloudTrpc } from "renderer/lib/cloud-trpc";
+import { useSidebarWorkspaceStatus } from "renderer/routes/_authenticated/_dashboard/providers/DashboardWorkspaceStatusProvider";
 import { useOptimisticActions } from "renderer/routes/_authenticated/hooks/useOptimisticActions";
 import { RenameBranchDialog } from "renderer/screens/main/components/WorkspaceSidebar/WorkspaceListItem/components";
 import {
@@ -18,7 +19,6 @@ import {
 	useDashboardSidebarIsHovered,
 } from "../../providers/DashboardSidebarHoverProvider";
 import type { WorkspaceSelectionEvent } from "../../providers/DashboardSidebarSelectionProvider";
-import { useSidebarWorkspaceStatus } from "../../providers/DashboardSidebarWorkspaceStatusProvider";
 import type {
 	DashboardSidebarWorkspace,
 	DashboardSidebarWorkspaceIndentation,

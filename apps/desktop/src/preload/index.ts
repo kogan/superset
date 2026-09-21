@@ -1,5 +1,6 @@
 import "@sentry/electron/preload";
 
+import type { publicLocalEnvironment } from "@superset/shared/standalone";
 import { contextBridge, ipcRenderer, webUtils } from "electron";
 import { exposeElectronTRPC } from "trpc-electron/main";
 
@@ -16,6 +17,9 @@ declare global {
 }
 
 const API = {
+	localEnvironment: ipcRenderer.sendSync("superestset:environment") as
+		| ReturnType<typeof publicLocalEnvironment>
+		| undefined,
 	sayHelloFromBridge: () => console.log("\nHello from bridgeAPI! 👋\n\n"),
 	username: process.env.USER,
 	appVersion: __APP_VERSION__,

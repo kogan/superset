@@ -16,7 +16,7 @@ import { DASHBOARD_SIDEBAR_PULL_REQUEST_QUERY_KEY_PREFIX } from "renderer/routes
 import {
 	useMarkSidebarWorkspaceTerminalsSeen,
 	useSidebarWorkspaceStatus,
-} from "renderer/routes/_authenticated/_dashboard/components/DashboardSidebar/providers/DashboardSidebarWorkspaceStatusProvider";
+} from "renderer/routes/_authenticated/_dashboard/providers/DashboardWorkspaceStatusProvider";
 import { useDashboardSidebarState } from "renderer/routes/_authenticated/hooks/useDashboardSidebarState";
 import { useOptimisticActions } from "renderer/routes/_authenticated/hooks/useOptimisticActions";
 import { useHostWorkspaces } from "renderer/routes/_authenticated/providers/HostWorkspacesProvider";

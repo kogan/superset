@@ -9,10 +9,6 @@ on:
       candidate-sha:
         type: string
         default: ""
-  push:
-    branches: [main]
-  pull_request:
-    types: [opened, synchronize]
 
 permissions:
   contents: read

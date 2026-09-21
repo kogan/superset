@@ -8,8 +8,8 @@ export const ORGANIZATION_HEADER = "x-superset-organization-id";
 
 // Deep link protocol schemes (used for desktop OAuth callbacks)
 export const PROTOCOL_SCHEMES = {
-	DEV: "superset-dev",
-	PROD: "superset",
+	DEV: "superestset-dev",
+	PROD: "superestset",
 } as const;
 
 // Company

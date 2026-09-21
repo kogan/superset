@@ -1,5 +1,5 @@
 import { randomUUID } from "node:crypto";
-import { db, dbWs } from "@superset/db/client";
+import { db } from "@superset/db/client";
 import {
 	attachments,
 	files,
@@ -242,7 +242,7 @@ async function runPublish({
 	const version = (target ? await latestVersionNumber(db, target.id) : 0) + 1;
 	const key = pageVersionKey(pageId, version);
 
-	const published: PublishedVersion = await dbWs.transaction(async (tx) => {
+	const published: PublishedVersion = await db.transaction(async (tx) => {
 		const existing = await resolveTargetPage({
 			executor: tx,
 			input,
@@ -487,7 +487,7 @@ async function verifyStagedAssets(
 	);
 }
 
-type Tx = Parameters<Parameters<typeof dbWs.transaction>[0]>[0];
+type Tx = Parameters<Parameters<typeof db.transaction>[0]>[0];
 
 type Executor = Pick<Tx, "select">;
 

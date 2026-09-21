@@ -36,7 +36,7 @@ export function DashboardSidebarDeleteDialog({
 		setDeleteBranch,
 		hasChanges,
 		hasUnpushedCommits,
-		sharesProjectCheckout,
+		preservesFiles,
 		canConfirm,
 		blockingReason,
 		error,
@@ -74,7 +74,7 @@ export function DashboardSidebarDeleteDialog({
 			onOpenChange={handleOpenChange}
 			workspaceName={workspaceName}
 			isSession={isSession}
-			sharesProjectCheckout={sharesProjectCheckout}
+			preservesFiles={preservesFiles}
 			deleteBranch={deleteBranch}
 			onDeleteBranchChange={setDeleteBranch}
 			hasChanges={hasChanges}

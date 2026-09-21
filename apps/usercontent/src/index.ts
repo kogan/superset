@@ -24,11 +24,11 @@ import {
 	verifyPageTicket,
 } from "@superset/shared/usercontent";
 import { type Context, Hono } from "hono";
-import { assertEnv, type UsercontentEnv } from "./env";
+import { assertEnv, type UsercontentEnv, type UsercontentObject } from "./env";
 
 type AppContext = { Bindings: UsercontentEnv };
 
-const app = new Hono<AppContext>();
+export const app = new Hono<AppContext>();
 
 const PUBLIC_REVOCABLE = "public, max-age=300";
 
@@ -227,13 +227,21 @@ async function servePage(c: Context<AppContext>): Promise<Response> {
 	// Read after authorization against a manifest loaded this request, so it
 	// widens nothing: a page that lost its manifest 404s before reaching here.
 	const cacheKey = documentCacheKey(entry.key);
-	const cached = entry.contentType.startsWith("text/html")
-		? // An optimization, never a dependency: fall through to R2 on failure.
-			await caches.default.match(cacheKey).catch((error: unknown) => {
-				Sentry.captureException(error);
-				return undefined;
-			})
-		: undefined;
+	const documentCache =
+		typeof caches === "undefined"
+			? undefined
+			: await caches.open("page-documents").catch((error: unknown) => {
+					Sentry.captureException(error);
+					return undefined;
+				});
+	const cached =
+		entry.contentType.startsWith("text/html") && documentCache
+			? // An optimization, never a dependency: fall through to R2 on failure.
+				await documentCache.match(cacheKey).catch((error: unknown) => {
+					Sentry.captureException(error);
+					return undefined;
+				})
+			: undefined;
 	if (cached) {
 		return new Response(cached.body, { headers: headersFor("text/html") });
 	}
@@ -250,21 +258,22 @@ async function servePage(c: Context<AppContext>): Promise<Response> {
 		injectScriptTag(await object.text(), RUNTIME_SCRIPT_PATH),
 		PAGE_THEME_CSS,
 	);
-	c.executionCtx.waitUntil(
-		caches.default
-			.put(
-				cacheKey,
-				new Response(html, {
-					headers: {
-						"Content-Type": "text/html; charset=utf-8",
-						"Cache-Control": `public, max-age=${CACHED_DOCUMENT_TTL_SECONDS}`,
-					},
+	if (documentCache)
+		c.executionCtx.waitUntil(
+			documentCache
+				.put(
+					cacheKey,
+					new Response(html, {
+						headers: {
+							"Content-Type": "text/html; charset=utf-8",
+							"Cache-Control": `public, max-age=${CACHED_DOCUMENT_TTL_SECONDS}`,
+						},
+					}),
+				)
+				.catch((error: unknown) => {
+					Sentry.captureException(error);
 				}),
-			)
-			.catch((error: unknown) => {
-				Sentry.captureException(error);
-			}),
-	);
+		);
 	return new Response(html, { headers: headersFor(contentType) });
 }
 
@@ -345,7 +354,7 @@ async function serveFile(c: Context<AppContext>): Promise<Response> {
 
 	const key = fileOriginalKey(fileId);
 	const range = parseRange(c.req.header("range"));
-	let object: R2ObjectBody | null;
+	let object: UsercontentObject | null;
 	try {
 		object = await c.env.PRIVATE.get(key, range ? { range } : undefined);
 	} catch {
@@ -482,7 +491,7 @@ async function serveAsset(c: Context<AppContext>): Promise<Response> {
 	}
 
 	const range = parseRange(c.req.header("range"));
-	let object: R2ObjectBody | null;
+	let object: UsercontentObject | null;
 	try {
 		object = await c.env.PRIVATE.get(asset.key, range ? { range } : undefined);
 	} catch {

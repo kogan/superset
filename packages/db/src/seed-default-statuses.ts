@@ -1,10 +1,10 @@
 import { and, eq, isNull } from "drizzle-orm";
-import { dbWs } from "./client";
+import { db } from "./client";
 import type { InsertTaskStatus } from "./schema";
 import { taskStatuses } from "./schema";
 
-type DbWsTransaction = Parameters<Parameters<typeof dbWs.transaction>[0]>[0];
-type Executor = typeof dbWs | DbWsTransaction;
+type DbTransaction = Parameters<Parameters<typeof db.transaction>[0]>[0];
+type Executor = typeof db | DbTransaction;
 
 const DEFAULT_STATUSES: Array<
 	Pick<InsertTaskStatus, "name" | "color" | "type" | "position">
@@ -19,11 +19,11 @@ const DEFAULT_STATUSES: Array<
 /**
  * Seed default task statuses for an organization. Idempotent.
  * Pass a transaction (`tx`) to run within an existing transaction,
- * otherwise wraps in its own via `dbWs`.
+ * otherwise uses the process database.
  */
 export async function seedDefaultStatuses(
 	organizationId: string,
-	executor: Executor = dbWs,
+	executor: Executor = db,
 ): Promise<string> {
 	const [existing] = await executor
 		.select({ id: taskStatuses.id })

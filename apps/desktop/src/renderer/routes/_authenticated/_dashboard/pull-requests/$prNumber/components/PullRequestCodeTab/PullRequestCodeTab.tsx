@@ -3,6 +3,8 @@ import type {
 	CodeViewItem,
 	CodeViewOptions,
 	DiffLineAnnotation,
+	FileDiffLoadedFiles,
+	FileDiffMetadata,
 	SelectedLineRange,
 } from "@pierre/diffs";
 import { parsePatchFiles } from "@pierre/diffs";
@@ -27,6 +29,7 @@ import {
 import { WorkItemDetailState } from "renderer/routes/_authenticated/_dashboard/components/WorkItemDetailState";
 import type { AgentTarget } from "renderer/routes/_authenticated/_dashboard/v2-workspace/$workspaceId/hooks/usePaneRegistry/components/AgentCommentComposer/hooks/useDiffCommentTarget";
 import { useDiffCardCodeViewTheme } from "renderer/routes/_authenticated/_dashboard/v2-workspace/$workspaceId/hooks/usePaneRegistry/components/DiffPane/hooks/useDiffCodeViewTheme";
+import { isDiffContentStale } from "renderer/routes/_authenticated/_dashboard/v2-workspace/$workspaceId/hooks/usePaneRegistry/components/DiffPane/utils/diffLoadingGuards/diffLoadingGuards";
 import { DiffFileCollapseButton } from "renderer/screens/main/components/DiffFileCollapseButton";
 import { DiffFileHeaderName } from "renderer/screens/main/components/DiffFileHeaderName";
 import { DiffViewToolbar } from "renderer/screens/main/components/DiffViewToolbar";
@@ -66,6 +69,7 @@ interface PrCommentThreadMetadata {
 
 interface PrDraftCommentMetadata {
 	kind: "composer";
+	commitId: string;
 	path: string;
 	startLine: number;
 	endLine: number;
@@ -84,6 +88,7 @@ interface OrderedThread {
 
 interface ComposerState {
 	itemId: string;
+	commitId: string;
 	path: string;
 	range: SelectedLineRange;
 }
@@ -184,7 +189,8 @@ export function PullRequestCodeTab({
 	// additions/deletions colors, app background instead of the terminal
 	// theme's) comes from the shared card theme hook — the same one the
 	// v2-workspace DiffPane renders with.
-	const { options, style: codeViewStyle } = useDiffCardCodeViewTheme();
+	const { options, style: codeViewStyle } =
+		useDiffCardCodeViewTheme<PrAnnotationMetadata>();
 	const codeViewRef = useRef<CodeViewHandle<PrAnnotationMetadata>>(null);
 	const [initialTreeExpansion] = useState<"open" | "closed">(() =>
 		window.innerWidth < NARROW_WINDOW_WIDTH_THRESHOLD ? "closed" : "open",
@@ -415,6 +421,35 @@ export function PullRequestCodeTab({
 			);
 		},
 	});
+	const postComment = useMutation({
+		mutationFn: async (input: {
+			commitId: string;
+			body: string;
+			path: string;
+			startLine: number;
+			endLine: number;
+			startSide: "additions" | "deletions";
+			endSide: "additions" | "deletions";
+		}) => {
+			return getHostServiceClientByUrl(
+				hostUrl,
+			).pullRequests.createComment.mutate({
+				projectId,
+				prNumber,
+				...input,
+				startSide: input.startSide === "deletions" ? "LEFT" : "RIGHT",
+				endSide: input.endSide === "deletions" ? "LEFT" : "RIGHT",
+			});
+		},
+		onSuccess: () => {
+			closeComposer();
+			void queryClient.invalidateQueries({ queryKey: threadsQueryKey });
+		},
+		onError: (error) =>
+			toast.error(t({ message: "Couldn't send comment" }), {
+				description: errorMessage(error),
+			}),
+	});
 	const linkedWorkspaceQueryKey = [
 		"pull-request-linked-workspace",
 		projectId,
@@ -588,6 +623,7 @@ export function PullRequestCodeTab({
 				lineNumber: composer.range.end,
 				metadata: {
 					kind: "composer",
+					commitId: composer.commitId,
 					path: composer.path,
 					startLine: composer.range.start,
 					endLine: composer.range.end,
@@ -713,10 +749,61 @@ export function PullRequestCodeTab({
 		);
 	};
 
+	const loadDiffFiles = useCallback(
+		async (fileDiff: FileDiffMetadata): Promise<FileDiffLoadedFiles> => {
+			try {
+				const client = getHostServiceClientByUrl(hostUrl);
+				const load = (objectId: string | undefined) => {
+					if (!objectId) throw new Error("File revision is unavailable");
+					return queryClient.fetchQuery({
+						queryKey: ["pull-request-file", projectId, hostUrl, objectId],
+						queryFn: () =>
+							client.pullRequests.getFileContents.query({
+								projectId,
+								objectId,
+							}),
+						staleTime: Infinity,
+						gcTime: 5 * 60_000,
+					});
+				};
+				const [oldContents, newContents] = await Promise.all([
+					load(fileDiff.prevObjectId),
+					load(fileDiff.newObjectId),
+				]);
+				if (oldContents.length + newContents.length > 4 * 1024 * 1024) {
+					throw new Error("File is too large to expand");
+				}
+				const loaded: FileDiffLoadedFiles = {
+					oldFile:
+						fileDiff.type === "rename-pure"
+							? null
+							: {
+									name: fileDiff.prevName ?? fileDiff.name,
+									contents: oldContents,
+								},
+					newFile: { name: fileDiff.name, contents: newContents },
+				};
+				if (isDiffContentStale(fileDiff, loaded)) {
+					throw new Error("File contents do not match this diff");
+				}
+				return loaded;
+			} catch (error) {
+				toast.error(t({ message: "Failed to load file" }), {
+					description: errorMessage(error),
+				});
+				throw error;
+			}
+		},
+		[hostUrl, projectId, queryClient, t],
+	);
+
 	const codeViewOptions = useMemo(
 		() =>
 			({
 				...options,
+				loadDiffFiles,
+				expandUnchanged: false,
+				unsafeCSS: `${options.unsafeCSS ?? ""}\n[data-expand-all-button] { display: none !important; }`,
 				enableLineSelection: true,
 				enableGutterUtility: true,
 				// Pierre gates the gutter "+" button's pointer flow behind a
@@ -730,16 +817,30 @@ export function PullRequestCodeTab({
 					range: SelectedLineRange | null,
 					context: { type: "diff" | "file"; item: { id: string } },
 				) => {
+					if (postComment.isPending || sendCommentToAgent.isPending) return;
 					if (context.type !== "diff" || !range) {
 						updateComposer(null);
 						return;
 					}
 					const path = pathByItemId.get(context.item.id);
-					if (!path) return;
-					updateComposer({ itemId: context.item.id, path, range });
+					if (!path || !data?.headSha) return;
+					updateComposer({
+						itemId: context.item.id,
+						path,
+						range,
+						commitId: data.headSha,
+					});
 				},
-			}) as CodeViewOptions<PrAnnotationMetadata>,
-		[options, pathByItemId, updateComposer],
+			}) satisfies CodeViewOptions<PrAnnotationMetadata>,
+		[
+			options,
+			loadDiffFiles,
+			pathByItemId,
+			updateComposer,
+			data?.headSha,
+			postComment.isPending,
+			sendCommentToAgent.isPending,
+		],
 	);
 
 	const treePaths = useMemo(() => files.map((f) => f.path), [files]);
@@ -890,6 +991,7 @@ export function PullRequestCodeTab({
 				)}
 				<div className="flex min-h-0 flex-1 flex-col">
 					<DiffViewToolbar
+						showContextToggle={false}
 						tree={{
 							fileCount: files.length,
 							isCollapsed: isTreeCollapsed,
@@ -937,7 +1039,7 @@ export function PullRequestCodeTab({
 										// remounts it instead of possibly carrying over a
 										// draft or in-flight submitting state from the
 										// previous target.
-										key={`${metadata.path}:${metadata.startLine}-${metadata.endLine}`}
+										key={`${metadata.commitId}:${metadata.path}:${metadata.startSide}:${metadata.startLine}-${metadata.endSide}:${metadata.endLine}`}
 										contextLabel={
 											metadata.startLine === metadata.endLine
 												? t({
@@ -950,6 +1052,17 @@ export function PullRequestCodeTab({
 										hostUrl={hostUrl}
 										linkedWorkspaceId={linkedWorkspaceId}
 										onCancel={closeComposer}
+										onPostComment={async (body) => {
+											await postComment.mutateAsync({
+												commitId: metadata.commitId,
+												body,
+												path: metadata.path,
+												startLine: metadata.startLine,
+												endLine: metadata.endLine,
+												startSide: metadata.startSide,
+												endSide: metadata.endSide,
+											});
+										}}
 										onSubmit={async ({ comment, target }) => {
 											await sendCommentToAgent.mutateAsync({
 												comment,

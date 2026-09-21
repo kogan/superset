@@ -1,11 +1,13 @@
 import { existsSync, readFileSync } from "node:fs";
-import { homedir } from "node:os";
 import { join } from "node:path";
+import {
+	defaultSupersetHomeDir,
+	SUPERSET_HOME_DIR_NAME,
+} from "../../superset-home.ts";
 
 const PROJECT_SUPERSET_DIR_NAME = ".superset";
 const CONFIG_FILE_NAME = "config.json";
 const LOCAL_CONFIG_FILE_NAME = "config.local.json";
-const SUPERSET_DIR_NAME = ".superset";
 const PROJECTS_DIR_NAME = "projects";
 
 export interface SetupConfig {
@@ -172,21 +174,28 @@ export function getProjectConfigPath(repoPath: string): string {
 /**
  * Candidate user-override files, highest priority first: keyed by the
  * project's repo path mirrored under the projects dir (e.g.
- * `~/.superset/projects/Users/me/work/app/config.json` — discoverable
+ * `~/.superestset/projects/Users/me/work/app/config.json` — discoverable
  * without looking up an ID), then by project id (legacy). The first
  * candidate that parses wins.
  */
 function getUserOverridePaths(args: {
 	repoPath: string;
 	projectId: string;
-	homeDir: string;
+	supersetHomeDir: string;
 }): string[] {
-	const projectsDir = join(args.homeDir, SUPERSET_DIR_NAME, PROJECTS_DIR_NAME);
+	const projectsDir = join(args.supersetHomeDir, PROJECTS_DIR_NAME);
 	const paths = [join(projectsDir, args.repoPath, CONFIG_FILE_NAME)];
 	if (!args.projectId.includes("/") && !args.projectId.includes("\\")) {
 		paths.push(join(projectsDir, args.projectId, CONFIG_FILE_NAME));
 	}
 	return paths;
+}
+
+function machineSupersetHomeDir(homeDir?: string): string {
+	const envHome = process.env.SUPERSET_HOME_DIR?.trim();
+	if (envHome) return envHome;
+	if (homeDir) return join(homeDir, SUPERSET_HOME_DIR_NAME);
+	return defaultSupersetHomeDir();
 }
 
 function getLocalOverlayPath(repoPath: string): string {
@@ -200,7 +209,7 @@ function getLocalOverlayPath(repoPath: string): string {
  *   1. <repoPath>/.superset/config.json      — canonical project config
  *   2. <worktreePath>/.superset/config.json  — workspace/branch override
  *      (only when a worktree is in scope: setup at create, teardown at delete)
- *   3. ~/.superset/projects/<repoPath>/config.json — per-machine user
+ *   3. ~/.superestset/projects/<repoPath>/config.json — per-machine user
  *      override (falls back to the legacy <project-id> key)
  *
  * Then a local overlay with before/after/replace semantics: the worktree's
@@ -213,7 +222,7 @@ export function loadSetupConfig(args: {
 	projectId: string;
 	/** Workspace worktree; when set, its config overrides the main repo's. */
 	worktreePath?: string;
-	/** Override $HOME for tests. Defaults to `os.homedir()`. */
+	/** Override $HOME for tests; ignored when SUPERSET_HOME_DIR is set. */
 	homeDir?: string;
 }): SetupConfig | null {
 	const projectConfig = readSetupConfigAt(getProjectConfigPath(args.repoPath));
@@ -225,7 +234,7 @@ export function loadSetupConfig(args: {
 	for (const overridePath of getUserOverridePaths({
 		repoPath: args.repoPath,
 		projectId: args.projectId,
-		homeDir: args.homeDir ?? homedir(),
+		supersetHomeDir: machineSupersetHomeDir(args.homeDir),
 	})) {
 		userConfig = readSetupConfigAt(overridePath);
 		if (userConfig) break;
@@ -283,7 +292,7 @@ export function resolveScript(
 		projectId: string;
 		/** Workspace worktree; its config and script win over the main repo. */
 		worktreePath?: string;
-		/** Override $HOME for tests. Defaults to `os.homedir()`. */
+		/** Override $HOME for tests; ignored when SUPERSET_HOME_DIR is set. */
 		homeDir?: string;
 	},
 ): ResolvedScript | null {

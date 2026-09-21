@@ -13,13 +13,13 @@ afterEach(() => {
 
 describe("writeFileIfChanged", () => {
 	it("writes new content with the requested mode and leaves no temp file", () => {
-		const target = path.join(TEST_DIR, "notify.sh");
+		const target = path.join(TEST_DIR, "superestset-notify.sh");
 
 		expect(writeFileIfChanged(target, "#!/bin/bash\n", 0o755)).toBe(true);
 
 		expect(fs.readFileSync(target, "utf-8")).toBe("#!/bin/bash\n");
 		expect(fs.statSync(target).mode & 0o777).toBe(0o755);
-		expect(fs.readdirSync(TEST_DIR)).toEqual(["notify.sh"]);
+		expect(fs.readdirSync(TEST_DIR)).toEqual(["superestset-notify.sh"]);
 	});
 
 	it("skips the write when content is unchanged", () => {
