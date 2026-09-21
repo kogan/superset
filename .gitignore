@@ -111,3 +111,8 @@ plans/local/
 packages/i18n/locales/*/messages.ts
 
 .gstack/
+
+# Runtime and local verification data for the personal desktop build.
+.personal-tools/
+.personal-data/
+scripts/personal/__pycache__/

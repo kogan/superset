@@ -14,6 +14,7 @@ import { workspaceTrpc } from "@superset/workspace-client";
 import {
 	Circle,
 	FileText,
+	FolderTree,
 	GitCompareArrows,
 	GitPullRequest,
 	Globe,
@@ -32,7 +33,9 @@ import {
 	LuLink,
 	LuPower,
 } from "react-icons/lu";
+import { useTerminalAgentBindings } from "renderer/hooks/host-service/useTerminalAgentBindings";
 import { useWorkspaceHostTarget } from "renderer/hooks/host-service/useWorkspaceHostUrl";
+import { usePagesEnabled } from "renderer/hooks/usePagesEnabled";
 import { useHotkeyDisplay } from "renderer/hotkeys";
 import { FileIcon } from "renderer/lib/fileIcons";
 import { getBaseName } from "renderer/lib/pathBasename";
@@ -42,6 +45,7 @@ import {
 } from "renderer/lib/terminal/confirm-close-terminals";
 import { consumeTerminalBackgroundIntent } from "renderer/lib/terminal/terminal-background-intents";
 import { terminalRuntimeRegistry } from "renderer/lib/terminal/terminal-runtime-registry";
+import { getSubagentLabel } from "renderer/routes/_authenticated/_dashboard/utils/subagent-label";
 import { useWorkspace } from "renderer/routes/_authenticated/_dashboard/v2-workspace/providers/WorkspaceProvider";
 import { useCollections } from "renderer/routes/_authenticated/providers/CollectionsProvider";
 import { getV2NotificationSourcesForPane } from "renderer/stores/v2-notifications";
@@ -80,6 +84,7 @@ import { CommentPaneTitle } from "./components/CommentPane/components/CommentPan
 import { DesktopPane } from "./components/DesktopPane";
 import { DiffPane } from "./components/DiffPane";
 import { DiffPaneHeaderExtras } from "./components/DiffPane/components/DiffPaneHeaderExtras";
+import { FileExplorerPane } from "./components/FileExplorerPane";
 import { FilePane } from "./components/FilePane";
 import { FilePaneHeaderExtras } from "./components/FilePane/components/FilePaneHeaderExtras";
 import { PagePane } from "./components/PagePane";
@@ -160,11 +165,12 @@ export function usePaneRegistry({
 	const { t } = useLingui();
 	const { workspace } = useWorkspace();
 	const workspaceId = workspace.id;
+	const agentBindings = useTerminalAgentBindings(workspaceId);
 	const isChatV3Enabled = useFeatureFlagEnabled(FEATURE_FLAGS.CHAT_V3) ?? false;
 	const host = useWorkspaceHostTarget(workspaceId);
 	const desktopUrl =
 		host.status === "ready" && host.kind === "sandbox" ? host.desktopUrl : null;
-	const isPagesEnabled = useFeatureFlagEnabled(FEATURE_FLAGS.PAGES) ?? false;
+	const isPagesEnabled = usePagesEnabled() ?? false;
 	const collections = useCollections();
 	const clearShortcut = useHotkeyDisplay("CLEAR_TERMINAL").text;
 	const scrollToBottomShortcut = useHotkeyDisplay("SCROLL_TO_BOTTOM").text;
@@ -225,6 +231,17 @@ export function usePaneRegistry({
 
 	return useMemo<PaneRegistry<PaneViewerData>>(
 		() => ({
+			"file-explorer": {
+				getIcon: () => <FolderTree className="size-3.5" />,
+				getTitle: () => t({ message: "Files" }),
+				renderPane: (ctx: RendererContext<PaneViewerData>) => (
+					<FileExplorerPane
+						context={ctx}
+						workspaceId={workspaceId}
+						onOpenFile={onOpenFile}
+					/>
+				),
+			},
 			file: {
 				getIcon: (ctx: RendererContext<PaneViewerData>) => {
 					const data = ctx.pane.data as FilePaneData;
@@ -799,9 +816,13 @@ export function usePaneRegistry({
 			[SUBAGENT_PANE_KIND]: {
 				getIcon: () => <LuBot className="size-3.5" />,
 				getTitle: (pane) => {
-					const { agentType } = pane.data as SubagentPaneData;
-					const label = t({ message: "Subagent" });
-					return agentType ? `${label} · ${agentType}` : label;
+					const data = pane.data as SubagentPaneData;
+					const child = agentBindings
+						.get(data.terminalId)
+						?.subagents?.find((subagent) => subagent.id === data.subagentId);
+					return getSubagentLabel(
+						child ?? { id: data.subagentId, agentType: data.agentType },
+					);
 				},
 				renderPane: (ctx: RendererContext<PaneViewerData>) => (
 					<SubagentPane
@@ -874,6 +895,7 @@ export function usePaneRegistry({
 			},
 		}),
 		[
+			agentBindings,
 			store,
 			workspaceId,
 			isChatV3Enabled,

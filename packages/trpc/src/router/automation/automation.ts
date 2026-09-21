@@ -1,4 +1,4 @@
-import { db, dbWs } from "@superset/db/client";
+import { db } from "@superset/db/client";
 import {
 	automationRuns,
 	automations,
@@ -395,7 +395,7 @@ export const automationRouter = {
 					})()
 				: null;
 
-			const created = await dbWs.transaction(async (tx) => {
+			const created = await db.transaction(async (tx) => {
 				const inserted = await tx
 					.insert(automations)
 					.values({
@@ -601,7 +601,7 @@ export const automationRouter = {
 						}).nextRunAt
 					: existing.nextRunAt;
 
-			const updated = await dbWs.transaction(async (tx) => {
+			const updated = await db.transaction(async (tx) => {
 				const [row] = await tx
 					.update(automations)
 					.set({
@@ -713,7 +713,7 @@ export const automationRouter = {
 				return { ...existing, scheduleText: safeDescribeRrule(existing) };
 			}
 
-			const updated = await dbWs.transaction(async (tx) => {
+			const updated = await db.transaction(async (tx) => {
 				const [row] = await tx
 					.update(automations)
 					.set({ prompt: input.prompt })
@@ -775,7 +775,7 @@ export const automationRouter = {
 
 			const resuming = input.enabled && !existing.enabled;
 
-			const updated = await dbWs.transaction(async (tx) => {
+			const updated = await db.transaction(async (tx) => {
 				const [row] = await tx
 					.update(automations)
 					.set({ enabled: input.enabled })

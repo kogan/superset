@@ -1,4 +1,4 @@
-import { db, dbWs } from "@superset/db/client";
+import { db } from "@superset/db/client";
 import {
 	connections,
 	type LinearConfig,
@@ -45,7 +45,7 @@ export const linearRouter = {
 			} catch {}
 		},
 		async (organizationId) => {
-			await dbWs.transaction(async (tx) => {
+			await db.transaction(async (tx) => {
 				// 1. Delete Linear-synced tasks
 				await tx
 					.delete(tasks)

@@ -30,7 +30,7 @@ describe("buildBulkWorkspaceInspectionSummary", () => {
 							reason: null,
 							hasChanges: false,
 							hasUnpushedCommits: false,
-							sharesProjectCheckout: index === 0 ? first : second,
+							preservesFiles: index === 0 ? first : second,
 						},
 					},
 				]),

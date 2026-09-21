@@ -1,4 +1,5 @@
 import { useLingui } from "@lingui/react/macro";
+import { useParams } from "@tanstack/react-router";
 import {
 	LuPanelRight,
 	LuPanelRightClose,
@@ -13,12 +14,14 @@ import { usePullRequestsSplitViewStore } from "../../stores/pullRequestsSplitVie
  */
 export function PullRequestDetailToggle() {
 	const { t } = useLingui();
+	const { prNumber } = useParams({ strict: false });
 	const isDetailCollapsed = usePullRequestsSplitViewStore(
 		(s) => s.isDetailCollapsed,
 	);
 	const toggleDetailCollapsed = usePullRequestsSplitViewStore(
 		(s) => s.toggleDetailCollapsed,
 	);
+	if (!prNumber) return null;
 
 	return (
 		<button

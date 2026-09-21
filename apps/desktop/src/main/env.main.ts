@@ -8,6 +8,7 @@
  */
 import { createEnv } from "@t3-oss/env-core";
 import { z } from "zod/v4";
+import { publicLocalEnvironment } from "@superset/shared/standalone";
 
 export const env = createEnv({
 	server: {
@@ -41,6 +42,13 @@ export const env = createEnv({
 		SENTRY_DSN_HOST_SERVICE: process.env.SENTRY_DSN_HOST_SERVICE,
 		STREAMS_URL: process.env.STREAMS_URL,
 		RELAY_URL: process.env.RELAY_URL,
+		...(process.env.SUPERESTSET_API_ORIGIN &&
+		process.env.SUPERESTSET_CONTENT_ORIGIN
+			? publicLocalEnvironment({
+					apiOrigin: process.env.SUPERESTSET_API_ORIGIN,
+					contentOrigin: process.env.SUPERESTSET_CONTENT_ORIGIN,
+				})
+			: {}),
 	},
 	emptyStringAsUndefined: true,
 	// Only allow skipping validation in development (never in production)

@@ -24,7 +24,7 @@ export type SupersetConfig = {
 };
 
 export const SUPERSET_HOME_DIR =
-	process.env.SUPERSET_HOME_DIR ?? join(homedir(), ".superset");
+	process.env.SUPERSET_HOME_DIR ?? join(homedir(), ".superestset");
 export const SUPERSET_CONFIG_PATH = join(SUPERSET_HOME_DIR, "config.json");
 
 function ensureDir() {

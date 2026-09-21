@@ -1,5 +1,6 @@
 import { EventEmitter } from "node:events";
 import type { AgentDefinitionId } from "@superset/shared/agent-catalog";
+import { readSubagentDescription } from "./subagent-description";
 import {
 	getSubagentHarness,
 	isTrustedTranscriptPath,
@@ -89,6 +90,12 @@ const SUBAGENT_ENDED_RETENTION_MS = 60 * 60_000;
 const MAX_SUBAGENTS_PER_TERMINAL = 64;
 
 export interface TerminalAgentBindingPersistence {
+	getSubagentName?(terminalId: string, subagentId: string): string | undefined;
+	setSubagentName?(input: {
+		terminalId: string;
+		subagentId: string;
+		name: string | null;
+	}): void;
 	load(): TerminalAgentBinding[];
 	upsert(binding: TerminalAgentBinding): void;
 	delete(terminalId: string): void;
@@ -284,6 +291,8 @@ export class TerminalAgentStore extends EventEmitter {
 		const nextPath = transcriptPath ?? existing?.transcriptPath;
 		const next: TerminalSubagent = {
 			id: subagentId,
+			description: existing?.description,
+			customName: existing?.customName,
 			...(nextType ? { agentType: nextType } : {}),
 			...(nextPath ? { transcriptPath: nextPath } : {}),
 			// A stopped child that speaks again (Codex send_input) is live again.
@@ -374,7 +383,50 @@ export class TerminalAgentStore extends EventEmitter {
 		subagentId: string,
 	): TerminalSubagent | undefined {
 		this.pruneSubagents(terminalId);
-		return this.subagentsByTerminal.get(terminalId)?.get(subagentId);
+		const subagent = this.subagentsByTerminal.get(terminalId)?.get(subagentId);
+		return subagent ? this.withSubagentName(terminalId, subagent) : undefined;
+	}
+
+	renameSubagent(input: {
+		workspaceId: string;
+		terminalId: string;
+		subagentId: string;
+		name: string | null;
+	}): boolean {
+		const parent = this.get(input.terminalId);
+		const subagent = this.getSubagent(input.terminalId, input.subagentId);
+		if (!parent || parent.workspaceId !== input.workspaceId || !subagent)
+			return false;
+		this.persistence?.setSubagentName?.(input);
+		this.subagentsByTerminal.get(input.terminalId)?.set(input.subagentId, {
+			...subagent,
+			customName: input.name ?? undefined,
+		});
+		this.emit("change", input.workspaceId);
+		return true;
+	}
+
+	private withSubagentName(
+		terminalId: string,
+		subagent: TerminalSubagent,
+	): TerminalSubagent {
+		const description =
+			subagent.description ??
+			(subagent.transcriptPath
+				? readSubagentDescription(
+						getSubagentHarness(this.byTerminal.get(terminalId)?.agentId),
+						subagent.transcriptPath,
+					)
+				: undefined);
+		const named = {
+			...subagent,
+			description,
+			customName: this.persistence?.getSubagentName
+				? this.persistence.getSubagentName(terminalId, subagent.id)
+				: subagent.customName,
+		};
+		this.subagentsByTerminal.get(terminalId)?.set(subagent.id, named);
+		return named;
 	}
 
 	markTerminalExited(terminalId: string): void {
@@ -471,7 +523,8 @@ export class TerminalAgentStore extends EventEmitter {
 		if (!roster) return binding;
 		const live = [...roster.values()]
 			.filter((subagent) => subagent.endedAt === undefined)
-			.sort((a, b) => a.startedAt - b.startedAt);
+			.sort((a, b) => a.startedAt - b.startedAt)
+			.map((subagent) => this.withSubagentName(binding.terminalId, subagent));
 		return live.length > 0 ? { ...binding, subagents: live } : binding;
 	}
 

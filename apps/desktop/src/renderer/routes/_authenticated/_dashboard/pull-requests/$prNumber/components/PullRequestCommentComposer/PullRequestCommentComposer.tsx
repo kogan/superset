@@ -25,6 +25,7 @@ interface PullRequestCommentComposerProps {
 	 *  create, not just a new terminal in an existing one). */
 	linkedWorkspaceId: string | null;
 	onCancel: () => void;
+	onPostComment: (comment: string) => Promise<void>;
 	onSubmit: (input: {
 		comment: string;
 		target: AgentTarget;
@@ -41,6 +42,7 @@ export function PullRequestCommentComposer({
 	hostUrl,
 	linkedWorkspaceId,
 	onCancel,
+	onPostComment,
 	onSubmit,
 }: PullRequestCommentComposerProps) {
 	const { t } = useLingui();
@@ -60,6 +62,8 @@ export function PullRequestCommentComposer({
 		configs,
 	});
 
+	const [destination, setDestination] = useState<"github" | "agent">("github");
+	const inFlight = useRef(false);
 	const [comment, setComment] = useState("");
 	const [submitting, setSubmitting] = useState(false);
 	const textareaRef = useRef<HTMLTextAreaElement>(null);
@@ -73,19 +77,25 @@ export function PullRequestCommentComposer({
 	}, []);
 
 	const canSubmit =
-		comment.trim().length > 0 && !submitting && resolved != null;
+		comment.trim().length > 0 &&
+		!submitting &&
+		(destination === "github" || resolved != null);
 
 	const handleSubmit = async () => {
-		if (!canSubmit || !resolved) return;
+		if (!canSubmit || inFlight.current) return;
+		inFlight.current = true;
 		setSubmitting(true);
 		try {
-			await onSubmit({ comment: comment.trim(), target: resolved });
+			if (destination === "github") await onPostComment(comment.trim());
+			else if (resolved)
+				await onSubmit({ comment: comment.trim(), target: resolved });
 		} catch (error) {
 			// User-facing errors are the caller's responsibility (toasted from
 			// the mutation's onError) — just don't let a rejection leak out of
 			// this form's synchronous handlers.
 			console.error("[PullRequestCommentComposer] submit failed", error);
 		} finally {
+			inFlight.current = false;
 			setSubmitting(false);
 		}
 	};
@@ -98,7 +108,7 @@ export function PullRequestCommentComposer({
 				void handleSubmit();
 			}}
 			onKeyDown={(e) => {
-				if (e.key === "Escape") {
+				if (e.key === "Escape" && !submitting) {
 					e.stopPropagation();
 					onCancel();
 				}
@@ -116,14 +126,40 @@ export function PullRequestCommentComposer({
 					<Trans>esc to dismiss</Trans>
 				</span>
 			</div>
+			<div className="flex gap-1 px-3 pb-2">
+				<Button
+					type="button"
+					size="xs"
+					variant={destination === "github" ? "secondary" : "ghost"}
+					aria-pressed={destination === "github"}
+					disabled={submitting}
+					onClick={() => setDestination("github")}
+				>
+					<Trans>Comment on PR</Trans>
+				</Button>
+				<Button
+					type="button"
+					size="xs"
+					variant={destination === "agent" ? "secondary" : "ghost"}
+					aria-pressed={destination === "agent"}
+					disabled={submitting}
+					onClick={() => setDestination("agent")}
+				>
+					<Trans>Send to agent</Trans>
+				</Button>
+			</div>
 			<div className="px-3 pb-2">
 				<textarea
 					ref={textareaRef}
 					value={comment}
 					onChange={(e) => setComment(e.target.value)}
-					placeholder={t({
-						message: "Ask the AI…",
-					})}
+					placeholder={
+						destination === "github"
+							? t({ message: "Write a comment…" })
+							: t({ message: "Ask the AI…" })
+					}
+					aria-label={t({ message: "Comment" })}
+					disabled={submitting}
 					rows={3}
 					className={cn(
 						"block w-full resize-none bg-transparent text-[13px] leading-snug text-foreground",
@@ -133,12 +169,14 @@ export function PullRequestCommentComposer({
 				/>
 			</div>
 			<div className="flex flex-wrap items-center justify-between gap-2 border-t border-border/60 bg-muted/30 px-2.5 py-1.5">
-				<AgentPickerSelect
-					value={value}
-					onValueChange={onValueChange}
-					sessions={sessions}
-					configs={configs}
-				/>
+				{destination === "agent" && (
+					<AgentPickerSelect
+						value={value}
+						onValueChange={onValueChange}
+						sessions={sessions}
+						configs={configs}
+					/>
+				)}
 				<div className="ml-auto flex items-center gap-1">
 					<Button
 						type="button"
@@ -158,7 +196,13 @@ export function PullRequestCommentComposer({
 					>
 						{submitting && <LuLoaderCircle className="size-3 animate-spin" />}
 						<span>
-							{submitting ? <Trans>Sending…</Trans> : <Trans>Comment</Trans>}
+							{submitting ? (
+								<Trans>Sending…</Trans>
+							) : destination === "github" ? (
+								<Trans>Post comment</Trans>
+							) : (
+								<Trans>Send to agent</Trans>
+							)}
 						</span>
 					</Button>
 				</div>

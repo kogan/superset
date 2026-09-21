@@ -417,7 +417,7 @@ await deleteSandbox(probe);
 log(`probe: ${probe} deleted`);
 
 // 5. rows
-const { db, dbWs } = await import("@superset/db/client");
+const { db } = await import("@superset/db/client");
 const { environments, environmentRepositories, githubRepositories } =
 	await import("@superset/db/schema");
 const { and, eq } = await import("drizzle-orm");
@@ -452,7 +452,7 @@ const previous = await db.query.environments.findFirst({
 			equals(row.name, INTERNAL_NAME),
 		),
 });
-await dbWs.transaction(async (tx) => {
+await db.transaction(async (tx) => {
 	const [internal] = await tx
 		.insert(environments)
 		.values({

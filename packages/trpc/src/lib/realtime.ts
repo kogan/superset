@@ -9,6 +9,8 @@ import { env } from "../env";
  * and a failed delivery only costs freshness until the next focus.
  */
 export function nudge(organizationId: string, kind: RealtimeNudgeKind): void {
+	// Local windows poll this one API owner; no hosted realtime service is needed.
+	if (process.env.SUPERESTSET_LOCAL === "1") return;
 	waitUntil(
 		fetch(`${env.REALTIME_URL}/v2/nudge`, {
 			method: "POST",

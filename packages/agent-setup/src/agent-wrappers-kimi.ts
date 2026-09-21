@@ -13,8 +13,9 @@ import {
 } from "./managed-toml-block";
 
 export const KIMI_HOOKS_MARKER_START =
-	"# >>> superset-managed-kimi-hooks v1 (do not edit) >>>";
-export const KIMI_HOOKS_MARKER_END = "# <<< superset-managed-kimi-hooks v1 <<<";
+	"# >>> superestset-managed-kimi-hooks v1 (do not edit) >>>";
+export const KIMI_HOOKS_MARKER_END =
+	"# <<< superestset-managed-kimi-hooks v1 <<<";
 
 const KIMI_MANAGED_HOOK_EVENTS = [
 	"SessionStart",

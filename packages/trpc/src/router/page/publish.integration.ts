@@ -48,7 +48,7 @@ mock.module("../../lib/r2", () => ({
 	}),
 }));
 
-const { db, dbWs } = await import("@superset/db/client");
+const { db, closeDatabase } = await import("@superset/db/client");
 const {
 	attachments,
 	files,
@@ -184,7 +184,7 @@ afterAll(async () => {
 	await db.delete(organizations).where(eq(organizations.id, OTHER_ORG));
 	await db.delete(users).where(eq(users.id, USER));
 	await db.delete(users).where(eq(users.id, OTHER_USER));
-	await dbWs.$client.end?.();
+	await closeDatabase();
 });
 
 describe("publish", () => {

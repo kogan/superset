@@ -36,7 +36,7 @@ function setupScenario(binaryBody: string): Scenario {
 
 	const notifyLog = path.join(root, "notify.log");
 	writeFileIfChanged(
-		path.join(hooksDir, "notify.sh"),
+		path.join(hooksDir, "superestset-notify.sh"),
 		`#!/bin/bash\nprintf '%s|%s\\n' "$SUPERSET_AGENT_ID" "$1" >> "${notifyLog}"\n`,
 		0o755,
 	);

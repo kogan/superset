@@ -4,8 +4,8 @@ import { getTemplatePath, getV1NotificationsPort } from "./config";
 import { getHooksDir } from "./paths";
 import { writeFileIfChanged } from "./write-file-if-changed";
 
-export const NOTIFY_SCRIPT_NAME = "notify.sh";
-export const NOTIFY_SCRIPT_MARKER = "# Superset agent notification hook v19";
+export const NOTIFY_SCRIPT_NAME = "superestset-notify.sh";
+export const NOTIFY_SCRIPT_MARKER = "# SuperestSet agent notification hook v19";
 
 export function getNotifyScriptPath(): string {
 	return path.join(getHooksDir(), NOTIFY_SCRIPT_NAME);

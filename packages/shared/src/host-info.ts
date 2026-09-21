@@ -3,9 +3,8 @@ import { createHmac } from "node:crypto";
 import { readFileSync } from "node:fs";
 import { homedir, hostname, platform } from "node:os";
 
-// Salt value preserved verbatim across the rename to keep existing host ids
-// stable for users already registered against the cloud.
-const APP_HOST_SALT = "superset-desktop-device-id-v1";
+// Keep this fork separate from hosts registered by the original app.
+const APP_HOST_SALT = "superestset-desktop-device-id-v1";
 
 function getRawMachineId(): string {
 	try {

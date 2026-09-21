@@ -15,6 +15,10 @@ const { QueryClient, QueryClientProvider } = await import(
 );
 const { useState } = await import("react");
 const { AuthorFilter } = await import("./AuthorFilter");
+const teamMembers = [
+	{ login: "morgan", name: "Morgan Lee" },
+	{ login: "robin", name: "Robin Park" },
+];
 
 afterEach(cleanup);
 afterAll(async () => {
@@ -23,7 +27,14 @@ afterAll(async () => {
 
 function FilterHarness() {
 	const [value, setValue] = useState<string | null>(null);
-	return <AuthorFilter value={value} onChange={setValue} projectTargets={[]} />;
+	return (
+		<AuthorFilter
+			value={value}
+			onChange={setValue}
+			projectTargets={[]}
+			teamMembers={teamMembers}
+		/>
+	);
 }
 
 test("selects multiple custom authors, retains them on reopen, and toggles or clears them", async () => {
@@ -87,5 +98,39 @@ test("selects multiple custom authors, retains them on reopen, and toggles or cl
 			.getByRole("option", { name: "All authors" })
 			.getAttribute("aria-checked"),
 	).toBe("true");
+	client.clear();
+});
+
+test("selects the team together and finds a configured member by name", async () => {
+	const client = new QueryClient();
+	render(
+		<QueryClientProvider client={client}>
+			<FilterHarness />
+		</QueryClientProvider>,
+	);
+	const page = within(document.body);
+	await act(async () => {
+		fireEvent.click(page.getByRole("button", { name: "Author: All authors" }));
+	});
+	await act(async () => {
+		fireEvent.click(page.getByRole("option", { name: "My team" }));
+	});
+	expect(page.getByRole("button", { name: "Author: My team" })).toBeTruthy();
+	for (const { login } of teamMembers) {
+		expect(
+			page.getByRole("option", { name: login }).getAttribute("aria-checked"),
+		).toBe("true");
+	}
+	await act(async () => {
+		fireEvent.change(page.getByRole("combobox"), {
+			target: { value: "Robin Park" },
+		});
+	});
+	expect(page.getByRole("option", { name: "robin" })).toBeTruthy();
+	expect(page.queryByRole("option", { name: "morgan" })).toBeNull();
+	await act(async () => {
+		fireEvent.click(page.getByRole("option", { name: "robin" }));
+	});
+	expect(page.queryByRole("button", { name: "Author: My team" })).toBeNull();
 	client.clear();
 });

@@ -253,6 +253,20 @@
       "when": 1789230415434,
       "tag": "0035_local_workspaces",
       "breakpoints": true
+    },
+    {
+      "idx": 36,
+      "version": "6",
+      "when": 1789714123233,
+      "tag": "0036_external_workspace_paths",
+      "breakpoints": true
+    },
+    {
+      "idx": 37,
+      "version": "6",
+      "when": 1789910883438,
+      "tag": "0037_subagent_names",
+      "breakpoints": true
     }
   ]
 }

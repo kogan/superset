@@ -11,7 +11,7 @@ import path from "node:path";
 export function resolveSupersetHomeDir(): string {
 	return (
 		process.env.SUPERSET_HOME_DIR?.trim() ||
-		path.join(os.homedir(), ".superset")
+		path.join(os.homedir(), ".superestset")
 	);
 }
 

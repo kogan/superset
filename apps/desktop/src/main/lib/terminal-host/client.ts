@@ -32,6 +32,8 @@ import {
 } from "@superset/pty-daemon/process-tree";
 import { app } from "electron";
 import { SUPERSET_DIR_NAME } from "shared/constants";
+import { terminalHostSocketPath } from "shared/terminal-host-socket";
+import { nodeExecutable } from "../node-executable";
 import { throwIfAborted } from "../terminal/abort";
 import {
 	TerminalAttachCanceledError,
@@ -77,9 +79,10 @@ enum ConnectionState {
 const DEBUG_CLIENT = process.env.SUPERSET_TERMINAL_DEBUG === "1";
 
 // Get from shared constants for multi-worktree support (imported at top of file)
-const SUPERSET_HOME_DIR = join(homedir(), SUPERSET_DIR_NAME);
+const SUPERSET_HOME_DIR =
+	process.env.SUPERSET_HOME_DIR || join(homedir(), SUPERSET_DIR_NAME);
 
-const SOCKET_PATH = join(SUPERSET_HOME_DIR, "terminal-host.sock");
+const SOCKET_PATH = terminalHostSocketPath(SUPERSET_HOME_DIR);
 const TOKEN_PATH = join(SUPERSET_HOME_DIR, "terminal-host.token");
 const PID_PATH = join(SUPERSET_HOME_DIR, "terminal-host.pid");
 const SPAWN_LOCK_PATH = join(SUPERSET_HOME_DIR, "terminal-host.spawn.lock");
@@ -1302,7 +1305,7 @@ export class TerminalHostClient extends EventEmitter {
 			const isDev = !app.isPackaged;
 			let child: ReturnType<typeof spawn> | null = null;
 			try {
-				child = spawn(process.execPath, [daemonScript], {
+				child = spawn(nodeExecutable(), [daemonScript], {
 					detached: !isDev,
 					stdio: logFd >= 0 ? ["ignore", logFd, logFd] : "ignore",
 					env: {

@@ -1,4 +1,4 @@
-import { db, dbWs } from "@superset/db/client";
+import { db } from "@superset/db/client";
 import {
 	invitations,
 	members,
@@ -155,7 +155,7 @@ export const acceptInvitationEndpoint = {
 
 				// 4. Hold the invitation row lock while membership is finalized so the
 				// invite cannot be observed as accepted before member creation succeeds.
-				const acceptanceResult = await dbWs.transaction(async (tx) => {
+				const acceptanceResult = await db.transaction(async (tx) => {
 					const lockedInvitation = await tx.execute<{ status: string }>(
 						sql`select ${invitations.status} as status from ${invitations} where ${invitations.id} = ${invitationId} for update`,
 					);

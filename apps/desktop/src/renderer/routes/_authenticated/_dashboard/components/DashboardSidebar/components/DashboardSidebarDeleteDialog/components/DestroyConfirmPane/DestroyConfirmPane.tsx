@@ -20,9 +20,8 @@ interface DestroyConfirmPaneProps {
 	workspaceName: string;
 	/** Session workspaces delete a managed folder; no branch to offer. */
 	isSession?: boolean;
-	/** Local workspaces live on the project's checkout: only the workspace
-	 * record goes away, so there is no branch or folder to offer. */
-	sharesProjectCheckout?: boolean;
+	/** Original Superset folders and primary checkouts remain on disk. */
+	preservesFiles?: boolean;
 	deleteBranch: boolean;
 	onDeleteBranchChange: (next: boolean) => void;
 	hasChanges: boolean;
@@ -38,7 +37,7 @@ export function DestroyConfirmPane({
 	onOpenChange,
 	workspaceName,
 	isSession = false,
-	sharesProjectCheckout = false,
+	preservesFiles = false,
 	deleteBranch,
 	onDeleteBranchChange,
 	hasChanges,
@@ -63,15 +62,15 @@ export function DestroyConfirmPane({
 						)}
 					</AlertDialogTitle>
 					<AlertDialogDescription>
-						{isSession ? (
+						{preservesFiles ? (
+							<Trans>
+								This closes the workspace and its terminals. Files and branches
+								stay on disk.
+							</Trans>
+						) : isSession ? (
 							<Trans>
 								This deletes the session's folder and everything in it from
 								disk.
-							</Trans>
-						) : sharesProjectCheckout ? (
-							<Trans>
-								This closes the workspace and its terminals. The project's
-								files, branches and other workspaces stay as they are.
 							</Trans>
 						) : (
 							<Trans>
@@ -109,7 +108,7 @@ export function DestroyConfirmPane({
 						</div>
 					</div>
 				)}
-				{!isSession && !sharesProjectCheckout && (
+				{!isSession && !preservesFiles && (
 					<div className="px-4 pb-2">
 						<div className="flex items-center gap-2">
 							<Checkbox

@@ -256,6 +256,7 @@ async function updateTrayMenu(): Promise<void> {
 
 	const hostServiceSubmenu = buildHostServiceSubmenu(orgIds, infos);
 
+	const appName = app.name;
 	const menu = Menu.buildFromTemplate([
 		{
 			label: hostServiceLabel,
@@ -263,7 +264,7 @@ async function updateTrayMenu(): Promise<void> {
 		},
 		{ type: "separator" },
 		{
-			label: i18n._(msg({ message: "Open Superset" })),
+			label: i18n._(msg({ message: `Open ${appName}` })),
 			click: focusMainWindow,
 		},
 		{
@@ -282,14 +283,14 @@ async function updateTrayMenu(): Promise<void> {
 		},
 		{ type: "separator" },
 		{
-			label: i18n._(msg({ message: "Close Superset" })),
+			label: i18n._(msg({ message: `Close ${appName}` })),
 			click: () => quitApp(),
 		},
 		{ type: "separator" },
 		{
 			label: i18n._(
 				msg({
-					message: "Quit Superset Completely",
+					message: `Quit ${appName} Completely`,
 				}),
 			),
 			click: () => {
@@ -326,7 +327,7 @@ export function initTray(): void {
 		}
 
 		tray = new Tray(icon);
-		tray.setToolTip("Superset");
+		tray.setToolTip(app.name);
 
 		void updateTrayMenu();
 

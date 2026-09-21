@@ -291,6 +291,10 @@ export const terminalRouter = router({
 				customTitle: input.title,
 				db: ctx.db,
 			});
+			ctx.eventBus.broadcastAgentBindingsChanged({
+				workspaceId: input.workspaceId,
+				occurredAt: Date.now(),
+			});
 			return { terminalId: input.terminalId, title: input.title };
 		}),
 

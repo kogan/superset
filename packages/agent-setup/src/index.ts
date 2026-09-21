@@ -42,6 +42,7 @@ export function setupAgentIntegrations(
 		disabledSkillIds?: readonly string[];
 	} = {},
 ): void {
+	if (process.env.SUPERESTSET_TEST_NO_PROVISION === "1") return;
 	console.log("[agent-setup] Provisioning agent integrations...");
 	const disabledAgentIds = resolveDisabledAgentIds(options.disabledAgentIds);
 	const disabledSkillIds = resolveDisabledSkillIds(options.disabledSkillIds);

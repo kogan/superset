@@ -63,6 +63,10 @@ export const terminalAgentBindings = sqliteTable(
 		startedAt: integer("started_at").notNull(),
 		lastEventAt: integer("last_event_at").notNull(),
 		lastEventType: text("last_event_type").notNull(),
+		subagentNames: text("subagent_names", { mode: "json" })
+			.$type<Record<string, string>>()
+			.notNull()
+			.default({}),
 		// Set when the agent session ended. "detached" = the agent reported its
 		// own end (SessionEnd hook) — not resumable; "terminal-exited" = the
 		// terminal died under it (kill, crash, reboot) — resume candidate;
@@ -218,6 +222,15 @@ export const hostAgentConfigs = sqliteTable(
 		index("host_agent_configs_display_order_idx").on(table.displayOrder),
 	],
 );
+
+// No foreign key: removing a workspace or project must neither forget an
+// external folder's ownership nor reconnect it on the next discovery.
+export const externalWorkspacePaths = sqliteTable("external_workspace_paths", {
+	worktreePath: text("worktree_path").primaryKey(),
+	connectedAt: integer("connected_at")
+		.notNull()
+		.$defaultFn(() => Date.now()),
+});
 
 export const workspaces = sqliteTable(
 	"workspaces",

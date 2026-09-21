@@ -31,7 +31,7 @@ const WORKSPACE = {
 	taskId: null,
 	createdAt: new Date("2026-04-24T22:00:41.950Z"),
 	updatedAt: new Date("2026-04-24T22:00:41.950Z"),
-	worktreePath: "/home/me/.superset/worktrees/proj-1/setup",
+	worktreePath: "/home/me/.superestset/worktrees/proj-1/setup",
 	worktreeExists: true,
 };
 

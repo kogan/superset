@@ -21,8 +21,11 @@ import { useSettingsSearchQuery } from "renderer/stores/settings-state";
 import {
 	integrationSettingItemId,
 	isItemVisible,
+	SETTING_ITEM_ID,
 	type SettingItemId,
 } from "../../../utils/settings-search";
+import { JiraConnection } from "./components/JiraConnection";
+import { PullRequestTeamSettings } from "./components/PullRequestTeamSettings";
 
 interface IntegrationsSettingsProps {
 	visibleItems?: SettingItemId[] | null;
@@ -185,11 +188,12 @@ export function IntegrationsSettings({
 						<Trans>Connect external services to sync data.</Trans>
 					</p>
 				</div>
-				<p className="text-sm text-muted-foreground">
-					<Trans>
-						You need to be part of an organization to use integrations.
-					</Trans>
-				</p>
+				{isItemVisible(SETTING_ITEM_ID.INTEGRATIONS_JIRA, visibleItems) && (
+					<JiraConnection />
+				)}
+				{isItemVisible(SETTING_ITEM_ID.INTEGRATIONS_PR_TEAM, visibleItems) && (
+					<PullRequestTeamSettings />
+				)}
 			</div>
 		);
 	}
@@ -206,6 +210,13 @@ export function IntegrationsSettings({
 					</Trans>
 				</p>
 			</div>
+
+			{isItemVisible(SETTING_ITEM_ID.INTEGRATIONS_JIRA, visibleItems) && (
+				<JiraConnection />
+			)}
+			{isItemVisible(SETTING_ITEM_ID.INTEGRATIONS_PR_TEAM, visibleItems) && (
+				<PullRequestTeamSettings />
+			)}
 
 			<div className="space-y-1">
 				{offered.map((integration) => {

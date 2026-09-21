@@ -1546,3 +1546,189 @@ describe("GitHub rejected-credential errors map to actionable UNAUTHORIZED", () 
 		);
 	});
 });
+
+describe("searchPullRequests source diagnostics", () => {
+	let host: TestHost;
+	let repoA: string;
+	let repoB: string;
+	let backend: "gh" | "octokit";
+	let condition:
+		| "success"
+		| "incomplete"
+		| "capped"
+		| "checks-unavailable"
+		| "partial";
+	const projectA = randomUUID();
+	const projectB = randomUUID();
+	const nameA = `a${"n".repeat(110)}`;
+	const nameB = `b${"n".repeat(110)}`;
+
+	function searchResponse(query: string) {
+		if (condition === "partial" && query.includes(nameB)) {
+			throw new Error("second repository unavailable");
+		}
+		return {
+			total_count: condition === "capped" ? 1001 : 1,
+			incomplete_results: condition === "incomplete",
+			items: [
+				{
+					number: 42,
+					title: "Current PR",
+					html_url: `https://github.com/octocat/${nameA}/pull/42`,
+					state: "open",
+					pull_request: { merged_at: null },
+				},
+			],
+		};
+	}
+
+	function checksResponse() {
+		if (condition === "checks-unavailable") {
+			throw new Error("checks unavailable");
+		}
+		return {
+			repository: {
+				pr42: {
+					number: 42,
+					statusCheckRollup: {
+						contexts: {
+							pageInfo: { hasNextPage: false, endCursor: null },
+							nodes: [
+								{
+									__typename: "CheckRun",
+									name: "CI",
+									status: "COMPLETED",
+									conclusion: "FAILURE",
+									detailsUrl: "https://github.com/octocat/hello/actions/42",
+								},
+							],
+						},
+					},
+				},
+			},
+		};
+	}
+
+	beforeEach(async () => {
+		backend = "gh";
+		condition = "success";
+		host = await createTestHost({
+			execGh: async (args) => {
+				if (backend === "octokit") throw new Error("gh unavailable");
+				if (args.includes("search/issues")) {
+					return searchResponse(args.find((arg) => arg.startsWith("q=")) ?? "");
+				}
+				if (args.includes("graphql")) return { data: checksResponse() };
+				throw new Error(`Unexpected gh call: ${args.join(" ")}`);
+			},
+			githubFactory: async () => ({
+				pulls: {
+					get: async ({ repo }: { repo: string }) => ({
+						data: {
+							number: 42,
+							title: "Current PR",
+							html_url: `https://github.com/octocat/${repo}/pull/42`,
+							state: "open",
+							merged_at: null,
+							user: { login: "alice" },
+							head: { ref: "feature", sha: "head42" },
+						},
+					}),
+				},
+				rest: {
+					checks: {
+						listForRef: async () => {
+							throw new Error("checks unavailable");
+						},
+					},
+					repos: { listCommitStatusesForRef: async () => ({ data: [] }) },
+				},
+				search: {
+					issuesAndPullRequests: async ({ q }: { q: string }) => ({
+						data: searchResponse(q),
+					}),
+				},
+				graphql: async () => checksResponse(),
+			}),
+		});
+		repoA = await seedRepoFixture(
+			host,
+			projectA,
+			`https://github.com/octocat/${nameA}.git`,
+		);
+		repoB = await seedRepoFixture(
+			host,
+			projectB,
+			`https://github.com/octocat/${nameB}.git`,
+		);
+	});
+
+	afterEach(async () => {
+		await host.dispose();
+		rmSync(repoA, { recursive: true, force: true });
+		rmSync(repoB, { recursive: true, force: true });
+	});
+
+	test.each([
+		"gh",
+		"octokit",
+	] as const)("%s distinguishes complete, partial, capped, and unenriched results", async (selectedBackend) => {
+		backend = selectedBackend;
+		for (const selectedCondition of [
+			"success",
+			"incomplete",
+			"capped",
+			"checks-unavailable",
+		] as const) {
+			condition = selectedCondition;
+			const result = await host.trpc.workspaceCreation.searchPullRequests.query(
+				{
+					projectId: projectA,
+					query: "status:failure",
+				},
+			);
+			expect(result.pullRequests).toHaveLength(1);
+			expect(result.pullRequests[0].prNumber).toBe(42);
+			expect(result.searchIncomplete).toBe(
+				condition === "incomplete" || condition === "capped",
+			);
+			expect(result.checksUnavailable).toBe(condition === "checks-unavailable");
+			expect(result.pullRequests[0].checksStatus).toBe(
+				condition === "checks-unavailable" ? "none" : "failure",
+			);
+		}
+	});
+
+	test("a failed Octokit chunk preserves successful rows and marks search incomplete", async () => {
+		backend = "octokit";
+		condition = "partial";
+		const result = await host.trpc.workspaceCreation.searchPullRequests.query({
+			projectId: projectA,
+			projectIds: [projectA, projectB],
+			query: "status:failure",
+		});
+		expect(result.pullRequests).toHaveLength(1);
+		expect(result.pullRequests[0].projectId).toBe(projectA);
+		expect(result.pullRequests[0].checksStatus).toBe("failure");
+		expect(result.searchIncomplete).toBe(true);
+		expect(result.checksUnavailable).toBe(false);
+		expect(result.totalCount).toBe(1);
+		expect(result.hasNextPage).toBe(false);
+	});
+
+	test("Octokit direct lookups report unavailable checks for single and multiple repos", async () => {
+		backend = "octokit";
+		for (const projectIds of [[projectA], [projectA, projectB]]) {
+			const result = await host.trpc.workspaceCreation.searchPullRequests.query(
+				{
+					projectId: projectA,
+					projectIds,
+					query: "#42",
+				},
+			);
+			expect(result.pullRequests).toHaveLength(projectIds.length);
+			expect(result.searchIncomplete).toBe(false);
+			expect(result.checksUnavailable).toBe(true);
+		}
+	});
+});

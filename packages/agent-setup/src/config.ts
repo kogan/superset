@@ -55,5 +55,5 @@ export function getV1NotificationsPort(): number {
 	const parsed = Number(process.env.DESKTOP_NOTIFICATIONS_PORT);
 	return Number.isInteger(parsed) && parsed >= 1 && parsed <= 65535
 		? parsed
-		: 51741;
+		: 51841;
 }

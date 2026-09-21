@@ -38,6 +38,7 @@ import {
 	redactCrashTail,
 } from "./host-service-utils";
 import { localDb } from "./local-db";
+import { nodeExecutable } from "./node-executable";
 import { HOOK_PROTOCOL_VERSION } from "./terminal/env";
 
 export type HostServiceStatus = "starting" | "running" | "stopped";
@@ -909,8 +910,8 @@ export class HostServiceCoordinator extends EventEmitter {
 		}
 		// spawn-helper's first argument is a cwd to chdir into; empty keeps ours.
 		const [command, args] = launcher
-			? [launcher, ["", process.execPath, this.scriptPath]]
-			: [process.execPath, [this.scriptPath]];
+			? [launcher, ["", nodeExecutable(), this.scriptPath]]
+			: [nodeExecutable(), [this.scriptPath]];
 		let child: ReturnType<typeof childProcess.spawn>;
 		try {
 			child = childProcess.spawn(command, args, {
@@ -1535,7 +1536,13 @@ export function getHostServiceCoordinator(): HostServiceCoordinator {
 }
 
 function chatV3ClaudeBin(): string | undefined {
-	if (app.isPackaged) return undefined;
+	if (app.isPackaged) {
+		const bundled = path.join(
+			process.resourcesPath,
+			"resources/bin/claude-agent",
+		);
+		return fs.existsSync(bundled) ? bundled : undefined;
+	}
 	const arch = process.arch;
 	const platform = process.platform;
 	const store = path.join(app.getAppPath(), "../../node_modules/.bun");

@@ -1,0 +1,1 @@
+export { JiraFreshdeskLinks } from "./JiraFreshdeskLinks";

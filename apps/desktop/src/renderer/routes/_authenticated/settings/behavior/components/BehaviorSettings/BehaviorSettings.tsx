@@ -18,6 +18,7 @@ import {
 	SETTING_ITEM_ID,
 	type SettingItemId,
 } from "../../../utils/settings-search";
+import { FeatureSettings } from "./components/FeatureSettings";
 import { GithubStarRow } from "./components/GithubStarRow";
 
 interface BehaviorSettingsProps {
@@ -152,6 +153,8 @@ export function BehaviorSettings({ visibleItems }: BehaviorSettingsProps) {
 					<Trans>Configure general app preferences</Trans>
 				</p>
 			</div>
+
+			<FeatureSettings visibleItems={visibleItems} />
 
 			<div className="space-y-6">
 				{showConfirmQuit && (

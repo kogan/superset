@@ -1,4 +1,4 @@
-import { db, dbWs } from "@superset/db/client";
+import { db } from "@superset/db/client";
 import { chatSessions } from "@superset/db/schema";
 import { getCurrentTxid } from "@superset/db/utils";
 import { SUPERSET_CHAT_MODELS } from "@superset/shared/agent-models";
@@ -73,7 +73,7 @@ export const chatRouter = {
 				});
 			}
 
-			const result = await dbWs.transaction(async (tx) => {
+			const result = await db.transaction(async (tx) => {
 				const [inserted] = await tx
 					.insert(chatSessions)
 					.values({
@@ -157,7 +157,7 @@ export const chatRouter = {
 				});
 			}
 
-			const result = await dbWs.transaction(async (tx) => {
+			const result = await db.transaction(async (tx) => {
 				const [deleted] = await tx
 					.delete(chatSessions)
 					.where(

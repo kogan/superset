@@ -5,8 +5,10 @@
 	"type": "module",
 	"scripts": {
 		"dev": "bun scripts/dev.ts",
+		"dev:personal": "bun --env-file=../../.env scripts/personal.ts",
 		"deploy": "wrangler deploy",
-		"typecheck": "tsc --noEmit --emitDeclarationOnly false"
+		"typecheck": "tsc --noEmit --emitDeclarationOnly false",
+		"typecheck:personal": "tsc -p tsconfig.personal.json --noEmit --emitDeclarationOnly false"
 	},
 	"dependencies": {
 		"@sentry/cloudflare": "10.68.0",
@@ -15,6 +17,7 @@
 		"zod": "4.4.3"
 	},
 	"devDependencies": {
+		"@aws-sdk/client-s3": "3.899.0",
 		"@cloudflare/workers-types": "5.20260801.1",
 		"@superset/typescript": "workspace:*",
 		"typescript": "6.0.3",

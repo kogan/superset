@@ -36,6 +36,8 @@ export interface FileView {
 }
 
 export interface ViewProps {
+	revealPosition?: { line: number; column: number };
+	onRevealComplete?: () => void;
 	document: SharedFileDocument;
 	filePath: string;
 	workspaceId: string;

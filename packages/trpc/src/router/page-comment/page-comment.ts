@@ -1,4 +1,4 @@
-import { db, dbWs } from "@superset/db/client";
+import { db } from "@superset/db/client";
 import {
 	pageComments,
 	pageCommentThreads,
@@ -182,7 +182,7 @@ export const pageCommentRouter = {
 				});
 			}
 
-			return await dbWs.transaction(async (tx) => {
+			return await db.transaction(async (tx) => {
 				const [thread] = await tx
 					.insert(pageCommentThreads)
 					.values({

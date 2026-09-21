@@ -42,6 +42,13 @@ export function RealtimeNudges() {
 				}
 			}
 		};
+		if (window.App?.localEnvironment) {
+			const timer = window.setInterval(
+				() => invalidate(REALTIME_NUDGE_KINDS),
+				5_000,
+			);
+			return () => window.clearInterval(timer);
+		}
 		const socket = createRelaySocket({
 			buildUrl: () =>
 				`${env.REALTIME_URL}${realtimeNudgesPath(organizationId)}`,

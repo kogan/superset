@@ -189,14 +189,6 @@ msgstr "{0, plural, one {# resultado neste host} other {# resultados neste host}
 msgid "{0, plural, one {# result} other {# results}}"
 msgstr "{0, plural, one {# resultado} other {# resultados}}"
 
-#. placeholder {0}: agents.length
-msgid "{0, plural, one {# running agent — hide details} other {# running agents — hide details}}"
-msgstr "{0, plural, one {# agente em execução — ocultar detalhes} other {# agentes em execução — ocultar detalhes}}"
-
-#. placeholder {0}: agents.length
-msgid "{0, plural, one {# running agent — show details} other {# running agents — show details}}"
-msgstr "{0, plural, one {# agente em execução — mostrar detalhes} other {# agentes em execução — mostrar detalhes}}"
-
 #. placeholder {0}: aliveCount ?? 0
 msgid "{0, plural, one {# session running} other {# sessions running}}"
 msgstr "{0, plural, one {# sessão em execução} other {# sessões em execução}}"
@@ -885,6 +877,9 @@ msgstr "{share}% humano"
 msgid "{shown} of {total}"
 msgstr "{shown} de {total}"
 
+msgid "{shownCount} of {totalCount} issues"
+msgstr "{shownCount} de {totalCount} itens"
+
 #. placeholder {0}: formatUsd(shownUsd)
 #. placeholder {1}: formatTokens(shownTokens)
 msgid "{shownCount} shown · {0} · {1} tokens"
@@ -898,9 +893,6 @@ msgstr "{starCount} estrelas e subindo"
 
 msgid "{stars} stars · {perDay}/day this week · {peakPerDay}/day at peak"
 msgstr "{stars} estrelas · {perDay}/dia nesta semana · {peakPerDay}/dia no pico"
-
-msgid "{subagentCount, plural, one {# subagent running} other {# subagents running}}"
-msgstr "{subagentCount, plural, one {# subagente em execução} other {# subagentes em execução}}"
 
 msgid "{successCount, plural, one {Created # workspace, {failCount} failed} other {Created # workspaces, {failCount} failed}}"
 msgstr "{successCount, plural, one {# área de trabalho criada, {failCount} falharam} other {# áreas de trabalho criadas, {failCount} falharam}}"
@@ -952,6 +944,9 @@ msgstr "{updatedLabel} restaurado para os padrões"
 
 msgid "{used} used"
 msgstr "{used} usado"
+
+msgid "{visibleCount} visible · {shownCount} loaded"
+msgstr "{visibleCount} visíveis · {shownCount} carregados"
 
 msgid "{waiting} Waiting"
 msgstr "{waiting} aguardando"
@@ -1423,6 +1418,9 @@ msgstr "Adicionar"
 msgid "Add {0} account"
 msgstr "Adicionar conta {0}"
 
+msgid "Add @{normalizedSearch}"
+msgstr "Adicionar @{normalizedSearch}"
+
 msgid "Add a comment…"
 msgstr "Adicione um comentário…"
 
@@ -1613,6 +1611,9 @@ msgstr "Agente concluiu"
 msgid "Agent Independence"
 msgstr "Independência de agente"
 
+msgid "Agent input, failed checks on your PRs, and reviews requested from you."
+msgstr "Solicitações de resposta dos agentes, verificações com falha nos seus PRs e revisões solicitadas a você."
+
 msgid "Agent launch configuration"
 msgstr "Configuração de execução do agente"
 
@@ -1753,6 +1754,9 @@ msgstr "Todas as verificações passaram"
 msgid "All checks skipped or cancelled"
 msgstr "Todas as verificações foram ignoradas ou canceladas"
 
+msgid "All columns are hidden. Use Columns to show them."
+msgstr "Todas as colunas estão ocultas. Use Colunas para exibi-las."
+
 msgid "All comments"
 msgstr "Todos os comentários"
 
@@ -1796,8 +1800,8 @@ msgstr "Todos os seus dados serão excluídos permanentemente depois de {ACCOUNT
 msgid "All of your data will be permanently deleted after {ACCOUNT_DELETION_GRACE_DAYS} days. Sign back in before then to restore your account."
 msgstr "Todos os seus dados serão excluídos permanentemente depois de {ACCOUNT_DELETION_GRACE_DAYS} dias. Entre de novo antes disso para restaurar sua conta."
 
-msgid "All open terminal sessions will be killed and any running host-services will be stopped. Use “Close Superset” instead if you want services to keep running for the next launch."
-msgstr "Todas as sessões de terminal abertas serão encerradas e os serviços de host em execução serão parados. Use “Fechar o Superset” se quiser que os serviços continuem rodando para a próxima abertura."
+msgid "All open terminal sessions will be killed and any running host-services will be stopped. Use “Close {appName}” instead if you want services to keep running for the next launch."
+msgstr "Todas as sessões de terminal abertas serão encerradas e os serviços de host em execução serão parados. Use “Fechar o {appName}” se quiser que os serviços continuem rodando para a próxima abertura."
 
 msgid "All pages"
 msgstr "Todas as páginas"
@@ -1828,6 +1832,9 @@ msgstr "Todas as sessões foram preservadas na atualização."
 
 msgid "All sessions were closed and a fresh daemon is running."
 msgstr "Todas as sessões foram fechadas e um daemon novo está rodando."
+
+msgid "All statuses"
+msgstr "Todos os status"
 
 msgid "All tasks"
 msgstr "Todas as tarefas"
@@ -2069,6 +2076,12 @@ msgstr "Chaves de API"
 msgid "API Keys"
 msgstr "Chaves de API"
 
+msgid "API token"
+msgstr "Token de API"
+
+msgid "API token with scopes"
+msgstr "Token de API com escopos"
+
 msgid "API-equivalent"
 msgstr "equivalente em API"
 
@@ -2199,6 +2212,9 @@ msgstr "Aspect Ratio"
 msgid "Assigned"
 msgstr "Atribuída"
 
+msgid "Assigned to me"
+msgstr "Atribuídos a mim"
+
 msgid "Assignee"
 msgstr "Responsável"
 
@@ -2259,6 +2275,18 @@ msgstr "Anexos precisam de um host online"
 msgid "Attempt before checks pass"
 msgstr "Tentar antes de as verificações passarem"
 
+msgid "Attention"
+msgstr "Pendências"
+
+msgid "Attention filters"
+msgstr "Filtros de pendências"
+
+msgid "Attention inbox"
+msgstr "Caixa de entrada de pendências"
+
+msgid "Attention inbox is turned off"
+msgstr "A caixa de entrada de pendências está desativada"
+
 msgid "Attention queue"
 msgstr "Fila de atenção"
 
@@ -2285,6 +2313,9 @@ msgstr "Código de autenticação"
 
 msgid "Authentication failed"
 msgstr "Falha na autenticação"
+
+msgid "Authentication method"
+msgstr "Método de autenticação"
 
 msgid "Author"
 msgstr "Autor"
@@ -2706,6 +2737,9 @@ msgstr "Junte seus agentes em um só lugar."
 msgid "Browse and install skills, MCP servers, and agent configs shared by the community."
 msgstr "Explore e instale skills, servidores MCP e configurações de agente compartilhados pela comunidade."
 
+msgid "Browse files"
+msgstr "Explorar arquivos"
+
 msgid "Browse for directory"
 msgstr "Procurar diretório"
 
@@ -3088,6 +3122,9 @@ msgstr "Conta corrente + poupança + Treasury ao longo do tempo; as tranches de 
 msgid "Checking agents…"
 msgstr "Verificando os agentes…"
 
+msgid "Checking for items needing attention…"
+msgstr "Buscando itens que precisam de atenção…"
+
 msgid "Checking host…"
 msgstr "Verificando o host…"
 
@@ -3142,11 +3179,17 @@ msgstr "Escolha um projeto em Pull requests antes de abrir um pull request."
 msgid "Choose a section."
 msgstr "Escolha uma seção."
 
+msgid "Choose a team board to see everyone’s issues."
+msgstr "Escolha um quadro de equipe para ver os tickets de todos."
+
 msgid "Choose agent"
 msgstr "Escolher agente"
 
 msgid "Choose an existing repo folder"
 msgstr "Escolha uma pasta de repositório existente"
+
+msgid "Choose another filter or refresh to check again."
+msgstr "Escolha outro filtro ou atualize para verificar novamente."
 
 msgid "Choose app"
 msgstr "Escolher app"
@@ -3160,6 +3203,12 @@ msgstr "Escolha como a visualização de alterações abre pela barra superior"
 msgid "Choose how to open file paths when Cmd+clicking in the terminal"
 msgstr "Escolha como abrir caminhos de arquivo ao dar Cmd+clique no terminal"
 
+msgid "Choose team board"
+msgstr "Escolher quadro de equipe"
+
+msgid "Choose up to 20 people for your My team PR filter. Saved on this Mac."
+msgstr "Escolha até 20 pessoas para o filtro de PRs Minha equipe. A lista é salva neste Mac."
+
 msgid "Choose what to clear from the in-app browser."
 msgstr "Escolha o que limpar do navegador do app."
 
@@ -3168,6 +3217,12 @@ msgstr "Escolha quando o Superset te avisa."
 
 msgid "Choose which agent watches this page for comments"
 msgstr "Escolha qual agente observa os comentários desta página"
+
+msgid "Choose which columns appear and use the arrows to set their left-to-right order."
+msgstr "Escolha quais colunas exibir e use as setas para ordenar da esquerda para a direita."
+
+msgid "Choose which features appear in the app. Changes apply immediately."
+msgstr "Escolha quais recursos aparecem no aplicativo. As alterações são aplicadas imediatamente."
 
 msgid "Churn"
 msgstr "Cancelamentos"
@@ -3345,6 +3400,9 @@ msgstr "Fechar"
 msgid "Close {0}"
 msgstr "Fechar {0}"
 
+msgid "Close {appName}"
+msgstr "Fechar o {appName}"
+
 #. placeholder {0}: data.number
 msgid "Close #{0}?"
 msgstr "Fechar o #{0}?"
@@ -3441,9 +3499,6 @@ msgstr "Fechar o filtro de revisões"
 msgid "Close session"
 msgstr "Fechar sessão"
 
-msgid "Close Superset"
-msgstr "Fechar o Superset"
-
 msgid "Close tab"
 msgstr "Fechar aba"
 
@@ -3530,6 +3585,9 @@ msgstr "Recolher"
 msgid "Collapse {0}"
 msgstr "Recolher {0}"
 
+msgid "Collapse agents"
+msgstr "Recolher agentes"
+
 msgid "Collapse all"
 msgstr "Recolher tudo"
 
@@ -3544,6 +3602,9 @@ msgstr "Recolher arquivo"
 
 msgid "Collapse project"
 msgstr "Recolher projeto"
+
+msgid "Collapse subagents"
+msgstr "Recolher subagentes"
 
 msgid "Collapse thread"
 msgstr "Recolher a thread"
@@ -3562,6 +3623,9 @@ msgstr "Coletando…"
 
 msgid "Color"
 msgstr "Cor"
+
+msgid "Columns"
+msgstr "Colunas"
 
 msgid "Combine all commits"
 msgstr "Combina todos os commits"
@@ -3625,6 +3689,9 @@ msgstr "Comentário não encontrado"
 
 msgid "Comment not posted"
 msgstr "Comentário não publicado"
+
+msgid "Comment on PR"
+msgstr "Comentar no PR"
 
 msgid "Comment on this page"
 msgstr "Comentar nesta página"
@@ -3701,6 +3768,9 @@ msgstr "Comparado ao estilo padrão"
 
 msgid "complete"
 msgstr "concluída"
+
+msgid "Complete the required fields in Jira before moving this issue."
+msgstr "Preencha os campos obrigatórios no Jira antes de mover esta issue."
 
 msgid "Completed"
 msgstr "Concluída"
@@ -3789,6 +3859,9 @@ msgstr "Conecte serviços externos para sincronizar dados."
 msgid "Connect Google"
 msgstr "Conectar o Google"
 
+msgid "Connect Jira in Settings to see your tickets."
+msgstr "Conecte o Jira nas Configurações para ver seus chamados."
+
 msgid "Connect Linear"
 msgstr "Conectar o Linear"
 
@@ -3819,6 +3892,9 @@ msgstr "Conectar este computador"
 msgid "Connect your GitHub repositories and sync pull requests. Track CI status and reviews across your team."
 msgstr "Conecte seus repositórios do GitHub e sincronize pull requests. Acompanhe o status de CI e as revisões do time."
 
+msgid "Connect your Jira site in Settings to see your issues."
+msgstr "Conecte seu site Jira nas Configurações para ver seus tickets."
+
 msgid "Connect your Linear workspace to sync issues and manage tasks directly from Superset."
 msgstr "Conecte seu workspace do Linear para sincronizar issues e gerenciar tarefas direto do Superset."
 
@@ -3842,6 +3918,9 @@ msgstr "{label} conectado"
 
 msgid "Connected as"
 msgstr "Conectado como"
+
+msgid "Connected projects only. Refreshes every minute while this page is open."
+msgstr "Somente projetos conectados. Atualiza a cada minuto enquanto esta página estiver aberta."
 
 msgid "Connected to"
 msgstr "Conectado a"
@@ -4272,6 +4351,9 @@ msgstr "Não foi possível carregar os ambientes"
 msgid "Could not load environments."
 msgstr "Não foi possível carregar os ambientes."
 
+msgid "Could not load GitHub PRs. Check GitHub CLI access and try again."
+msgstr "Não foi possível carregar os PRs do GitHub. Verifique o acesso pela GitHub CLI e tente novamente."
+
 msgid "Could not load image"
 msgstr "Não foi possível carregar a imagem"
 
@@ -4305,6 +4387,9 @@ msgstr "Não foi possível abrir o link"
 msgid "Could not open Photos"
 msgstr "Não foi possível abrir o Fotos"
 
+msgid "Could not reach Jira. Check your network or VPN and try again."
+msgstr "Não foi possível acessar o Jira. Verifique sua rede ou VPN e tente novamente."
+
 msgid "Could not reach the desktop."
 msgstr "Não foi possível acessar a área de trabalho."
 
@@ -4326,6 +4411,9 @@ msgstr "Não foi possível acessar a máquina desta área de trabalho"
 msgid "Could not reactivate"
 msgstr "Não foi possível reativar"
 
+msgid "Could not read Jira preferences."
+msgstr "Não foi possível ler as preferências do Jira."
+
 msgid "Could not read selected file"
 msgstr "Não foi possível ler o arquivo selecionado"
 
@@ -4335,11 +4423,20 @@ msgstr "Não foi possível ler os arquivos soltos"
 msgid "Could not read the Google account. Please try again."
 msgstr "Não foi possível ler a conta Google. Tente novamente."
 
+msgid "Could not read the saved Jira connection. Disconnect and connect again."
+msgstr "Não foi possível ler a conexão salva do Jira. Desconecte e conecte novamente."
+
 msgid "Could not record cloud workspace"
 msgstr "Não foi possível registrar a área de trabalho na nuvem"
 
 msgid "Could not record environment"
 msgstr "Não foi possível salvar o ambiente"
+
+msgid "Could not remove the Jira connection. Check local storage permissions and try again."
+msgstr "Não foi possível remover a conexão do Jira. Verifique as permissões do armazenamento local e tente novamente."
+
+msgid "Could not rename subagent. Try again."
+msgstr "Não foi possível renomear o subagente. Tente novamente."
 
 msgid "Could not rename the session"
 msgstr "Não foi possível renomear a sessão"
@@ -4358,6 +4455,12 @@ msgstr "Não foi possível resolver este comentário"
 
 msgid "Could not restart the host service"
 msgstr "Não foi possível reiniciar o serviço de host"
+
+msgid "Could not save Jira preferences."
+msgstr "Não foi possível salvar as preferências do Jira."
+
+msgid "Could not save the Jira connection. Check local storage permissions and try again."
+msgstr "Não foi possível salvar a conexão do Jira. Verifique as permissões do armazenamento local e tente novamente."
 
 msgid "Could not send"
 msgstr "Não foi possível enviar"
@@ -5528,6 +5631,12 @@ msgstr "Rascunho aberto"
 msgid "drafted 3 support replies"
 msgstr "escreveu 3 respostas de suporte"
 
+msgid "Drag ended."
+msgstr "Arrasto concluído."
+
+msgid "Drag issue"
+msgstr "Arrastar issue"
+
 msgid "Drag to move"
 msgstr "Arraste para mover"
 
@@ -5536,6 +5645,9 @@ msgstr "Arraste para reordenar"
 
 msgid "Drag workspaces to reorder in Manual order"
 msgstr "Arraste as áreas de trabalho para reordenar na ordem manual"
+
+msgid "Dragging issue."
+msgstr "Arrastando issue."
 
 msgid "Drawer"
 msgstr "Drawer"
@@ -5680,6 +5792,9 @@ msgstr "Editar script de execução"
 msgid "Edit script"
 msgstr "Editar script"
 
+msgid "Edit team"
+msgstr "Editar equipe"
+
 msgid "Edited"
 msgstr "Editado"
 
@@ -5757,6 +5872,9 @@ msgstr "Ativar {0}"
 msgid "Enable an agent in Settings > Agents first"
 msgstr "Ative um agente em Configurações > Agentes primeiro"
 
+msgid "Enable attention inbox"
+msgstr "Ativar a caixa de entrada de pendências"
+
 msgid "Enable auto-merge"
 msgstr "Ativar merge automático"
 
@@ -5792,6 +5910,12 @@ msgstr "Digite uma URL na barra de busca acima."
 
 msgid "Enter a valid email address."
 msgstr "Digite um endereço de e-mail válido."
+
+msgid "Enter a valid GitHub username."
+msgstr "Digite um nome de usuário válido do GitHub."
+
+msgid "Enter a valid Jira server URL."
+msgstr "Insira uma URL válida do servidor Jira."
 
 msgid "Enter a valid recurrence rule."
 msgstr "Digite uma regra de recorrência válida."
@@ -5960,6 +6084,9 @@ msgstr "Expandir"
 msgid "Expand {0}"
 msgstr "Expandir {0}"
 
+msgid "Expand agents"
+msgstr "Expandir agentes"
+
 msgid "Expand all"
 msgstr "Expandir tudo"
 
@@ -5971,6 +6098,9 @@ msgstr "Expandir arquivo"
 
 msgid "Expand project"
 msgstr "Expandir projeto"
+
+msgid "Expand subagents"
+msgstr "Expandir subagentes"
 
 msgid "Expand thread"
 msgstr "Expandir a thread"
@@ -6057,6 +6187,9 @@ msgstr "Falhou"
 
 msgid "Failed <0>· 7d</0>"
 msgstr "Falharam <0>· 7d</0>"
+
+msgid "Failed checks"
+msgstr "Verificações com falha"
 
 msgid "Failed to accept invitation"
 msgstr "Falha ao aceitar o convite"
@@ -6466,6 +6599,9 @@ msgstr "Falha ao iniciar o agente"
 msgid "Failed to start agent session."
 msgstr "Falha ao iniciar a sessão do agente."
 
+msgid "Failed to stop agent"
+msgstr "Não foi possível parar o agente"
+
 msgid "Failed to stop workspace run command"
 msgstr "Falha ao parar o comando de execução da área de trabalho"
 
@@ -6559,6 +6695,9 @@ msgstr "Abra um ticket e receba de volta um PR verificado e pronto para merge, c
 msgid "File actions"
 msgstr "Ações do arquivo"
 
+msgid "File contents"
+msgstr "Conteúdo dos arquivos"
+
 msgid "File is too large to preview"
 msgstr "O arquivo é grande demais para pré-visualizar"
 
@@ -6582,6 +6721,9 @@ msgstr "O arquivo foi excluído do disco."
 
 msgid "File was deleted on disk. You still have unsaved changes."
 msgstr "O arquivo foi excluído do disco. Você ainda tem alterações não salvas."
+
+msgid "Filenames"
+msgstr "Nomes de arquivos"
 
 msgid "Files"
 msgstr "Arquivos"
@@ -6615,6 +6757,9 @@ msgstr "Filtrar por autor: {label}"
 
 msgid "Filter by device"
 msgstr "Filtrar por dispositivo"
+
+msgid "Filter by member"
+msgstr "Filtrar por membro"
 
 msgid "Filter by reviews"
 msgstr "Filtrar por revisões"
@@ -6910,6 +7055,9 @@ msgstr "Comece grátis · Não precisa de cartão de crédito"
 msgid "Frequently<0/>asked questions"
 msgstr "Perguntas<0/>frequentes"
 
+msgid "Freshdesk"
+msgstr "Freshdesk"
+
 msgid "from"
 msgstr "de"
 
@@ -7060,6 +7208,9 @@ msgstr "O GitHub está recusando chamadas de API com a credencial desta máquina
 msgid "GitHub issues"
 msgstr "Issues do GitHub"
 
+msgid "GitHub organization or repository"
+msgstr "Organização ou repositório do GitHub"
+
 msgid "GitHub rate limit reached"
 msgstr "Limite de requisições do GitHub atingido"
 
@@ -7068,6 +7219,9 @@ msgstr "O GitHub recusou o merge"
 
 msgid "GitHub rejected this machine's credentials, so pull requests cannot be detected. Run \"gh auth login\" or fix GITHUB_TOKEN; the next retry is at {until}."
 msgstr "O GitHub rejeitou as credenciais desta máquina, então os pull requests não podem ser detectados. Execute \"gh auth login\" ou corrija GITHUB_TOKEN; a próxima tentativa será às {until}."
+
+msgid "GitHub returned incomplete PR results. Try a narrower repository scope."
+msgstr "O GitHub retornou resultados de PR incompletos. Tente restringir a busca a um repositório."
 
 msgid "GitHub sign-in needed"
 msgstr "Login no GitHub necessário"
@@ -7252,6 +7406,9 @@ msgstr "Ocultar e-mails"
 
 msgid "Hide file tree"
 msgstr "Ocultar a árvore de arquivos"
+
+msgid "Hide filters"
+msgstr "Ocultar filtros"
 
 msgid "Hide folder"
 msgstr "Ocultar pasta"
@@ -7903,6 +8060,12 @@ msgstr "Comentário em issue"
 msgid "Issue created"
 msgstr "Issue criada"
 
+msgid "Issue moved, but refreshing failed. Refresh the issue list."
+msgstr "A issue foi movida, mas a atualização falhou. Atualize a lista de issues."
+
+msgid "Issue moved."
+msgstr "Issue movida."
+
 msgid "Issue not found."
 msgstr "Issue não encontrada."
 
@@ -7936,6 +8099,9 @@ msgstr "Itálico"
 msgid "Item"
 msgstr "Item"
 
+msgid "Items appear here when an agent needs input, your PR checks fail, or someone requests your review."
+msgstr "Os itens aparecem aqui quando um agente precisa de uma resposta, as verificações dos seus PRs falham ou alguém solicita sua revisão."
+
 msgid "Its own branch and copy of the files"
 msgstr "Sua própria branch e sua própria cópia dos arquivos"
 
@@ -7947,6 +8113,24 @@ msgstr "Maria Silva"
 
 msgid "JetBrains"
 msgstr "JetBrains"
+
+msgid "Jira"
+msgstr "Jira"
+
+msgid "Jira could not complete the request. Check your server URL and try again."
+msgstr "O Jira não conseguiu concluir a solicitação. Verifique a URL do servidor e tente novamente."
+
+msgid "Jira denied access. Check your credentials and permissions."
+msgstr "O Jira negou o acesso. Verifique suas credenciais e permissões."
+
+msgid "Jira redirected the request. Check your server URL."
+msgstr "O Jira redirecionou a solicitação. Verifique a URL do servidor."
+
+msgid "Jira returned an unexpected response. Check your server URL and try again."
+msgstr "O Jira retornou uma resposta inesperada. Verifique a URL do servidor e tente novamente."
+
+msgid "Jira server URL"
+msgstr "URL do servidor Jira"
 
 msgid "Join"
 msgstr "Entrar"
@@ -8007,6 +8191,9 @@ msgstr "Só minhas"
 
 msgid "just now"
 msgstr "agora mesmo"
+
+msgid "Kanban"
+msgstr "Kanban"
 
 msgid "Kbd"
 msgstr "Kbd"
@@ -8216,6 +8403,9 @@ msgstr "Sair do modo de comentários"
 msgid "Leave it empty to go back to the name the terminal reports."
 msgstr "Deixe em branco para voltar ao nome informado pelo terminal."
 
+msgid "Leave it empty to use the task name."
+msgstr "Deixe vazio para usar o nome da tarefa."
+
 msgid "Leave Organization"
 msgstr "Sair da organização"
 
@@ -8357,6 +8547,9 @@ msgstr "Vincular pull request"
 msgid "Link task"
 msgstr "Vincular tarefa"
 
+msgid "Link workspace"
+msgstr "Vincular espaço de trabalho"
+
 msgid "Linked {slug} to workspace"
 msgstr "{slug} vinculada à área de trabalho"
 
@@ -8423,6 +8616,12 @@ msgstr "Carregar mensagens anteriores"
 msgid "Load more"
 msgstr "Carregar mais"
 
+msgid "Load more results, reconnect unavailable hosts, or check your GitHub connection, then refresh."
+msgstr "Carregue mais resultados, reconecte os hosts indisponíveis ou verifique sua conexão com o GitHub e atualize."
+
+msgid "Loaded issues: {shownCount}"
+msgstr "Tickets carregados: {shownCount}"
+
 msgid "Loader"
 msgstr "Carregador"
 
@@ -8437,6 +8636,9 @@ msgstr "Carregando as configurações do agente..."
 
 msgid "Loading and in-flight activity indicators"
 msgstr "Indicadores de carregamento e de atividade em andamento"
+
+msgid "Loading available moves…"
+msgstr "Carregando movimentos disponíveis…"
 
 msgid "Loading changes..."
 msgstr "Carregando as alterações..."
@@ -8485,6 +8687,9 @@ msgstr "Carregando o projeto…"
 
 msgid "Loading projects…"
 msgstr "Carregando projetos…"
+
+msgid "Loading PRs…"
+msgstr "Carregando PRs…"
 
 msgid "Loading pull request…"
 msgstr "Carregando o pull request…"
@@ -9030,11 +9235,29 @@ msgstr "Quase toda a história do software"
 msgid "Move {count} to Group"
 msgstr "Mover {count} para um grupo"
 
+msgid "Move {name} left"
+msgstr "Mover {name} para a esquerda"
+
+msgid "Move {name} right"
+msgstr "Mover {name} para a direita"
+
+msgid "Move canceled."
+msgstr "Movimento cancelado."
+
+msgid "Move issue"
+msgstr "Mover issue"
+
+msgid "Move to"
+msgstr "Mover para"
+
 msgid "Move to group"
 msgstr "Mover para grupo"
 
 msgid "Move to Tab"
 msgstr "Mover para a aba"
+
+msgid "Moving issue…"
+msgstr "Movendo issue…"
 
 msgid "MRR"
 msgstr "MRR"
@@ -9064,6 +9287,12 @@ msgstr "Meu agente"
 
 msgid "My Tasks"
 msgstr "Minhas tarefas"
+
+msgid "My team"
+msgstr "Minha equipe"
+
+msgid "My work"
+msgstr "Meu trabalho"
 
 msgid "Mystery Machinist"
 msgstr "Maquinista Misterioso"
@@ -9418,6 +9647,9 @@ msgstr "Nenhum autor encontrado."
 msgid "No automations match"
 msgstr "Nenhuma automação corresponde"
 
+msgid "No available moves. Open the issue in Jira to check its workflow."
+msgstr "Nenhum movimento disponível. Abra a issue no Jira para verificar seu fluxo de trabalho."
+
 msgid "No background terminal sessions"
 msgstr "Nenhuma sessão de terminal em segundo plano"
 
@@ -9589,8 +9821,14 @@ msgstr "Nenhum criador conhecido"
 msgid "No labels"
 msgstr "Sem labels"
 
+msgid "No linked PR"
+msgstr "Nenhum PR vinculado"
+
 msgid "No live sessions"
 msgstr "Nenhuma sessão ativa"
+
+msgid "No loaded items match this filter"
+msgstr "Nenhum item carregado corresponde a este filtro"
 
 msgid "no logins"
 msgstr "sem logins"
@@ -10246,6 +10484,9 @@ msgstr "Abrir {0}"
 msgid "Open {0} website"
 msgstr "Abrir o site de {0}"
 
+msgid "Open {appName}"
+msgstr "Abrir o {appName}"
+
 msgid "Open {filePath}"
 msgstr "Abrir {filePath}"
 
@@ -10421,6 +10662,9 @@ msgstr "Abrir no Finder"
 msgid "Open in GitHub"
 msgstr "Abrir no GitHub"
 
+msgid "Open in Jira"
+msgstr "Abrir no Jira"
+
 msgid "Open in Linear"
 msgstr "Abrir no Linear"
 
@@ -10466,6 +10710,9 @@ msgstr "Abrir a issue no GitHub"
 
 msgid "Open issues"
 msgstr "Issues abertas"
+
+msgid "Open Jira"
+msgstr "Abrir Jira"
 
 msgid "Open leaderboard"
 msgstr "Abrir ranking"
@@ -10560,9 +10807,6 @@ msgstr "Abrir sheet"
 
 msgid "Open ship options"
 msgstr "Abrir opções de envio"
-
-msgid "Open Superset"
-msgstr "Abrir o Superset"
 
 msgid "Open Superset on that computer"
 msgstr "Abra o Superset nesse computador"
@@ -10824,6 +11068,9 @@ msgstr "Pertence a {0} — só essa pessoa pode editar esta automação."
 msgid "Owner"
 msgstr "Proprietário"
 
+msgid "owner/repository"
+msgstr "owner/repository"
+
 msgid "Owns every PTY session and survives app restarts."
 msgstr "É dono de cada sessão PTY e sobrevive a reinícios do app."
 
@@ -10938,6 +11185,9 @@ msgstr "Parte registro, parte aposta. Os dois primeiros itens já estão acontec
 msgid "Partial"
 msgstr "Parcial"
 
+msgid "Partial results"
+msgstr "Resultados parciais"
+
 msgid "Partner, Transpose Platform"
 msgstr "Sócio, Transpose Platform"
 
@@ -11040,6 +11290,9 @@ msgstr "Acesso permanente a Documentos, Downloads, Mesa e iCloud."
 
 msgid "Personal"
 msgstr "Pessoal"
+
+msgid "Personal access token"
+msgstr "Token de acesso pessoal"
 
 msgid "Phantom Forklift"
 msgstr "Empilhadeira Fantasma"
@@ -11251,6 +11504,9 @@ msgstr "PR #{0} criado"
 msgid "PR Closed"
 msgstr "PR fechado"
 
+msgid "PR links from Jira tickets and GitHub."
+msgstr "Links de PRs dos tickets do Jira e do GitHub."
+
 msgid "PR merged"
 msgstr "PR mesclado"
 
@@ -11265,6 +11521,9 @@ msgstr "Comentário de revisão de PR"
 
 msgid "PR review submitted…"
 msgstr "Revisão de PR enviada…"
+
+msgid "PR source"
+msgstr "Origem dos PRs"
 
 msgid "PR state"
 msgstr "Estado do PR"
@@ -11340,6 +11599,9 @@ msgstr "Branch anterior"
 
 msgid "Previous comment"
 msgstr "Comentário anterior"
+
+msgid "Previous copies"
+msgstr "Cópias anteriores"
 
 msgid "Previous file"
 msgstr "Arquivo anterior"
@@ -11571,6 +11833,9 @@ msgstr "O provisionamento falhou e o sandbox foi desmontado. Nada está rodando 
 msgid "PRs a week"
 msgstr "PRs por semana"
 
+msgid "PRs unavailable"
+msgstr "PRs indisponíveis"
+
 msgid "Public"
 msgstr "Público"
 
@@ -11620,6 +11885,9 @@ msgstr "Pull requests"
 
 msgid "Pull Requests"
 msgstr "Pull requests"
+
+msgid "Pull requests are turned off. Only agent input is shown."
+msgstr "Os pull requests estão desativados. Apenas as solicitações de resposta dos agentes são exibidas."
 
 msgid "Purple"
 msgstr "Roxo"
@@ -11689,17 +11957,17 @@ msgstr "Baixinho"
 msgid "Quit"
 msgstr "Encerrar"
 
+msgid "Quit {appName}"
+msgstr "Encerrar o {appName}"
+
+msgid "Quit {appName} and stop all background services?"
+msgstr "Encerrar o {appName} e parar todos os serviços em segundo plano?"
+
+msgid "Quit {appName} Completely"
+msgstr "Encerrar o {appName} por completo"
+
 msgid "Quit Completely"
 msgstr "Encerrar por completo"
-
-msgid "Quit Superset"
-msgstr "Encerrar o Superset"
-
-msgid "Quit Superset and stop all background services?"
-msgstr "Encerrar o Superset e parar todos os serviços em segundo plano?"
-
-msgid "Quit Superset Completely"
-msgstr "Encerrar o Superset por completo"
 
 msgid "Quit the source browser first so its logins are saved to disk. You'll be asked to allow Keychain access."
 msgstr "Feche o navegador de origem primeiro para que os logins sejam salvos em disco. Será pedido acesso ao Keychain."
@@ -11900,6 +12168,9 @@ msgstr "Atualizar os pull requests"
 msgid "Refresh repositories"
 msgstr "Atualizar repositórios"
 
+msgid "Refresh Superset Workspaces…"
+msgstr "Atualizar espaços de trabalho do Superset…"
+
 msgid "Refreshes when Claude Code next runs."
 msgstr "Atualiza na próxima execução do Claude Code."
 
@@ -11990,6 +12261,9 @@ msgstr "Remover {0}"
 
 msgid "Remove {label}?"
 msgstr "Remover {label}?"
+
+msgid "Remove @{login}"
+msgstr "Remover @{login}"
 
 msgid "Remove attachment"
 msgstr "Remover anexo"
@@ -12096,6 +12370,9 @@ msgstr "Renomear página"
 
 msgid "Rename session"
 msgstr "Renomear sessão"
+
+msgid "Rename subagent"
+msgstr "Renomear subagente"
 
 msgid "rename the branch"
 msgstr "renomear a branch"
@@ -12369,6 +12646,9 @@ msgstr "Reiniciar o daemon de terminal?"
 msgid "Restart terminals"
 msgstr "Reiniciar os terminais"
 
+msgid "Restart to find existing Superset workspaces. Their folders will be opened in place."
+msgstr "Reinicie para encontrar espaços de trabalho existentes do Superset. Suas pastas serão abertas no local atual."
+
 msgid "Restart to use the latest version of Superset."
 msgstr "Reinicie para usar a versão mais recente do Superset."
 
@@ -12534,6 +12814,9 @@ msgstr "Revise pull requests dentro do Superset: painel de diff, revisão assist
 msgid "Review requested"
 msgstr "Revisão solicitada"
 
+msgid "Review requests"
+msgstr "Solicitações de revisão"
+
 msgid "Review required"
 msgstr "Revisão obrigatória"
 
@@ -12545,6 +12828,9 @@ msgstr "Thread de revisão…"
 
 msgid "Reviewed by you"
 msgstr "Revisados por você"
+
+msgid "Reviewer needed"
+msgstr "Revisor necessário"
 
 msgid "Reviewers"
 msgstr "Revisores"
@@ -12907,6 +13193,9 @@ msgstr "Buscar autores…"
 msgid "Search automations"
 msgstr "Buscar automações"
 
+msgid "Search boards…"
+msgstr "Buscar quadros…"
+
 msgid "Search branches..."
 msgstr "Buscar branches..."
 
@@ -12915,6 +13204,9 @@ msgstr "Buscar por nome de chave..."
 
 msgid "Search changed files"
 msgstr "Buscar arquivos alterados"
+
+msgid "Search contributors or enter a username…"
+msgstr "Buscar colaboradores ou digitar um nome de usuário…"
 
 msgid "Search developers"
 msgstr "Buscar desenvolvedores"
@@ -12927,6 +13219,15 @@ msgstr "Buscar na documentação..."
 
 msgid "Search environments..."
 msgstr "Buscar ambientes..."
+
+msgid "Search file contents"
+msgstr "Buscar no conteúdo dos arquivos"
+
+msgid "Search file contents..."
+msgstr "Buscar no conteúdo dos arquivos..."
+
+msgid "Search filenames and text in your workspace"
+msgstr "Buscar nomes de arquivos e texto no seu workspace"
 
 msgid "Search files"
 msgstr "Buscar arquivos"
@@ -12960,6 +13261,9 @@ msgstr "Buscar em {frameTitle}…"
 
 msgid "Search issues..."
 msgstr "Buscar issues..."
+
+msgid "Search mode"
+msgstr "Modo de busca"
 
 msgid "Search pages"
 msgstr "Buscar páginas"
@@ -13054,6 +13358,9 @@ msgstr "Líder de Turno Secreto"
 msgid "Sections"
 msgstr "Seções"
 
+msgid "Secure storage is unavailable. Unlock your system keychain and try again."
+msgstr "O armazenamento seguro não está disponível. Desbloqueie o chaveiro do sistema e tente novamente."
+
 msgid "Security"
 msgstr "Segurança"
 
@@ -13101,6 +13408,9 @@ msgstr "Veja em que posição seus últimos 30 dias ficam no ranking público. A
 
 msgid "Select"
 msgstr "Select"
+
+msgid "Select a file to open"
+msgstr "Selecione um arquivo para abrir"
 
 msgid "Select a project"
 msgstr "Selecione um projeto"
@@ -13553,6 +13863,9 @@ msgstr "Mostrar e-mails"
 msgid "Show file tree"
 msgstr "Mostrar a árvore de arquivos"
 
+msgid "Show filters"
+msgstr "Mostrar filtros"
+
 msgid "Show in bar"
 msgstr "Mostrar na barra"
 
@@ -13616,9 +13929,6 @@ msgstr "Mostrar os resolvidos ({resolvedCount})"
 msgid "Show review comments"
 msgstr "Mostrar os comentários de revisão"
 
-msgid "Show running agents under each workspace in the sidebar, with their live status."
-msgstr "Mostra os agentes em execução sob cada área de trabalho na barra lateral, com o status ao vivo."
-
 msgid "Show Scripts Bar"
 msgstr "Mostrar a barra de scripts"
 
@@ -13636,6 +13946,9 @@ msgstr "Mostrar aba de uso na barra lateral"
 
 msgid "showArrow opt-in"
 msgstr "showArrow opcional"
+
+msgid "Showing the first {SEARCH_LIMIT} results. Narrow your search or add a filter."
+msgstr "Exibindo os primeiros {SEARCH_LIMIT} resultados. Refine a busca ou adicione um filtro."
 
 msgid "Shown"
 msgstr "Exibidos"
@@ -13904,12 +14217,21 @@ msgstr "Alguns arquivos passam do tamanho máximo e não foram adicionados."
 msgid "Some models were priced with a fallback rate"
 msgstr "Alguns modelos foram precificados com uma taxa de reserva"
 
+msgid "Some PR links could not be loaded. Check Jira permissions and GitHub CLI access, then refresh."
+msgstr "Não foi possível carregar alguns links de PRs. Verifique as permissões do Jira e o acesso pela GitHub CLI e atualize."
+
 #. placeholder {0}: error.message
 msgid "Some repositories could not be loaded: {0}"
 msgstr "Alguns repositórios não puderam ser carregados: {0}"
 
 msgid "Some sessions could not be killed"
 msgstr "Algumas sessões não puderam ser encerradas"
+
+msgid "Some sources could not be fully checked."
+msgstr "Não foi possível verificar completamente algumas fontes."
+
+msgid "Some Superset workspaces could not be connected."
+msgstr "Não foi possível conectar alguns espaços de trabalho do Superset."
 
 msgid "Some themes were skipped"
 msgstr "Alguns temas foram ignorados"
@@ -14255,6 +14577,12 @@ msgstr "Parar"
 msgid "Stop {0}"
 msgstr "Parar {0}"
 
+msgid "Stop agent"
+msgstr "Parar agente"
+
+msgid "Stop agent and subagents"
+msgstr "Parar agente e subagentes"
+
 msgid "Stop dictation"
 msgstr "Parar ditado"
 
@@ -14301,6 +14629,9 @@ msgstr "Progresso estruturado: cadeia de raciocínio, tarefas, planos"
 
 msgid "Subagent"
 msgstr "Subagente"
+
+msgid "Subagent name"
+msgstr "Nome do subagente"
 
 msgid "Subagents"
 msgstr "Subagentes"
@@ -14714,6 +15045,9 @@ msgstr "targetHostId não corresponde ao host da área de trabalho"
 msgid "Task"
 msgstr "Tarefa"
 
+msgid "Task {shortId}"
+msgstr "Tarefa {shortId}"
+
 msgid "Task Launch"
 msgstr "Execução da tarefa"
 
@@ -14758,6 +15092,9 @@ msgstr "equipe"
 
 msgid "Team"
 msgstr "Equipe"
+
+msgid "Team board"
+msgstr "Quadro da equipe"
 
 msgid "Team collaboration"
 msgstr "Colaboração em equipe"
@@ -15054,6 +15391,9 @@ msgstr "O host voltou ao build anterior."
 msgid "The human reads every line before it merges."
 msgstr "A pessoa lê cada linha antes do merge."
 
+msgid "The Jira board changed. Reopen Columns and try again."
+msgstr "O quadro do Jira mudou. Abra Colunas novamente e tente outra vez."
+
 msgid "The job description shifts. Engineers stop being typists with taste and become dispatchers with taste: decomposing work, routing it to fleets, arbitrating conflicts between agents that both touched the same module."
 msgstr "A descrição do cargo muda. Quem desenvolve deixa de ser digitador com bom gosto e vira despachante com bom gosto: decompõe o trabalho, direciona para as frotas e arbitra conflitos entre agentes que mexeram no mesmo módulo."
 
@@ -15303,6 +15643,9 @@ msgstr "Isso fecha todas as sessões de terminal da sua organização{runningCou
 msgid "This closes the selected workspaces and their terminals. The project's files and branches stay as they are."
 msgstr "Isso fecha as áreas de trabalho selecionadas e seus terminais. Os arquivos e as branches do projeto permanecem como estão."
 
+msgid "This closes the workspace and its terminals. Files and branches stay on disk."
+msgstr "Isso fecha o espaço de trabalho e seus terminais. Os arquivos e as branches permanecem no disco."
+
 msgid "This closes the workspace and its terminals. The project's files, branches and other workspaces stay as they are."
 msgstr "Isso fecha a área de trabalho e seus terminais. Os arquivos, as branches e as outras áreas de trabalho do projeto permanecem como estão."
 
@@ -15392,6 +15735,9 @@ msgstr "Este tenant da Microsoft já está conectado a outra organização do Su
 
 msgid "This month"
 msgstr "Este mês"
+
+msgid "This move requires fields in Jira."
+msgstr "Este movimento exige o preenchimento de campos no Jira."
 
 msgid "This only changes the display name, not the branch."
 msgstr "Isso muda só o nome exibido, não a branch."
@@ -15492,6 +15838,9 @@ msgstr "Esta thread não tem comentário para responder."
 
 msgid "This thread is not open to agents. A person has to comment on it before an agent can reply."
 msgstr "Esta thread não foi passada para um agente. Alguém precisa repassá-la pela página primeiro."
+
+msgid "This transition is no longer available. Refresh the issue and try again."
+msgstr "Esta transição não está mais disponível. Atualize a issue e tente novamente."
 
 msgid "This user runs the host service for this device and can't be removed."
 msgstr "Este usuário roda o serviço de host deste dispositivo e não pode ser removido."
@@ -15867,6 +16216,9 @@ msgstr "Digite uma tarefa para o Claude…"
 msgid "Type an email, press Enter"
 msgstr "Digite um e-mail e pressione Enter"
 
+msgid "Type at least 2 characters to find more people."
+msgstr "Digite pelo menos 2 caracteres para encontrar mais pessoas."
+
 msgid "Type here to send to the terminal"
 msgstr "Digite aqui para enviar ao terminal"
 
@@ -15875,6 +16227,9 @@ msgstr "Digite o nome da organização para confirmar."
 
 msgid "Type to search files..."
 msgstr "Digite para buscar arquivos..."
+
+msgid "Type to search your workspace"
+msgstr "Digite para buscar no seu workspace"
 
 msgid "TypeScript"
 msgstr "TypeScript"
@@ -15956,6 +16311,9 @@ msgstr "Em curso"
 
 msgid "Undo"
 msgstr "Desfazer"
+
+msgid "Unfinished"
+msgstr "Não concluído"
 
 msgid "Ungroup"
 msgstr "Desagrupar"
@@ -16242,6 +16600,9 @@ msgstr "Usar “{0}”"
 msgid "Use a workspace-relative path or an absolute folder."
 msgstr "Use um caminho relativo à área de trabalho ou uma pasta absoluta."
 
+msgid "Use an HTTPS Jira server URL without a username, password, query, or fragment."
+msgstr "Use uma URL de servidor Jira com HTTPS, sem nome de usuário, senha, parâmetros de consulta ou fragmento."
+
 msgid "Use another port"
 msgstr "Usar outra porta"
 
@@ -16250,6 +16611,9 @@ msgstr "Use qualquer agente"
 
 msgid "Use as workspace run"
 msgstr "Usar como execução da área de trabalho"
+
+msgid "Use automatic name"
+msgstr "Usar nome automático"
 
 msgid "Use Claude Code, Codex, OpenCode, or any coding agent for each task. Your workspaces, branches, and review flow stay the same."
 msgstr "Use Claude Code, Codex, OpenCode ou qualquer agente de código em cada tarefa. Suas áreas de trabalho, branches e fluxo de revisão continuam iguais."
@@ -16263,6 +16627,9 @@ msgstr "Usar para novos agentes"
 msgid "Use global default"
 msgstr "Usar o padrão global"
 
+msgid "Use Move to to choose a status with the keyboard."
+msgstr "Use Mover para para escolher um status com o teclado."
+
 msgid "Use Superset on mobile"
 msgstr "Use o Superset no celular"
 
@@ -16271,6 +16638,9 @@ msgstr "Use o Superset no celular com o Pro."
 
 msgid "Use the desktop app to start running parallel coding agents."
 msgstr "Use o app de desktop para rodar agentes de código em paralelo."
+
+msgid "Use the email address of the Atlassian account that created the token."
+msgstr "Use o e-mail da conta Atlassian que criou o token."
 
 msgid "Use the new workspace experience."
 msgstr "Use a nova experiência de área de trabalho."
@@ -16328,6 +16698,9 @@ msgstr "Usuário não encontrado"
 
 msgid "user@example.com"
 msgstr "usuario@exemplo.com"
+
+msgid "Uses your GitHub CLI login to match Jira keys in PR titles and descriptions."
+msgstr "Usa seu login da GitHub CLI para encontrar chaves do Jira nos títulos e descrições dos PRs."
 
 msgid "Using random branch name (AI generation timed out)"
 msgstr "Usando nome de branch aleatório (a geração por IA expirou)"
@@ -16864,6 +17237,9 @@ msgstr "Área de trabalho criada"
 msgid "Workspace created from PR"
 msgstr "Área de trabalho criada a partir do PR"
 
+msgid "Workspace created, but linking it to Jira failed."
+msgstr "Espaço de trabalho criado, mas a vinculação ao Jira falhou."
+
 msgid "Workspace details"
 msgstr "Detalhes da área de trabalho"
 
@@ -17111,6 +17487,9 @@ msgstr "Você está prestes a mudar seu cargo de {currentRoleName} para {newRole
 msgid "You're about to get Superset"
 msgstr "Você está quase com o Superset"
 
+msgid "You're all caught up"
+msgstr "Tudo em dia"
+
 msgid "You're all set!"
 msgstr "Tudo pronto!"
 
@@ -17156,6 +17535,12 @@ msgstr "Sua conta do GitHub não consegue acessar um repositório deste ambiente
 msgid "Your GitHub link comes from the account you signed in with, so it shows as verified and cannot be edited here."
 msgstr "Seu link do GitHub vem da conta com que você entrou, por isso aparece como verificado e não pode ser editado aqui."
 
+msgid "Your Jira account is inactive."
+msgstr "Sua conta do Jira está inativa."
+
+msgid "Your Jira connection is stored on this device."
+msgstr "Sua conexão do Jira é armazenada neste dispositivo."
+
 msgid "Your last payment failed. Update your payment method to keep Pro."
 msgstr "Seu último pagamento falhou. Atualize sua forma de pagamento para manter o Pro."
 
@@ -17189,6 +17574,9 @@ msgstr "Sua assinatura será ajustada conforme isso."
 
 msgid "Your Superset download is starting."
 msgstr "O download do Superset está começando."
+
+msgid "Your team’s issues and pull requests."
+msgstr "Os tickets e pull requests da sua equipe."
 
 msgid "Your terminal sessions won't be interrupted."
 msgstr "Suas sessões de terminal não serão interrompidas."

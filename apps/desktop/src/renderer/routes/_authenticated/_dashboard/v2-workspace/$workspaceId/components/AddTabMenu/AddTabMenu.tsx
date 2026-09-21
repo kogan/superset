@@ -5,7 +5,7 @@ import {
 	DropdownMenuSeparator,
 } from "@superset/ui/dropdown-menu";
 import { BsTerminalPlus } from "react-icons/bs";
-import { LuGitCompareArrows } from "react-icons/lu";
+import { LuFolderTree, LuGitCompareArrows } from "react-icons/lu";
 import { TbDeviceDesktop, TbMessageCirclePlus, TbWorld } from "react-icons/tb";
 import { HotkeyMenuShortcut } from "renderer/components/HotkeyMenuShortcut";
 
@@ -13,6 +13,7 @@ interface AddTabMenuProps {
 	onAddTerminal: () => void;
 	onAddChatV3?: (() => void) | undefined;
 	onAddBrowser: () => void;
+	onAddFiles: () => void;
 	onAddChanges: () => void;
 	onAddDesktop?: (() => void) | undefined;
 	showPresetsBar: boolean;
@@ -23,6 +24,7 @@ export function AddTabMenu({
 	onAddTerminal,
 	onAddChatV3,
 	onAddBrowser,
+	onAddFiles,
 	onAddChanges,
 	onAddDesktop,
 	showPresetsBar,
@@ -51,6 +53,12 @@ export function AddTabMenu({
 					<Trans>Browser</Trans>
 				</span>
 				<HotkeyMenuShortcut hotkeyId="NEW_BROWSER" />
+			</DropdownMenuItem>
+			<DropdownMenuItem className="gap-2" onClick={onAddFiles}>
+				<LuFolderTree className="size-4" />
+				<span>
+					<Trans>Files</Trans>
+				</span>
 			</DropdownMenuItem>
 			<DropdownMenuItem className="gap-2" onClick={onAddChanges}>
 				<LuGitCompareArrows className="size-4" />

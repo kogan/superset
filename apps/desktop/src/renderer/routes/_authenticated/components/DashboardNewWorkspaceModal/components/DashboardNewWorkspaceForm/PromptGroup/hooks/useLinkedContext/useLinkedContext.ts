@@ -83,9 +83,11 @@ export function useLinkedContext(
 			// Clear the seeded names, but only when they still match what the
 			// issue seeded — a user edit sticks. When another internal issue is
 			// still linked, hand the seed to it instead of going blank.
-			if (removed?.source === "internal") {
+			if (removed?.source === "internal" || removed?.source === "jira") {
 				const draft = useNewWorkspaceDraftStore.getState();
-				const next = remaining.find((i) => i.source === "internal");
+				const next = remaining.find(
+					(i) => i.source === "internal" || i.source === "jira",
+				);
 				const seededBranch = deriveBranchName({
 					slug: removed.slug,
 					title: removed.title,

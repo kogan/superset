@@ -7,23 +7,25 @@ import {
 	S3Client,
 } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
-import { env } from "../env";
+import {
+	type Bucket,
+	LocalObjectStore,
+	ObjectRangeError,
+	signedObjectUrl,
+} from "./local-objects";
 
-/**
- * Which bucket an operation addresses. Named rather than defaulted: the two
- * differ in who can read them, and a public write that silently landed in the
- * private bucket would surface as a broken image rather than an error.
- */
-export type Bucket = "private" | "public";
-
-function bucketName(bucket: Bucket): string {
-	return bucket === "public" ? env.R2_PUBLIC_BUCKET : env.R2_PRIVATE_BUCKET;
-}
+export type { Bucket };
 
 let client: S3Client | null = null;
 
-function s3(): S3Client {
+async function cloudEnv() {
+	const { env } = await import("../env");
+	return env;
+}
+
+async function s3(): Promise<S3Client> {
 	if (!client) {
+		const env = await cloudEnv();
 		client = new S3Client({
 			region: "auto",
 			endpoint: env.R2_ENDPOINT,
@@ -31,15 +33,34 @@ function s3(): S3Client {
 				accessKeyId: env.R2_ACCESS_KEY_ID,
 				secretAccessKey: env.R2_SECRET_ACCESS_KEY,
 			},
-			// Path-style keeps emulators working and R2 accepts it.
 			forcePathStyle: true,
-			// R2 rejects the SDK's default CRC32 request checksums; Cloudflare's
-			// docs prescribe checksums only where the API requires them.
 			requestChecksumCalculation: "WHEN_REQUIRED",
 			responseChecksumValidation: "WHEN_REQUIRED",
 		});
 	}
 	return client;
+}
+
+async function bucketName(bucket: Bucket): Promise<string> {
+	const env = await cloudEnv();
+	return bucket === "public" ? env.R2_PUBLIC_BUCKET : env.R2_PRIVATE_BUCKET;
+}
+
+function localRuntime(): {
+	store: LocalObjectStore;
+	origin: string;
+	secret: string;
+} | null {
+	const dataDir = process.env.SUPERESTSET_DATA_DIR;
+	if (!dataDir) return null;
+	const origin = process.env.USERCONTENT_URL ?? process.env.STATIC_URL;
+	const secret = process.env.USERCONTENT_TOKEN_SECRET;
+	if (!origin || !secret) {
+		throw new Error(
+			"Local object storage needs USERCONTENT_URL or STATIC_URL and USERCONTENT_TOKEN_SECRET",
+		);
+	}
+	return { store: new LocalObjectStore(dataDir), origin, secret };
 }
 
 function isMissing(error: unknown): boolean {
@@ -52,6 +73,20 @@ function isMissing(error: unknown): boolean {
 		candidate?.name === "NotFound" ||
 		candidate?.$metadata?.httpStatusCode === 404
 	);
+}
+
+function parseRangeHeader(range: string) {
+	const match = /^bytes=(\d*)-(\d*)$/.exec(range.trim());
+	if (!match) throw new ObjectRangeError("Invalid object range");
+	const startRaw = match[1] ?? "";
+	const endRaw = match[2] ?? "";
+	if (startRaw === "" && endRaw !== "") return { suffix: Number(endRaw) };
+	if (startRaw === "") throw new ObjectRangeError("Invalid object range");
+	const offset = Number(startRaw);
+	if (endRaw === "") return { offset };
+	const end = Number(endRaw);
+	if (end < offset) throw new ObjectRangeError("Invalid object range");
+	return { offset, length: end - offset + 1 };
 }
 
 export async function putObject({
@@ -67,10 +102,20 @@ export async function putObject({
 	bucket: Bucket;
 	cacheControl?: string;
 }): Promise<void> {
-	await s3().send(
+	const local = localRuntime();
+	if (local) {
+		await local.store.put({ bucket, key, body, contentType, cacheControl });
+		return;
+	}
+
+	const [cloudClient, bucketValue] = await Promise.all([
+		s3(),
+		bucketName(bucket),
+	]);
+	await cloudClient.send(
 		new PutObjectCommand({
 			CacheControl: cacheControl,
-			Bucket: bucketName(bucket),
+			Bucket: bucketValue,
 			Key: key,
 			Body: body,
 			ContentType: contentType,
@@ -78,11 +123,6 @@ export async function putObject({
 	);
 }
 
-/**
- * A server-side copy within the private bucket: the bytes never leave
- * storage. The stored type is replaced, not carried over, so what the copy
- * serves as is decided here rather than by whoever uploaded the source.
- */
 export async function copyObject({
 	sourceKey,
 	key,
@@ -92,8 +132,17 @@ export async function copyObject({
 	key: string;
 	contentType: string;
 }): Promise<void> {
-	const bucket = bucketName("private");
-	await s3().send(
+	const local = localRuntime();
+	if (local) {
+		await local.store.copy({ sourceKey, key, contentType });
+		return;
+	}
+
+	const [cloudClient, bucket] = await Promise.all([
+		s3(),
+		bucketName("private"),
+	]);
+	await cloudClient.send(
 		new CopyObjectCommand({
 			Bucket: bucket,
 			CopySource: `${bucket}/${sourceKey}`,
@@ -109,10 +158,37 @@ export async function getObject(
 	key: string,
 	{ range, bucket = "private" }: { range?: string; bucket?: Bucket } = {},
 ): Promise<Response | null> {
+	const local = localRuntime();
+	if (local) {
+		const object = await local.store.get({
+			bucket,
+			key,
+			range: range ? parseRangeHeader(range) : undefined,
+		});
+		if (!object) return null;
+		return new Response(object.body, {
+			status: object.range ? 206 : 200,
+			headers: {
+				...(object.httpMetadata.contentType
+					? { "Content-Type": object.httpMetadata.contentType }
+					: {}),
+				...(object.range
+					? {
+							"Content-Range": `bytes ${object.range.offset}-${object.range.offset + object.range.length - 1}/${object.size}`,
+						}
+					: {}),
+			},
+		});
+	}
+
 	try {
-		const result = await s3().send(
+		const [cloudClient, bucketValue] = await Promise.all([
+			s3(),
+			bucketName(bucket),
+		]);
+		const result = await cloudClient.send(
 			new GetObjectCommand({
-				Bucket: bucketName(bucket),
+				Bucket: bucketValue,
 				Key: key,
 				Range: range,
 			}),
@@ -138,9 +214,16 @@ export async function headObject(
 	key: string,
 	{ bucket = "private" }: { bucket?: Bucket } = {},
 ): Promise<{ sizeBytes: number; contentType: string | null } | null> {
+	const local = localRuntime();
+	if (local) return await local.store.head({ bucket, key });
+
 	try {
-		const result = await s3().send(
-			new HeadObjectCommand({ Bucket: bucketName(bucket), Key: key }),
+		const [cloudClient, bucketValue] = await Promise.all([
+			s3(),
+			bucketName(bucket),
+		]);
+		const result = await cloudClient.send(
+			new HeadObjectCommand({ Bucket: bucketValue, Key: key }),
 		);
 		return {
 			sizeBytes: result.ContentLength ?? 0,
@@ -164,11 +247,21 @@ export async function deleteObjects(
 	keys: readonly string[],
 	{ bucket = "private" }: { bucket?: Bucket } = {},
 ): Promise<void> {
+	const local = localRuntime();
+	if (local) {
+		await local.store.delete(keys, bucket);
+		return;
+	}
+
+	const [cloudClient, bucketValue] = await Promise.all([
+		s3(),
+		bucketName(bucket),
+	]);
 	for (let i = 0; i < keys.length; i += 1000) {
 		const batch = keys.slice(i, i + 1000);
-		const result = await s3().send(
+		const result = await cloudClient.send(
 			new DeleteObjectsCommand({
-				Bucket: bucketName(bucket),
+				Bucket: bucketValue,
 				Delete: {
 					Objects: batch.map((key) => ({ Key: key })),
 					Quiet: true,
@@ -190,18 +283,32 @@ export async function presignedGetUrl(
 	key: string,
 	expiresInSeconds = 60 * 60,
 ): Promise<string> {
-	return getSignedUrl(
+	const local = localRuntime();
+	if (local) {
+		return signedObjectUrl({
+			origin: local.origin,
+			secret: local.secret,
+			grant: {
+				v: 1,
+				bucket: "private",
+				key,
+				method: "GET",
+				exp: Math.floor(Date.now() / 1000) + expiresInSeconds,
+			},
+		});
+	}
+
+	const [cloudClient, bucket] = await Promise.all([
 		s3(),
-		new GetObjectCommand({ Bucket: bucketName("private"), Key: key }),
+		bucketName("private"),
+	]);
+	return getSignedUrl(
+		cloudClient,
+		new GetObjectCommand({ Bucket: bucket, Key: key }),
 		{ expiresIn: expiresInSeconds },
 	);
 }
 
-/**
- * A presigned PUT for a direct browser or main-process upload. The signature
- * covers the content type and length, so the client must send exactly what
- * `createUpload` was told — the first size gate; `complete` is the second.
- */
 export async function presignedPutUrl({
 	key,
 	contentType,
@@ -213,10 +320,34 @@ export async function presignedPutUrl({
 	contentLength: number;
 	expiresInSeconds?: number;
 }): Promise<{ url: string; headers: Record<string, string> }> {
-	const url = await getSignedUrl(
+	const local = localRuntime();
+	if (local) {
+		return {
+			url: signedObjectUrl({
+				origin: local.origin,
+				secret: local.secret,
+				grant: {
+					v: 1,
+					bucket: "private",
+					key,
+					method: "PUT",
+					contentType,
+					contentLength,
+					exp: Math.floor(Date.now() / 1000) + expiresInSeconds,
+				},
+			}),
+			headers: { "Content-Type": contentType },
+		};
+	}
+
+	const [cloudClient, bucket] = await Promise.all([
 		s3(),
+		bucketName("private"),
+	]);
+	const url = await getSignedUrl(
+		cloudClient,
 		new PutObjectCommand({
-			Bucket: bucketName("private"),
+			Bucket: bucket,
 			Key: key,
 			ContentType: contentType,
 			ContentLength: contentLength,

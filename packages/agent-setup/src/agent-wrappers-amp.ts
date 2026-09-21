@@ -21,8 +21,8 @@ export function createAmpWrapper(): void {
 	createWrapper("amp", script);
 }
 
-export const AMP_PLUGIN_FILE = "superset-lifecycle.ts";
-const AMP_PLUGIN_SIGNATURE = "// Superset Amp lifecycle plugin";
+export const AMP_PLUGIN_FILE = "superestset-lifecycle.ts";
+const AMP_PLUGIN_SIGNATURE = "// SuperestSet Amp lifecycle plugin";
 const AMP_PLUGIN_VERSION = "v3";
 export const AMP_PLUGIN_MARKER = `${AMP_PLUGIN_SIGNATURE} ${AMP_PLUGIN_VERSION}`;
 
@@ -45,7 +45,11 @@ export function getAmpPluginContent(): string {
 		getTemplatePath("amp-plugin.template.ts"),
 		"utf-8",
 	);
-	return template.replace("{{MARKER}}", AMP_PLUGIN_MARKER);
+	return template
+		.replaceAll("notify.sh", "superestset-notify.sh")
+		.replaceAll(".superset", ".superestset")
+		.replaceAll("__superset", "__superestset")
+		.replace("{{MARKER}}", AMP_PLUGIN_MARKER);
 }
 
 export function createAmpPlugin(): void {

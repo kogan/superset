@@ -12,7 +12,7 @@ import path from "node:path";
 import { getBinDir } from "@superset/agent-setup/paths";
 import { app } from "electron";
 
-export const BUNDLED_CLI_SHIM_MARKER = "# Superset bundled CLI shim v1";
+export const BUNDLED_CLI_SHIM_MARKER = "# SuperestSet bundled CLI shim v1";
 const SHIM_HEADER_BYTES = 2048;
 
 export type BundledCliInstallStatus = "installed" | "missing" | "skipped";
@@ -32,7 +32,7 @@ export function getBundledCliBinaryName(
 export function getBundledCliShimName(
 	platform: NodeJS.Platform = process.platform,
 ): string {
-	return platform === "win32" ? "superset.cmd" : "superset";
+	return platform === "win32" ? "superestset.cmd" : "superestset";
 }
 
 function quoteShellLiteral(value: string): string {
@@ -48,10 +48,13 @@ function quoteCmdLiteral(value: string): string {
  * the addresses travel in the shim rather than being compiled into the CLI.
  */
 function devStackAddresses(): Array<[string, string]> {
-	if (app.isPackaged) return [];
 	const api = process.env.NEXT_PUBLIC_API_URL;
 	const web = process.env.NEXT_PUBLIC_WEB_URL;
+	const dataDir = process.env.SUPERSET_HOME_DIR;
 	return [
+		...(dataDir
+			? ([["SUPERSET_HOME_DIR", dataDir]] as Array<[string, string]>)
+			: []),
 		...(api ? ([["SUPERSET_API_URL", api]] as Array<[string, string]>) : []),
 		...(web ? ([["SUPERSET_WEB_URL", web]] as Array<[string, string]>) : []),
 	];
@@ -136,6 +139,11 @@ export function installBundledCliShim(
 
 	const binDir = options.binDir ?? getBinDir();
 	const shimPath = path.join(binDir, getBundledCliShimName(platform));
+	// Agent templates use the compatibility command inside this fork’s own bin directory.
+	const internalAlias = path.join(
+		binDir,
+		platform === "win32" ? "superset.cmd" : "superset",
+	);
 	if (!shouldReplaceShim(shimPath)) {
 		console.warn(
 			`[bundled-cli] Skipping ${shimPath}; an unmanaged file already exists`,
@@ -151,6 +159,13 @@ export function installBundledCliShim(
 		mode: platform === "win32" ? 0o644 : 0o755,
 	});
 
-	console.log(`[bundled-cli] Installed Superset CLI shim at ${shimPath}`);
+	if (shouldReplaceShim(internalAlias)) {
+		writeFileSync(
+			internalAlias,
+			buildBundledCliShim(bundledCliPath, platform),
+			{ mode: platform === "win32" ? 0o644 : 0o755 },
+		);
+	}
+	console.log(`[bundled-cli] Installed SuperestSet CLI shim at ${shimPath}`);
 	return "installed";
 }

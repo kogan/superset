@@ -1,5 +1,9 @@
 import type { AgentIdentityId } from "@superset/shared/agent-catalog";
+export interface FileExplorerPaneData {
+	kind: "file-explorer";
+}
 export interface FilePaneData {
+	revealPosition?: { line: number; column: number };
 	filePath: string;
 	mode: "editor" | "diff" | "preview";
 	language?: string;
@@ -107,6 +111,7 @@ export type WorkspaceSearchKey =
 export type ConsumeSearch = (keys: WorkspaceSearchKey[]) => void;
 
 export type PaneViewerData =
+	| FileExplorerPaneData
 	| FilePaneData
 	| TerminalPaneData
 	| ChatV3PaneData

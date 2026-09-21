@@ -24,9 +24,19 @@ const envSchema = z.object({
 	SENTRY_DSN: z.string().url().optional(),
 });
 
+export type UsercontentObject = Pick<
+	R2ObjectBody,
+	"body" | "text" | "size" | "httpMetadata" | "range"
+>;
+
 export type UsercontentEnv = z.infer<typeof envSchema> & {
 	/** Pages and files: read only through this Worker, with a ticket. */
-	PRIVATE: R2Bucket;
+	PRIVATE: {
+		get(
+			key: string,
+			options?: { range?: R2Range },
+		): Promise<UsercontentObject | null>;
+	};
 };
 
 const validated = new WeakSet<object>();

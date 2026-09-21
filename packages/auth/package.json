@@ -19,6 +19,10 @@
 		"./stripe": {
 			"types": "./src/stripe.ts",
 			"default": "./src/stripe.ts"
+		},
+		"./local-bootstrap": {
+			"types": "./src/local-bootstrap.ts",
+			"default": "./src/local-bootstrap.ts"
 		}
 	},
 	"scripts": {

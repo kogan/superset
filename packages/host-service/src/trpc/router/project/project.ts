@@ -34,6 +34,10 @@ import {
 } from "../workspace-creation/shared/sparse-checkout";
 import { normalizeWorktreeBaseDir } from "../workspace-creation/shared/worktree-paths";
 import {
+	externalWorkspacePathSet,
+	isExternalWorkspacePath,
+} from "../../../workspaces/external-workspace-paths";
+import {
 	createFromClone,
 	createFromEmpty,
 	createFromImportLocal,
@@ -856,8 +860,13 @@ export const projectRouter = router({
 				.all()
 				.filter((ws) => ws.archivedAt == null || existsSync(ws.worktreePath));
 
+			const externalPaths = externalWorkspacePathSet(ctx.db);
 			for (const ws of localWorkspaces) {
-				if (ws.type === "local" || ws.worktreePath === localProject.repoPath)
+				if (
+					ws.type === "local" ||
+					ws.worktreePath === localProject.repoPath ||
+					isExternalWorkspacePath(externalPaths, ws.worktreePath)
+				)
 					continue;
 				try {
 					const git = await ctx.git(localProject.repoPath);

@@ -15,6 +15,7 @@ const desktopDevOrigins =
 
 function getAllowedOrigins(deploymentOrigin: string) {
 	return [
+		...(process.env.SUPERESTSET_LOCAL === "1" ? ["null"] : []),
 		env.NEXT_PUBLIC_WEB_URL,
 		env.NEXT_PUBLIC_ADMIN_URL,
 		env.NEXT_PUBLIC_MARKETING_URL,

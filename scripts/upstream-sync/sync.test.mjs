@@ -1,15 +1,16 @@
 import assert from "node:assert/strict";
-import { spawnSync } from "node:child_process";
+import { spawn, spawnSync } from "node:child_process";
+import { once } from "node:events";
 import {
-	chmodSync,
 	copyFileSync,
+	existsSync,
 	mkdtempSync,
 	readFileSync,
 	rmSync,
 	writeFileSync,
 } from "node:fs";
 import { tmpdir } from "node:os";
-import { delimiter, join } from "node:path";
+import { join } from "node:path";
 import { test } from "node:test";
 import { fileURLToPath } from "node:url";
 
@@ -17,7 +18,12 @@ function command(cwd, program, args, env = {}) {
 	const result = spawnSync(program, args, {
 		cwd,
 		encoding: "utf8",
-		env: { ...process.env, ...env },
+		env: {
+			...process.env,
+			GIT_CONFIG_GLOBAL: "/dev/null",
+			GIT_CONFIG_NOSYSTEM: "1",
+			...env,
+		},
 	});
 	assert.equal(
 		result.status,
@@ -27,25 +33,26 @@ function command(cwd, program, args, env = {}) {
 	return result.stdout.trim();
 }
 
-function fixture(t) {
+async function fixture(t) {
 	const root = mkdtempSync(join(tmpdir(), "superset-upstream-sync-"));
-	t.after(() => rmSync(root, { recursive: true, force: true }));
 	const upstream = join(root, "upstream.git");
 	const origin = join(root, "origin.git");
 	const author = join(root, "author");
 	const worker = join(root, "worker");
-	const statePath = join(root, "github.json");
-	const script = join(root, "sync.sh");
+	const publisher = join(root, "publisher");
+	const bundle = join(root, "candidate.bundle");
+	const outputs = join(root, "outputs");
+	const requests = join(root, "request.json");
+	const response = join(root, "response.json");
 	const git = (cwd, ...args) => command(cwd, "git", args);
 	git(root, "init", "--bare", "--initial-branch=main", upstream);
 	git(root, "init", "--bare", "--initial-branch=main", origin);
 	git(root, "clone", upstream, author);
 	git(author, "config", "user.name", "Test");
 	git(author, "config", "user.email", "test@example.com");
-	git(author, "config", "commit.gpgsign", "false");
 	const commit = (name, contents) => {
 		writeFileSync(join(author, name), contents);
-		git(author, "add", name);
+		git(author, "add", "--", name);
 		git(author, "commit", "-m", `Update ${name}`);
 		return git(author, "rev-parse", "HEAD");
 	};
@@ -54,67 +61,104 @@ function fixture(t) {
 	git(author, "remote", "add", "fork", origin);
 	git(author, "push", "fork", "main");
 	git(root, "clone", origin, worker);
-	git(worker, "config", "commit.gpgsign", "false");
-	copyFileSync(fileURLToPath(new URL("./sync.sh", import.meta.url)), script);
-	writeFileSync(statePath, JSON.stringify({ calls: [], pr: null }));
-	const mock = join(root, "gh");
-	writeFileSync(
-		mock,
-		`#!${process.execPath}
-const fs = require("node:fs");
-const args = process.argv.slice(2);
-const state = JSON.parse(fs.readFileSync(process.env.MOCK_GH_STATE, "utf8"));
-state.calls.push(args);
-const bodyIndex = args.indexOf("--body-file");
-if (bodyIndex !== -1) state.body = fs.readFileSync(args[bodyIndex + 1], "utf8");
-if (args[0] !== "pr") throw new Error("Unexpected gh command");
-switch (args[1]) {
-  case "list":
-    if (state.pr) console.log(state.pr.number);
-    if (state.mergeOnNextList) {
-      const cp = require("node:child_process");
-      for (const args of [
-        ["fetch", "fork"],
-        ["checkout", "kogan"],
-        ["merge", "--no-ff", "--no-edit", "fork/sync/upstream"],
-        ["push", "fork", "HEAD:main"],
-      ]) cp.execFileSync("git", args, { cwd: state.mergeOnNextList, stdio: "pipe" });
-      state.pr = null;
-      delete state.mergeOnNextList;
-    }
-    break;
-  case "create":
-    if (state.pr) throw new Error("Duplicate PR");
-    state.pr = { number: 1, isDraft: false };
-    console.log("https://github.com/test/fork/pull/1");
-    break;
-  case "edit": if (!state.pr) throw new Error("Missing PR"); break;
-  case "view": console.log(state.pr.isDraft); break;
-  case "ready": state.pr.isDraft = true; break;
-  default: throw new Error("Unexpected gh operation");
-}
-fs.writeFileSync(process.env.MOCK_GH_STATE, JSON.stringify(state));
+	git(root, "clone", origin, publisher);
+	for (const file of ["sync.sh", "resolve-conflicts.mjs", "verify-aimc.mjs"]) {
+		copyFileSync(
+			fileURLToPath(new URL(file, import.meta.url)),
+			join(root, file),
+		);
+	}
+	const setResponse = (files, options = {}) =>
+		writeFileSync(
+			response,
+			JSON.stringify({
+				status: options.status || 200,
+				body: {
+					choices: [
+						{
+							finish_reason: options.finishReason || "stop",
+							message: {
+								content: JSON.stringify({
+									resolved: options.resolved ?? true,
+									reason: "Fixture",
+									files,
+								}),
+							},
+						},
+					],
+				},
+			}),
+		);
+	setResponse([{ path: "shared.txt", content: "combined changes\n" }]);
+	const server = spawn(
+		process.execPath,
+		[
+			"--input-type=module",
+			"-e",
+			`
+import http from 'node:http';
+import fs from 'node:fs';
+const server = http.createServer(async (req, res) => {
+  let body = '';
+  for await (const chunk of req) body += chunk;
+  fs.writeFileSync(process.argv[1], JSON.stringify({path:req.url, body:JSON.parse(body)}));
+  const response = JSON.parse(fs.readFileSync(process.argv[2], 'utf8'));
+  res.writeHead(response.status, {'Content-Type':'application/json'});
+  res.end(JSON.stringify(response.body));
+});
+server.listen(0, '127.0.0.1', () => console.log(server.address().port));
 `,
+			requests,
+			response,
+		],
+		{ stdio: ["ignore", "pipe", "inherit"] },
 	);
-	chmodSync(mock, 0o755);
-	const run = (extraEnv = {}) =>
-		spawnSync("bash", [script], {
-			cwd: worker,
+	t.after(async () => {
+		const closed = once(server, "exit");
+		server.kill();
+		await closed;
+		rmSync(root, { recursive: true, force: true });
+	});
+	const [port] = await once(server.stdout, "data");
+	const aimcBaseUrl = `http://127.0.0.1:${port.toString().trim()}`;
+	const run = (mode, env = {}, cwd = worker) =>
+		spawnSync("bash", [join(root, "sync.sh"), mode], {
+			cwd,
 			encoding: "utf8",
 			env: {
 				...process.env,
-				PATH: `${root}${delimiter}${process.env.PATH}`,
+				GIT_CONFIG_GLOBAL: "/dev/null",
+				GIT_CONFIG_NOSYSTEM: "1",
 				UPSTREAM_URL: upstream,
-				GH_REPO: "test/fork",
-				MOCK_GH_STATE: statePath,
-				...extraEnv,
+				SYNC_BUNDLE: bundle,
+				GITHUB_OUTPUT: outputs,
+				AIMC_API_KEY: "fixture-key",
+				AIMC_BASE_URL: aimcBaseUrl,
+				AIMC_MODEL: "openai/gpt-5.4",
+				...env,
 			},
 		});
-	const success = () => {
-		const result = run();
+	const prepare = () => {
+		const result = run("prepare");
 		assert.equal(result.status, 0, result.stdout + result.stderr);
+		return Object.fromEntries(
+			readFileSync(outputs, "utf8")
+				.trim()
+				.split("\n")
+				.map((line) => line.split("=")),
+		);
 	};
-	const state = () => JSON.parse(readFileSync(statePath, "utf8"));
+	const publish = (metadata, env = {}) =>
+		run(
+			"publish",
+			{
+				BASE_SHA: metadata.base_sha,
+				UPSTREAM_SHA: metadata.upstream_sha,
+				CANDIDATE_SHA: metadata.candidate_sha,
+				...env,
+			},
+			publisher,
+		);
 	const upstreamCommit = (name = "upstream.txt", contents = "upstream\n") => {
 		git(author, "checkout", "main");
 		const sha = commit(name, contents);
@@ -128,154 +172,182 @@ fs.writeFileSync(process.env.MOCK_GH_STATE, JSON.stringify(state));
 		return sha;
 	};
 	return {
+		aimcBaseUrl,
 		root,
 		upstream,
 		origin,
 		author,
 		worker,
+		bundle,
+		requests,
 		git,
 		commit,
 		run,
-		success,
-		state,
-		statePath,
+		prepare,
+		publish,
+		setResponse,
 		upstreamCommit,
 		forkCommit,
 	};
 }
 
-test("does nothing when main already contains upstream, including custom commits", (t) => {
-	const f = fixture(t);
+test("does nothing when main already contains upstream", async (t) => {
+	const f = await fixture(t);
 	const main = f.forkCommit();
-	f.success();
+	assert.equal(f.prepare().changed, "false");
 	assert.equal(f.git(f.origin, "rev-parse", "main"), main);
-	assert.deepEqual(f.state().calls, []);
-	assert.equal(f.git(f.origin, "branch", "--list", "sync/upstream"), "");
+	assert.equal(existsSync(f.bundle), false);
+	assert.equal(existsSync(f.requests), false);
 });
 
-test("creates one PR, preserves custom main, and retains upstream ancestry", (t) => {
-	const f = fixture(t);
+test("prepares without remote writes and publishes the exact merge with both histories", async (t) => {
+	const f = await fixture(t);
 	const main = f.forkCommit();
 	const upstream = f.upstreamCommit();
-	f.success();
+	const metadata = f.prepare();
 	assert.equal(f.git(f.origin, "rev-parse", "main"), main);
-	f.git(f.origin, "merge-base", "--is-ancestor", upstream, "sync/upstream");
-	f.git(f.origin, "merge-base", "--is-ancestor", main, "sync/upstream");
-	const firstSync = f.git(f.origin, "rev-parse", "sync/upstream");
-	assert.match(f.state().body, new RegExp(upstream));
-	f.git(f.worker, "merge", "--no-edit", "origin/main");
-	assert.equal(readFileSync(join(f.worker, "kogan.txt"), "utf8"), "custom\n");
-	assert.equal(
-		readFileSync(join(f.worker, "upstream.txt"), "utf8"),
-		"upstream\n",
-	);
-	f.success();
-	assert.equal(
-		f.state().calls.filter((call) => call[1] === "create").length,
-		1,
-	);
-	assert.equal(f.git(f.origin, "rev-parse", "sync/upstream"), firstSync);
+	assert.equal(f.git(f.origin, "branch", "--list", "sync/upstream"), "");
+	assert.equal(existsSync(f.requests), false);
+	const result = f.publish(metadata);
+	assert.equal(result.status, 0, result.stderr);
+	assert.equal(f.git(f.origin, "rev-parse", "main"), metadata.candidate_sha);
+	f.git(f.origin, "merge-base", "--is-ancestor", main, "main");
+	f.git(f.origin, "merge-base", "--is-ancestor", upstream, "main");
+	assert.equal(f.git(f.origin, "show", "main:kogan.txt"), "custom");
 });
 
-test("updates the same PR and preserves manual commits on the sync branch", (t) => {
-	const f = fixture(t);
-	f.upstreamCommit();
-	f.success();
-	f.git(f.author, "fetch", "fork");
-	f.git(f.author, "checkout", "-b", "resolution", "fork/sync/upstream");
+test("retains manual sync-branch commits even when upstream is already in main", async (t) => {
+	const f = await fixture(t);
+	f.forkCommit();
+	f.git(f.author, "checkout", "-b", "resolution");
 	const manual = f.commit("resolution.txt", "keep this\n");
 	f.git(f.author, "push", "fork", "HEAD:sync/upstream");
-	const upstream = f.upstreamCommit("next.txt", "next\n");
-	f.success();
-	f.git(f.origin, "merge-base", "--is-ancestor", manual, "sync/upstream");
-	f.git(f.origin, "merge-base", "--is-ancestor", upstream, "sync/upstream");
-	assert.equal(
-		f.state().calls.filter((call) => call[1] === "create").length,
-		1,
-	);
-	assert.match(f.state().body, new RegExp(upstream));
+	const metadata = f.prepare();
+	assert.equal(f.publish(metadata).status, 0);
+	f.git(f.origin, "merge-base", "--is-ancestor", manual, "main");
+	assert.equal(f.git(f.origin, "show", "main:resolution.txt"), "keep this");
 });
 
-test("opens a PR even when upstream conflicts with custom main", (t) => {
-	const f = fixture(t);
-	const main = f.forkCommit("shared.txt", "Kogan version\n");
-	const upstream = f.upstreamCommit("shared.txt", "upstream version\n");
-	f.success();
-	assert.equal(f.state().pr.number, 1);
+test("resolves a real conflict through AIMC and preserves merge parents", async (t) => {
+	const f = await fixture(t);
+	const main = f.forkCommit("shared.txt", "Kogan behavior\n");
+	const upstream = f.upstreamCommit("shared.txt", "upstream behavior\n");
+	const metadata = f.prepare();
+	const request = JSON.parse(readFileSync(f.requests, "utf8"));
+	assert.equal(request.path, "/chat/completions");
+	assert.equal(request.body.model, "openai/gpt-5.4");
+	assert.equal(request.body.response_format.json_schema.strict, true);
+	const [input] = JSON.parse(request.body.messages[1].content);
+	assert.equal(input.base, "base\n");
+	assert.equal(input.ours, "Kogan behavior\n");
+	assert.equal(input.theirs, "upstream behavior\n");
 	assert.equal(f.git(f.origin, "rev-parse", "main"), main);
-	assert.equal(f.git(f.origin, "rev-parse", "sync/upstream"), upstream);
-	const merge = spawnSync("git", ["merge", "--no-edit", "origin/main"], {
-		cwd: f.worker,
-	});
-	assert.notEqual(merge.status, 0);
+	assert.equal(f.publish(metadata).status, 0);
+	f.git(f.origin, "merge-base", "--is-ancestor", main, "main");
+	f.git(f.origin, "merge-base", "--is-ancestor", upstream, "main");
+	assert.equal(f.git(f.origin, "show", "main:shared.txt"), "combined changes");
 });
 
-test("leaves remote branches untouched and drafts the PR on conflicting updates", (t) => {
-	const f = fixture(t);
-	f.upstreamCommit();
-	f.success();
-	const main = f.git(f.origin, "rev-parse", "main");
-	f.git(f.author, "fetch", "fork");
-	f.git(f.author, "checkout", "-b", "resolution", "fork/sync/upstream");
-	const manual = f.commit("shared.txt", "resolved\n");
-	f.git(f.author, "push", "fork", "HEAD:sync/upstream");
-	f.upstreamCommit("shared.txt", "conflicting update\n");
-	for (let attempt = 0; attempt < 2; attempt++) {
-		assert.notEqual(f.run().status, 0);
+for (const [name, files, options] of [
+	["refusal", [], { resolved: false }],
+	["truncation", [], { finishReason: "length" }],
+	["unexpected path", [{ path: "../outside.txt", content: "escape" }], {}],
+	["missing path", [], {}],
+	[
+		"unresolved markers",
+		[{ path: "shared.txt", content: "<<<<<<< ours\nbroken\n" }],
+		{},
+	],
+	["gateway failure", [], { status: 503 }],
+]) {
+	test(`does not publish or retain conflict edits after ${name}`, async (t) => {
+		const f = await fixture(t);
+		const main = f.forkCommit("shared.txt", "Kogan behavior\n");
+		f.upstreamCommit("shared.txt", "upstream behavior\n");
+		f.setResponse(files, options);
+		const result = f.run("prepare");
+		assert.notEqual(result.status, 0);
 		assert.equal(f.git(f.origin, "rev-parse", "main"), main);
-		assert.equal(f.git(f.origin, "rev-parse", "sync/upstream"), manual);
-		assert.equal(f.state().pr.isDraft, true);
-		assert.match(f.state().body, /Update blocked/);
 		assert.equal(f.git(f.worker, "status", "--porcelain"), "");
-	}
-});
+		assert.equal(existsSync(f.bundle), false);
+		assert.equal(existsSync(join(f.root, "outside.txt")), false);
+	});
+}
 
-test("does not publish anything when fetching upstream fails", (t) => {
-	const f = fixture(t);
-	const result = f.run({ UPSTREAM_URL: join(f.root, "missing.git") });
+test("does not overwrite a main commit made while checks were running", async (t) => {
+	const f = await fixture(t);
+	f.forkCommit();
+	f.upstreamCommit();
+	const metadata = f.prepare();
+	const newerMain = f.forkCommit("later.txt", "human change\n");
+	const result = f.publish(metadata);
 	assert.notEqual(result.status, 0);
-	assert.deepEqual(f.state().calls, []);
-	assert.equal(f.git(f.origin, "branch", "--list", "sync/upstream"), "");
+	assert.match(result.stderr, /main changed during validation/);
+	assert.equal(f.git(f.origin, "rev-parse", "main"), newerMain);
 });
 
-test("opens the next PR after a merge without rewriting the reusable branch", (t) => {
-	const f = fixture(t);
-	f.forkCommit();
+test("rejects a bundle that differs from the validated commit", async (t) => {
+	const f = await fixture(t);
+	const main = f.forkCommit();
 	f.upstreamCommit();
-	f.success();
-	const firstSync = f.git(f.origin, "rev-parse", "sync/upstream");
-	f.git(f.author, "fetch", "fork");
-	f.git(f.author, "checkout", "kogan");
-	f.git(f.author, "merge", "--no-ff", "--no-edit", "fork/sync/upstream");
-	f.git(f.author, "push", "fork", "HEAD:main");
-	const github = f.state();
-	github.pr = null;
-	writeFileSync(f.statePath, JSON.stringify(github));
-	f.upstreamCommit("next.txt", "next update\n");
-	f.success();
-	f.git(f.origin, "merge-base", "--is-ancestor", firstSync, "sync/upstream");
-	assert.equal(
-		f.state().calls.filter((call) => call[1] === "create").length,
-		2,
-	);
+	const metadata = f.prepare();
+	const result = f.publish(metadata, { CANDIDATE_SHA: main });
+	assert.notEqual(result.status, 0);
+	assert.equal(f.git(f.origin, "rev-parse", "main"), main);
 });
 
-test("opens a new PR when the preceding PR merges during synchronization", (t) => {
-	const f = fixture(t);
-	f.forkCommit();
-	f.upstreamCommit();
-	f.success();
-	const previousSync = f.git(f.origin, "rev-parse", "sync/upstream");
-	const upstream = f.upstreamCommit("next.txt", "next update\n");
-	const github = f.state();
-	github.mergeOnNextList = f.author;
-	writeFileSync(f.statePath, JSON.stringify(github));
-	f.success();
-	f.git(f.origin, "merge-base", "--is-ancestor", previousSync, "main");
-	f.git(f.origin, "merge-base", "--is-ancestor", upstream, "sync/upstream");
-	assert.ok(f.state().pr);
-	assert.equal(
-		f.state().calls.filter((call) => call[1] === "create").length,
-		2,
+test("does not call AI or publish when fetching upstream fails", async (t) => {
+	const f = await fixture(t);
+	const result = f.run("prepare", {
+		UPSTREAM_URL: join(f.root, "missing.git"),
+	});
+	assert.notEqual(result.status, 0);
+	assert.equal(existsSync(f.bundle), false);
+	assert.equal(existsSync(f.requests), false);
+});
+
+test("resolves a modify/delete conflict with an explicit deletion", async (t) => {
+	const f = await fixture(t);
+	f.forkCommit("shared.txt", "Kogan change\n");
+	f.git(f.author, "checkout", "main");
+	f.git(f.author, "rm", "shared.txt");
+	f.git(f.author, "commit", "-m", "Remove obsolete file");
+	f.git(f.author, "push", "origin", "main");
+	f.setResponse([{ path: "shared.txt", content: null }]);
+	const metadata = f.prepare();
+	assert.equal(f.publish(metadata).status, 0);
+	assert.equal(f.git(f.origin, "ls-tree", "main", "shared.txt"), "");
+});
+
+test("rejects binary conflicts without making an AI request", async (t) => {
+	const f = await fixture(t);
+	const main = f.forkCommit("shared.txt", "Kogan\0binary");
+	f.upstreamCommit("shared.txt", "upstream\0binary");
+	assert.notEqual(f.run("prepare").status, 0);
+	assert.equal(f.git(f.origin, "rev-parse", "main"), main);
+	assert.equal(existsSync(f.requests), false);
+});
+
+test("verifies AIMC using a synthetic conflict that preserves both changes", async (t) => {
+	const f = await fixture(t);
+	f.setResponse([
+		{ path: "config.json", content: '{"upstream":true,"kogan":true}\n' },
+	]);
+	const result = spawnSync(
+		process.execPath,
+		[join(f.root, "verify-aimc.mjs")],
+		{
+			encoding: "utf8",
+			env: {
+				...process.env,
+				GIT_CONFIG_GLOBAL: "/dev/null",
+				GIT_CONFIG_NOSYSTEM: "1",
+				AIMC_API_KEY: "fixture-key",
+				AIMC_BASE_URL: f.aimcBaseUrl,
+				AIMC_MODEL: "openai/gpt-5.4",
+			},
+		},
 	);
+	assert.equal(result.status, 0, result.stderr);
+	assert.match(result.stdout, /preserving both changes/);
 });

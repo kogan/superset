@@ -5,7 +5,6 @@ import { resolveProjectFilterParams } from "renderer/routes/_authenticated/_dash
 import { parsePositiveIntegerParam } from "renderer/routes/_authenticated/_dashboard/utils/parsePositiveIntegerParam";
 import { ResizablePanel } from "renderer/screens/main/components/ResizablePanel";
 import { useWorkspaceSidebarStore } from "renderer/stores/workspace-sidebar-state";
-import { PullRequestListToggle } from "./components/PullRequestListToggle";
 import { PullRequestsView } from "./components/PullRequestsView";
 import {
 	DEFAULT_PULL_REQUESTS_LIST_WIDTH,
@@ -64,13 +63,16 @@ function PullRequestsLayout() {
 	const selectedPrNumber = params.prNumber
 		? parsePositiveIntegerParam(params.prNumber)
 		: null;
-	const isListCollapsed = usePullRequestsSplitViewStore(
+	const storedListCollapsed = usePullRequestsSplitViewStore(
 		(s) => s.isListCollapsed,
 	);
-	const isDetailCollapsed = usePullRequestsSplitViewStore(
+	const storedDetailCollapsed = usePullRequestsSplitViewStore(
 		(s) => s.isDetailCollapsed,
 	);
 	const listWidth = usePullRequestsSplitViewStore((s) => s.width);
+	// An empty preview must never hide the list on the landing page.
+	const isListCollapsed = selectedPrNumber !== null && storedListCollapsed;
+	const isDetailCollapsed = selectedPrNumber === null || storedDetailCollapsed;
 	const setListWidth = usePullRequestsSplitViewStore((s) => s.setWidth);
 	const isResizingList = usePullRequestsSplitViewStore((s) => s.isResizing);
 	const setIsResizingList = usePullRequestsSplitViewStore(
@@ -157,11 +159,6 @@ function PullRequestsLayout() {
 						isAppSidebarCollapsed && isListCollapsed && "rounded-tl-[8px]",
 					)}
 				>
-					{params.prNumber === undefined && (
-						<div className="flex shrink-0 items-center justify-end px-4 pt-2">
-							<PullRequestListToggle />
-						</div>
-					)}
 					<Outlet />
 				</div>
 			)}

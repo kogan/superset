@@ -1,0 +1,1 @@
+export { JiraGithubScope } from "./JiraGithubScope";

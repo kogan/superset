@@ -13,14 +13,14 @@ import {
 } from "./managed-toml-block";
 
 export const VIBE_HOOKS_MARKER_START =
-	"# >>> superset-managed-hooks v1 (do not edit) >>>";
-export const VIBE_HOOKS_MARKER_END = "# <<< superset-managed-hooks v1 <<<";
+	"# >>> superestset-managed-hooks v1 (do not edit) >>>";
+export const VIBE_HOOKS_MARKER_END = "# <<< superestset-managed-hooks v1 <<<";
 
 // Vibe runs the command via a shell and pipes the hook invocation JSON (which
 // carries `hook_event_name`) on stdin.
 const VIBE_MANAGED_HOOK_COMMAND = getManagedNotifyHookCommand("vibe");
 
-const MANAGED_HOOK_NAME_PREFIX = "superset-notify-";
+const MANAGED_HOOK_NAME_PREFIX = "superestset-notify-";
 
 export function getVibeHooksTomlPath(): string {
 	return path.join(os.homedir(), ".vibe", "hooks.toml");
@@ -30,19 +30,19 @@ function buildVibeManagedHooksBlock(): string {
 	return [
 		VIBE_HOOKS_MARKER_START,
 		"[[hooks]]",
-		'name = "superset-notify-before-tool"',
+		'name = "superestset-notify-before-tool"',
 		'type = "pre_tool"',
 		`command = '${VIBE_MANAGED_HOOK_COMMAND}'`,
 		"",
 		"[[hooks]]",
-		'name = "superset-notify-post-agent-turn"',
+		'name = "superestset-notify-post-agent-turn"',
 		'type = "post_agent"',
 		`command = '${VIBE_MANAGED_HOOK_COMMAND}'`,
 		VIBE_HOOKS_MARKER_END,
 	].join("\n");
 }
 
-// Our block only ever contains `[[hooks]]` tables named `superset-notify-*`,
+// Our block only ever contains `[[hooks]]` tables named `superestset-notify-*`,
 // so during orphan recovery a table is foreign only when it carries a name
 // outside that prefix.
 function isManagedVibeTable(lines: string[]): boolean {

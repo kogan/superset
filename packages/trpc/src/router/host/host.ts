@@ -1,4 +1,4 @@
-import { db, dbWs } from "@superset/db/client";
+import { db } from "@superset/db/client";
 import {
 	members,
 	subscriptions,
@@ -183,7 +183,7 @@ export const hostRouter = {
 				eq(v2Hosts.organizationId, input.organizationId),
 				eq(v2Hosts.machineId, input.machineId),
 			);
-			const { host, inserted } = await dbWs.transaction(async (tx) =>
+			const { host, inserted } = await db.transaction(async (tx) =>
 				registerHost(input, {
 					insert: async () =>
 						(

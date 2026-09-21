@@ -1,352 +1,78 @@
-<div align="center">
+# superset++
 
-<img width="full" alt="Claude and OpenCode working in parallel Superset workspaces with live diffs" src="apps/marketing/public/images/readme-hero.gif" />
+superset++ is a standalone Mac development workspace built from Superset. It brings Jira tickets, GitHub pull requests, Git worktrees, terminals, files, diffs, and local Pages into one app. Configure your Jira connection, board, PR source and teammates in **Settings > Integrations**.
 
-### Run 100+ Coding Agents in Parallel
+The Mac app includes its own runtime, database, and page storage. You do **not** need the original Superset app, Docker, or Bun to run it. Git, your coding agents, and their account connections are still needed for the development work you choose to do.
 
-<details>
-<summary>🌐 Read this in other languages</summary>
-<br />
+The **Attention** inbox collects agents waiting for input, failed checks on your own PRs, and PRs requesting your review across connected projects. Open a row to jump to its terminal or PR; resolved items clear when their source refreshes.
 
-[English](README.md) | [日本語](readme/README.ja.md) | [简体中文](readme/README.zh-CN.md) | [繁體中文](readme/README.zh-TW.md) | [한국어](readme/README.ko.md) | [Français](readme/README.fr.md) | [Español](readme/README.es.md) | [Deutsch](readme/README.de.md) | [Português](readme/README.pt-BR.md) | [Italiano](readme/README.it.md) | [Русский](readme/README.ru.md) | [Türkçe](readme/README.tr.md) | [Polski](readme/README.pl.md) | [Nederlands](readme/README.nl.md) | [Bahasa Indonesia](readme/README.id.md) | [Čeština](readme/README.cs.md) | [Tiếng Việt](readme/README.vi.md)
+Agents appear beneath their workspaces in collapsible sidebar groups with status and direct session navigation. Use the chevron beside a workspace to hide or show all of its agents, including different agent types, without stopping them. Subagents use task names when available; click the pencil beside one to give it a custom name. In the Pull requests Code tab, select a diff line or range to post a comment directly to GitHub. Choose **Send to agent** only when you want AI help. The Files search supports filenames and file contents, path filters, and opening matching lines. Choose which features to show in **Settings > General > Features**. See [the usage guide](PERSONAL_BUILD.md) and [saved feature ideas](docs/feature-backlog.md).
 
-</details>
+## Download and install
 
-[![GitHub stars](https://img.shields.io/github/stars/superset-sh/superset?style=flat&logo=github)](https://github.com/superset-sh/superset/stargazers)
-[![GitHub release](https://img.shields.io/github/v/release/superset-sh/superset?style=flat&logo=github)](https://github.com/superset-sh/superset/releases)
-[![License](https://img.shields.io/badge/license-Elastic%20License%202.0-blue?style=flat)](LICENSE.md)
-[![Twitter](https://img.shields.io/badge/@superset__sh-555?logo=x)](https://x.com/superset_sh)
-[![Discord](https://img.shields.io/badge/Discord-555?logo=discord)](https://discord.gg/cZeD9WYcV7)
+1. Open [superset++ releases](https://github.com/kogan/superset/releases).
+2. Download the **Apple Silicon / arm64 `.dmg`** from the release.
+3. Open the disk image and drag **superset++.app** into **Applications**.
+4. Open **superset++**. It creates a personal local account and opens your existing Superset workspaces in place.
 
-<br />
+If no superset++ installer has been published in this fork yet, build it with [DEVELOPMENT.md](DEVELOPMENT.md). Forking the source does not copy installers from another repository.
 
-Claude Code, Codex, or any CLI agent, each in its own isolated worktree.<br />
-Spend your time shipping, not waiting.
+If you are upgrading from SuperestSet, quit it before opening **superset++**. Both app names use the same data folder.
 
-<br />
+Finish or stop the old app's terminal sessions before upgrading, since its terminal helpers can survive quitting the window. Running helpers from both versions can cause repeated Documents access prompts. Keep one installed copy of the fork; retain your worktrees and `~/.superestset` data when retiring an old app.
 
-[**Download for macOS**](https://github.com/superset-sh/superset/releases/latest) &nbsp;&bull;&nbsp; [Documentation](https://docs.superset.sh) &nbsp;&bull;&nbsp; [Changelog](https://github.com/superset-sh/superset/releases) &nbsp;&bull;&nbsp; [Discord](https://discord.gg/cZeD9WYcV7)
+These personal builds use an ad-hoc signature and are not Apple-notarized. If macOS blocks the downloaded app, use **System Settings > Privacy & Security > Open Anyway** after attempting to open it.
 
-<br />
+Downloads and updates come from this repository. **Check for updates** opens its Releases page; the app does not install upstream Superset updates. Intel Mac, Windows, and Linux installers are not provided by this fork's Mac release workflow.
 
+## What this fork adds
 
-</div>
+- **Jira workboard:** Team and My work views, remembered boards and filters, a Kanban board with saved column visibility and order, assignees, code reviewers, linked PRs, and clickable Freshdesk links found in ticket descriptions or Jira remote links. Choose your board and configure column visibility and order for your workflow.
+- **Move Jira issues:** drag a card's handle into another column, or use **Move to**. Available Jira workflow transitions determine the choices. Moves requiring extra fields open in Jira.
+- **Start from a ticket:** choose **Workspaces > New workspace** to open workspace creation with the ticket context. Choose the project and review the branch and name. A successful creation links the workspace back to the ticket. You can also link existing workspaces.
+- **Team pull requests:** choose **Edit team** beside **My team** to select repository contributors or enter GitHub usernames. Each person keeps their own saved team list.
+- **Files and review:** a dedicated Files tab, quick file search, editing and saving, and controls to expand unchanged diff context.
+- **Local Pages:** publish and read HTML pages, retain versions and assets, and use the existing signed access checks.
+- **Separate installation:** its own app identity, deep links, data directory, local services, and fork release channel.
 
-## Code 10x Faster With No Switching Cost
+## First use
 
-Superset runs CLI-based coding agents in parallel across isolated git worktrees, with built-in terminal, review, and open-in-editor workflows.
+On startup, superset++ finds existing Superset workspaces and opens their original folders. It reads the existing workspace list from `~/.superset`, `~/.superset-dev`, and the custom fork's detected `superset-dev-data` folders. There is no copy or import step. Your branches, edits, ignored files, dependencies, and build output stay exactly where they are.
 
-- **Run multiple agents simultaneously** without context switching overhead
-- **Isolate each task** in its own git worktree so agents don't interfere with each other
-- **Monitor all your agents** from one place and get notified when they need attention
-- **Review and edit changes quickly** with the built-in diff viewer and editor
-- **Open any workspace where you need it** with one-click handoff to your editor or terminal
-- **Reach your workspaces from anywhere** via remote hosts, the CLI, the SDK, or MCP
+New worktrees use `~/.superset/worktrees`; new projectless sessions use `~/.superset/sessions`. An explicit project or host worktree location still takes priority. The original Superset app does not need to be installed or running once the folders are connected.
 
-Wait less, ship more.
+If an earlier release made copies, those remain available in **Previous copies** groups. Their paths and terminal associations are preserved. Use the original project entries for shared work going forward.
 
-## Features
+Removing a connected original workspace from superset++ closes its entry and its superset++ terminals, while leaving its folder and branch on disk. Removed entries stay removed on restart. Workspaces created by superset++ retain normal cleanup behavior.
 
-<table>
-<tr>
-<td width="50%" valign="middle">
+Discovery runs on startup. Use **File > Refresh Superset Workspaces…** to restart and find newly added original workspaces. Superset++ has its own terminal sessions, Pages, settings, and service connections. Editing a shared file in either app changes that same file.
 
-### Parallel Workspaces
+Open a repository through **Add project > Open project**. Create a workspace, then open a terminal, an agent, or the Files tab.
 
-Run 100+ coding agents at once, each in its own git worktree with its own branch, terminal, and environment. Compare the results and merge the winner.
+Connect Jira under **Settings > Integrations > Jira**. The connector supports standard Atlassian API tokens, scoped Cloud tokens, and Server/Data Center personal access tokens. GitHub PR lookup uses your GitHub CLI connection. Model and coding-agent accounts remain your own connections.
 
-[Docs →](https://docs.superset.sh/workspaces)
+Jira moves change the real ticket's status. Creating a workspace creates local development files; it does not change the ticket's status.
 
-</td>
-<td width="50%">
-  <a href="https://docs.superset.sh/workspaces"><img src="apps/marketing/public/images/readme/agents-working.gif" alt="Claude streaming a billing migration while other agents run in parallel workspaces" width="100%" /></a>
-</td>
-</tr>
-<tr>
-<td width="50%" valign="middle">
+See [the personal feature guide](PERSONAL_BUILD.md) for board behavior, PR matching, shortcuts, and data locations.
 
-### Agent Monitoring
+## Data and backups
 
-Track every agent from the sidebar, with working indicators, completion chimes, and dock badges when one needs your attention.
+The renamed app uses the same `~/.superestset` data folder as SuperestSet, so your existing workspaces, settings, and saved connections carry over.
 
-[Docs →](https://docs.superset.sh/agent-integration)
+App data lives in `~/.superestset`, including the embedded database, local Pages objects, settings, and workspace records. Quit superset++ before copying this directory as a backup. Repositories outside this directory need their own backups.
 
-</td>
-<td width="50%">
-  <a href="https://docs.superset.sh/agent-integration"><img src="apps/marketing/public/images/readme/agent-monitoring.gif" alt="An agent finishing its task and the sidebar status flipping from working to done" width="100%" /></a>
-</td>
-</tr>
-<tr>
-<td width="50%" valign="middle">
+Keep backups of the original repositories and `~/.superset` worktree folders as well as the superset++ data folder. Previous copies are retained for recovery; no files are automatically merged between copies and originals. Connect Jira separately in superset++ Settings.
 
-### Built-in Terminal
+The app's local services listen on loopback addresses. Public internet hosting, inbound cloud webhooks, and access from another device require separately deployed services; this Mac build does not use Superset's hosted infrastructure for them.
 
-Tabs, infinite splits, presets, and persistent sessions that survive restarts. Press ⌘I for a rich prompt editor with multiline editing and @-file mentions.
+## Build from source
 
-[Docs →](https://docs.superset.sh/terminal-integration)
+See [DEVELOPMENT.md](DEVELOPMENT.md). Development tools are required to build an installer, but are not required by someone installing the Mac app.
 
-</td>
-<td width="50%">
-  <a href="https://docs.superset.sh/terminal-integration"><img src="apps/marketing/public/images/readme/terminal.gif" alt="Typing a follow-up with an @-file mention in the rich prompt editor next to a split terminal" width="100%" /></a>
-</td>
-</tr>
-<tr>
-<td width="50%" valign="middle">
+You can ask a coding agent here or inside superset++ to make further changes. Open **this repository's source checkout** as the agent's workspace. After changes are tested and pushed, build and install a new Mac app; a GitHub push alone does not update an installed copy.
 
-### Built-in Diff Viewer
+## Upstream and license
 
-Inspect, comment on, and edit agent changes without leaving the app, then commit and push when it's ready.
+This fork began from Superset revision `02c4d5c087db8e3ead76e97e836482affc2381b3`. Its Git history retains the upstream history and the fork's changes. The original Superset installation is not a runtime dependency.
 
-[Docs →](https://docs.superset.sh/diff-viewer)
-
-</td>
-<td width="50%">
-  <a href="https://docs.superset.sh/diff-viewer"><img src="apps/marketing/public/images/readme/diff-viewer.png" alt="Reviewing an agent's changes in the diff viewer" width="100%" /></a>
-</td>
-</tr>
-<tr>
-<td width="50%" valign="middle">
-
-### In-App Browser & Ports
-
-Preview running dev servers in a browser pane. Ports are detected per workspace, so every worktree gets its own preview.
-
-[Docs →](https://docs.superset.sh/browser)
-
-</td>
-<td width="50%">
-  <a href="https://docs.superset.sh/browser"><img src="apps/marketing/public/images/readme/browser-ports.png" alt="In-app browser previewing a dev server with detected ports" width="100%" /></a>
-</td>
-</tr>
-<tr>
-<td width="50%" valign="middle">
-
-### Automations
-
-Run agent sessions on a schedule: triage issues overnight, draft the weekly changelog, keep dependencies fresh.
-
-[Docs →](https://docs.superset.sh/automations)
-
-</td>
-<td width="50%">
-  <a href="https://docs.superset.sh/automations"><img src="apps/marketing/public/images/readme/automations.png" alt="Scheduled agent automations" width="100%" /></a>
-</td>
-</tr>
-<tr>
-<td width="50%" valign="middle">
-
-### Remote Access
-
-Connect another machine and reach its workspaces from anywhere: the desktop app, the CLI, or your phone. Wake offline hosts with a custom command.
-
-[Docs →](https://docs.superset.sh/remote-access)
-
-</td>
-<td width="50%">
-  <a href="https://docs.superset.sh/remote-access"><img src="apps/docs/public/images/remote-workspaces-hosts-members.png" alt="Hosts and members in organization settings" width="100%" /></a>
-</td>
-</tr>
-<tr>
-<td width="50%" valign="middle">
-
-### Superset CLI
-
-Script it from any shell: create workspaces, launch agents, read their terminals, and manage automations with a single binary. If an agent can run a command, it can drive Superset.
-
-[Docs →](https://docs.superset.sh/cli/getting-started)
-
-</td>
-<td width="50%">
-  <a href="https://docs.superset.sh/cli/getting-started"><img src="apps/marketing/public/images/readme/cli-demo.gif" alt="Creating a workspace and launching an agent from the Superset CLI" width="100%" /></a>
-</td>
-</tr>
-<tr>
-<td width="50%" valign="middle">
-
-### Command Palette
-
-Jump to any workspace, action, or setting from one search box.
-
-[Docs →](https://docs.superset.sh/keyboard-shortcuts)
-
-</td>
-<td width="50%">
-  <a href="https://docs.superset.sh/keyboard-shortcuts"><img src="apps/marketing/public/images/readme/command-palette.gif" alt="Typing in the command palette and filtering workspace actions live" width="100%" /></a>
-</td>
-</tr>
-</table>
-
-**Also in the box:**
-
-- **[Built-in skills](https://docs.superset.sh/skills)**: agents come pre-loaded with `superset:*` skills (orchestrate parallel agents, schedule automations, file feedback, diagnose issues), provisioned automatically at launch
-- **[Model picker & custom agents](https://docs.superset.sh/agent-integration)**: choose a model and reasoning effort at launch, and add any terminal agent with its own icon
-- **[Workspace setup scripts](https://docs.superset.sh/setup-teardown-scripts)**: automate env setup, dependency installs, and dev servers per workspace
-- **[Terminal presets](https://docs.superset.sh/terminal-presets)**: save agent and shell layouts and open them with one keystroke
-- **[Slack & Linear](https://docs.superset.sh/use-with-linear)**: spin up workspaces from Slack messages or Linear issues
-- **[Open in your IDE](https://docs.superset.sh/use-with-ide)**: one-click handoff to Cursor, VS Code, or any editor
-- **[Custom themes](https://docs.superset.sh/custom-themes)**: build, edit, and import theme files
-- **[Keyboard shortcuts](https://docs.superset.sh/keyboard-shortcuts)**: every action is remappable via **Settings → Keyboard Shortcuts** (⌘/)
-- **[Bring your own providers](https://docs.superset.sh/providers)**: connect OpenRouter, Bedrock, Vertex, or Vercel AI Gateway
-- **And many more**: we ship daily, so this list is perpetually behind. The [changelog](https://superset.sh/changelog) is the real feature list.
-
-## Supported Agents
-
-Superset works with any CLI-based coding agent, including:
-
-| Agent | Status |
-|:------|:-------|
-| <img height="16" align="top" alt="Amp Code" src="packages/ui/src/assets/icons/preset-icons/amp.svg" /> &nbsp;[Amp Code](https://ampcode.com/) | Fully supported |
-| <img height="16" align="top" alt="Antigravity" src="packages/ui/src/assets/icons/preset-icons/antigravity.svg" /> &nbsp;[Antigravity CLI](https://antigravity.google/) | Fully supported |
-| <img height="16" align="top" alt="Claude Code" src="packages/ui/src/assets/icons/preset-icons/claude.svg" /> &nbsp;[Claude Code](https://github.com/anthropics/claude-code) | Fully supported |
-| <picture><source media="(prefers-color-scheme: dark)" srcset="packages/ui/src/assets/icons/preset-icons/codex-white.svg" /><img height="16" align="top" alt="OpenAI Codex CLI" src="packages/ui/src/assets/icons/preset-icons/codex.svg" /></picture> &nbsp;[OpenAI Codex CLI](https://github.com/openai/codex) | Fully supported |
-| <img height="16" align="top" alt="Cursor Agent" src="packages/ui/src/assets/icons/preset-icons/cursor.svg" /> &nbsp;[Cursor Agent](https://docs.cursor.com/agent) | Fully supported |
-| <picture><source media="(prefers-color-scheme: dark)" srcset="packages/ui/src/assets/icons/preset-icons/droid-white.svg" /><img height="16" align="top" alt="Droid" src="packages/ui/src/assets/icons/preset-icons/droid.svg" /></picture> &nbsp;[Droid](https://www.factory.ai/) | Fully supported |
-| <picture><source media="(prefers-color-scheme: dark)" srcset="packages/ui/src/assets/icons/preset-icons/fx-white.svg" /><img height="16" align="top" alt="fx" src="packages/ui/src/assets/icons/preset-icons/fx.svg" /></picture> &nbsp;[fx](https://fx.sh/) | Fully supported |
-| <img height="16" align="top" alt="Gemini CLI" src="packages/ui/src/assets/icons/preset-icons/gemini.svg" /> &nbsp;[Gemini CLI](https://github.com/google-gemini/gemini-cli) | Fully supported |
-| <picture><source media="(prefers-color-scheme: dark)" srcset="packages/ui/src/assets/icons/preset-icons/copilot-white.svg" /><img height="16" align="top" alt="GitHub Copilot" src="packages/ui/src/assets/icons/preset-icons/copilot.svg" /></picture> &nbsp;[GitHub Copilot](https://github.com/features/copilot) | Fully supported |
-| <picture><source media="(prefers-color-scheme: dark)" srcset="packages/ui/src/assets/icons/preset-icons/grok-white.svg" /><img height="16" align="top" alt="Grok" src="packages/ui/src/assets/icons/preset-icons/grok.svg" /></picture> &nbsp;[Grok](https://x.ai/) | Fully supported |
-| <picture><source media="(prefers-color-scheme: dark)" srcset="packages/ui/src/assets/icons/preset-icons/hermes-white.svg" /><img height="16" align="top" alt="Hermes" src="packages/ui/src/assets/icons/preset-icons/hermes.svg" /></picture> &nbsp;[Hermes](https://github.com/NousResearch/hermes-agent) | Fully supported |
-| <picture><source media="(prefers-color-scheme: dark)" srcset="packages/ui/src/assets/icons/preset-icons/muse-white.svg" /><img height="16" align="top" alt="Muse Code" src="packages/ui/src/assets/icons/preset-icons/muse.svg" /></picture> &nbsp;[Muse Code](https://developer.meta.com/ai/products/muse-code/) | Fully supported |
-| <picture><source media="(prefers-color-scheme: dark)" srcset="packages/ui/src/assets/icons/preset-icons/devin-white.svg" /><img height="16" align="top" alt="Devin" src="packages/ui/src/assets/icons/preset-icons/devin.svg" /></picture> &nbsp;[Devin](https://devin.ai/cli) | Fully supported |
-| <picture><source media="(prefers-color-scheme: dark)" srcset="packages/ui/src/assets/icons/preset-icons/kimi-white.svg" /><img height="16" align="top" alt="Kimi Code" src="packages/ui/src/assets/icons/preset-icons/kimi.svg" /></picture> &nbsp;[Kimi Code](https://www.kimi.com/) | Fully supported |
-| <img height="16" align="top" alt="Kiro" src="packages/ui/src/assets/icons/preset-icons/kiro.svg" /> &nbsp;[Kiro](https://kiro.dev/cli/) | Fully supported |
-| <picture><source media="(prefers-color-scheme: dark)" srcset="packages/ui/src/assets/icons/preset-icons/mastracode-white.svg" /><img height="16" align="top" alt="Mastra Code" src="packages/ui/src/assets/icons/preset-icons/mastracode.svg" /></picture> &nbsp;[Mastra Code](https://mastra.ai/) | Fully supported |
-| <img height="16" align="top" alt="Mistral Vibe" src="packages/ui/src/assets/icons/preset-icons/vibe.svg" /> &nbsp;[Mistral Vibe](https://mistral.ai/) | Fully supported |
-| <picture><source media="(prefers-color-scheme: dark)" srcset="packages/ui/src/assets/icons/preset-icons/pi-white.svg" /><img height="16" align="top" alt="Oh My Pi" src="packages/ui/src/assets/icons/preset-icons/pi.svg" /></picture> &nbsp;[Oh My Pi](https://github.com/can1357/oh-my-pi) | Fully supported |
-| <picture><source media="(prefers-color-scheme: dark)" srcset="packages/ui/src/assets/icons/preset-icons/opencode-white.svg" /><img height="16" align="top" alt="OpenCode" src="packages/ui/src/assets/icons/preset-icons/opencode.svg" /></picture> &nbsp;[OpenCode](https://github.com/opencode-ai/opencode) | Fully supported |
-| <picture><source media="(prefers-color-scheme: dark)" srcset="packages/ui/src/assets/icons/preset-icons/pi-white.svg" /><img height="16" align="top" alt="Pi" src="packages/ui/src/assets/icons/preset-icons/pi.svg" /></picture> &nbsp;[Pi](https://github.com/badlogic/pi-mono/tree/main/packages/coding-agent) | Fully supported |
-| <picture><source media="(prefers-color-scheme: dark)" srcset="packages/ui/src/assets/icons/preset-icons/polygraph-white.svg" /><img height="16" align="top" alt="Polygraph" src="packages/ui/src/assets/icons/preset-icons/polygraph.svg" /></picture> &nbsp;[Polygraph](https://trypolygraph.com/) | Fully supported |
-| Any other CLI agent | Works without configuration |
-
-If it runs in a terminal, it runs on Superset
-
-Agents get more than a terminal:
-
-- **Model picker**: choose a model and reasoning effort when you launch an agent
-- **Per-agent settings**: tune launch commands, prompt templates, and model overrides in Settings → Agents
-- **Custom agents**: add any terminal agent with its own icon and it works like a built-in
-- **Status and notifications**: working indicators, completion chimes, and dock badges when an agent needs you
-- **Built-in chat**: talk to models in a chat pane, with inline tool approvals and plan review
-
-## More Than a Desktop App
-
-Every surface talks to the same workspaces, so you can start a task in the app and check on it from anywhere.
-
-| Surface | What you get |
-|:--------|:-------------|
-| [**Desktop App**](https://github.com/superset-sh/superset/releases/latest) | The full IDE: terminals, diff viewer, in-app browser, automations |
-| [**CLI**](https://docs.superset.sh/cli/getting-started) | A single `superset` binary to manage workspaces, agents, terminals, and hosts from any shell |
-| [**TypeScript SDK**](https://docs.superset.sh/sdk/getting-started) | Drive Superset programmatically with [`@superset_sh/sdk`](https://www.npmjs.com/package/@superset_sh/sdk) from Node, Bun, or Deno |
-| [**MCP Server**](https://docs.superset.sh/mcp) | Let Claude Code, Codex, Cursor, and other agents create and manage workspaces themselves |
-
-The CLI comes bundled with the desktop app, or install it standalone:
-
-```bash
-curl -fsSL https://superset.sh/cli/install.sh | sh
-# or
-brew install superset-sh/tap/superset
-```
-
-[Download Superset for iPhone on the App Store](https://apps.apple.com/app/id6788926383) to check on your agents from your phone.
-
-## Install
-
-Download the desktop app:
-
-- **macOS**: [Apple Silicon (.dmg)](https://github.com/superset-sh/superset/releases/latest/download/Superset-arm64.dmg) · [Intel (.dmg)](https://github.com/superset-sh/superset/releases/latest/download/Superset-x64.dmg)
-- **Linux**: [x64 AppImage](https://github.com/superset-sh/superset/releases/latest/download/Superset-x86_64.AppImage) (experimental; macOS is the primary target)
-- **Windows**: not yet available
-- [All builds](https://github.com/superset-sh/superset/releases/latest)
-
-All you need installed is [Git](https://git-scm.com/). [gh](https://cli.github.com/) is optional and unlocks the PR workflows; Superset offers to install it for you.
-
-## Development
-
-Want to hack on Superset or contribute a PR? Clone the repository, add it to the
-installed Superset app, and create a workspace for your change:
-
-```bash
-git clone https://github.com/superset-sh/superset.git
-```
-
-Then run the development setup from that workspace terminal:
-
-```bash
-./.superset/setup.local.sh
-bun run dev
-```
-
-Run `setup.local.sh` once in every new worktree. It configures workspace-specific
-app identity and ports so the development desktop app can run alongside the
-installed Superset app and other development worktrees.
-
-No Neon account or third-party credentials are needed. `setup.local.sh` brings
-up a local Postgres + Electric stack via Docker and seeds a dev account. Sign in
-with the **"Sign in as dev"** button (or `admin@local.test` / `supersetdev`).
-
-Prereqs: [Bun](https://bun.sh/) v1.3.14+ (pinned in `.bun-version`), `docker`, `jq`, and `caddy`, which `bun dev` runs as the local HTTPS proxy (`brew install jq caddy && caddy trust`).
-
-See [**DEVELOPMENT.md**](./DEVELOPMENT.md) for the full guide: what the setup script does, manual setup against real services, common commands, troubleshooting, and how to build the desktop app. Contribution process lives in [**CONTRIBUTING.md**](./CONTRIBUTING.md).
-
-## Configuration
-
-Configure workspace setup, teardown, and run scripts in `.superset/config.json`. See [full documentation](https://docs.superset.sh/setup-teardown-scripts).
-
-```json
-{
-  "setup": ["./.superset/setup.sh"],
-  "teardown": ["./.superset/teardown.sh"],
-  "run": ["./.superset/run.sh"]
-}
-```
-
-Keyboard shortcuts are customizable via **Settings → Keyboard Shortcuts** (⌘/); see the [full shortcut list](https://docs.superset.sh/keyboard-shortcuts).
-
-## Tech Stack
-
-<p>
-  <a href="https://www.electronjs.org/"><img src="https://img.shields.io/badge/Electron-191970?logo=Electron&logoColor=white" alt="Electron" /></a>
-  <a href="https://reactjs.org/"><img src="https://img.shields.io/badge/React-%2320232a.svg?logo=react&logoColor=%2361DAFB" alt="React" /></a>
-  <a href="https://tailwindcss.com/"><img src="https://img.shields.io/badge/Tailwindcss-%2338B2AC.svg?logo=tailwind-css&logoColor=white" alt="TailwindCSS" /></a>
-  <a href="https://bun.sh/"><img src="https://img.shields.io/badge/Bun-000000?logo=bun&logoColor=white" alt="Bun" /></a>
-  <a href="https://turbo.build/"><img src="https://img.shields.io/badge/Turborepo-EF4444?logo=turborepo&logoColor=white" alt="Turborepo" /></a>
-  <a href="https://vitejs.dev/"><img src="https://img.shields.io/badge/Vite-%23646CFF.svg?logo=vite&logoColor=white" alt="Vite" /></a>
-  <a href="https://biomejs.dev/"><img src="https://img.shields.io/badge/Biome-339AF0?logo=biome&logoColor=white" alt="Biome" /></a>
-  <a href="https://orm.drizzle.team/"><img src="https://img.shields.io/badge/Drizzle%20ORM-FFE873?logo=drizzle&logoColor=black" alt="Drizzle ORM" /></a>
-  <a href="https://neon.tech/"><img src="https://img.shields.io/badge/Neon-00E9CA?logo=neon&logoColor=white" alt="Neon" /></a>
-  <a href="https://trpc.io/"><img src="https://img.shields.io/badge/tRPC-2596BE?logo=trpc&logoColor=white" alt="tRPC" /></a>
-</p>
-
-## Private by Default
-
-- **Source Available**: full source is on GitHub under Elastic License 2.0 (ELv2).
-- **Explicit Connections**: you choose which agents, providers, and integrations to connect.
-
-## Contributing
-
-We welcome contributions! See [CONTRIBUTING.md](CONTRIBUTING.md) for how to get set up and open a PR. Bugs and feature requests go in [issues](https://github.com/superset-sh/superset/issues).
-
-<a href="https://github.com/superset-sh/superset/graphs/contributors">
-  <img src="https://contrib.rocks/image?repo=superset-sh/superset" />
-</a>
-
-## Community
-
-Join the Superset community to get help, share feedback, and connect with other users:
-
-- **[Discord](https://discord.gg/cZeD9WYcV7)**: chat with the team and community
-- **[Twitter](https://x.com/superset_sh)**: follow for updates and announcements
-- **[GitHub Issues](https://github.com/superset-sh/superset/issues)**: report bugs and request features
-- **[GitHub Discussions](https://github.com/superset-sh/superset/discussions)**: ask questions and share ideas
-
-### Team
-
-[![Avi Twitter](https://img.shields.io/badge/Avi-@avimakesrobots-555?logo=x)](https://x.com/avimakesrobots)
-[![Kiet Twitter](https://img.shields.io/badge/Kiet-@flyakiet-555?logo=x)](https://x.com/flyakiet)
-[![Satya Twitter](https://img.shields.io/badge/Satya-@saddle__paddle-555?logo=x)](https://x.com/saddle_paddle)
-
-## License & what's free forever
-
-**The desktop app is free forever.** Running agents in parallel on your own machine will never require payment. Anything we charge for will be an optional service on top.
-
-The whole app is in this repo under the [Elastic License 2.0](LICENSE.md): use it, fork it, modify it, self-host it for your team. The only thing off the table is repackaging Superset itself as a service you sell to others.
+The upstream [Elastic License 2.0](LICENSE.md) and copyright notices are retained. superset++ is a separately maintained personal fork.

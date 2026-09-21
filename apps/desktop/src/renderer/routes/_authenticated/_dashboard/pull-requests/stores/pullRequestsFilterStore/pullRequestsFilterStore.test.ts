@@ -122,3 +122,49 @@ test("restores saved multiple authors", () => {
 	usePullRequestsFilterStore.getState().setAuthorFilter(null);
 	expect(usePullRequestsFilterStore.getState().authorFilter).toBeNull();
 });
+
+describe("editable team persistence", () => {
+	test("never seeds a team when upgrading an installation without saved members", () => {
+		const upgraded = migratePullRequestsFilterState({ authorFilter: "alice" });
+		expect(upgraded.teamMembers).toEqual([]);
+		expect(upgraded.authorFilter).toBe("alice");
+		expect(migratePullRequestsFilterState(undefined).teamMembers).toEqual([]);
+		expect(migratePullRequestsFilterState({}).teamMembers).toEqual([]);
+	});
+	test("empty and edited teams survive migration and rehydration normalization", () => {
+		expect(
+			migratePullRequestsFilterState({ teamMembers: [] }).teamMembers,
+		).toEqual([]);
+		const saved = migratePullRequestsFilterState({
+			teamMembers: [{ login: "@Alice" }],
+		});
+		expect(migratePullRequestsFilterState(saved).teamMembers).toEqual([
+			{ login: "alice" },
+		]);
+		const { setTeamMembers } = usePullRequestsFilterStore.getState();
+		setTeamMembers([{ login: "Alice" }, { login: "ALICE" }, { login: "bob" }]);
+		expect(usePullRequestsFilterStore.getState().teamMembers).toEqual([
+			{ login: "alice" },
+			{ login: "bob" },
+		]);
+		setTeamMembers([]);
+		expect(usePullRequestsFilterStore.getState().teamMembers).toEqual([]);
+	});
+});
+
+test("editing the team updates an active team filter but preserves other author filters", () => {
+	const store = usePullRequestsFilterStore.getState();
+	store.setTeamMembers([{ login: "alice" }, { login: "bob" }]);
+	store.setAuthorFilter("alice,bob");
+	store.setTeamMembers([{ login: "charlie" }]);
+	expect(usePullRequestsFilterStore.getState().authorFilter).toBe("charlie");
+	store.setTeamMembers([]);
+	expect(usePullRequestsFilterStore.getState().authorFilter).toBeNull();
+	store.setAuthorFilter("someone-else");
+	store.setTeamMembers([{ login: "alice" }]);
+	expect(usePullRequestsFilterStore.getState().authorFilter).toBe(
+		"someone-else",
+	);
+	store.setTeamMembers([]);
+	store.setAuthorFilter(null);
+});

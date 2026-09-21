@@ -1420,21 +1420,30 @@ function isProcessAliveForTest(pid: number): boolean {
 
 describe("ptyDaemonSocketPath", () => {
 	const ORG = "org-socket-path";
-	const legacyPath = () => {
+	const defaultForkPath = () => {
 		const shortId = createHash("sha256").update(ORG).digest("hex").slice(0, 12);
-		return path.join(os.tmpdir(), `superset-ptyd-${shortId}.sock`);
+		return path.join(os.tmpdir(), `superestset-ptyd-${shortId}.sock`);
 	};
 
-	test("default production homes keep the legacy org-only path", () => {
+	test("default production homes keep the fork org-only path", () => {
 		expect(ptyDaemonSocketPath(ORG, { NODE_ENV: "production" })).toBe(
-			legacyPath(),
+			defaultForkPath(),
 		);
+		expect(
+			ptyDaemonSocketPath(ORG, {
+				NODE_ENV: "production",
+				SUPERSET_HOME_DIR: path.join(os.homedir(), ".superestset"),
+			}),
+		).toBe(defaultForkPath());
+	});
+
+	test("the original Superset home does not share the fork default socket", () => {
 		expect(
 			ptyDaemonSocketPath(ORG, {
 				NODE_ENV: "production",
 				SUPERSET_HOME_DIR: path.join(os.homedir(), ".superset"),
 			}),
-		).toBe(legacyPath());
+		).not.toBe(defaultForkPath());
 	});
 
 	test("equivalent spellings of one custom home share a socket", () => {
@@ -1467,7 +1476,7 @@ describe("ptyDaemonSocketPath", () => {
 					NODE_ENV,
 					SUPERSET_HOME_DIR: "/tmp/custom-home-a",
 				}),
-			).not.toBe(legacyPath());
+			).not.toBe(defaultForkPath());
 		}
 	});
 
@@ -1483,6 +1492,12 @@ describe("ptyDaemonSocketPath", () => {
 		).toThrow(/isolated temp dir/);
 		expect(() =>
 			ptyDaemonSocketPath(ORG, {
+				NODE_ENV: "test",
+				SUPERSET_HOME_DIR: path.join(os.homedir(), ".superestset"),
+			}),
+		).toThrow(/isolated temp dir/);
+		expect(() =>
+			ptyDaemonSocketPath(ORG, {
 				NODE_TEST_CONTEXT: "child-v8",
 			} as NodeJS.ProcessEnv),
 		).toThrow(/isolated temp dir/);
@@ -1491,7 +1506,7 @@ describe("ptyDaemonSocketPath", () => {
 				NODE_ENV: "test",
 				SUPERSET_HOME_DIR: "/tmp/isolated-test-home",
 			}),
-		).not.toBe(legacyPath());
+		).not.toBe(defaultForkPath());
 	});
 
 	test("non-default development homes get their own stable daemon socket", () => {
@@ -1503,8 +1518,8 @@ describe("ptyDaemonSocketPath", () => {
 			NODE_ENV: "development",
 			SUPERSET_HOME_DIR: "/tmp/home-b",
 		});
-		expect(a).not.toBe(legacyPath());
-		expect(b).not.toBe(legacyPath());
+		expect(a).not.toBe(defaultForkPath());
+		expect(b).not.toBe(defaultForkPath());
 		expect(a).not.toBe(b);
 		expect(
 			ptyDaemonSocketPath(ORG, {
@@ -1514,23 +1529,23 @@ describe("ptyDaemonSocketPath", () => {
 		).toBe(a);
 	});
 
-	test("development with a default home keeps the legacy org-only path", () => {
+	test("development with a default home keeps the fork org-only path", () => {
 		expect(ptyDaemonSocketPath(ORG, { NODE_ENV: "development" })).toBe(
-			legacyPath(),
+			defaultForkPath(),
 		);
 		expect(
 			ptyDaemonSocketPath(ORG, {
 				NODE_ENV: "development",
-				SUPERSET_HOME_DIR: `${path.join(os.homedir(), ".superset")}/../.superset/`,
+				SUPERSET_HOME_DIR: `${path.join(os.homedir(), ".superestset")}/../.superestset/`,
 			}),
-		).toBe(legacyPath());
+		).toBe(defaultForkPath());
 	});
 
 	test("stays under Darwin's 104-byte sun_path limit for long worktree homes", () => {
 		const socket = ptyDaemonSocketPath("a1b2c3d4-e5f6-7890-abcd-ef1234567890", {
 			NODE_ENV: "development",
 			SUPERSET_HOME_DIR:
-				"/Users/someone/.superset/worktrees/0123456789abcdef-0123/very-long-branch-name-for-a-feature/superset-dev-data",
+				"/Users/someone/.superestset/worktrees/0123456789abcdef-0123/very-long-branch-name-for-a-feature/superestset-dev-data",
 		});
 		expect(Buffer.byteLength(socket)).toBeLessThan(104);
 	});

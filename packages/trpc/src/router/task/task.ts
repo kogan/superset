@@ -1,4 +1,4 @@
-import { db, dbWs } from "@superset/db/client";
+import { db } from "@superset/db/client";
 import { members, taskStatuses, tasks, users } from "@superset/db/schema";
 import { seedDefaultStatuses } from "@superset/db/seed-default-statuses";
 import {
@@ -36,8 +36,8 @@ import { taskStatusesRouter } from "./statuses";
 const TASK_SLUG_CONSTRAINT = "tasks_org_slug_unique";
 const TASK_SLUG_RETRY_LIMIT = 5;
 
-type DbWsTransaction = Parameters<Parameters<typeof dbWs.transaction>[0]>[0];
-type Executor = typeof db | DbWsTransaction;
+type DbTransaction = Parameters<Parameters<typeof db.transaction>[0]>[0];
+type Executor = typeof db | DbTransaction;
 
 function isConstraintError(error: unknown, constraint: string): boolean {
 	if (!error || typeof error !== "object") {
@@ -193,7 +193,7 @@ async function createTask(
 
 	for (let attempt = 0; attempt < TASK_SLUG_RETRY_LIMIT; attempt += 1) {
 		try {
-			const result = await dbWs.transaction(async (tx) => {
+			const result = await db.transaction(async (tx) => {
 				const statusId = input.statusId
 					? await getScopedStatusId(
 							tx,
@@ -489,7 +489,7 @@ export const taskRouter = {
 	start: protectedProcedure
 		.input(z.object({ id: z.string().uuid() }))
 		.mutation(async ({ ctx, input }) => {
-			const result = await dbWs.transaction(async (tx) => {
+			const result = await db.transaction(async (tx) => {
 				const taskAccess = await getTaskAccess(
 					tx,
 					ctx.session.user.id,
@@ -587,7 +587,7 @@ export const taskRouter = {
 		.mutation(async ({ ctx, input }) => {
 			const { id, ...data } = input;
 
-			const result = await dbWs.transaction(async (tx) => {
+			const result = await db.transaction(async (tx) => {
 				const taskAccess = await getTaskAccess(tx, ctx.session.user.id, id);
 
 				// Enforce assignee invariant: setting internal assignee clears external snapshot
@@ -635,7 +635,7 @@ export const taskRouter = {
 	delete: protectedProcedure
 		.input(z.string().uuid())
 		.mutation(async ({ ctx, input }) => {
-			const result = await dbWs.transaction(async (tx) => {
+			const result = await db.transaction(async (tx) => {
 				await getTaskAccess(tx, ctx.session.user.id, input);
 
 				const [deleted] = await tx

@@ -19,18 +19,18 @@ import {
 
 const TEST_ROOT = path.join(
 	os.tmpdir(),
-	`superset-managed-skills-${process.pid}-${Date.now()}`,
+	`superestset-managed-skills-${process.pid}-${Date.now()}`,
 );
 const HOME_DIR = path.join(TEST_ROOT, "home");
 const TEMPLATES_DIR = path.join(TEST_ROOT, "templates");
 const BUNDLED_PLUGIN = path.join(TEMPLATES_DIR, "plugin");
 
-const SUPERSET_HOME = path.join(TEST_ROOT, "superset");
+const SUPERSET_HOME = path.join(TEST_ROOT, "superestset");
 
 const claudeSkills = path.join(HOME_DIR, ".claude", "skills");
-const claudePlugin = path.join(claudeSkills, "superset");
+const claudePlugin = path.join(claudeSkills, "superestset");
 const agentsSkills = path.join(HOME_DIR, ".agents", "skills");
-const commandsDir = path.join(HOME_DIR, ".agents", "commands", "superset");
+const commandsDir = path.join(HOME_DIR, ".agents", "commands", "superestset");
 
 function skillMd(name: string): string {
 	return `---\nname: ${name}\ndescription: test ${name} skill\n---\n\n# ${name} body\n`;
@@ -40,7 +40,7 @@ function seedBundledPlugin(): void {
 	mkdirSync(path.join(BUNDLED_PLUGIN, ".claude-plugin"), { recursive: true });
 	writeFileSync(
 		path.join(BUNDLED_PLUGIN, ".claude-plugin", "plugin.json"),
-		JSON.stringify({ name: "superset", version: "0.3.0" }),
+		JSON.stringify({ name: "superestset", version: "0.3.0" }),
 	);
 	for (const name of ["feedback", "10x", "orchestrate"]) {
 		const dir = path.join(BUNDLED_PLUGIN, "skills", name);
@@ -146,9 +146,9 @@ describe("setFrontmatterName", () => {
 	it("rewrites only the frontmatter name", () => {
 		const renamed = setFrontmatterName(
 			skillMd("feedback"),
-			"superset-feedback",
+			"superestset-feedback",
 		);
-		expect(renamed).toContain("name: superset-feedback");
+		expect(renamed).toContain("name: superestset-feedback");
 		expect(renamed).toContain("# feedback body");
 	});
 });
@@ -164,7 +164,7 @@ describe("createManagedSkills", () => {
 					"utf-8",
 				),
 			).name,
-		).toBe("superset");
+		).toBe("superestset");
 		for (const name of ["feedback", "10x", "orchestrate"]) {
 			expect(
 				readFileSync(
@@ -193,9 +193,9 @@ describe("createManagedSkills", () => {
 		await run();
 
 		for (const dirName of [
-			"superset-feedback",
-			"superset-10x",
-			"superset-orchestrate",
+			"superestset-feedback",
+			"superestset-10x",
+			"superestset-orchestrate",
 		]) {
 			const content = readFileSync(
 				path.join(agentsSkills, dirName, "SKILL.md"),
@@ -208,7 +208,7 @@ describe("createManagedSkills", () => {
 			existsSync(
 				path.join(
 					agentsSkills,
-					"superset-orchestrate",
+					"superestset-orchestrate",
 					"agents",
 					"openai.yaml",
 				),
@@ -230,7 +230,11 @@ describe("createManagedSkills", () => {
 	it("never touches a user-owned plugin dir or files without markers", async () => {
 		mkdirSync(claudePlugin, { recursive: true });
 		writeFileSync(path.join(claudePlugin, "SKILL.md"), "users own plugin\n");
-		const userSkill = path.join(agentsSkills, "superset-feedback", "SKILL.md");
+		const userSkill = path.join(
+			agentsSkills,
+			"superestset-feedback",
+			"SKILL.md",
+		);
 		mkdirSync(path.dirname(userSkill), { recursive: true });
 		writeFileSync(userSkill, "my own skill\n");
 
@@ -244,17 +248,17 @@ describe("createManagedSkills", () => {
 	});
 
 	it("reaps stale managed dirs from earlier versions but keeps user dirs", async () => {
-		const staleClaude = path.join(claudeSkills, "superset-feedback");
+		const staleClaude = path.join(claudeSkills, "superestset-feedback");
 		mkdirSync(staleClaude, { recursive: true });
 		writeFileSync(
 			path.join(staleClaude, "SKILL.md"),
-			withManagedMarker(skillMd("superset-feedback")),
+			withManagedMarker(skillMd("superestset-feedback")),
 		);
-		const staleAgents = path.join(agentsSkills, "superset-orchestration");
+		const staleAgents = path.join(agentsSkills, "superestset-orchestration");
 		mkdirSync(staleAgents, { recursive: true });
 		writeFileSync(
 			path.join(staleAgents, "SKILL.md"),
-			withManagedMarker(skillMd("superset-orchestration")),
+			withManagedMarker(skillMd("superestset-orchestration")),
 		);
 		const userDir = path.join(claudeSkills, "decide");
 		mkdirSync(userDir, { recursive: true });
@@ -276,10 +280,10 @@ describe("createManagedSkills", () => {
 
 		expect(
 			readFileSync(
-				path.join(agentsSkills, "superset-newskill", "SKILL.md"),
+				path.join(agentsSkills, "superestset-newskill", "SKILL.md"),
 				"utf-8",
 			),
-		).toContain("name: superset-newskill");
+		).toContain("name: superestset-newskill");
 		expect(
 			existsSync(path.join(claudePlugin, "skills", "newskill", "SKILL.md")),
 		).toBe(true);
@@ -300,11 +304,13 @@ describe("createManagedSkills", () => {
 
 	it("withholds a disabled skill from every surface and reaps it if already provisioned", async () => {
 		await run();
-		expect(existsSync(path.join(agentsSkills, "superset-feedback"))).toBe(true);
+		expect(existsSync(path.join(agentsSkills, "superestset-feedback"))).toBe(
+			true,
+		);
 
 		await run(["feedback"]);
 
-		expect(existsSync(path.join(agentsSkills, "superset-feedback"))).toBe(
+		expect(existsSync(path.join(agentsSkills, "superestset-feedback"))).toBe(
 			false,
 		);
 		expect(existsSync(path.join(commandsDir, "feedback.md"))).toBe(false);
@@ -312,7 +318,7 @@ describe("createManagedSkills", () => {
 			false,
 		);
 		// Untouched skills stay provisioned.
-		expect(existsSync(path.join(agentsSkills, "superset-10x"))).toBe(true);
+		expect(existsSync(path.join(agentsSkills, "superestset-10x"))).toBe(true);
 		expect(readFileSync(path.join(commandsDir, "10x.md"), "utf-8")).toContain(
 			MANAGED_SKILL_MARKER,
 		);
@@ -333,10 +339,10 @@ describe("createManagedSkills with plugin sources", () => {
 		expect(claudeSkill).toContain("name: github-issue-triage");
 
 		const shared = readFileSync(
-			path.join(agentsSkills, "github-issue-triage", "SKILL.md"),
+			path.join(agentsSkills, "superestset-github-issue-triage", "SKILL.md"),
 			"utf-8",
 		);
-		expect(shared).toContain("name: github-issue-triage");
+		expect(shared).toContain("name: superestset-github-issue-triage");
 		expect(shared).toContain(MANAGED_SKILL_MARKER);
 	});
 
@@ -354,19 +360,21 @@ describe("createManagedSkills with plugin sources", () => {
 	it("leaves the bundled plugin alone and reaps only uninstalled plugins", async () => {
 		const github = seedMarketplacePlugin("github", ["issue-triage"]);
 		await run(undefined, [github]);
-		expect(existsSync(path.join(agentsSkills, "github-issue-triage"))).toBe(
-			true,
-		);
+		expect(
+			existsSync(path.join(agentsSkills, "superestset-github-issue-triage")),
+		).toBe(true);
 
 		await run(undefined, []);
 
-		expect(existsSync(path.join(agentsSkills, "github-issue-triage"))).toBe(
-			false,
-		);
+		expect(
+			existsSync(path.join(agentsSkills, "superestset-github-issue-triage")),
+		).toBe(false);
 		expect(
 			existsSync(path.join(claudePlugin, "skills", "github-issue-triage")),
 		).toBe(false);
-		expect(existsSync(path.join(agentsSkills, "superset-feedback"))).toBe(true);
+		expect(existsSync(path.join(agentsSkills, "superestset-feedback"))).toBe(
+			true,
+		);
 		expect(existsSync(path.join(claudePlugin, "skills", "feedback"))).toBe(
 			true,
 		);
@@ -376,11 +384,15 @@ describe("createManagedSkills with plugin sources", () => {
 		const github = seedMarketplacePlugin("github", ["feedback"]);
 		await run(["github/feedback"], [github]);
 
-		expect(existsSync(path.join(agentsSkills, "github-feedback"))).toBe(false);
+		expect(
+			existsSync(path.join(agentsSkills, "superestset-github-feedback")),
+		).toBe(false);
 		expect(
 			existsSync(path.join(claudePlugin, "skills", "github-feedback")),
 		).toBe(false);
-		expect(existsSync(path.join(agentsSkills, "superset-feedback"))).toBe(true);
+		expect(existsSync(path.join(agentsSkills, "superestset-feedback"))).toBe(
+			true,
+		);
 		expect(existsSync(path.join(claudePlugin, "skills", "feedback"))).toBe(
 			true,
 		);
@@ -390,18 +402,22 @@ describe("createManagedSkills with plugin sources", () => {
 		const github = seedMarketplacePlugin("github", ["feedback"]);
 		await run(["feedback"], [github]);
 
-		expect(existsSync(path.join(agentsSkills, "superset-feedback"))).toBe(
+		expect(existsSync(path.join(agentsSkills, "superestset-feedback"))).toBe(
 			false,
 		);
-		expect(existsSync(path.join(agentsSkills, "github-feedback"))).toBe(true);
+		expect(
+			existsSync(path.join(agentsSkills, "superestset-github-feedback")),
+		).toBe(true);
 	});
 
 	it("refuses a plugin that would take over the bundled directory", async () => {
-		const impostor = seedMarketplacePlugin("superset", ["evil"]);
+		const impostor = seedMarketplacePlugin("superestset", ["evil"]);
 		await run(undefined, [impostor]);
 
-		expect(existsSync(path.join(agentsSkills, "superset-evil"))).toBe(false);
-		expect(existsSync(path.join(agentsSkills, "superset-feedback"))).toBe(true);
+		expect(existsSync(path.join(agentsSkills, "superestset-evil"))).toBe(false);
+		expect(existsSync(path.join(agentsSkills, "superestset-feedback"))).toBe(
+			true,
+		);
 		expect(
 			JSON.parse(
 				readFileSync(
@@ -419,9 +435,9 @@ describe("createManagedSkills with plugin sources", () => {
 		rmSync(github.dir, { recursive: true });
 		await run(undefined, [github]);
 
-		expect(existsSync(path.join(agentsSkills, "github-issue-triage"))).toBe(
-			true,
-		);
+		expect(
+			existsSync(path.join(agentsSkills, "superestset-github-issue-triage")),
+		).toBe(true);
 		expect(
 			existsSync(path.join(claudePlugin, "skills", "github-issue-triage")),
 		).toBe(true);
@@ -433,18 +449,22 @@ describe("createManagedSkills with plugin sources", () => {
 			"ci-triage",
 		]);
 		await run(undefined, [github]);
-		expect(existsSync(path.join(agentsSkills, "github-ci-triage"))).toBe(true);
+		expect(
+			existsSync(path.join(agentsSkills, "superestset-github-ci-triage")),
+		).toBe(true);
 
 		rmSync(path.join(github.dir, "skills", "ci-triage"), { recursive: true });
 		await run(undefined, [github]);
 
-		expect(existsSync(path.join(agentsSkills, "github-ci-triage"))).toBe(false);
+		expect(
+			existsSync(path.join(agentsSkills, "superestset-github-ci-triage")),
+		).toBe(false);
 		expect(
 			existsSync(path.join(claudePlugin, "skills", "github-ci-triage")),
 		).toBe(false);
-		expect(existsSync(path.join(agentsSkills, "github-issue-triage"))).toBe(
-			true,
-		);
+		expect(
+			existsSync(path.join(agentsSkills, "superestset-github-issue-triage")),
+		).toBe(true);
 	});
 });
 
@@ -461,9 +481,9 @@ describe("createManagedSkills without an explicit source list", () => {
 			installedPluginsFile: INSTALLED_PLUGINS_FILE,
 		});
 
-		expect(existsSync(path.join(agentsSkills, "github-issue-triage"))).toBe(
-			true,
-		);
+		expect(
+			existsSync(path.join(agentsSkills, "superestset-github-issue-triage")),
+		).toBe(true);
 		expect(
 			existsSync(path.join(claudePlugin, "skills", "github-issue-triage")),
 		).toBe(true);
@@ -481,10 +501,12 @@ describe("createManagedSkills without an explicit source list", () => {
 			installedPluginsFile: INSTALLED_PLUGINS_FILE,
 		});
 
-		expect(existsSync(path.join(agentsSkills, "github-issue-triage"))).toBe(
-			false,
+		expect(
+			existsSync(path.join(agentsSkills, "superestset-github-issue-triage")),
+		).toBe(false);
+		expect(existsSync(path.join(agentsSkills, "superestset-feedback"))).toBe(
+			true,
 		);
-		expect(existsSync(path.join(agentsSkills, "superset-feedback"))).toBe(true);
 	});
 
 	it("provisions the bundled plugin when the file is absent", async () => {
@@ -494,6 +516,49 @@ describe("createManagedSkills without an explicit source list", () => {
 			installedPluginsFile: INSTALLED_PLUGINS_FILE,
 		});
 
-		expect(existsSync(path.join(agentsSkills, "superset-feedback"))).toBe(true);
+		expect(existsSync(path.join(agentsSkills, "superestset-feedback"))).toBe(
+			true,
+		);
 	});
+});
+
+it("preserves original Superset skills and commands across fork provisioning and reaping", async () => {
+	const originalSkill = path.join(
+		agentsSkills,
+		"superset-feedback",
+		"SKILL.md",
+	);
+	const originalPlugin = path.join(
+		claudeSkills,
+		"superset",
+		".superset-managed",
+	);
+	const originalCommand = path.join(
+		HOME_DIR,
+		".agents",
+		"commands",
+		"superset",
+		"feedback.md",
+	);
+	const original =
+		"<!-- superset-managed-skill v1 -->\nOriginal Superset content\n";
+	for (const file of [originalSkill, originalPlugin, originalCommand]) {
+		mkdirSync(path.dirname(file), { recursive: true });
+		writeFileSync(file, original);
+	}
+	writeFileSync(
+		path.join(BUNDLED_PLUGIN, "skills", "feedback", "SKILL.md"),
+		skillMd("feedback") +
+			"Run `superset ws list` and keep .superset/config.json.\n",
+	);
+	await run();
+	const forkSkill = readFileSync(
+		path.join(agentsSkills, "superestset-feedback", "SKILL.md"),
+		"utf-8",
+	);
+	expect(forkSkill).toContain("`superestset ws list`");
+	expect(forkSkill).toContain(".superset/config.json");
+	await run(["feedback"]);
+	for (const file of [originalSkill, originalPlugin, originalCommand])
+		expect(readFileSync(file, "utf-8")).toBe(original);
 });

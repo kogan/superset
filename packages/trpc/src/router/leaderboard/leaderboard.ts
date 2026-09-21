@@ -1,4 +1,4 @@
-import { db, dbWs } from "@superset/db/client";
+import { db } from "@superset/db/client";
 import {
 	handles,
 	leaderboardDaily,
@@ -13,6 +13,11 @@ import { Ratelimit } from "@upstash/ratelimit";
 import { Redis } from "@upstash/redis";
 import { and, eq, gte, lte, sql } from "drizzle-orm";
 import { env } from "../../env";
+import {
+	createLocalSlidingWindowRateLimit,
+	isLocalRuntime,
+	type LocalRateLimit,
+} from "../../lib/local-runtime/cache";
 import {
 	createTRPCRouter,
 	protectedProcedure,
@@ -61,48 +66,69 @@ import {
 import { computeTier, type FactoryDayRow, type Tier } from "./tier";
 
 const redis =
-	env.KV_REST_API_URL && env.KV_REST_API_TOKEN
+	!isLocalRuntime() && env.KV_REST_API_URL && env.KV_REST_API_TOKEN
 		? new Redis({ url: env.KV_REST_API_URL, token: env.KV_REST_API_TOKEN })
 		: null;
 
-const publishRateLimit = redis
-	? new Ratelimit({
-			redis,
-			limiter: Ratelimit.slidingWindow(30, "1 h"),
-			prefix: "ratelimit:leaderboard:publish",
-		})
-	: null;
+type RateLimit = Pick<Ratelimit, "limit"> | LocalRateLimit;
 
-const publicReadRateLimit = redis
-	? new Ratelimit({
-			redis,
-			limiter: Ratelimit.slidingWindow(60, "1 m"),
-			prefix: "ratelimit:leaderboard:public",
-		})
-	: null;
+function rateLimit({
+	prefix,
+	limit,
+	windowSeconds,
+	window,
+}: {
+	prefix: string;
+	limit: number;
+	windowSeconds: number;
+	window: `${number} ${"m" | "h"}`;
+}): RateLimit | null {
+	if (isLocalRuntime()) {
+		return createLocalSlidingWindowRateLimit({ prefix, limit, windowSeconds });
+	}
+	return redis
+		? new Ratelimit({
+				redis,
+				limiter: Ratelimit.slidingWindow(limit, window),
+				prefix,
+			})
+		: null;
+}
 
-const joinRateLimit = redis
-	? new Ratelimit({
-			redis,
-			limiter: Ratelimit.slidingWindow(10, "1 h"),
-			prefix: "ratelimit:leaderboard:join",
-		})
-	: null;
+const publishRateLimit = rateLimit({
+	prefix: "ratelimit:leaderboard:publish",
+	limit: 30,
+	windowSeconds: 60 * 60,
+	window: "1 h",
+});
 
-const previewRateLimit = redis
-	? new Ratelimit({
-			redis,
-			limiter: Ratelimit.slidingWindow(30, "1 h"),
-			prefix: "ratelimit:leaderboard:preview",
-		})
-	: null;
+const publicReadRateLimit = rateLimit({
+	prefix: "ratelimit:leaderboard:public",
+	limit: 60,
+	windowSeconds: 60,
+	window: "1 m",
+});
+
+const joinRateLimit = rateLimit({
+	prefix: "ratelimit:leaderboard:join",
+	limit: 10,
+	windowSeconds: 60 * 60,
+	window: "1 h",
+});
+
+const previewRateLimit = rateLimit({
+	prefix: "ratelimit:leaderboard:preview",
+	limit: 30,
+	windowSeconds: 60 * 60,
+	window: "1 h",
+});
 
 /**
  * Write path: fail closed. A limiter outage becomes a clean retryable signal
  * rather than an unhandled 500. Anonymous reads use `enforceOpen` instead.
  */
 async function enforce(
-	limiter: Ratelimit | null,
+	limiter: RateLimit | null,
 	key: string,
 	message: string,
 ): Promise<void> {
@@ -119,7 +145,7 @@ async function enforce(
 	}
 }
 
-type Tx = Parameters<Parameters<typeof dbWs.transaction>[0]>[0];
+type Tx = Parameters<Parameters<typeof db.transaction>[0]>[0];
 
 /**
  * Both daily tables carry hostId, so counting one lets a factory-only payload
@@ -615,7 +641,7 @@ export const leaderboardRouter = createTRPCRouter({
 				.limit(1);
 
 			try {
-				return await dbWs.transaction(async (tx) => {
+				return await db.transaction(async (tx) => {
 					const [owned] = await tx
 						.select({ handle: handles.handle })
 						.from(handles)
@@ -747,7 +773,7 @@ export const leaderboardRouter = createTRPCRouter({
 
 	leave: protectedProcedure.mutation(async ({ ctx }) => {
 		const userId = ctx.session.user.id;
-		await dbWs.transaction(async (tx) => {
+		await db.transaction(async (tx) => {
 			await tx
 				.delete(leaderboardDaily)
 				.where(eq(leaderboardDaily.userId, userId));
@@ -800,7 +826,7 @@ export const leaderboardRouter = createTRPCRouter({
 				sessions: day.sessions,
 			}));
 
-			await dbWs.transaction(async (tx) => {
+			await db.transaction(async (tx) => {
 				await enforceHostBudget(tx, userId, input.hostId);
 
 				if (rows.length > 0) {

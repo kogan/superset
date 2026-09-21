@@ -15,6 +15,7 @@
         "sherif": "1.11.0",
         "turbo": "2.10.9",
         "typescript": "6.0.3",
+        "zod": "4.4.3",
       },
     },
     "apps/admin": {
@@ -705,6 +706,7 @@
         "zod": "4.4.3",
       },
       "devDependencies": {
+        "@aws-sdk/client-s3": "3.899.0",
         "@cloudflare/workers-types": "5.20260801.1",
         "@superset/typescript": "workspace:*",
         "typescript": "6.0.3",
@@ -954,7 +956,7 @@
       "name": "@superset/db",
       "version": "0.1.0",
       "dependencies": {
-        "@neondatabase/serverless": "1.0.2",
+        "@electric-sql/pglite": "0.5.8",
         "@superset/shared": "workspace:*",
         "@t3-oss/env-core": "0.13.11",
         "dotenv": "17.3.1",
@@ -1901,6 +1903,8 @@
     "@drizzle-team/brocli": ["@drizzle-team/brocli@0.10.2", "", {}, "sha512-z33Il7l5dKjUgGULTqBsQBQwckHh5AbIuxhdsIxDDiZAzBOrZO6q9ogcWC65kU382AfynTfgNumVcNIjuIua6w=="],
 
     "@egjs/hammerjs": ["@egjs/hammerjs@2.0.17", "", { "dependencies": { "@types/hammerjs": "^2.0.36" } }, "sha512-XQsZgjm2EcVUiZQf11UBJQfmZeEmOW8DpI1gsFeln6w0ae0ii4dMQEQ0kjl6DspdWX1aGY1/loyXnP0JS06e/A=="],
+
+    "@electric-sql/pglite": ["@electric-sql/pglite@0.5.8", "", {}, "sha512-n9tsbUOhwx2epK1V0ZG9Ar4SHWUju04dhmzZXiSBXwBoleOvIfals33NAaWgagQVAL4Rbvx/Ptsu3P+pA09f6Q=="],
 
     "@electron-internal/extract-zip": ["@electron-internal/extract-zip@1.0.5", "", {}, "sha512-+bqFCP98pLI0Tt0XQo1TmlXtwjWchISndDOxCkEcIuUgXWpBnLyRI+2DU+mesvnMMX6L1XDqYNA0lXNDHd/yiA=="],
 

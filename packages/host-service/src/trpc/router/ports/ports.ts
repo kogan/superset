@@ -1,7 +1,11 @@
-import type { DetectedPort } from "@superset/port-scanner";
+import {
+	type DetectedPort,
+	workspacePortTerminalId,
+} from "@superset/port-scanner";
 import { z } from "zod";
-import { portManager } from "../../../ports/port-manager";
+import { portManager, workspacePortScanner } from "../../../ports/port-manager";
 import { getLabelsForWorkspace } from "../../../ports/static-ports";
+import { treeKillWithEscalation } from "../../../ports/tree-kill";
 import { protectedProcedure, router } from "../../index";
 
 export interface EnrichedPort extends DetectedPort {
@@ -19,7 +23,7 @@ const getAllInputSchema = z.object({
 export const portsRouter = router({
 	getAll: protectedProcedure
 		.input(getAllInputSchema)
-		.query(({ ctx, input }): EnrichedPort[] => {
+		.query(async ({ ctx, input }): Promise<EnrichedPort[]> => {
 			const requestedWorkspaceIds = new Set(input.workspaceIds);
 			const resolve = (workspaceId: string): string | null => {
 				try {
@@ -33,8 +37,22 @@ export const portsRouter = router({
 				string,
 				ReturnType<typeof getLabelsForWorkspace>
 			>();
-			return portManager
-				.getAllPorts()
+			const managedPorts = portManager.getAllPorts();
+			const roots = ctx.db.query.workspaces
+				.findMany({
+					columns: { id: true, archivedAt: true },
+				})
+				.sync()
+				.filter((workspace) => workspace.archivedAt === null)
+				.flatMap(({ id: workspaceId }) => {
+					const path = resolve(workspaceId);
+					return path ? [{ workspaceId, path }] : [];
+				});
+			const workspacePorts = await workspacePortScanner.getPorts(
+				roots,
+				managedPorts,
+			);
+			return [...managedPorts, ...workspacePorts]
 				.filter((port) => requestedWorkspaceIds.has(port.workspaceId))
 				.map((port) => {
 					let labels = labelsByWorkspace.get(port.workspaceId);
@@ -108,7 +126,17 @@ export const portsRouter = router({
 			}),
 		)
 		.mutation(
-			async ({ input }): Promise<{ success: boolean; error?: string }> => {
+			async ({ ctx, input }): Promise<{ success: boolean; error?: string }> => {
+				if (input.terminalId === workspacePortTerminalId(input.workspaceId)) {
+					return workspacePortScanner.killPort({
+						workspaceId: input.workspaceId,
+						path: ctx.runtime.filesystem.resolveWorkspaceRoot(
+							input.workspaceId,
+						),
+						port: input.port,
+						killFn: treeKillWithEscalation,
+					});
+				}
 				return portManager.killPort(input);
 			},
 		),

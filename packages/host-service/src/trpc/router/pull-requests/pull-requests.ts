@@ -1,8 +1,10 @@
 import { z } from "zod";
 import { protectedProcedure, router } from "../../index";
+import { createComment } from "./procedures/create-comment";
 import { createForWorkspace } from "./procedures/create-for-workspace";
 import { getContent } from "./procedures/get-content";
 import { getDiff } from "./procedures/get-diff";
+import { getFileContents } from "./procedures/get-file-contents";
 import { getLinkedWorkspace } from "./procedures/get-linked-workspace";
 import { getThreads } from "./procedures/get-threads";
 import { mergePR } from "./procedures/merge";
@@ -71,8 +73,10 @@ export const pullRequestsRouter = router({
 			return { ok: true };
 		}),
 	createForWorkspace,
+	createComment,
 	getContent,
 	getDiff,
+	getFileContents,
 	getLinkedWorkspace,
 	getThreads,
 	setState,

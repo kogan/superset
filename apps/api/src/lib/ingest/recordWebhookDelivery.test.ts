@@ -9,7 +9,6 @@ const execute = mock(
 
 mock.module("@superset/db/client", () => ({
 	db: { execute },
-	dbWs: { execute },
 }));
 
 const { recordWebhookDelivery } = await import("./recordWebhookDelivery");

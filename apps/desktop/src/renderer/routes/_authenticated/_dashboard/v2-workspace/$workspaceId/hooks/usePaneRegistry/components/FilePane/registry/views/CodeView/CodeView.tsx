@@ -8,7 +8,13 @@ import { detectLanguage } from "shared/detect-language";
 import type { ViewProps } from "../../types";
 import { CodeEditor } from "./components/CodeEditor";
 
-export function CodeView({ document, filePath, workspaceId }: ViewProps) {
+export function CodeView({
+	document,
+	filePath,
+	workspaceId,
+	revealPosition,
+	onRevealComplete,
+}: ViewProps) {
 	// Quick Open replaces preview panes with new pane IDs, so the file path is
 	// the stable editor identity when a user switches away and back.
 	const scrollStateKey = useMemo(
@@ -42,6 +48,8 @@ export function CodeView({ document, filePath, workspaceId }: ViewProps) {
 			language={detectLanguage(filePath)}
 			onChange={(next) => document.setContent(next)}
 			onSave={() => void document.save()}
+			revealPosition={revealPosition}
+			onRevealComplete={onRevealComplete}
 			initialScrollPosition={initialScrollPosition}
 			onScrollPositionChange={handleScrollPositionChange}
 			fillHeight

@@ -17,11 +17,11 @@ import {
 } from "./managed-toml-block";
 
 export const GROK_COMPAT_MARKER_START =
-	"# >>> superset-managed-grok-compat v1 (do not edit) >>>";
+	"# >>> superestset-managed-grok-compat v1 (do not edit) >>>";
 export const GROK_COMPAT_MARKER_END =
-	"# <<< superset-managed-grok-compat v1 <<<";
+	"# <<< superestset-managed-grok-compat v1 <<<";
 
-export const GROK_HOOKS_FILE = "superset-notify.json";
+export const GROK_HOOKS_FILE = "superestset-notify.json";
 
 // Grok's hook config uses Claude Code's event names; the wire payload it pipes
 // to the command is camelCase (`hookEventName`) with snake_case values, which

@@ -1,13 +1,13 @@
 {
 	"name": "@superset/desktop",
-	"productName": "Superset",
-	"description": "The last developer tool you'll ever need",
+	"productName": "superset++",
+	"description": "Personal development workspace with Jira, pull requests, terminals and local Pages",
 	"version": "1.30.0",
 	"main": "./dist/main/index.js",
 	"resources": "src/resources",
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/superset-sh/superset.git"
+		"url": "https://github.com/kogan/superset.git"
 	},
 	"author": {
 		"name": "Superset",

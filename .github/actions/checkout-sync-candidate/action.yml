@@ -1,0 +1,31 @@
+name: Checkout validated sync candidate
+description: Load a merge candidate from this workflow run without changing the workflow definition.
+inputs:
+  artifact:
+    required: true
+    description: Artifact containing candidate.bundle
+  sha:
+    required: true
+    description: Expected candidate commit
+runs:
+  using: composite
+  steps:
+    - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
+      with:
+        name: ${{ inputs.artifact }}
+        path: ${{ runner.temp }}/sync-candidate
+    - shell: bash
+      env:
+        CANDIDATE_SHA: ${{ inputs.sha }}
+      run: |
+        set -euo pipefail
+        [[ "$CANDIDATE_SHA" =~ ^[0-9a-f]{40}$ ]]
+        if [[ "$(git rev-parse --is-shallow-repository)" == true ]]; then
+          git fetch --no-tags --unshallow origin refs/heads/main
+        else
+          git fetch --no-tags origin refs/heads/main
+        fi
+        git bundle verify "$RUNNER_TEMP/sync-candidate/candidate.bundle"
+        git fetch --no-tags "$RUNNER_TEMP/sync-candidate/candidate.bundle" HEAD
+        [[ "$(git rev-parse FETCH_HEAD)" == "$CANDIDATE_SHA" ]]
+        git checkout --detach "$CANDIDATE_SHA"

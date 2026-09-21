@@ -17,7 +17,7 @@ import { useSettings } from "renderer/stores/settings";
 import { useResolvedTheme, useTerminalTheme } from "renderer/stores/theme";
 import type { DiffAnnotationMetadata } from "../useDiffAnnotations";
 
-export function useDiffCodeViewTheme() {
+export function useDiffCodeViewTheme<Annotation = DiffAnnotationMetadata>() {
 	const diffStyle = useSettings((s) => s.diffStyle);
 	const expandUnchanged = useSettings((s) => s.expandUnchanged);
 	const activeTheme = useResolvedTheme();
@@ -81,10 +81,11 @@ export function useDiffCodeViewTheme() {
 			? "var(--color-red-500)"
 			: "var(--color-red-700)";
 
-	const options = useMemo<CodeViewOptions<DiffAnnotationMetadata>>(
+	const options = useMemo<CodeViewOptions<Annotation>>(
 		() => ({
 			diffStyle,
 			expandUnchanged,
+			expansionLineCount: 20,
 			overflow: "wrap",
 			stickyHeaders: true,
 			theme: getDiffsTheme(activeTheme),

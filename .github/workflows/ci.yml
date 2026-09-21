@@ -1,10 +1,17 @@
 name: CI
 
 on:
-  push:
-    branches: [main]
-  pull_request:
-    types: [opened, synchronize]
+  workflow_call:
+    inputs:
+      candidate-artifact:
+        type: string
+        default: ""
+      candidate-sha:
+        type: string
+        default: ""
+
+permissions:
+  contents: read
 
 jobs:
   sherif:
@@ -13,6 +20,15 @@ jobs:
     steps:
       - name: Check out code
         uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+        with:
+          persist-credentials: false
+
+      - name: Load upstream sync candidate
+        if: inputs.candidate-artifact != ''
+        uses: ./.github/actions/checkout-sync-candidate
+        with:
+          artifact: ${{ inputs.candidate-artifact }}
+          sha: ${{ inputs.candidate-sha }}
 
       - name: Setup Bun
         id: setup-bun
@@ -40,6 +56,15 @@ jobs:
     steps:
       - name: Check out code
         uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+        with:
+          persist-credentials: false
+
+      - name: Load upstream sync candidate
+        if: inputs.candidate-artifact != ''
+        uses: ./.github/actions/checkout-sync-candidate
+        with:
+          artifact: ${{ inputs.candidate-artifact }}
+          sha: ${{ inputs.candidate-sha }}
 
       - name: Install Vale
         run: |
@@ -62,6 +87,15 @@ jobs:
     steps:
       - name: Check out code
         uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+        with:
+          persist-credentials: false
+
+      - name: Load upstream sync candidate
+        if: inputs.candidate-artifact != ''
+        uses: ./.github/actions/checkout-sync-candidate
+        with:
+          artifact: ${{ inputs.candidate-artifact }}
+          sha: ${{ inputs.candidate-sha }}
 
       - name: Setup Bun
         id: setup-bun
@@ -84,6 +118,9 @@ jobs:
       - name: Test release scripts
         run: bun run test:release
 
+      - name: Test upstream sync automation
+        run: node --test scripts/upstream-sync/sync.test.mjs
+
       - name: Check unified versions (desktop == host-service == cli)
         run: bun run check:versions
 
@@ -93,6 +130,15 @@ jobs:
     steps:
       - name: Check out code
         uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+        with:
+          persist-credentials: false
+
+      - name: Load upstream sync candidate
+        if: inputs.candidate-artifact != ''
+        uses: ./.github/actions/checkout-sync-candidate
+        with:
+          artifact: ${{ inputs.candidate-artifact }}
+          sha: ${{ inputs.candidate-sha }}
 
       - name: Setup Bun
         id: setup-bun
@@ -128,6 +174,15 @@ jobs:
     steps:
       - name: Check out code
         uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+        with:
+          persist-credentials: false
+
+      - name: Load upstream sync candidate
+        if: inputs.candidate-artifact != ''
+        uses: ./.github/actions/checkout-sync-candidate
+        with:
+          artifact: ${{ inputs.candidate-artifact }}
+          sha: ${{ inputs.candidate-sha }}
 
       - name: Setup Bun
         id: setup-bun
@@ -177,6 +232,15 @@ jobs:
     steps:
       - name: Check out code
         uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+        with:
+          persist-credentials: false
+
+      - name: Load upstream sync candidate
+        if: inputs.candidate-artifact != ''
+        uses: ./.github/actions/checkout-sync-candidate
+        with:
+          artifact: ${{ inputs.candidate-artifact }}
+          sha: ${{ inputs.candidate-sha }}
 
       - name: Setup Bun
         id: setup-bun
@@ -202,6 +266,15 @@ jobs:
     steps:
       - name: Check out code
         uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+        with:
+          persist-credentials: false
+
+      - name: Load upstream sync candidate
+        if: inputs.candidate-artifact != ''
+        uses: ./.github/actions/checkout-sync-candidate
+        with:
+          artifact: ${{ inputs.candidate-artifact }}
+          sha: ${{ inputs.candidate-sha }}
 
       - name: Setup Bun
         id: setup-bun
@@ -237,4 +310,6 @@ jobs:
     with:
       targets: '[{"os":"ubuntu-latest","target":"linux-x64"},{"os":"macos-14","target":"darwin-arm64"},{"os":"macos-15-intel","target":"darwin-x64"},{"os":"ubuntu-24.04-arm","target":"linux-arm64"}]'
       upload: false
+      candidate-artifact: ${{ inputs.candidate-artifact || '' }}
+      candidate-sha: ${{ inputs.candidate-sha || '' }}
     secrets: inherit

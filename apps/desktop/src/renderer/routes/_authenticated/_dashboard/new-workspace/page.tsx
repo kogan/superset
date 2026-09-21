@@ -3,6 +3,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { NewWorkspaceScreen } from "renderer/routes/_authenticated/components/DashboardNewWorkspaceModal/components/NewWorkspaceScreen";
 import { DashboardNewWorkspaceDraftProvider } from "renderer/routes/_authenticated/components/DashboardNewWorkspaceModal/DashboardNewWorkspaceDraftContext";
 import { newWorkspaceAttachmentsStore } from "renderer/stores/new-workspace-attachments";
+import { useNewWorkspaceDraftStore } from "renderer/stores/new-workspace-draft";
 
 export const Route = createFileRoute(
 	"/_authenticated/_dashboard/new-workspace/",
@@ -15,6 +16,11 @@ export const Route = createFileRoute(
 		session: search.session === true ? true : undefined,
 		host: typeof search.host === "string" ? search.host : undefined,
 	}),
+	onLeave: () => {
+		const draft = useNewWorkspaceDraftStore.getState();
+		if (draft.linkedIssues.some((issue) => issue.source === "jira"))
+			draft.resetDraft();
+	},
 	component: NewWorkspacePage,
 });
 

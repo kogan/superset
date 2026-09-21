@@ -95,7 +95,7 @@ describe("PtyDaemonManifest", () => {
 });
 
 describe("assertIsolatedDaemonNamespaceInTests", () => {
-	test("throws for test-runner contexts on the default home", () => {
+	test("throws for test-runner contexts on real app homes", () => {
 		expect(() =>
 			assertIsolatedDaemonNamespaceInTests({ NODE_ENV: "test" }),
 		).toThrow(/isolated temp dir/);
@@ -110,11 +110,17 @@ describe("assertIsolatedDaemonNamespaceInTests", () => {
 				SUPERSET_HOME_DIR: path.join(os.homedir(), ".superset"),
 			}),
 		).toThrow(/isolated temp dir/);
-		// Aliases of the default home must not slip past the guard.
 		expect(() =>
 			assertIsolatedDaemonNamespaceInTests({
 				NODE_ENV: "test",
-				SUPERSET_HOME_DIR: `${path.join(os.homedir(), ".superset")}${path.sep}`,
+				SUPERSET_HOME_DIR: path.join(os.homedir(), ".superestset"),
+			}),
+		).toThrow(/isolated temp dir/);
+		// Aliases of the fork default home must not slip past the guard.
+		expect(() =>
+			assertIsolatedDaemonNamespaceInTests({
+				NODE_ENV: "test",
+				SUPERSET_HOME_DIR: `${path.join(os.homedir(), ".superestset")}${path.sep}`,
 			}),
 		).toThrow(/isolated temp dir/);
 		expect(() =>
@@ -124,7 +130,7 @@ describe("assertIsolatedDaemonNamespaceInTests", () => {
 					os.homedir(),
 					"somewhere",
 					"..",
-					".superset",
+					".superestset",
 				),
 			}),
 		).toThrow(/isolated temp dir/);

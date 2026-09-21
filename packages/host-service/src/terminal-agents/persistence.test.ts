@@ -57,6 +57,121 @@ function seedSession(
 		.run();
 }
 
+describe("subagent names", () => {
+	it("keeps names across hooks and a store restart, with reset and workspace isolation", () => {
+		const db = createTestDb();
+		seedSession(db, { id: "t1", status: "active", workspaceId: "ws-1" });
+		seedSession(db, { id: "t2", status: "active", workspaceId: "ws-2" });
+		const persistence = new SqliteTerminalAgentBindingPersistence(db);
+		const store = new TerminalAgentStore(persistence);
+		const childEvent = {
+			terminalId: "t1",
+			workspaceId: "ws-1",
+			subagentId: "child",
+			eventType: "SubagentStart",
+			agentType: "default",
+			occurredAt: Date.now(),
+		};
+		store.recordSubagentEvent(childEvent);
+		const rename = {
+			terminalId: "t1",
+			workspaceId: "ws-1",
+			subagentId: "child",
+			name: "Review payments",
+		};
+		expect(store.renameSubagent({ ...rename, workspaceId: "ws-2" })).toBe(
+			false,
+		);
+		expect(store.renameSubagent({ ...rename, subagentId: "missing" })).toBe(
+			false,
+		);
+		expect(store.renameSubagent(rename)).toBe(true);
+		store.recordSubagentEvent({ ...childEvent, eventType: "PostToolUse" });
+		expect(store.get("t1")?.subagents?.[0]?.customName).toBe("Review payments");
+		store.recordEvent({
+			terminalId: "t1",
+			workspaceId: "ws-1",
+			eventType: "PostToolUse",
+			occurredAt: Date.now(),
+		});
+		expect(persistence.getSubagentName("t1", "child")).toBe("Review payments");
+
+		const restarted = new TerminalAgentStore(
+			new SqliteTerminalAgentBindingPersistence(db),
+		);
+		restarted.recordSubagentEvent(childEvent);
+		restarted.recordSubagentEvent({
+			...childEvent,
+			terminalId: "t2",
+			workspaceId: "ws-2",
+		});
+		expect(restarted.getSubagent("t1", "child")?.customName).toBe(
+			"Review payments",
+		);
+		expect(restarted.getSubagent("t2", "child")?.customName).toBeUndefined();
+		expect(restarted.renameSubagent({ ...rename, name: null })).toBe(true);
+		expect(restarted.getSubagent("t1", "child")?.customName).toBeUndefined();
+		expect(persistence.getSubagentName("t1", "child")).toBeUndefined();
+		restarted.renameSubagent(rename);
+		restarted.recordEvent({
+			terminalId: "t1",
+			workspaceId: "ws-1",
+			agentId: "claude",
+			agentSessionId: "new-session",
+			eventType: "Attached",
+			occurredAt: Date.now() + 10,
+		});
+		restarted.recordSubagentEvent(childEvent);
+		expect(restarted.getSubagent("t1", "child")?.customName).toBeUndefined();
+		expect(persistence.getSubagentName("t1", "child")).toBeUndefined();
+	});
+
+	it("bounds names on each terminal binding and treats unusual ids as data", () => {
+		const db = createTestDb();
+		seedSession(db, { id: "t1", status: "active", workspaceId: "ws-1" });
+		const persistence = new SqliteTerminalAgentBindingPersistence(db);
+		expect(persistence.getSubagentName("t1", "__proto__")).toBeUndefined();
+		for (let index = 0; index < 65; index++) {
+			persistence.setSubagentName({
+				terminalId: "t1",
+				subagentId: String(index),
+				name: `Task ${index}`,
+			});
+		}
+		expect(persistence.getSubagentName("t1", "0")).toBeUndefined();
+		expect(persistence.getSubagentName("t1", "64")).toBe("Task 64");
+		persistence.setSubagentName({
+			terminalId: "t1",
+			subagentId: "__proto__",
+			name: "Audit",
+		});
+		expect(persistence.getSubagentName("t1", "__proto__")).toBe("Audit");
+		persistence.delete("t1");
+		expect(persistence.getSubagentName("t1", "__proto__")).toBeUndefined();
+	});
+
+	it("clears names when two different parent sessions start in the same millisecond", () => {
+		const db = createTestDb();
+		seedSession(db, { id: "t1", status: "active", workspaceId: "ws-1" });
+		const persistence = new SqliteTerminalAgentBindingPersistence(db);
+		persistence.setSubagentName({
+			terminalId: "t1",
+			subagentId: "child",
+			name: "Previous task",
+		});
+		persistence.upsert({
+			terminalId: "t1",
+			workspaceId: "ws-1",
+			agentId: "codex",
+			agentSessionId: "new-parent",
+			startedAt: 1,
+			lastEventAt: 1,
+			lastEventType: "Attached",
+		});
+		expect(persistence.getSubagentName("t1", "child")).toBeUndefined();
+	});
+});
+
 describe("SqliteTerminalAgentBindingPersistence live reads", () => {
 	it("hides bindings whose session is not active or workspace-less", () => {
 		const db = createTestDb();

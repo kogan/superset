@@ -240,7 +240,7 @@ export async function provisionClaudeProfile(
 		await provisionManagedClaudePluginAt(target, {
 			disabledSkills: resolveDisabledSkillIds(),
 		});
-		surfaces["skills/superset"] = "synced";
+		surfaces["skills/superestset"] = "synced";
 	}
 
 	const report = { configDir: target, surfaces };

@@ -10,17 +10,22 @@ import {
 	CommandList,
 } from "@superset/ui/command";
 import { Popover, PopoverContent, PopoverTrigger } from "@superset/ui/popover";
-import { useQuery } from "@tanstack/react-query";
 import { useMemo, useState } from "react";
 import { HiCheck, HiChevronDown, HiOutlineUserCircle } from "react-icons/hi2";
-import { getHostServiceClientByUrl } from "renderer/lib/host-service-client";
 import type { ProjectQueryTarget } from "renderer/routes/_authenticated/_dashboard/hooks/useProjectQueryTargets";
 import {
 	normalizeAuthorFilter,
 	normalizeAuthorFilters,
 } from "renderer/routes/_authenticated/_dashboard/pull-requests/utils/normalizeAuthorFilter";
+import {
+	getTeamAuthors,
+	isTeamAuthorFilter,
+	type TeamMember,
+} from "renderer/routes/_authenticated/_dashboard/pull-requests/utils/pullRequestTeam";
+import { useRepositoryContributors } from "renderer/routes/_authenticated/hooks/useRepositoryContributors";
 
 interface AuthorFilterProps {
+	teamMembers: readonly TeamMember[];
 	value: string | null;
 	onChange: (value: string | null) => void;
 	/** Scoped to a single repo, this drives a live contributor list instead
@@ -30,6 +35,7 @@ interface AuthorFilterProps {
 }
 
 export function AuthorFilter({
+	teamMembers,
 	value,
 	onChange,
 	projectTargets,
@@ -42,11 +48,13 @@ export function AuthorFilter({
 		selectedAuthors.some(
 			(author) => author.toLowerCase() === login.toLowerCase(),
 		);
-	const label = value
-		? selectedAuthors.map((author) => `@${author}`).join(", ")
-		: t({
-				message: "All authors",
-			});
+	const isTeamSelected = isTeamAuthorFilter(value, teamMembers);
+	const teamAuthors = getTeamAuthors(teamMembers);
+	const label = isTeamSelected
+		? t({ message: "My team" })
+		: value
+			? selectedAuthors.map((author) => `@${author}`).join(", ")
+			: t({ message: "All authors" });
 
 	const singleTarget =
 		projectTargets.length === 1 ? projectTargets[0] : undefined;
@@ -55,28 +63,20 @@ export function AuthorFilter({
 		data: contributors,
 		isLoading,
 		error,
-	} = useQuery({
-		queryKey: [
-			"pullRequests",
-			"repoContributors",
-			singleTarget?.projectId,
-			singleTarget?.hostUrl,
-		],
-		queryFn: async () => {
-			if (!singleTarget?.hostUrl) return [];
-			const client = getHostServiceClientByUrl(singleTarget.hostUrl);
-			return client.workspaceCreation.getRepoContributors.query({
-				projectId: singleTarget.projectId,
-			});
-		},
-		enabled: !!singleTarget?.hostUrl,
-		staleTime: 5 * 60_000,
-		gcTime: 10 * 60_000,
-	});
+	} = useRepositoryContributors(singleTarget, open);
 
 	const filtered = useMemo(() => {
 		const q = search.trim().replace(/^@/, "").toLowerCase();
-		const list = [...(contributors ?? [])];
+		const list: { login: string; name?: string }[] = [
+			...teamMembers,
+			...(contributors ?? []).filter(
+				(contributor) =>
+					!teamMembers.some(
+						(member) =>
+							member.login.toLowerCase() === contributor.login.toLowerCase(),
+					),
+			),
+		];
 		for (const login of selectedAuthors) {
 			if (
 				!list.some(
@@ -88,8 +88,11 @@ export function AuthorFilter({
 			}
 		}
 		if (!q) return list;
-		return list.filter((c) => c.login.toLowerCase().includes(q));
-	}, [contributors, search, selectedAuthors]);
+		return list.filter(
+			(c) =>
+				c.login.toLowerCase().includes(q) || c.name?.toLowerCase().includes(q),
+		);
+	}, [contributors, search, selectedAuthors, teamMembers]);
 
 	const normalizedSearch = normalizeAuthorFilter(search)?.toLowerCase() ?? null;
 	const showCustomOption =
@@ -156,6 +159,21 @@ export function AuthorFilter({
 							<CommandGroup>
 								{!search && (
 									<CommandItem
+										aria-checked={isTeamSelected}
+										disabled={!teamAuthors}
+										onSelect={() => onChange(teamAuthors)}
+									>
+										<HiOutlineUserCircle className="size-4 shrink-0" />
+										<span className="text-sm">
+											<Trans>My team</Trans>
+										</span>
+										{isTeamSelected && (
+											<HiCheck className="ml-auto size-3.5 shrink-0" />
+										)}
+									</CommandItem>
+								)}
+								{!search && (
+									<CommandItem
 										aria-checked={!value}
 										onSelect={() => handleSelect(null)}
 									>
@@ -189,6 +207,11 @@ export function AuthorFilter({
 											</AvatarFallback>
 										</Avatar>
 										<span className="truncate text-sm">
+											{contributor.name && (
+												<span className="block truncate">
+													{contributor.name}
+												</span>
+											)}
 											{contributor.login}
 										</span>
 										{isSelected(contributor.login) && (

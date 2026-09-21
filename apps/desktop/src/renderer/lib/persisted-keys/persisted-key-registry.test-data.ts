@@ -126,6 +126,10 @@ export const PERSISTED_KEY_REGISTRY: ReadonlyArray<
 	],
 	["src/renderer/stores/workspace-agents-row.ts", ["workspace-agents-row"]],
 	[
+		"src/renderer/stores/feature-preferences.ts",
+		["superestset-feature-preferences"],
+	],
+	[
 		"src/renderer/routes/_authenticated/settings/usage/utils/usageLastSection/usageLastSection.ts",
 		["usage-last-section-v1"],
 	],

@@ -1,4 +1,4 @@
-import { db, dbWs } from "@superset/db/client";
+import { db } from "@superset/db/client";
 import { v2UsersHostRoleValues } from "@superset/db/enums";
 import { members, v2Hosts, v2UsersHosts } from "@superset/db/schema";
 import { getCurrentTxid } from "@superset/db/utils";
@@ -141,7 +141,7 @@ export const hostManagementRouter = {
 			const organizationId = requireActiveOrgId(ctx);
 			await requireHostOwner(ctx.session.user.id, input.hostId, organizationId);
 
-			const txid = await dbWs.transaction(async (tx) => {
+			const txid = await db.transaction(async (tx) => {
 				const [updated] = await tx
 					.update(v2Hosts)
 					.set({ name: input.name })
@@ -171,7 +171,7 @@ export const hostManagementRouter = {
 		.mutation(async ({ ctx, input }) => {
 			const organizationId = requireActiveOrgId(ctx);
 
-			const txid = await dbWs.transaction(async (tx) => {
+			const txid = await db.transaction(async (tx) => {
 				const [membership] = await tx
 					.select({ id: members.id })
 					.from(members)
@@ -271,7 +271,7 @@ export const hostManagementRouter = {
 			await requireHostOwner(ctx.session.user.id, input.hostId, organizationId);
 			await requireOrgMember(input.userId, organizationId);
 
-			const result = await dbWs.transaction(async (tx) => {
+			const result = await db.transaction(async (tx) => {
 				const [inserted] = await tx
 					.insert(v2UsersHosts)
 					.values({
@@ -328,7 +328,7 @@ export const hostManagementRouter = {
 				});
 			}
 
-			const txid = await dbWs.transaction(async (tx) => {
+			const txid = await db.transaction(async (tx) => {
 				const target = await tx.query.v2UsersHosts.findFirst({
 					where: and(
 						eq(v2UsersHosts.organizationId, organizationId),
@@ -409,7 +409,7 @@ export const hostManagementRouter = {
 				});
 			}
 
-			const txid = await dbWs.transaction(async (tx) => {
+			const txid = await db.transaction(async (tx) => {
 				const target = await tx.query.v2UsersHosts.findFirst({
 					where: and(
 						eq(v2UsersHosts.organizationId, organizationId),

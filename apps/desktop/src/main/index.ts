@@ -10,11 +10,7 @@ import {
 } from "@superset/agent-setup";
 import { i18n, initI18nAsync } from "@superset/i18n";
 import { settings } from "@superset/local-db";
-import {
-	devAppProfileDirName,
-	isDevAppProfileDirName,
-	workspaceDevAppProfileDirName,
-} from "@superset/shared/dev-app-profile";
+import { workspaceDevAppProfileDirName } from "@superset/shared/dev-app-profile";
 import { app, dialog, Notification, net, protocol, session } from "electron";
 import { makeAppSetup } from "lib/electron-app/factories/app/setup";
 import {
@@ -30,6 +26,7 @@ import {
 	PLATFORM,
 	PROTOCOL_SCHEME,
 } from "shared/constants";
+import { productName } from "../../package.json";
 import { sweepDevAppProfiles } from "./dev-app-profile-sweep";
 import { initAppState } from "./lib/app-state";
 import { requestAppleEventsAccess } from "./lib/apple-events-permission";
@@ -39,13 +36,13 @@ import { browserManager } from "./lib/browser/browser-manager";
 import { downloadManager } from "./lib/browser/download-manager";
 import { installBundledCliShim } from "./lib/bundled-cli";
 import { installDevRunnerExit } from "./lib/dev-runner-exit";
-import { resolveDevWorkspaceName } from "./lib/dev-workspace-name";
 import { setWorkspaceDockIcon } from "./lib/dock-icon";
 import { loadWebviewBrowserExtension } from "./lib/extensions";
 import { getHostServiceCoordinator } from "./lib/host-service-coordinator";
 import { resolveAppLocale } from "./lib/language";
 import { localDb } from "./lib/local-db";
 import { requestLocalNetworkAccess } from "./lib/local-network-permission";
+import { stopLocalServices } from "./lib/local-runtime";
 import { menuEmitter } from "./lib/menu-events";
 import {
 	initTanstackDbPersistence,
@@ -94,20 +91,8 @@ if (IS_DEV) {
 	mkdirSync(profilePath, { recursive: true });
 	app.setPath("userData", profilePath);
 	app.setPath("sessionData", profilePath);
-	const workspaceName = resolveDevWorkspaceName();
-	const profileName = workspaceName
-		? devAppProfileDirName(workspaceName)
-		: undefined;
-	// Retain the existing validation for the display label.
-	if (profileName && isDevAppProfileDirName(profileName)) {
-		app.setName(profileName);
-	} else if (profileName) {
-		console.warn(
-			"[main] Not renaming the app: unusable profile name",
-			profileName,
-		);
-	}
 }
+app.setName(productName);
 
 // Dev mode: register with execPath + app script so macOS launches Electron with our entry point
 if (process.defaultApp) {
@@ -291,7 +276,10 @@ app.on("window-all-closed", () => {
 });
 
 app.on("before-quit", async (event) => {
+	const appName = app.name;
 	if (isQuitting) return;
+	// The local database must finish its asynchronous flush before Electron exits.
+	if (process.env.SUPERESTSET_LOCAL === "1") event.preventDefault();
 
 	const isDev = process.env.NODE_ENV === "development";
 	if (!skipQuitConfirmation && !isDev && getConfirmOnQuitSetting()) {
@@ -308,7 +296,7 @@ app.on("before-quit", async (event) => {
 				],
 				defaultId: 0,
 				cancelId: 1,
-				title: i18n._(msg({ message: "Quit Superset" })),
+				title: i18n._(msg({ message: `Quit ${appName}` })),
 				message: i18n._(
 					msg({
 						message: "Are you sure you want to quit?",
@@ -344,7 +332,11 @@ app.on("before-quit", async (event) => {
 		disposeTerminalHostClient,
 		shutdownPersistence: shutdownTanstackDbPersistence,
 		disposeTray,
-		forceExit: (code) => app.exit(code),
+		forceExit: (code) => {
+			if (process.env.SUPERESTSET_LOCAL === "1")
+				void stopLocalServices().finally(() => app.exit(code));
+			else app.exit(code);
+		},
 	});
 });
 
@@ -394,28 +386,8 @@ if (process.env.NODE_ENV === "development") {
 // roughly 128 MB.
 app.commandLine.appendSwitch("disk-cache-size", String(1024 * 1024 * 1024));
 
-protocol.registerSchemesAsPrivileged([
-	{
-		scheme: "superset-icon",
-		privileges: {
-			standard: true,
-			secure: true,
-			bypassCSP: true,
-			supportFetchAPI: true,
-		},
-	},
-	{
-		scheme: "superset-font",
-		privileges: {
-			standard: true,
-			secure: true,
-			bypassCSP: true,
-			supportFetchAPI: true,
-		},
-	},
-]);
-
-const gotTheLock = app.requestSingleInstanceLock();
+const gotTheLock =
+	app.hasSingleInstanceLock() || app.requestSingleInstanceLock();
 
 if (!gotTheLock) {
 	app.exit(0);
@@ -598,7 +570,8 @@ if (!gotTheLock) {
 		try {
 			// Converge agent MCP configs on the installed-plugin set, so
 			// installs/uninstalls that missed a mid-session sync land here.
-			syncInstalledPluginMcpServers();
+			if (process.env.SUPERESTSET_TEST_NO_PROVISION !== "1")
+				syncInstalledPluginMcpServers();
 		} catch (error) {
 			console.error("[main] Failed to sync installed plugins:", error);
 		}

@@ -5,7 +5,7 @@ import { ARTIFACT_GUARD_SCRIPT_NAME } from "./artifact-guard-hook";
 import { NOTIFY_SCRIPT_NAME } from "./notify-hook";
 import { getBinDir } from "./paths";
 
-export const WRAPPER_MARKER = "# Superset agent-wrapper v5";
+export const WRAPPER_MARKER = "# SuperestSet agent-wrapper v5";
 export { SUPERSET_MANAGED_BINARIES };
 
 /** Path (under SUPERSET_HOME_DIR) of the runtime notify hook script. */
@@ -44,10 +44,10 @@ export function getManagedArtifactGuardHookCommand(): string {
 }
 
 // Dev setup (.superset/lib/setup/steps.sh) points SUPERSET_HOME_DIR at
-// $PWD/superset-dev-data — without a leading dot — so we must recognize that
+// $PWD/superestset-dev-data — without a leading dot — so we must recognize that
 // variant to reap stale notify.sh paths from deleted worktrees.
 const SUPERSET_MANAGED_HOOK_PATH_PATTERN =
-	/\/(?:\.superset(?:-[^/'"\s\\]+)?|superset-dev-data)\//;
+	/\/(?:\.superestset(?:-[^/'"\s\\]+)?|superestset-dev-data)\//;
 
 import { writeFileIfChanged } from "./write-file-if-changed";
 

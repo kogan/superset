@@ -1,6 +1,6 @@
 import { getTableColumns, type SQL, sql } from "drizzle-orm";
-import type { PgTable, PgTransaction } from "drizzle-orm/pg-core";
-import { dbWs } from "../client";
+import type { PgTable } from "drizzle-orm/pg-core";
+import { db } from "../client";
 
 export function buildConflictUpdateColumns<
 	T extends PgTable,
@@ -18,8 +18,7 @@ export function buildConflictUpdateColumns<
 }
 
 export async function getCurrentTxid(
-	// biome-ignore lint/suspicious/noExplicitAny: Transaction type varies by client (Neon, PostgresJs, etc)
-	tx: PgTransaction<any, any, any>,
+	tx: Parameters<Parameters<typeof db.transaction>[0]>[0],
 ): Promise<number> {
 	const result = await tx.execute<{ txid: string }>(
 		sql`SELECT pg_current_xact_id()::xid::text as txid`,
@@ -36,10 +35,9 @@ export async function getCurrentTxid(
 
 export async function withConnectionLock<T>(
 	connectionId: string,
-	// biome-ignore lint/suspicious/noExplicitAny: Transaction type varies by client (Neon, PostgresJs, etc)
-	fn: (tx: PgTransaction<any, any, any>) => Promise<T>,
+	fn: (tx: Parameters<Parameters<typeof db.transaction>[0]>[0]) => Promise<T>,
 ): Promise<T> {
-	return dbWs.transaction(async (tx) => {
+	return db.transaction(async (tx) => {
 		await tx.execute(
 			sql`SELECT pg_advisory_xact_lock(hashtextextended(${connectionId}::text, 0))`,
 		);

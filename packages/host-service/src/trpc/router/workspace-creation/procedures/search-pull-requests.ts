@@ -62,6 +62,8 @@ export interface PullRequestsPage {
 	hasNextPage: boolean;
 	page: number;
 	repoMismatch?: string;
+	searchIncomplete?: boolean;
+	checksUnavailable?: boolean;
 }
 
 const githubAuthorSchema = z
@@ -158,6 +160,8 @@ function emptyPullRequestsPage(page: number): PullRequestsPage {
 		totalCount: 0,
 		hasNextPage: false,
 		page,
+		searchIncomplete: false,
+		checksUnavailable: false,
 	};
 }
 
@@ -549,7 +553,10 @@ async function octokitDirectLookupRow(
 	reviewFilter: PullRequestReviewFilter | undefined,
 	mergedOnly: boolean | undefined,
 	viewerRelationship: ViewerRelationship | undefined,
-): Promise<PullRequestResult | null> {
+): Promise<{
+	pullRequest: PullRequestResult;
+	checksUnavailable: boolean;
+} | null> {
 	const { repo } = target;
 	const response = await octokit.pulls
 		.get({
@@ -592,6 +599,7 @@ async function octokitDirectLookupRow(
 	}
 	let checks: PullRequestCheck[] = [];
 	let checksStatus: ChecksStatus = "none";
+	let checksUnavailable = false;
 	try {
 		const contexts = await fetchPullRequestChecks(
 			octokit,
@@ -600,12 +608,13 @@ async function octokitDirectLookupRow(
 		);
 		({ checks, checksStatus } = normalizePullRequestChecks(contexts));
 	} catch (checksError) {
+		checksUnavailable = true;
 		console.warn(
 			"[workspaceCreation.searchPullRequests] failed to enrich checks via Octokit",
 			checksError,
 		);
 	}
-	return {
+	const pullRequest: PullRequestResult = {
 		projectId: target.projectId,
 		prNumber: pr.number,
 		title: pr.title,
@@ -620,6 +629,7 @@ async function octokitDirectLookupRow(
 		deletions: pr.deletions ?? null,
 		headRefName: pr.head?.ref ?? null,
 	};
+	return { pullRequest, checksUnavailable };
 }
 
 const searchIssuesItemSchema = z.object({
@@ -640,6 +650,7 @@ const searchIssuesItemSchema = z.object({
 
 const searchIssuesResponseSchema = z.object({
 	total_count: z.number(),
+	incomplete_results: z.boolean().optional(),
 	items: z.array(searchIssuesItemSchema),
 });
 
@@ -653,6 +664,7 @@ async function ghApiSearchPullRequests(
 	items: PullRequestResult[];
 	totalCount: number;
 	hasNextPage: boolean;
+	searchIncomplete: boolean;
 }> {
 	const q = buildSearchQuery(chunk, qualifiers);
 	const args = [
@@ -701,7 +713,14 @@ async function ghApiSearchPullRequests(
 		});
 	const hasNextPage =
 		page * perPage < Math.min(parsed.total_count, GITHUB_SEARCH_RESULT_LIMIT);
-	return { items, totalCount: parsed.total_count, hasNextPage };
+	return {
+		items,
+		totalCount: parsed.total_count,
+		hasNextPage,
+		searchIncomplete:
+			parsed.incomplete_results === true ||
+			parsed.total_count > GITHUB_SEARCH_RESULT_LIMIT,
+	};
 }
 
 async function octokitSearchPullRequests(
@@ -714,6 +733,7 @@ async function octokitSearchPullRequests(
 	items: PullRequestResult[];
 	totalCount: number;
 	hasNextPage: boolean;
+	searchIncomplete: boolean;
 }> {
 	const { data } = await octokit.search.issuesAndPullRequests({
 		q: buildSearchQuery(chunk, qualifiers),
@@ -750,7 +770,14 @@ async function octokitSearchPullRequests(
 		});
 	const hasNextPage =
 		page * perPage < Math.min(data.total_count, GITHUB_SEARCH_RESULT_LIMIT);
-	return { items, totalCount: data.total_count, hasNextPage };
+	return {
+		items,
+		totalCount: data.total_count,
+		hasNextPage,
+		searchIncomplete:
+			data.incomplete_results === true ||
+			data.total_count > GITHUB_SEARCH_RESULT_LIMIT,
+	};
 }
 
 const checksGraphqlDataSchema = z.object({
@@ -1019,6 +1046,8 @@ export const searchPullRequests = protectedProcedure
 				hasNextPage: false,
 				page,
 				repoMismatch: formatRepoList(projectRepos),
+				searchIncomplete: false,
+				checksUnavailable: false,
 			};
 		}
 
@@ -1065,6 +1094,8 @@ export const searchPullRequests = protectedProcedure
 						totalCount: 1,
 						hasNextPage: false,
 						page,
+						searchIncomplete: false,
+						checksUnavailable: false,
 					};
 				}
 				// Bare `#N` fans out one `gh pr view` per repo — core quota,
@@ -1095,6 +1126,8 @@ export const searchPullRequests = protectedProcedure
 					totalCount: found.length,
 					hasNextPage: false,
 					page,
+					searchIncomplete: false,
+					checksUnavailable: false,
 				};
 			}
 
@@ -1108,6 +1141,7 @@ export const searchPullRequests = protectedProcedure
 				chunkResults.map((result) => result.items),
 			);
 			let pullRequests = merged;
+			let checksUnavailable = false;
 			try {
 				pullRequests = await enrichPageWithChecks(
 					merged,
@@ -1115,6 +1149,7 @@ export const searchPullRequests = protectedProcedure
 					(repo, numbers) => ghGetPullRequestChecks(ctx.execGh, repo, numbers),
 				);
 			} catch (checksError) {
+				checksUnavailable = true;
 				console.warn(
 					"[workspaceCreation.searchPullRequests] failed to enrich checks",
 					checksError,
@@ -1128,6 +1163,10 @@ export const searchPullRequests = protectedProcedure
 				),
 				hasNextPage: chunkResults.some((result) => result.hasNextPage),
 				page,
+				searchIncomplete: chunkResults.some(
+					(result) => result.searchIncomplete,
+				),
+				checksUnavailable,
 			};
 		} catch (ghErr) {
 			// A rate-limited gh call surfaces as-is — falling back to Octokit
@@ -1145,7 +1184,7 @@ export const searchPullRequests = protectedProcedure
 			if (lookupNumber !== null) {
 				const single = directTargets.length === 1 ? directTargets[0] : null;
 				if (single) {
-					const pullRequest = await octokitDirectLookupRow(
+					const result = await octokitDirectLookupRow(
 						octokit,
 						single,
 						lookupNumber,
@@ -1154,12 +1193,14 @@ export const searchPullRequests = protectedProcedure
 						input.mergedOnly,
 						input.viewerRelationship,
 					);
-					if (!pullRequest) return emptyPullRequestsPage(page);
+					if (!result) return emptyPullRequestsPage(page);
 					return {
-						pullRequests: [pullRequest],
+						pullRequests: [result.pullRequest],
 						totalCount: 1,
 						hasNextPage: false,
 						page,
+						searchIncomplete: false,
+						checksUnavailable: result.checksUnavailable,
 					};
 				}
 				const settled = await Promise.allSettled(
@@ -1176,9 +1217,13 @@ export const searchPullRequests = protectedProcedure
 					),
 				);
 				const found: PullRequestResult[] = [];
+				let checksUnavailable = false;
 				for (const result of settled) {
 					if (result.status === "fulfilled") {
-						if (result.value) found.push(result.value);
+						if (result.value) {
+							found.push(result.value.pullRequest);
+							checksUnavailable ||= result.value.checksUnavailable;
+						}
 					} else if (!isGithubNotFoundError(result.reason)) {
 						throw result.reason;
 					}
@@ -1188,6 +1233,8 @@ export const searchPullRequests = protectedProcedure
 					totalCount: found.length,
 					hasNextPage: false,
 					page,
+					searchIncomplete: false,
+					checksUnavailable,
 				};
 			}
 
@@ -1212,6 +1259,7 @@ export const searchPullRequests = protectedProcedure
 				chunkResults.map((result) => result.items),
 			);
 			let pullRequests = merged;
+			let checksUnavailable = false;
 			try {
 				pullRequests = await enrichPageWithChecks(
 					merged,
@@ -1225,6 +1273,7 @@ export const searchPullRequests = protectedProcedure
 						),
 				);
 			} catch (checksError) {
+				checksUnavailable = true;
 				console.warn(
 					"[workspaceCreation.searchPullRequests] failed to enrich checks via Octokit",
 					checksError,
@@ -1238,6 +1287,10 @@ export const searchPullRequests = protectedProcedure
 				),
 				hasNextPage: chunkResults.some((result) => result.hasNextPage),
 				page,
+				searchIncomplete:
+					failures.length > 0 ||
+					chunkResults.some((result) => result.searchIncomplete),
+				checksUnavailable,
 			};
 		} catch (err) {
 			// Both gh and Octokit failed — rethrow so the renderer's toast

@@ -44,7 +44,7 @@ describe("Pi completion notifications", () => {
 		const output = join(home, "payload.json");
 		mkdirSync(join(home, "hooks"));
 		writeFileSync(
-			join(home, "hooks", "notify.sh"),
+			join(home, "hooks", "superestset-notify.sh"),
 			`#!/bin/bash\ncat > '${output}'\n`,
 			{ mode: 0o755 },
 		);

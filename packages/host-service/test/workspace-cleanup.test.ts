@@ -14,7 +14,7 @@ import {
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { cleanupGitOps } from "../src/trpc/router/workspace-cleanup/git-ops";
-import { isLocalCheckoutWorkspace } from "../src/trpc/router/workspace-cleanup/is-local-checkout-workspace";
+import { getWorkspaceCleanupState } from "../src/trpc/router/workspace-cleanup/workspace-cleanup-state";
 import {
 	__testDestroysInFlight,
 	workspaceCleanupRouter,
@@ -142,6 +142,7 @@ function makeCtx(spec: ContextSpec): HostServiceContext & {
 			},
 			select: () => ({
 				from: () => ({
+					all: () => [],
 					// `.all` serves the terminal-session sweep; `.get` serves
 					// getHostWorktreeBaseDir when a spec sets no per-project
 					// worktreeBaseDir ("no host settings row" shape).
@@ -167,11 +168,11 @@ function makeCtx(spec: ContextSpec): HostServiceContext & {
 	});
 }
 
-describe("isLocalCheckoutWorkspace", () => {
+describe("getWorkspaceCleanupState", () => {
 	test("does not share the checkout when no local workspace row", async () => {
 		const ctx = makeCtx({});
-		const result = await isLocalCheckoutWorkspace(ctx, "ws-1");
-		expect(result.sharesProjectCheckout).toBe(false);
+		const result = await getWorkspaceCleanupState(ctx, "ws-1");
+		expect(result.preservesFiles).toBe(false);
 		expect(result.local).toBeUndefined();
 	});
 
@@ -187,8 +188,8 @@ describe("isLocalCheckoutWorkspace", () => {
 				},
 				project: { id: "p-1", repoPath: tmp },
 			});
-			const result = await isLocalCheckoutWorkspace(ctx, "ws-1");
-			expect(result.sharesProjectCheckout).toBe(true);
+			const result = await getWorkspaceCleanupState(ctx, "ws-1");
+			expect(result.preservesFiles).toBe(true);
 		} finally {
 			rmSync(tmp, { recursive: true, force: true });
 		}
@@ -211,8 +212,8 @@ describe("isLocalCheckoutWorkspace", () => {
 				},
 				project: { id: "p-1", repoPath: realRepo },
 			});
-			const result = await isLocalCheckoutWorkspace(ctx, "ws-1");
-			expect(result.sharesProjectCheckout).toBe(true);
+			const result = await getWorkspaceCleanupState(ctx, "ws-1");
+			expect(result.preservesFiles).toBe(true);
 		} finally {
 			rmSync(tmp, { recursive: true, force: true });
 		}
@@ -229,8 +230,8 @@ describe("isLocalCheckoutWorkspace", () => {
 			},
 			project: { id: "p-1", repoPath: "/some/repo" },
 		});
-		const result = await isLocalCheckoutWorkspace(ctx, "ws-1");
-		expect(result.sharesProjectCheckout).toBe(true);
+		const result = await getWorkspaceCleanupState(ctx, "ws-1");
+		expect(result.preservesFiles).toBe(true);
 	});
 
 	test("does not share the checkout when neither path equality nor local type fires", async () => {
@@ -244,8 +245,8 @@ describe("isLocalCheckoutWorkspace", () => {
 			},
 			project: { id: "p-1", repoPath: "/repo" },
 		});
-		const result = await isLocalCheckoutWorkspace(ctx, "ws-1");
-		expect(result.sharesProjectCheckout).toBe(false);
+		const result = await getWorkspaceCleanupState(ctx, "ws-1");
+		expect(result.preservesFiles).toBe(false);
 	});
 });
 
@@ -275,7 +276,7 @@ describe("workspaceCleanup.inspect", () => {
 			reason: null,
 			hasChanges: false,
 			hasUnpushedCommits: false,
-			sharesProjectCheckout: true,
+			preservesFiles: true,
 		});
 	});
 
@@ -288,7 +289,7 @@ describe("workspaceCleanup.inspect", () => {
 			reason: null,
 			hasChanges: false,
 			hasUnpushedCommits: false,
-			sharesProjectCheckout: false,
+			preservesFiles: false,
 		});
 	});
 
@@ -326,7 +327,7 @@ describe("workspaceCleanup.inspect", () => {
 			reason: null,
 			hasChanges: false,
 			hasUnpushedCommits: false,
-			sharesProjectCheckout: false,
+			preservesFiles: false,
 		});
 	});
 
@@ -342,7 +343,7 @@ describe("workspaceCleanup.inspect", () => {
 			reason: null,
 			hasChanges: false,
 			hasUnpushedCommits: false,
-			sharesProjectCheckout: false,
+			preservesFiles: false,
 		});
 	});
 });

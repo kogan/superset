@@ -4,6 +4,11 @@ on:
   schedule:
     - cron: "23 19 * * *"
   workflow_dispatch:
+    inputs:
+      verify_ai:
+        description: Exercise AIMC with a synthetic merge conflict before syncing
+        type: boolean
+        default: false
   pull_request:
     types: [opened, synchronize, reopened]
   push:
@@ -12,6 +17,10 @@ on:
 permissions:
   contents: read
 
+concurrency:
+  group: upstream-sync-${{ github.event_name == 'pull_request' && github.event.pull_request.number || github.ref }}
+  cancel-in-progress: false
+
 jobs:
   test:
     name: Upstream sync tests
@@ -19,34 +28,75 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
+        with:
+          persist-credentials: false
       - uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444
         with:
           node-version: 22
       - run: node --test scripts/upstream-sync/sync.test.mjs
 
-  sync:
-    name: Open upstream sync PR
+  prepare:
+    name: Merge upstream and resolve conflicts
     if: >-
       github.repository == 'kogan/superset' && github.ref == 'refs/heads/main' &&
       (github.event_name == 'schedule' || github.event_name == 'workflow_dispatch')
     runs-on: ubuntu-latest
-    timeout-minutes: 10
-    environment: upstream-sync
-    concurrency:
-      group: upstream-sync
-      cancel-in-progress: false
+    timeout-minutes: 20
+    environment: upstream-sync-ai
+    outputs:
+      changed: ${{ steps.prepare.outputs.changed }}
+      base_sha: ${{ steps.prepare.outputs.base_sha }}
+      upstream_sha: ${{ steps.prepare.outputs.upstream_sha }}
+      candidate_sha: ${{ steps.prepare.outputs.candidate_sha }}
     steps:
-      - name: Check app configuration
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444
+        with:
+          node-version: 22
+      - name: Prepare merge candidate
+        id: prepare
         shell: bash
         env:
-          APP_CLIENT_ID: ${{ vars.UPSTREAM_SYNC_APP_CLIENT_ID }}
-          APP_PRIVATE_KEY: ${{ secrets.UPSTREAM_SYNC_APP_PRIVATE_KEY }}
+          AIMC_API_KEY: ${{ secrets.AIMC_API_KEY }}
+          AIMC_BASE_URL: https://aimc-stream.ai.kgn.io/v2/openai
+          AIMC_MODEL: ${{ vars.UPSTREAM_SYNC_MODEL || 'openai/gpt-5.4' }}
+          SYNC_BUNDLE: ${{ runner.temp }}/candidate.bundle
+          VERIFY_AI: ${{ inputs.verify_ai || false }}
         run: |
-          if [[ -z "$APP_CLIENT_ID" || -z "$APP_PRIVATE_KEY" ]]; then
-            echo "::error::Configure UPSTREAM_SYNC_APP_CLIENT_ID and UPSTREAM_SYNC_APP_PRIVATE_KEY. See docs/upstream-sync.md."
-            exit 1
+          cp -R scripts/upstream-sync "$RUNNER_TEMP/upstream-sync"
+          if [[ "$VERIFY_AI" == true ]]; then
+            node "$RUNNER_TEMP/upstream-sync/verify-aimc.mjs"
           fi
+          bash "$RUNNER_TEMP/upstream-sync/sync.sh" prepare
+      - name: Save immutable candidate
+        if: steps.prepare.outputs.changed == 'true'
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: upstream-sync-candidate
+          path: ${{ runner.temp }}/candidate.bundle
+          retention-days: 1
+          if-no-files-found: error
 
+  validate:
+    name: Validate upstream merge
+    needs: prepare
+    if: needs.prepare.outputs.changed == 'true'
+    uses: ./.github/workflows/ci.yml
+    with:
+      candidate-artifact: upstream-sync-candidate
+      candidate-sha: ${{ needs.prepare.outputs.candidate_sha }}
+
+  publish:
+    name: Advance main after validation
+    needs: [prepare, validate]
+    if: needs.prepare.outputs.changed == 'true' && needs.validate.result == 'success'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    environment: upstream-sync
+    steps:
       - name: Create repository-scoped app token
         id: app
         uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1
@@ -54,20 +104,21 @@ jobs:
           client-id: ${{ vars.UPSTREAM_SYNC_APP_CLIENT_ID }}
           private-key: ${{ secrets.UPSTREAM_SYNC_APP_PRIVATE_KEY }}
           permission-contents: write
-          permission-pull-requests: write
           permission-workflows: write
-
       - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
         with:
-          ref: main
+          ref: ${{ github.sha }}
           fetch-depth: 0
           token: ${{ steps.app.outputs.token }}
-
-      - name: Update sync branch and pull request
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
+        with:
+          name: upstream-sync-candidate
+          path: ${{ runner.temp }}/sync-candidate
+      - name: Publish the tested commit
         shell: bash
         env:
-          GH_TOKEN: ${{ steps.app.outputs.token }}
-          GH_REPO: ${{ github.repository }}
-        run: |
-          cp scripts/upstream-sync/sync.sh "$RUNNER_TEMP/sync-upstream.sh"
-          bash "$RUNNER_TEMP/sync-upstream.sh"
+          BASE_SHA: ${{ needs.prepare.outputs.base_sha }}
+          UPSTREAM_SHA: ${{ needs.prepare.outputs.upstream_sha }}
+          CANDIDATE_SHA: ${{ needs.prepare.outputs.candidate_sha }}
+          SYNC_BUNDLE: ${{ runner.temp }}/sync-candidate/candidate.bundle
+        run: bash scripts/upstream-sync/sync.sh publish

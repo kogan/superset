@@ -45,7 +45,7 @@ export type DestroyWorkspacePreview =
 			hasUnpushedCommits: boolean;
 			/** Local workspace: only the record goes; files and branches stay.
 			 * Absent from hosts that predate local workspaces. */
-			sharesProjectCheckout?: boolean;
+			preservesFiles?: boolean;
 	  }
 	| {
 			canDelete: false;
