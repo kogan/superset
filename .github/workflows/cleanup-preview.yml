@@ -6,6 +6,7 @@ on:
 
 jobs:
   cleanup:
+    if: github.repository == 'superset-sh/superset'
     name: Cleanup Preview Resources
     runs-on: ubuntu-latest
     permissions:

@@ -17,6 +17,7 @@ permissions:
 
 jobs:
   check-changes:
+    if: github.repository == 'superset-sh/superset'
     name: Check for changes
     runs-on: ubuntu-latest
     outputs:

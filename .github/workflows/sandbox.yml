@@ -26,7 +26,7 @@ on:
 jobs:
   boot-twice:
     name: Boot twice
-    if: github.event_name == 'pull_request'
+    if: github.repository == 'superset-sh/superset' && github.event_name == 'pull_request'
     runs-on: ubuntu-latest
     steps:
       - name: Check out code
@@ -79,7 +79,7 @@ jobs:
 
   publish-bundle:
     name: Publish the bundle
-    if: github.event_name == 'push'
+    if: github.repository == 'superset-sh/superset' && github.event_name == 'push'
     runs-on: ubuntu-latest
     steps:
       - name: Check out code
@@ -106,7 +106,7 @@ jobs:
 
   real-sandbox:
     name: Real sandbox
-    if: github.event_name == 'workflow_dispatch' && inputs.run == 'real-sandbox'
+    if: github.repository == 'superset-sh/superset' && github.event_name == 'workflow_dispatch' && inputs.run == 'real-sandbox'
     runs-on: ubuntu-latest
     steps:
       - name: Check out code
@@ -138,7 +138,7 @@ jobs:
 
   production-release:
     name: Production release
-    if: github.event_name == 'workflow_dispatch' && inputs.run == 'production-release' && github.ref == 'refs/heads/main'
+    if: github.repository == 'superset-sh/superset' && github.event_name == 'workflow_dispatch' && inputs.run == 'production-release' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     environment: production
     timeout-minutes: 120

@@ -10,6 +10,7 @@ env:
 
 jobs:
   deploy-database:
+    if: github.repository == 'superset-sh/superset'
     name: Deploy Database Migrations
     runs-on: ubuntu-latest
     environment: production
@@ -557,6 +558,7 @@ jobs:
   # socket of every connected host at once. Only deploy when the push touches
   # something the relay bundle is built from.
   relay-changes:
+    if: github.repository == 'superset-sh/superset'
     name: Detect Relay Changes
     runs-on: ubuntu-latest
     permissions:
@@ -619,6 +621,7 @@ jobs:
         run: bunx wrangler deploy
 
   realtime-changes:
+    if: github.repository == 'superset-sh/superset'
     name: Detect Realtime Changes
     runs-on: ubuntu-latest
     permissions:
@@ -679,6 +682,7 @@ jobs:
         run: bunx wrangler deploy
 
   deploy-content:
+    if: github.repository == 'superset-sh/superset'
     name: Deploy Usercontent Worker to Cloudflare
     runs-on: ubuntu-latest
     environment: production
@@ -710,6 +714,7 @@ jobs:
         run: bunx wrangler deploy
 
   deploy-sandbox-gate:
+    if: github.repository == 'superset-sh/superset'
     name: Deploy Gate Worker to Cloudflare
     runs-on: ubuntu-latest
     environment: production
