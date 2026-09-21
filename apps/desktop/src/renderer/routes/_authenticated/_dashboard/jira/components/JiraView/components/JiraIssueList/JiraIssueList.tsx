@@ -41,6 +41,20 @@ export function JiraIssueList({ baseUrl }: { baseUrl: string }) {
 		preferences.data?.baseUrl === baseUrl ? preferences.data : undefined;
 	const board = settings?.teamBoard;
 	const ready = mode === "mine" || Boolean(board);
+	const boardColumns = electronTrpc.jira.getBoardColumns.useQuery(
+		board?.id ?? 1,
+		{
+			enabled: mode === "team" && Boolean(board),
+			retry: false,
+			staleTime: 30_000,
+			gcTime: 0,
+		},
+	);
+	const configuredColumns = mode === "team" ? boardColumns.data : undefined;
+	const mappedStatuses = configuredColumns?.flatMap(
+		(column) => column.statuses,
+	);
+	const boardError = mode === "team" ? boardColumns.error : null;
 	const scope: JiraListInput["scope"] =
 		mode === "team" && board
 			? { kind: "board", boardId: board.id, assignee }
@@ -58,10 +72,10 @@ export function JiraIssueList({ baseUrl }: { baseUrl: string }) {
 		{
 			scope,
 			status,
-			visibleStatuses: settings?.columns?.flatMap((column) => column.statuses),
+			visibleStatuses: mappedStatuses?.length ? mappedStatuses : undefined,
 		},
 		{
-			enabled: ready,
+			enabled: ready && (mode === "mine" || boardColumns.isSuccess),
 			getNextPageParam: (page) => page.nextCursor ?? undefined,
 			retry: false,
 			staleTime: 30_000,
@@ -142,6 +156,7 @@ export function JiraIssueList({ baseUrl }: { baseUrl: string }) {
 	);
 	const reviewersLoading = reviewerQueries.some((query) => query.isPending);
 	const refresh = () => {
+		if (mode === "team" && board) void boardColumns.refetch();
 		void electronTrpcClient.jira.refreshPullRequests
 			.mutate()
 			.then(() => {
@@ -152,7 +167,10 @@ export function JiraIssueList({ baseUrl }: { baseUrl: string }) {
 			.catch((error: unknown) => toast.error(errorMessage(error)));
 	};
 
-	const columns = groupIssuesByStatus(issues, settings?.columns);
+	const columns = groupIssuesByStatus(
+		issues,
+		mode === "team" ? (configuredColumns ?? []) : undefined,
+	);
 	const orderedColumns = applyColumnLayout(columns, settings?.columnLayout);
 	const visibleColumns = orderedColumns.filter((column) => column.visible);
 	const visibleCount = formatNumber(
@@ -272,19 +290,19 @@ export function JiraIssueList({ baseUrl }: { baseUrl: string }) {
 					</Button>
 				</div>
 			)}
-			{ready && issuesQuery.isError && (
+			{ready && (issuesQuery.isError || boardError) && (
 				<div
 					className="flex items-center gap-3 border-b bg-destructive/5 px-6 py-3 text-sm"
 					role="alert"
 				>
 					<p className="min-w-0 flex-1 text-destructive select-text">
-						{errorMessage(issuesQuery.error)}
+						{errorMessage(boardError ?? issuesQuery.error)}
 					</p>
 					<Button
 						variant="outline"
 						size="sm"
 						disabled={issuesQuery.isFetching}
-						onClick={() => void issuesQuery.refetch()}
+						onClick={refresh}
 					>
 						<Trans>Retry</Trans>
 					</Button>
@@ -311,7 +329,7 @@ export function JiraIssueList({ baseUrl }: { baseUrl: string }) {
 						<Trans>Choose a team board to see everyone’s issues.</Trans>
 					)}
 				</output>
-			) : issuesQuery.isPending ? (
+			) : boardError && !configuredColumns ? null : issuesQuery.isPending ? (
 				<output className="flex flex-1 items-center justify-center gap-2 p-8 text-sm text-muted-foreground">
 					<LuRefreshCw className="size-4 animate-spin motion-reduce:animate-none" />
 					<Trans>Loading issues…</Trans>

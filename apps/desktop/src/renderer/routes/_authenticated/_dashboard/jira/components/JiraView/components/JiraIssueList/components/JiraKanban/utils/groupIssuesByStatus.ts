@@ -7,6 +7,7 @@ export type JiraIssue = Awaited<
 
 export type StatusColumn = {
 	key: string;
+	layoutKeys?: string[];
 	status: string;
 	statuses: string[];
 	category: string;
@@ -20,7 +21,7 @@ const categoryOrder: Record<string, number> = {
 
 export function groupIssuesByStatus(
 	issues: JiraIssue[],
-	configuredColumns?: JiraColumn[],
+	configuredColumns?: (JiraColumn & { key?: string; category?: string })[],
 ): StatusColumn[] {
 	if (configuredColumns) {
 		return configuredColumns.map((column) => {
@@ -28,10 +29,18 @@ export function groupIssuesByStatus(
 				column.statuses.includes(issue.status),
 			);
 			return {
-				key: JSON.stringify(column.statuses),
+				key: column.key ?? JSON.stringify(column.statuses),
+				layoutKeys: [
+					JSON.stringify(column.statuses),
+					...column.statuses.flatMap((status) =>
+						Object.keys(categoryOrder).map((category) =>
+							JSON.stringify([category, status]),
+						),
+					),
+				],
 				status: column.name,
 				statuses: column.statuses,
-				category: matches[0]?.statusCategory ?? "new",
+				category: column.category ?? matches[0]?.statusCategory ?? "new",
 				issues: matches,
 			};
 		});

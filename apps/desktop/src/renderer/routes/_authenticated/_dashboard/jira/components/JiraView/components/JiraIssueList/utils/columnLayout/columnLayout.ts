@@ -1,22 +1,31 @@
 import type { JiraColumnLayout } from "lib/trpc/routers/jira/jira-schema";
 
-export function applyColumnLayout<Column extends { key: string }>(
+export function applyColumnLayout<
+	Column extends { key: string; layoutKeys?: string[] },
+>(
 	columns: readonly Column[],
 	layout: JiraColumnLayout = [],
 ): (Column & { visible: boolean })[] {
-	const remaining = new Map(columns.map((column) => [column.key, column]));
-	const ordered: (Column & { visible: boolean })[] = [];
-	for (const entry of layout) {
-		const column = remaining.get(entry.key);
-		if (column) {
-			ordered.push({ ...column, visible: entry.visible });
-			remaining.delete(entry.key);
-		}
-	}
-	return [
-		...ordered,
-		...[...remaining.values()].map((column) => ({ ...column, visible: true })),
-	];
+	return columns
+		.map((column, index) => {
+			const exact = layout.findIndex((entry) => entry.key === column.key);
+			const matches = layout.flatMap((entry, position) =>
+				column.layoutKeys?.includes(entry.key) ? [{ ...entry, position }] : [],
+			);
+			return {
+				column: {
+					...column,
+					visible:
+						exact >= 0
+							? layout[exact].visible
+							: matches.length === 0 || matches.some((entry) => entry.visible),
+				},
+				position:
+					exact >= 0 ? exact : (matches[0]?.position ?? layout.length + index),
+			};
+		})
+		.sort((a, b) => a.position - b.position)
+		.map(({ column }) => column);
 }
 
 export function mergeColumnLayout(
