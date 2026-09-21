@@ -1,13 +1,14 @@
 import { beforeEach, expect, mock, test } from "bun:test";
 import { COMPANY } from "@superset/shared/constants";
-import { type ComponentType, createElement, type ReactNode } from "react";
+import { type ComponentType, createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { GATED_FEATURES } from "renderer/components/Paywall/constants";
 
-const router = await import("@tanstack/react-router");
 let paid = true;
 let ready = true;
-let tried = 0;
+let remoteEnabled = false;
+let remoteLoading = false;
+let remotePending = false;
 let flags: string[] | undefined = [];
 let enabled: boolean | undefined = true;
 mock.module("posthog-js/react", () => ({
@@ -25,13 +26,18 @@ mock.module("renderer/components/Paywall", () => ({
 		gateFeature: () => {},
 	}),
 }));
-mock.module("renderer/stores/getting-started", () => ({
-	useGettingStartedStore: () => ({ tried, markTried: () => {} }),
-}));
-mock.module("@tanstack/react-router", () => ({
-	...router,
-	Link: ({ children, to }: { children: ReactNode; to: string }) =>
-		createElement("a", { href: to }, children),
+mock.module("renderer/lib/electron-trpc", () => ({
+	electronTrpc: {
+		useUtils: () => ({}),
+		settings: {
+			getExposeHostServiceViaRelay: {
+				useQuery: () => ({ data: remoteEnabled, isLoading: remoteLoading }),
+			},
+			setExposeHostServiceViaRelay: {
+				useMutation: () => ({ isPending: remotePending }),
+			},
+		},
+	},
 }));
 const { MobileSettings } = await import("../MobileSettings");
 const { Route } = await import("../../../page");
@@ -41,34 +47,40 @@ beforeEach(() => {
 	enabled = true;
 	paid = true;
 	ready = true;
-	tried = 0;
+	remoteEnabled = false;
+	remoteLoading = false;
+	remotePending = false;
 });
-test("shows the official download QR and setup confirmation for paid users", () => {
+test("shows the download QR and remote access switch for paid users", () => {
 	const html = renderToStaticMarkup(<MobileSettings />);
 	expect(html).toContain("Scan to download Superset for iPhone");
-	expect(html).toContain("https://apps.apple.com/app/id6788926383");
-	expect(html).toContain("/settings/security");
-	expect(html).toContain(`${COMPANY.MARKETING_URL}/mobile`);
+	expect(html).toContain('id="mobile-remote-access"');
+	expect(html).toContain('aria-checked="false"');
+	expect(html.match(/target="_blank"/g)).toHaveLength(1);
 	expect(html).toContain(`${COMPANY.DOCS_URL}/remote-access`);
-	expect(html).toContain("signed in on my phone");
 });
-test("withholds QR and confirmation from free and unresolved plans", () => {
+test("withholds QR and remote access switch from free and unresolved plans", () => {
 	paid = false;
 	let html = renderToStaticMarkup(<MobileSettings />);
 	expect(html).toContain("Upgrade to Pro");
-	expect(html).not.toContain("https://apps.apple.com/app/id6788926383");
-	expect(html).not.toContain("signed in on my phone");
+	expect(html).not.toContain("Scan to download Superset for iPhone");
+	expect(html).not.toContain('id="mobile-remote-access"');
 	paid = true;
 	ready = false;
 	html = renderToStaticMarkup(<MobileSettings />);
-	expect(html).not.toContain("https://apps.apple.com/app/id6788926383");
-	expect(html).not.toContain("signed in on my phone");
+	expect(html).not.toContain("Scan to download Superset for iPhone");
+	expect(html).not.toContain('id="mobile-remote-access"');
 });
-test("shows confirmed setup only after explicit mobile confirmation", () => {
-	tried = 1;
+test("reflects the saved remote access state and disables the switch while busy", () => {
+	remoteEnabled = true;
 	expect(renderToStaticMarkup(<MobileSettings />)).toContain(
-		"Mobile setup confirmed",
+		'aria-checked="true"',
 	);
+	remoteLoading = true;
+	expect(renderToStaticMarkup(<MobileSettings />)).toContain('disabled=""');
+	remoteLoading = false;
+	remotePending = true;
+	expect(renderToStaticMarkup(<MobileSettings />)).toContain('disabled=""');
 });
 
 test("mobile route waits for flags, then redirects for disabled or omitted flags", () => {
@@ -80,5 +92,7 @@ test("mobile route waits for flags, then redirects for disabled or omitted flags
 	enabled = false;
 	expect(renderToStaticMarkup(<MobilePage />)).toContain("/settings/account");
 	enabled = true;
-	expect(renderToStaticMarkup(<MobilePage />)).toContain("Scan to get the app");
+	expect(renderToStaticMarkup(<MobilePage />)).toContain(
+		"Install on your iPhone",
+	);
 });

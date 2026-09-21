@@ -33,3 +33,49 @@ test("editing filtered columns preserves hidden preferences for statuses not cur
 		{ key: "todo", visible: false },
 	]);
 });
+
+test("carries status-based visibility and order into actual board columns", () => {
+	const columns = [
+		{
+			key: "dev",
+			layoutKeys: [
+				'["indeterminate","In Development"]',
+				'["indeterminate","Needs QA"]',
+			],
+		},
+		{ key: "qa", layoutKeys: ['["indeterminate","Being QA\'d"]'] },
+		{ key: "done", layoutKeys: ['["done","Closed"]', '["done","Live"]'] },
+		{ key: "new" },
+	];
+	const saved = [
+		{ key: '["indeterminate","Being QA\'d"]', visible: true },
+		{ key: '["indeterminate","Needs QA"]', visible: false },
+		{ key: '["indeterminate","In Development"]', visible: true },
+		{ key: '["done","Closed"]', visible: false },
+		{ key: '["done","Live"]', visible: false },
+	];
+	expect(
+		applyColumnLayout(columns, saved).map(({ key, visible }) => ({
+			key,
+			visible,
+		})),
+	).toEqual([
+		{ key: "qa", visible: true },
+		{ key: "dev", visible: true },
+		{ key: "done", visible: false },
+		{ key: "new", visible: true },
+	]);
+	const updated = [
+		{ key: "dev", visible: false },
+		{ key: "qa", visible: true },
+		...saved,
+	];
+	expect(
+		applyColumnLayout(columns, updated)
+			.slice(0, 2)
+			.map(({ key, visible }) => ({ key, visible })),
+	).toEqual([
+		{ key: "dev", visible: false },
+		{ key: "qa", visible: true },
+	]);
+});

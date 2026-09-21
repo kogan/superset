@@ -91,3 +91,29 @@ it("preserves configured column order and groups multiple statuses", () => {
 			.some((ticket) => ticket.status === "Live"),
 	).toBe(false);
 });
+
+it("shows empty board columns with stable keys and categories before any issues load", () => {
+	const columns = groupIssuesByStatus(
+		[],
+		[
+			{
+				key: "board-qa",
+				name: "QA",
+				statuses: ["Being QA'd"],
+				category: "indeterminate",
+			},
+			{ key: "board-empty", name: "Empty", statuses: [], category: "new" },
+		],
+	);
+	expect(
+		columns.map(({ key, status, category, issues }) => ({
+			key,
+			status,
+			category,
+			issues,
+		})),
+	).toEqual([
+		{ key: "board-qa", status: "QA", category: "indeterminate", issues: [] },
+		{ key: "board-empty", status: "Empty", category: "new", issues: [] },
+	]);
+});

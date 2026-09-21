@@ -190,6 +190,14 @@ export function createJiraRouter({
 				}),
 			),
 		getPreferences: publicProcedure.query(() => preferences.read()),
+		getBoardColumns: publicProcedure
+			.input(jiraBoardIdSchema)
+			.query(async ({ input }) =>
+				client.getBoardColumns({
+					credentials: await requireConnection(),
+					boardId: input,
+				}),
+			),
 		setColumnLayout: publicProcedure
 			.input(
 				z.object({

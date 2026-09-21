@@ -9,7 +9,7 @@ import { localizedAlternates } from "@/app/[lang]/metadata";
 import { initServerI18n } from "@/app/i18n-server";
 import { isMobileLaunched } from "@/lib/site-flags";
 import { AppStoreQr } from "./components/AppStoreQr";
-import { MobileFeatures } from "./components/MobileFeatures";
+import { MobileTestimonials } from "./components/MobileTestimonials";
 import { MobileWaitlist } from "./components/MobileWaitlist";
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -70,9 +70,7 @@ export default async function MobilePage() {
 					<PhoneShowcase />
 				</section>
 
-				<div className="mt-16 sm:mt-24">
-					<MobileFeatures />
-				</div>
+				<MobileTestimonials />
 
 				<section
 					id="android"
@@ -82,9 +80,6 @@ export default async function MobilePage() {
 						<h2 className="flex items-center gap-2 font-mono text-brand text-xs uppercase tracking-wider">
 							<FaAndroid aria-hidden="true" className="size-4" />
 							Android
-							<span className="border border-border px-2 py-0.5 text-muted-foreground normal-case tracking-normal">
-								<Trans>Coming soon</Trans>
-							</span>
 						</h2>
 						<p className="mt-3 font-light text-foreground text-xl">
 							<Trans>

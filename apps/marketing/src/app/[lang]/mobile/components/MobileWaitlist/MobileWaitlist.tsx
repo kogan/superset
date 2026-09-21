@@ -45,10 +45,7 @@ export function MobileWaitlist({ platform }: MobileWaitlistProps) {
 
 	return (
 		<form onSubmit={handleSubmit} className="w-full max-w-md">
-			<label
-				htmlFor="mobile-waitlist-email"
-				className="mb-2 block font-mono text-muted-foreground text-xs uppercase tracking-wider"
-			>
+			<label htmlFor="mobile-waitlist-email" className="sr-only">
 				<Trans>Email address</Trans>
 			</label>
 			<div className="flex flex-col gap-2 sm:flex-row sm:gap-0">

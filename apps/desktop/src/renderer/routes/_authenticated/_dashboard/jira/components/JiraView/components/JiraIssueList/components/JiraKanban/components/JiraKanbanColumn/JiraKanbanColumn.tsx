@@ -13,7 +13,10 @@ export function JiraKanbanColumn({
 	disabled: boolean;
 	children: ReactNode;
 }) {
-	const { setNodeRef, isOver } = useDroppable({ id: column.key, disabled });
+	const { setNodeRef, isOver } = useDroppable({
+		id: column.key,
+		disabled: disabled || column.statuses.length === 0,
+	});
 	const { formatNumber } = useFormat();
 	return (
 		<section

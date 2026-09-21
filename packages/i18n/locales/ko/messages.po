@@ -1245,6 +1245,9 @@ msgstr "전면 재단장입니다. 더 촘촘한 행, 워크스페이스마다 �
 msgid "A gateway is signed in with an API key."
 msgstr "게이트웨이는 API 키로 로그인합니다."
 
+msgid "A guilty habit I have is waking up with an idea in the middle of the night and opening the app. By morning it's ready for review."
+msgstr "한밤중에 아이디어가 떠올라 잠에서 깨면 앱을 여는 버릇이 있습니다. 아침이면 검토할 준비가 되어 있죠."
+
 msgid "A host must have at least one owner."
 msgstr "호스트에는 소유자가 한 명 이상 있어야 합니다."
 
@@ -3557,6 +3560,9 @@ msgstr "{account}에는 클라우드 샌드박스가 활성화되어 있지 않�
 msgid "Cloud workspace"
 msgstr "클라우드 워크스페이스"
 
+msgid "Co-founder & CTO, TrainLoop (YC W25)"
+msgstr "공동 창업자 겸 CTO, TrainLoop (YC W25)"
+
 msgid "Code"
 msgstr "코드"
 
@@ -3879,6 +3885,9 @@ msgstr "Slack 연결"
 
 msgid "Connect Slack to manage tasks from conversations. Mention the bot in any channel or send it a direct message to create and update tasks."
 msgstr "Slack을 연결해 대화에서 바로 작업을 관리하세요. 아무 채널에서나 봇을 멘션하거나 다이렉트 메시지를 보내 작업을 만들고 업데이트할 수 있습니다."
+
+msgid "Connect this computer"
+msgstr "이 컴퓨터에 연결"
 
 msgid "Connect your GitHub repositories and sync pull requests. Track CI status and reviews across your team."
 msgstr "GitHub 리포지토리를 연결하고 풀 리퀘스트를 동기화하세요. 팀 전체의 CI 상태와 리뷰를 추적할 수 있습니다."
@@ -4847,6 +4856,9 @@ msgstr "worktree 만드는 중"
 
 msgid "Creating..."
 msgstr "만드는 중..."
+
+msgid "Creative Manager, Valid"
+msgstr "크리에이티브 매니저, Valid"
 
 msgid "Credentials stay on the server"
 msgstr "자격 증명은 서버에 보관됩니다"
@@ -5872,8 +5884,8 @@ msgstr "릴레이 접근 활성화…"
 msgid "Enable remote access"
 msgstr "원격 액세스 활성화하기"
 
-msgid "Enable remote access to reach this computer from your phone. Keep this computer awake and Superset running."
-msgstr "휴대폰에서 이 컴퓨터에 연결하려면 원격 액세스를 활성화하세요. 컴퓨터가 잠자기 모드로 전환되지 않도록 하고 Superset을 실행해 두세요."
+msgid "Enable Remote Access and keep this computer awake with Superset running."
+msgstr "원격 액세스를 활성화하고 Superset이 실행된 상태로 이 컴퓨터가 깨어 있도록 유지하세요."
 
 msgid "Enable skill"
 msgstr "스킬 활성화"
@@ -6914,9 +6926,6 @@ msgstr "폴더 보기"
 msgid "Folders to check out into new worktrees, one per line, relative to the repo root. Files at the root are always included. Empty checks out everything."
 msgstr "새 worktree에 체크아웃할 폴더를 리포지토리 루트 기준으로 한 줄에 하나씩 적습니다. 루트에 있는 파일은 항상 포함됩니다. 비워 두면 전체를 체크아웃합니다."
 
-msgid "Follow every session"
-msgstr "모든 세션을 따라가기"
-
 msgid "FOLLOW ON X"
 msgstr "X에서 팔로우하기"
 
@@ -7028,14 +7037,20 @@ msgstr "앞으로"
 msgid "Found 12 tooltip call sites"
 msgstr "툴팁 호출 지점 12곳 발견"
 
+msgid "Founder & CEO, WowMakers"
+msgstr "창업자 겸 CEO, WowMakers"
+
+msgid "Founding Engineer"
+msgstr "창립 엔지니어"
+
 msgid "Free"
 msgstr "무료"
 
 msgid "Free for everyone"
 msgstr "누구나 무료"
 
-msgid "Free plan available · No credit card required"
-msgstr "무료 요금제 제공 · 신용카드가 필요 없습니다"
+msgid "Free to start · No credit card required"
+msgstr "무료로 시작 · 신용카드 필요 없음"
 
 msgid "Frequently<0/>asked questions"
 msgstr "자주 묻는<0/>질문"
@@ -7300,6 +7315,9 @@ msgstr "새 브랜치를 폴더 아래로 묶습니다."
 
 msgid "Growth"
 msgstr "성장"
+
+msgid "GTM & AI Automation Architect, Mistral AI"
+msgstr "GTM 및 AI 자동화 아키텍트, Mistral AI"
 
 msgid "Guide"
 msgstr "가이드"
@@ -7610,11 +7628,14 @@ msgstr "사람이 모든 줄을 씁니다. 도구는 컴파일하고, 린트하�
 msgid "I already use an IDE like Cursor, is this for me?"
 msgstr "이미 Cursor 같은 IDE를 쓰고 있는데, 저에게 맞나요?"
 
+msgid "I can be in a café with my coffee while the work keeps moving forward."
+msgstr "카페에서 커피를 마시는 동안에도 작업은 계속 진행됩니다."
+
+msgid "I start my morning walks with an idea, and end with a pull request."
+msgstr "아이디어 하나로 아침 산책을 시작하고, 풀 리퀘스트 하나로 마무리합니다."
+
 msgid "I'm #{rank} on the {company} leaderboard with {tokens} tokens of agent usage."
 msgstr "에이전트 사용량 {tokens} 토큰으로 {company} 리더보드 {rank}위입니다."
-
-msgid "I've signed in on my phone"
-msgstr "휴대폰에서 로그인했습니다"
 
 msgid "Icon"
 msgstr "아이콘"
@@ -7863,6 +7884,9 @@ msgstr "설치 실패"
 
 msgid "Install GitHub App"
 msgstr "GitHub App 설치"
+
+msgid "Install on your iPhone"
+msgstr "iPhone에 설치"
 
 msgid "Install plugin"
 msgstr "플러그인 설치"
@@ -8334,9 +8358,6 @@ msgstr "실행"
 msgid "Launch agents across features, bug fixes, and refactors, all in parallel. Status at a glance shows which agents are working, which are blocked, and which are waiting on you."
 msgstr "기능 개발, 버그 수정, 리팩터링에 에이전트를 병렬로 띄우세요. 어떤 에이전트가 작업 중이고, 막혀 있고, 응답을 기다리는지 한눈에 보입니다."
 
-msgid "Launch an agent on any connected machine the moment an idea lands. Every session gets its own isolated workspace."
-msgstr "아이디어가 떠오르는 순간, 연결된 어떤 머신에서든 에이전트를 실행하세요. 모든 세션은 격리된 자체 워크스페이스를 갖습니다."
-
 msgid "Launch mode"
 msgstr "실행 방식"
 
@@ -8360,9 +8381,6 @@ msgstr "잎"
 
 msgid "Learn how to use scripts"
 msgstr "스크립트 사용법 알아보기"
-
-msgid "Learn more"
-msgstr "자세히 알아보기"
 
 msgid "Learn the workflow that fits this repo — parallel workspaces and agent setup."
 msgstr "이 리포지토리에 맞는 워크플로 익히기 — 병렬 워크스페이스와 에이전트 설정."
@@ -9104,9 +9122,6 @@ msgstr "모바일 앱"
 
 msgid "Mobile App"
 msgstr "모바일 앱"
-
-msgid "Mobile setup confirmed"
-msgstr "모바일 설정 확인됨"
 
 msgid "model"
 msgstr "모델"
@@ -10258,6 +10273,9 @@ msgstr "방금"
 msgid "Now"
 msgstr "현재"
 
+msgid "Now I open the workspace on my phone, type the one line it's waiting for, and it carries on."
+msgstr "이제 휴대폰에서 워크스페이스를 열고 기다리던 한 줄을 입력하면 작업이 계속됩니다."
+
 #. placeholder {0}: versions.expected
 #. placeholder {1}: versions.running
 msgid "Now running {0} (was {1}). All sessions preserved."
@@ -11170,6 +11188,9 @@ msgstr "부분"
 msgid "Partial results"
 msgstr "일부 결과"
 
+msgid "Partner, Transpose Platform"
+msgstr "파트너, Transpose Platform"
+
 msgid "Passed"
 msgstr "통과"
 
@@ -12011,9 +12032,6 @@ msgstr "변경 로그 읽기"
 msgid "Read the changelog →"
 msgstr "변경 로그 읽기 →"
 
-msgid "Read the full diff file by file, check the PR status, and open a terminal when you need the raw output."
-msgstr "전체 diff를 파일별로 읽고, PR 상태를 확인하고, 원본 출력이 필요할 땐 터미널을 여세요."
-
 msgid "Read the guide to parallel coding agents"
 msgstr "병렬 코딩 에이전트 가이드 읽기"
 
@@ -12772,9 +12790,6 @@ msgstr "리뷰와 CI 대기열이 에이전트가 만든 이득을 깎아먹습�
 msgid "Review becomes the bottleneck"
 msgstr "리뷰가 병목이 됩니다"
 
-msgid "Review before you merge"
-msgstr "머지 전에 리뷰하기"
-
 msgid "Review Dismissed"
 msgstr "리뷰 무시됨"
 
@@ -13086,14 +13101,11 @@ msgstr "페이월 조회"
 msgid "Scale to 100+ agents"
 msgstr "100개 이상의 에이전트로 확장"
 
+msgid "Scan the QR code, then sign in with the same Superset account and select this organization."
+msgstr "QR 코드를 스캔한 후 동일한 Superset 계정으로 로그인하고 이 조직을 선택하세요."
+
 msgid "Scan to download Superset for iPhone"
 msgstr "스캔하여 iPhone용 Superset 다운로드"
-
-msgid "Scan to get the app"
-msgstr "스캔하여 앱 다운로드"
-
-msgid "Scan with your iPhone camera, then sign in with the same Superset account and organization."
-msgstr "iPhone 카메라로 스캔한 다음 동일한 Superset 계정 및 조직으로 로그인하세요."
 
 msgid "Scanning transcript logs…"
 msgstr "트랜스크립트 로그를 스캔하는 중…"
@@ -14366,6 +14378,9 @@ msgstr "안정성 개선"
 msgid "Stacked"
 msgstr "스택"
 
+msgid "Staff Software Engineer, Vori"
+msgstr "스태프 소프트웨어 엔지니어, Vori"
+
 msgid "Stage all"
 msgstr "모두 스테이징"
 
@@ -14789,8 +14804,11 @@ msgstr "Superset 메모리"
 msgid "Superset memory · last 5 min"
 msgstr "Superset 메모리 · 최근 5분"
 
-msgid "Superset Mobile is here. Learn more"
-msgstr "모바일 Superset이 출시되었습니다. 자세히 알아보기"
+msgid "Superset mobile gives me the power of my desktop anywhere I go."
+msgstr "Superset 모바일은 어디를 가든 데스크톱의 성능을 사용할 수 있게 해줍니다."
+
+msgid "Superset Mobile is here"
+msgstr "Superset Mobile 출시"
 
 msgid "Superset Mobile is part of Pro"
 msgstr "Superset Mobile은 Pro에 포함되어 있습니다"
@@ -14831,6 +14849,9 @@ msgstr "Superset은 Claude Code, OpenCode, OpenAI Codex 등 CLI 기반 코딩 �
 
 msgid "superset.sh"
 msgstr "superset.sh"
+
+msgid "Superset's mobile app lets me keep my agents moving and unblock them from anywhere, even when I'm nowhere near my computer."
+msgstr "Superset 모바일 앱 덕분에 컴퓨터에서 멀리 떨어져 있어도 어디서든 에이전트가 계속 작업하도록 돕고 막힌 부분을 해결할 수 있습니다."
 
 msgid "Supervised"
 msgstr "감독"
@@ -16863,9 +16884,6 @@ msgstr "경고"
 msgid "Warning occurred."
 msgstr "경고가 발생했습니다."
 
-msgid "Watch agents work in real time and step in with a follow-up, a photo, or a dictated message when they need direction."
-msgstr "에이전트가 일하는 모습을 실시간으로 지켜보고, 방향이 필요할 때 후속 메시지, 사진, 음성 입력 메시지로 개입하세요."
-
 msgid "Watchers"
 msgstr "관찰자"
 
@@ -17026,6 +17044,9 @@ msgstr "빌더들이 말하는 Superset"
 msgid "What do you want to do?"
 msgstr "무엇을 하고 싶으신가요?"
 
+msgid "What early users say"
+msgstr "초기 사용자들의 이야기"
+
 msgid "What Google shows us for and how much of it is not our own name."
 msgstr "Google이 어떤 검색어로 우리를 보여주는지, 그중 우리 이름이 아닌 비중은 얼마인지."
 
@@ -17163,6 +17184,9 @@ msgstr "레이블 포함"
 
 msgid "with or without attachments"
 msgstr "첨부 파일 유무 무관"
+
+msgid "With the Superset mobile app, I can address production issues from anywhere."
+msgstr "Superset 모바일 앱 덕분에 어디서든 프로덕션 문제에 대응할 수 있습니다."
 
 msgid "Work email"
 msgstr "업무용 이메일"
@@ -17489,9 +17513,6 @@ msgstr "계정이 비활성화되었으며 곧 영구적으로 삭제됩니다. 
 
 msgid "Your account is managed by your organization. Contact your admin to create a new organization."
 msgstr "계정이 조직에서 관리됩니다. 새 조직을 만들려면 관리자에게 문의하세요."
-
-msgid "Your agents, wherever you are."
-msgstr "어디서나 함께하는 에이전트."
 
 msgid "Your Agents, Your Accounts"
 msgstr "당신의 에이전트, 당신의 계정"
