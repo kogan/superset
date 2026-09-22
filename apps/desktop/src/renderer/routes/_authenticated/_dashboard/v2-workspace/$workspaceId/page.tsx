@@ -371,7 +371,7 @@ function V2WorkspaceContent() {
 		[openFilePane, openFilePaneFromTreeClick, setRightSidebarOpen, store],
 	);
 	const defaultPaneActions = useDefaultPaneActions({ launcher });
-	const onBeforeCloseTab = useTabCloseGuard();
+	const onBeforeCloseTab = useTabCloseGuard(store);
 
 	// Fallback for rows persisted before the rightSidebarWidth field existed —
 	// the live collection skips zod defaults, so an older row reads undefined

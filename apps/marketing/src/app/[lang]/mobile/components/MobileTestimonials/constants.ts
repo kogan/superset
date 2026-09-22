@@ -2,13 +2,13 @@ import { msg } from "@lingui/core/macro";
 
 export const TESTIMONIALS = [
 	{
-		name: "Clinton Blackburn",
-		avatar: "https://unavatar.io/github/clintonb",
-		href: "https://dev.clintonblackburn.com",
-		role: msg({ message: "Staff Software Engineer, Vori" }),
+		name: "Drake Thomsen",
+		avatar: "https://unavatar.io/github/ThomsenDrake",
+		href: "https://github.com/ThomsenDrake",
+		role: msg({ message: "GTM & AI Automation Architect, Mistral AI" }),
 		quote: msg({
 			message:
-				"I start my morning walks with an idea, and end with a pull request.",
+				"Superset's mobile app lets me keep my agents moving and unblock them from anywhere, even when I'm nowhere near my computer.",
 		}),
 	},
 	{
@@ -22,6 +22,16 @@ export const TESTIMONIALS = [
 		}),
 	},
 	{
+		name: "James Tan",
+		avatar: "https://unavatar.io/github/jamesktan",
+		href: "https://www.transposeplatform.vc",
+		role: msg({ message: "Partner, Transpose Platform" }),
+		quote: msg({
+			message:
+				"Superset mobile gives me the power of my desktop anywhere I go.",
+		}),
+	},
+	{
 		name: "Jaseem Thayal",
 		avatar: "https://unavatar.io/twitter/jaseemts",
 		href: "https://www.wowmakers.com",
@@ -32,23 +42,23 @@ export const TESTIMONIALS = [
 		}),
 	},
 	{
-		name: "Drake Thomsen",
-		avatar: "https://unavatar.io/github/ThomsenDrake",
-		href: "https://github.com/ThomsenDrake",
-		role: msg({ message: "GTM & AI Automation Architect, Mistral AI" }),
+		name: "Clinton Blackburn",
+		avatar: "https://unavatar.io/github/clintonb",
+		href: "https://dev.clintonblackburn.com",
+		role: msg({ message: "Staff Software Engineer, Vori" }),
 		quote: msg({
 			message:
-				"Superset's mobile app lets me keep my agents moving and unblock them from anywhere, even when I'm nowhere near my computer.",
+				"I start my morning walks with an idea, and end with a pull request.",
 		}),
 	},
 	{
-		name: "James Tan",
-		avatar: "https://unavatar.io/github/jamesktan",
-		href: "https://www.transposeplatform.vc",
-		role: msg({ message: "Partner, Transpose Platform" }),
+		name: "Vladimir Babic",
+		avatar: "https://unavatar.io/github/Vladimirbabic",
+		href: "https://github.com/Vladimirbabic",
+		role: msg({ message: "Digital Product Designer" }),
 		quote: msg({
 			message:
-				"Superset mobile gives me the power of my desktop anywhere I go.",
+				"I also love being able to spin up a local worktree environment on my Mac directly from my phone.",
 		}),
 	},
 	{
