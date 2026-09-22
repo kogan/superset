@@ -177,7 +177,7 @@ await run(
 		"electron-builder.ts",
 		...(signedBuild ? ["--config.forceCodeSigning=true"] : []),
 		"--mac",
-		process.argv.includes("--dir") ? "dir" : "dmg",
+		...(process.argv.includes("--dir") ? ["dir"] : ["dmg", "zip"]),
 		"--arm64",
 		"--publish",
 		"never",

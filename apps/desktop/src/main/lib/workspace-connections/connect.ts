@@ -9,14 +9,12 @@ import {
 	createDb,
 	externalWorkspacePaths,
 	projects,
-	tagFolderSettings,
 	workspaces,
 	workspaceTags,
 } from "@superset/host-service/db";
 import Database from "better-sqlite3";
-import { eq } from "drizzle-orm";
+import { and, eq } from "drizzle-orm";
 import { z } from "zod";
-import { SESSIONS_TAG_SCOPE } from "@superset/shared/workspace-tags";
 
 const projectSchema = z.object({
 	id: z.string(),
@@ -178,7 +176,6 @@ type ConnectOptions = {
 	organizationId: string;
 	userId: string;
 	migrationsFolder: string;
-	previousCopiesLabel: string;
 };
 
 const exec = promisify(execFile);
@@ -241,9 +238,9 @@ export async function connectWorkspaceSources(
 	const report: {
 		connected: number;
 		alreadyKnown: number;
-		previousCopies: number;
+		adoptedCopies: number;
 		failures: string[];
-	} = { connected: 0, alreadyKnown: 0, previousCopies: 0, failures: [] };
+	} = { connected: 0, alreadyKnown: 0, adoptedCopies: 0, failures: [] };
 	try {
 		const seen = new Set(
 			db
@@ -320,10 +317,6 @@ export async function connectWorkspaceSources(
 									.all()
 									.find((row) => row.repoPath === project.repo_path)
 							: undefined;
-						const projectId = project
-							? (existingProject?.id ??
-								workspacePathId(project.repo_path, "connected-project", ""))
-							: null;
 						const copied = db.query.workspaces
 							.findFirst({
 								where: eq(
@@ -332,26 +325,94 @@ export async function connectWorkspaceSources(
 								),
 							})
 							.sync();
+						const copiedProjectId = project
+							? workspacePathId(project.repo_path, "project", "")
+							: copied?.projectId;
+						const copiedProject = copiedProjectId
+							? db.query.projects
+									.findFirst({ where: eq(projects.id, copiedProjectId) })
+									.sync()
+							: undefined;
+						const copiedProjectIsInternal =
+							copiedProject !== undefined &&
+							contains(dataDir, copiedProject.repoPath);
+						const projectId = project
+							? (existingProject?.id ??
+								(copiedProjectIsInternal
+									? copiedProject.id
+									: workspacePathId(
+											project.repo_path,
+											"connected-project",
+											"",
+										)))
+							: null;
+						const adoptingCopy =
+							copied !== undefined && contains(dataDir, copied.worktreePath);
 						db.transaction((tx) => {
-							if (project && projectId && !existingProject && !existing)
-								tx.insert(projects)
-									.values({
-										id: projectId,
-										repoPath: project.repo_path,
-										name: project.name,
-										repoProvider: project.repo_provider,
-										repoOwner: project.repo_owner,
-										repoName: project.repo_name,
-										repoUrl: project.repo_url,
-										remoteName: project.remote_name,
-										icon: project.icon,
-										color: project.color,
-										worktreeBaseDir: project.worktree_base_dir,
+							if (project && projectId && !existingProject) {
+								if (copiedProjectIsInternal && copiedProject)
+									tx.update(projects)
+										.set({
+											repoPath: project.repo_path,
+											name: copiedProject.name.endsWith(" (Previous copies)")
+												? copiedProject.name.slice(0, -18)
+												: copiedProject.name,
+											updatedAt: Date.now(),
+										})
+										.where(eq(projects.id, copiedProject.id))
+										.run();
+								else
+									tx.insert(projects)
+										.values({
+											id: projectId,
+											repoPath: project.repo_path,
+											name: project.name,
+											repoProvider: project.repo_provider,
+											repoOwner: project.repo_owner,
+											repoName: project.repo_name,
+											repoUrl: project.repo_url,
+											remoteName: project.remote_name,
+											icon: project.icon,
+											color: project.color,
+											worktreeBaseDir: project.worktree_base_dir,
+											updatedAt: Date.now(),
+										})
+										.onConflictDoNothing()
+										.run();
+							}
+							if (adoptingCopy && copied) {
+								// Keep the copied workspace ID: terminal, agent, and other
+								// workspace associations refer to it. Only its location changes.
+								tx.update(workspaces)
+									.set({
+										projectId,
+										worktreePath: path,
+										branch,
+										headSha,
+										name: workspace.name,
+										type: project
+											? path === project.repo_path
+												? "local"
+												: "worktree"
+											: "session",
+										upstreamOwner: workspace.upstream_owner,
+										upstreamRepo: workspace.upstream_repo,
+										upstreamBranch: workspace.upstream_branch,
 										updatedAt: Date.now(),
 									})
-									.onConflictDoNothing()
+									.where(eq(workspaces.id, copied.id))
 									.run();
-							if (!existing)
+								// Remove a legacy Previous copies label if this workspace was
+								// adopted after an older version of the migration.
+								tx.delete(workspaceTags)
+									.where(
+										and(
+											eq(workspaceTags.workspaceId, copied.id),
+											eq(workspaceTags.tag, "previous-copies"),
+										),
+									)
+									.run();
+							} else if (!existing)
 								tx.insert(workspaces)
 									.values({
 										id: workspacePathId(path, "connected-workspace", ""),
@@ -375,51 +436,11 @@ export async function connectWorkspaceSources(
 							tx.insert(externalWorkspacePaths)
 								.values({ worktreePath: path })
 								.run();
-							if (copied && contains(dataDir, copied.worktreePath)) {
-								const tag = "previous-copies";
-								tx.insert(workspaceTags)
-									.values({
-										workspaceId: copied.id,
-										tag,
-										createdByUserId: options.userId,
-									})
-									.onConflictDoNothing()
-									.run();
-								tx.insert(tagFolderSettings)
-									.values({
-										scope: copied.projectId ?? SESSIONS_TAG_SCOPE,
-										tag,
-										displayName: options.previousCopiesLabel,
-										createdByUserId: options.userId,
-									})
-									.onConflictDoNothing()
-									.run();
-								if (copied.projectId) {
-									const copiedProject = tx
-										.select()
-										.from(projects)
-										.where(eq(projects.id, copied.projectId))
-										.get();
-									const suffix = ` (${options.previousCopiesLabel})`;
-									if (
-										copiedProject &&
-										contains(dataDir, copiedProject.repoPath) &&
-										!copiedProject.name.endsWith(suffix)
-									)
-										tx.update(projects)
-											.set({
-												name: `${copiedProject.name}${suffix}`,
-												updatedAt: Date.now(),
-											})
-											.where(eq(projects.id, copiedProject.id))
-											.run();
-								}
-							}
 						});
 						seen.add(path);
 						if (existing) report.alreadyKnown++;
 						else report.connected++;
-						if (copied) report.previousCopies++;
+						if (adoptingCopy) report.adoptedCopies++;
 					} catch (error) {
 						report.failures.push(
 							`${workspace.name || path}: ${error instanceof Error ? error.message : String(error)}`,

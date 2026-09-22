@@ -66,9 +66,9 @@ Open **Pages** in the sidebar to read local HTML pages and their versions. Metad
 
 ## Data, migration, and updates
 
-The independent installation uses `~/.superestset` and its own Electron profile. The old source launcher’s `.personal-data`, `superset-dev-data`, and Docker volumes remain separate. Existing Superset worktrees are opened in place and retained when their superset++ entries are removed. New worktrees default to `~/.superset/worktrees`. Earlier copied workspaces remain in Previous copies groups. Credentials and live process ownership stay separate.
+The independent installation uses `~/.superestset` and its own Electron profile. The old source launcher's `.personal-data`, `superset-dev-data`, and Docker volumes remain separate. Existing Superset worktrees are opened in place and retained when their superset++ entries are removed. New worktrees default to `~/.superset/worktrees`. If an earlier migration made an internal copy, superset++ reconnects the original folder with the same workspace identity and leaves the old folder untouched as a recovery copy. Credentials and live process ownership stay separate.
 
-Use **Check for updates** or visit [superset++ releases](https://github.com/kogan/superset/releases) to download a newer fork build. Quit the app before replacing it or backing up its data. The original Superset updater is not used.
+Use **Check for updates** to check immediately. Packaged releases download updates in the background and install them on restart. Visit [superset++ releases](https://github.com/kogan/superset/releases) only for the first installation or a recovery download.
 
 The upstream [license](LICENSE.md) applies. The original implementation notes remain in [the personal design document](docs/personal-superset-design.md).
 

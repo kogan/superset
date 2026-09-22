@@ -52,7 +52,6 @@ export async function connectExistingWorkspaces(
 		migrationsFolder: app.isPackaged
 			? join(process.resourcesPath, "resources/host-migrations")
 			: join(app.getAppPath(), "../../packages/host-service/drizzle"),
-		previousCopiesLabel: i18n._(msg({ message: "Previous copies" })),
 	});
 	await writeFile(
 		join(dataDir, "superset-connections-report.json"),
