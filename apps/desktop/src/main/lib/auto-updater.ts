@@ -3,12 +3,13 @@ import { statfsSync } from "node:fs";
 import { msg } from "@lingui/core/macro";
 import * as Sentry from "@sentry/electron/main";
 import { i18n } from "@superset/i18n";
-import { app, shell, dialog } from "electron";
+import { app, dialog, shell } from "electron";
 import log from "electron-log/main";
 import { autoUpdater, type UpdateCheckResult } from "electron-updater";
 import { env } from "main/env.main";
 import { setSkipQuitConfirmation } from "main/index";
 import { appState } from "main/lib/app-state";
+import { isUnpackagedStandaloneRuntime } from "main/lib/auto-update-mode";
 import {
 	isEnvironmentUpdateError,
 	isUpstreamServerError,
@@ -130,6 +131,16 @@ function isUpdateCheckDisabledByEnvironment(): boolean {
 	return PLATFORM.IS_MAC && process.env.DISABLE_UPDATE_CHECK !== undefined;
 }
 
+// The standalone app deliberately sets SUPERESTSET_LOCAL so it owns its local
+// services and data directory. That must not disable the updater in a shipped
+// app: only an unpackaged local runtime is a development build.
+function isLocalRuntimeWithoutUpdater(): boolean {
+	return isUnpackagedStandaloneRuntime({
+		isStandalone: process.env.SUPERESTSET_LOCAL === "1",
+		isPackaged: app.isPackaged,
+	});
+}
+
 let currentStatus: AutoUpdateStatus = AUTO_UPDATE_STATUS.IDLE;
 let currentVersion: string | undefined;
 let currentError: string | undefined;
@@ -220,7 +231,7 @@ export function dismissUpdate(): void {
 }
 
 export function checkForUpdates(): void {
-	if (process.env.SUPERESTSET_LOCAL === "1") return;
+	if (isLocalRuntimeWithoutUpdater()) return;
 	if (env.NODE_ENV === "development" || !IS_AUTO_UPDATE_PLATFORM) {
 		return;
 	}
@@ -256,7 +267,7 @@ export function checkForUpdates(): void {
 }
 
 export function checkForUpdatesInteractive(): void {
-	if (process.env.SUPERESTSET_LOCAL === "1") {
+	if (isLocalRuntimeWithoutUpdater()) {
 		void shell.openExternal("https://github.com/kogan/superset/releases");
 		return;
 	}
@@ -443,7 +454,7 @@ export function simulateError(): void {
 
 export function setupAutoUpdater(): void {
 	// Private GitHub releases require a signed-in browser. Never hand a GitHub token to the updater.
-	if (process.env.SUPERESTSET_LOCAL === "1") return;
+	if (isLocalRuntimeWithoutUpdater()) return;
 	if (env.NODE_ENV === "development" || !IS_AUTO_UPDATE_PLATFORM) {
 		return;
 	}

@@ -91,7 +91,6 @@ function fixture() {
 		organizationId: randomUUID(),
 		userId: randomUUID(),
 		migrationsFolder,
-		previousCopiesLabel: "Previous copies",
 	};
 	const targetDbPath = join(dataDir, "host", options.organizationId, "host.db");
 	return {
@@ -176,7 +175,7 @@ test("connects original Git folders without copying or mutating them, and rememb
 	}
 });
 
-test("keeps copied paths, IDs, unique files and terminal associations while connecting originals", async () => {
+test("adopts the original path without duplicating a copied workspace", async () => {
 	const f = fixture();
 	try {
 		const copyId = workspacePathId(f.checkout, "workspace", "");
@@ -205,13 +204,13 @@ test("keeps copied paths, IDs, unique files and terminal associations while conn
 			.run();
 		const source = await inspectWorkspaceSource(f.sourceHome);
 		assert.equal(
-			(await connectWorkspaceSources([source], f.options)).previousCopies,
+			(await connectWorkspaceSources([source], f.options)).adoptedCopies,
 			1,
 		);
 		assert.equal(
 			db.query.workspaces.findFirst({ where: eq(workspaces.id, copyId) }).sync()
 				?.worktreePath,
-			copyPath,
+			f.checkout,
 		);
 		assert.equal(
 			db.select().from(terminalSessions).get()?.originWorkspaceId,
@@ -222,13 +221,29 @@ test("keeps copied paths, IDs, unique files and terminal associations while conn
 			"only in previous copy",
 		);
 		assert.equal(
+			db
+				.select()
+				.from(workspaces)
+				.all()
+				.some((row) => row.worktreePath === copyPath),
+			false,
+		);
+		assert.equal(
+			db
+				.select()
+				.from(externalWorkspacePaths)
+				.all()
+				.some((row) => row.worktreePath === f.checkout),
+			true,
+		);
+		assert.equal(
 			db.query.projects
 				.findFirst({ where: eq(projects.id, copyProjectId) })
-				.sync()?.name,
-			"Project (Previous copies)",
+				.sync()?.repoPath,
+			f.repo,
 		);
 		await connectWorkspaceSources([source], f.options);
-		assert.equal(db.select().from(workspaces).all().length, 3);
+		assert.equal(db.select().from(workspaces).all().length, 2);
 		db.$client.close();
 	} finally {
 		rmSync(f.root, { recursive: true, force: true });

@@ -33,7 +33,7 @@ You do not need to fork this repository to use the app. Everyone can install the
 
 ## Update the app
 
-Use **Check for updates** to open this fork's Releases page, then download the newer DMG and replace the app in Applications. Updates are installed manually; a merged PR does not update installed copies.
+After installing a current release once, superset++ checks for updates at launch and downloads them in the background. When an update is ready, restart the app to install it. You can use **Check for updates** to check immediately. Your data, workspaces, and settings stay in place.
 
 Finish active terminal and agent sessions before replacing an older build, then quit the app. Keep one installed copy at a stable path. Do not delete `~/.superestset` or your worktree folders when updating. Older SuperestSet builds use the same data folder.
 
