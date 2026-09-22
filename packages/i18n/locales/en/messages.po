@@ -5368,6 +5368,9 @@ msgstr "diff in new tab"
 msgid "Diff size"
 msgstr "Diff size"
 
+msgid "Digital Product Designer"
+msgstr "Digital Product Designer"
+
 msgid "Direct"
 msgstr "Direct"
 
@@ -5476,6 +5479,9 @@ msgstr "Discord, GitHub, and office hours."
 
 msgid "Discover and connect to development servers on your network."
 msgstr "Discover and connect to development servers on your network."
+
+msgid "Disk version"
+msgstr "Disk version"
 
 msgid "Dismiss"
 msgstr "Dismiss"
@@ -6695,6 +6701,9 @@ msgstr "File a ticket, get back a verified, merge-ready PR, with screenshots or 
 msgid "File actions"
 msgstr "File actions"
 
+msgid "File changed on disk"
+msgstr "File changed on disk"
+
 msgid "File contents"
 msgstr "File contents"
 
@@ -7628,6 +7637,9 @@ msgstr "Humans write every line. Tools compile, lint, and complain. The keyboard
 msgid "I already use an IDE like Cursor, is this for me?"
 msgstr "I already use an IDE like Cursor, is this for me?"
 
+msgid "I also love being able to spin up a local worktree environment on my Mac directly from my phone."
+msgstr "I also love being able to spin up a local worktree environment on my Mac directly from my phone."
+
 msgid "I can be in a café with my coffee while the work keeps moving forward."
 msgstr "I can be in a café with my coffee while the work keeps moving forward."
 
@@ -8200,6 +8212,9 @@ msgstr "Kbd"
 
 msgid "Keep docs fresh"
 msgstr "Keep docs fresh"
+
+msgid "Keep editing"
+msgstr "Keep editing"
 
 msgid "Keep waiting"
 msgstr "Keep waiting"
@@ -11061,6 +11076,9 @@ msgstr "Overnight and weekend runs complete unattended and are mergeable in the 
 msgid "Overview"
 msgstr "Overview"
 
+msgid "Overwrite file"
+msgstr "Overwrite file"
+
 #. placeholder {0}: ownerName ?? t({ message: "a teammate", })
 msgid "Owned by {0} — only they can edit this automation."
 msgstr "Owned by {0} — only they can edit this automation."
@@ -12210,11 +12228,17 @@ msgstr "Reload"
 msgid "Reload app"
 msgstr "Reload app"
 
+msgid "Reload from disk"
+msgstr "Reload from disk"
+
 msgid "Reload Superset to refresh the workspace list."
 msgstr "Reload Superset to refresh the workspace list."
 
 msgid "Reload window"
 msgstr "Reload window"
+
+msgid "Reloading discards your edits. Overwriting replaces the file on disk."
+msgstr "Reloading discards your edits. Overwriting replaces the file on disk."
 
 msgid "Relocate"
 msgstr "Relocate"
@@ -17519,6 +17543,9 @@ msgstr "Your Agents, Your Accounts"
 
 msgid "Your browser doesn't report which chip you have, so this is the Apple Silicon build. On an Intel Mac, <0>get the Intel build</0> instead."
 msgstr "Your browser doesn't report which chip you have, so this is the Apple Silicon build. On an Intel Mac, <0>get the Intel build</0> instead."
+
+msgid "Your changes"
+msgstr "Your changes"
 
 msgid "Your changes will be lost if you don't save them."
 msgstr "Your changes will be lost if you don't save them."

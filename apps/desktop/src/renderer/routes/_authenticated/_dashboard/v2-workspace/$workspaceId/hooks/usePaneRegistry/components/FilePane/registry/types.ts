@@ -3,6 +3,7 @@ import { i18n } from "@superset/i18n";
 import type { ComponentType } from "react";
 import type { LinkAction } from "renderer/lib/clickPolicy";
 import type { SharedFileDocument } from "../../../../../state/fileDocumentStore";
+import type { FilePosition } from "../../../../../types";
 
 export type FileMeta = {
 	size?: number;
@@ -36,8 +37,8 @@ export interface FileView {
 }
 
 export interface ViewProps {
-	revealPosition?: { line: number; column: number };
-	onRevealComplete?: () => void;
+	pendingPosition?: FilePosition;
+	onPositionRevealed?: () => void;
 	document: SharedFileDocument;
 	filePath: string;
 	workspaceId: string;

@@ -45,6 +45,7 @@ import {
 } from "./handlers";
 import { listLiveLocalWorkspaces } from "./utils/create-local-workspace";
 import { getGitHubRemotes } from "./utils/git-remote";
+import { listGitHubRepositories } from "./utils/github-repositories";
 import { persistLocalProject } from "./utils/persist-project";
 import {
 	cloneRepoInto,
@@ -76,6 +77,10 @@ export interface FindByPathCandidate {
 }
 
 export const projectRouter = router({
+	listGitHubRepositories: machineOnlyProcedure.query(() =>
+		listGitHubRepositories(),
+	),
+
 	list: protectedProcedure.query(({ ctx }) => {
 		const tagSettingsByProject = new Map<string, TagSettingSnapshot[]>();
 		for (const { scope, ...setting } of getAllTagFolderSettings(

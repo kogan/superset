@@ -5368,6 +5368,9 @@ msgstr "diff in una nuova scheda"
 msgid "Diff size"
 msgstr "Dimensione del diff"
 
+msgid "Digital Product Designer"
+msgstr "Designer di prodotti digitali"
+
 msgid "Direct"
 msgstr "Diretto"
 
@@ -5476,6 +5479,9 @@ msgstr "Discord, GitHub e office hours."
 
 msgid "Discover and connect to development servers on your network."
 msgstr "Rilevare i server di sviluppo sulla tua rete e connettersi a essi."
+
+msgid "Disk version"
+msgstr "Versione su disco"
 
 msgid "Dismiss"
 msgstr "Chiudi"
@@ -6695,6 +6701,9 @@ msgstr "Apri un ticket e ricevi una PR verificata e pronta per il merge, con scr
 msgid "File actions"
 msgstr "Azioni sul file"
 
+msgid "File changed on disk"
+msgstr "Il file è cambiato su disco"
+
 msgid "File contents"
 msgstr "Contenuto dei file"
 
@@ -7628,6 +7637,9 @@ msgstr "Gli umani scrivono ogni riga. Gli strumenti compilano, fanno lint e si l
 msgid "I already use an IDE like Cursor, is this for me?"
 msgstr "Uso già un IDE come Cursor, fa per me?"
 
+msgid "I also love being able to spin up a local worktree environment on my Mac directly from my phone."
+msgstr "Mi piace anche poter avviare un ambiente locale con un albero di lavoro sul mio Mac direttamente dal telefono."
+
 msgid "I can be in a café with my coffee while the work keeps moving forward."
 msgstr "Posso essere al bar con il mio caffè mentre il lavoro continua ad avanzare."
 
@@ -8200,6 +8212,9 @@ msgstr "Kbd"
 
 msgid "Keep docs fresh"
 msgstr "Mantieni la documentazione aggiornata"
+
+msgid "Keep editing"
+msgstr "Continua a modificare"
 
 msgid "Keep waiting"
 msgstr "Continua ad aspettare"
@@ -11061,6 +11076,9 @@ msgstr "Le esecuzioni notturne e del fine settimana si completano senza presidio
 msgid "Overview"
 msgstr "Panoramica"
 
+msgid "Overwrite file"
+msgstr "Sovrascrivi file"
+
 #. placeholder {0}: ownerName ?? t({ message: "a teammate", })
 msgid "Owned by {0} — only they can edit this automation."
 msgstr "Di {0} — solo il proprietario può modificare questa automazione."
@@ -12210,11 +12228,17 @@ msgstr "Ricarica"
 msgid "Reload app"
 msgstr "Ricarica l'app"
 
+msgid "Reload from disk"
+msgstr "Ricarica dal disco"
+
 msgid "Reload Superset to refresh the workspace list."
 msgstr "Ricarica Superset per aggiornare l'elenco dei workspace."
 
 msgid "Reload window"
 msgstr "Ricarica la finestra"
+
+msgid "Reloading discards your edits. Overwriting replaces the file on disk."
+msgstr "Ricaricando verranno scartate le tue modifiche. Sovrascrivendo verrà sostituito il file su disco."
 
 msgid "Relocate"
 msgstr "Sposta"
@@ -17519,6 +17543,9 @@ msgstr "I tuoi agenti, i tuoi account"
 
 msgid "Your browser doesn't report which chip you have, so this is the Apple Silicon build. On an Intel Mac, <0>get the Intel build</0> instead."
 msgstr "Il tuo browser non indica quale chip hai, quindi questa è la build per Apple Silicon. Su un Mac con Intel, <0>scarica invece la build Intel</0>."
+
+msgid "Your changes"
+msgstr "Le tue modifiche"
 
 msgid "Your changes will be lost if you don't save them."
 msgstr "Le tue modifiche andranno perse se non le salvi."

@@ -3,7 +3,10 @@ import { env } from "renderer/env.renderer";
 import type { FolderLinkAction, LinkAction } from "renderer/lib/clickPolicy";
 import { parseSupersetPageUrl } from "renderer/lib/parseSupersetPageUrl";
 import { electronTrpcClient } from "renderer/lib/trpc-client";
-import type { PaneViewerData } from "renderer/routes/_authenticated/_dashboard/v2-workspace/$workspaceId/types";
+import type {
+	OpenFile,
+	PaneViewerData,
+} from "renderer/routes/_authenticated/_dashboard/v2-workspace/$workspaceId/types";
 import { openPagePaneInStore } from "renderer/routes/_authenticated/_dashboard/v2-workspace/$workspaceId/utils/openPagePaneInStore";
 import { openUrlInV2Workspace } from "renderer/routes/_authenticated/_dashboard/v2-workspace/$workspaceId/utils/openUrlInV2Workspace";
 import type { StoreApi } from "zustand/vanilla";
@@ -16,7 +19,7 @@ import type { StoreApi } from "zustand/vanilla";
 export interface TerminalLinkActionDeps {
 	store: StoreApi<WorkspaceStore<PaneViewerData>>;
 	isPagesEnabled: boolean;
-	onOpenFile: (path: string, openInNewTab?: boolean) => void;
+	onOpenFile: OpenFile;
 	onRevealPath: (path: string, options?: { isDirectory?: boolean }) => void;
 	openInExternalEditor: (
 		path: string,
@@ -68,7 +71,11 @@ export function runFileLinkAction(
 		});
 		return;
 	}
-	deps.onOpenFile(file.path, action === "newTab");
+	deps.onOpenFile(
+		file.path,
+		action === "newTab",
+		file.row === undefined ? undefined : { line: file.row, column: file.col },
+	);
 }
 
 export function runFolderLinkAction(

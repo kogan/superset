@@ -20,6 +20,7 @@ import { ArrowUpRight, Check, ChevronDown, Languages } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import type { ReactNode } from "react";
+import { FaApple } from "react-icons/fa";
 import { track } from "@/lib/analytics";
 import { useIsMobileLaunched } from "../../providers/MobileLaunchProvider";
 import { Soc2Badge } from "../Soc2Badge";
@@ -182,7 +183,24 @@ export function Footer({ locale }: { locale?: SupportedLocale }) {
 						>
 							<SupersetLogo />
 						</Link>
-						<SocialLinks className="-ml-2" />
+						<div className="-ml-2 flex items-center gap-2">
+							<SocialLinks />
+							<a
+								href={COMPANY.APP_STORE_URL}
+								target="_blank"
+								rel="noopener noreferrer"
+								aria-label="App Store"
+								className="text-muted-foreground hover:text-foreground transition-colors p-1 sm:p-2"
+								onClick={() =>
+									track("mobile_store_clicked", {
+										store: "app_store",
+										source: "footer",
+									})
+								}
+							>
+								<FaApple aria-hidden="true" className="size-5" />
+							</a>
+						</div>
 						<a
 							href={COMPANY.TRUST_URL}
 							target="_blank"
