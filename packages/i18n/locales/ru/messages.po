@@ -189,14 +189,6 @@ msgstr "{0, plural, one {# результат на этом хосте} few {# �
 msgid "{0, plural, one {# result} other {# results}}"
 msgstr "{0, plural, one {# результат} few {# результата} many {# результатов} other {# результата}}"
 
-#. placeholder {0}: agents.length
-msgid "{0, plural, one {# running agent — hide details} other {# running agents — hide details}}"
-msgstr "{0, plural, one {# работающий агент — скрыть детали} few {# работающих агента — скрыть детали} many {# работающих агентов — скрыть детали} other {# работающих агентов — скрыть детали}}"
-
-#. placeholder {0}: agents.length
-msgid "{0, plural, one {# running agent — show details} other {# running agents — show details}}"
-msgstr "{0, plural, one {# работающий агент — показать детали} few {# работающих агента — показать детали} many {# работающих агентов — показать детали} other {# работающих агентов — показать детали}}"
-
 #. placeholder {0}: aliveCount ?? 0
 msgid "{0, plural, one {# session running} other {# sessions running}}"
 msgstr "{0, plural, one {# сессия работает} few {# сессии работают} many {# сессий работают} other {# сессии работают}}"
@@ -885,6 +877,9 @@ msgstr "{share}% человека"
 msgid "{shown} of {total}"
 msgstr "{shown} из {total}"
 
+msgid "{shownCount} of {totalCount} issues"
+msgstr "{shownCount} из {totalCount} задач"
+
 #. placeholder {0}: formatUsd(shownUsd)
 #. placeholder {1}: formatTokens(shownTokens)
 msgid "{shownCount} shown · {0} · {1} tokens"
@@ -898,9 +893,6 @@ msgstr "{starCount} звёзд и продолжаем"
 
 msgid "{stars} stars · {perDay}/day this week · {peakPerDay}/day at peak"
 msgstr "{stars} звёзд · {perDay}/день на этой неделе · {peakPerDay}/день на пике"
-
-msgid "{subagentCount, plural, one {# subagent running} other {# subagents running}}"
-msgstr "{subagentCount, plural, one {# субагент выполняется} few {# субагента выполняются} many {# субагентов выполняются} other {# субагента выполняются}}"
 
 msgid "{successCount, plural, one {Created # workspace, {failCount} failed} other {Created # workspaces, {failCount} failed}}"
 msgstr "{successCount, plural, one {Создана # рабочая область, {failCount} с ошибкой} few {Создано # рабочие области, {failCount} с ошибкой} many {Создано # рабочих областей, {failCount} с ошибкой} other {Создано # рабочей области, {failCount} с ошибкой}}"
@@ -952,6 +944,9 @@ msgstr "{updatedLabel} восстановлен к значениям по ум�
 
 msgid "{used} used"
 msgstr "Использовано {used}"
+
+msgid "{visibleCount} visible · {shownCount} loaded"
+msgstr "Видно: {visibleCount} · Загружено: {shownCount}"
 
 msgid "{waiting} Waiting"
 msgstr "Ожидают: {waiting}"
@@ -1423,6 +1418,9 @@ msgstr "Добавить"
 msgid "Add {0} account"
 msgstr "Добавить аккаунт {0}"
 
+msgid "Add @{normalizedSearch}"
+msgstr "Добавить @{normalizedSearch}"
+
 msgid "Add a comment…"
 msgstr "Добавьте комментарий…"
 
@@ -1613,6 +1611,9 @@ msgstr "Агент завершил"
 msgid "Agent Independence"
 msgstr "Независимость от агента"
 
+msgid "Agent input, failed checks on your PRs, and reviews requested from you."
+msgstr "Запросы ввода от агентов, неудачные проверки ваших PR и запросы на ваше ревью."
+
 msgid "Agent launch configuration"
 msgstr "Конфигурация запуска агента"
 
@@ -1753,6 +1754,9 @@ msgstr "Все проверки пройдены"
 msgid "All checks skipped or cancelled"
 msgstr "Все проверки пропущены или отменены"
 
+msgid "All columns are hidden. Use Columns to show them."
+msgstr "Все столбцы скрыты. Используйте меню «Столбцы», чтобы показать их."
+
 msgid "All comments"
 msgstr "Все комментарии"
 
@@ -1796,8 +1800,8 @@ msgstr "Все ваши данные будут безвозвратно уда�
 msgid "All of your data will be permanently deleted after {ACCOUNT_DELETION_GRACE_DAYS} days. Sign back in before then to restore your account."
 msgstr "Все ваши данные будут безвозвратно удалены через {ACCOUNT_DELETION_GRACE_DAYS} дней. Войдите снова до этого срока, чтобы восстановить аккаунт."
 
-msgid "All open terminal sessions will be killed and any running host-services will be stopped. Use “Close Superset” instead if you want services to keep running for the next launch."
-msgstr "Все открытые сессии терминала будут завершены, а работающие службы хоста остановлены. Если нужно, чтобы службы продолжили работу до следующего запуска, используйте «Закрыть Superset»."
+msgid "All open terminal sessions will be killed and any running host-services will be stopped. Use “Close {appName}” instead if you want services to keep running for the next launch."
+msgstr "Все открытые сессии терминала будут завершены, а работающие службы хоста остановлены. Если нужно, чтобы службы продолжили работу до следующего запуска, используйте «Закрыть {appName}»."
 
 msgid "All pages"
 msgstr "Все страницы"
@@ -1828,6 +1832,9 @@ msgstr "Все сессии сохранены при обновлении."
 
 msgid "All sessions were closed and a fresh daemon is running."
 msgstr "Все сессии закрыты, работает новый демон."
+
+msgid "All statuses"
+msgstr "Все статусы"
 
 msgid "All tasks"
 msgstr "Все задачи"
@@ -2069,6 +2076,12 @@ msgstr "Ключи API"
 msgid "API Keys"
 msgstr "Ключи API"
 
+msgid "API token"
+msgstr "Токен API"
+
+msgid "API token with scopes"
+msgstr "Токен API с областями доступа"
+
 msgid "API-equivalent"
 msgstr "в эквиваленте API"
 
@@ -2199,6 +2212,9 @@ msgstr "Соотношение сторон"
 msgid "Assigned"
 msgstr "Назначена"
 
+msgid "Assigned to me"
+msgstr "Назначены мне"
+
 msgid "Assignee"
 msgstr "Исполнитель"
 
@@ -2259,6 +2275,18 @@ msgstr "Для вложений нужен хост в сети"
 msgid "Attempt before checks pass"
 msgstr "Попробовать до прохождения проверок"
 
+msgid "Attention"
+msgstr "Внимание"
+
+msgid "Attention filters"
+msgstr "Фильтры требующих внимания элементов"
+
+msgid "Attention inbox"
+msgstr "Входящие, требующие внимания"
+
+msgid "Attention inbox is turned off"
+msgstr "Входящие, требующие внимания, отключены"
+
 msgid "Attention queue"
 msgstr "Очередь внимания"
 
@@ -2285,6 +2313,9 @@ msgstr "Код аутентификации"
 
 msgid "Authentication failed"
 msgstr "Аутентификация не удалась"
+
+msgid "Authentication method"
+msgstr "Способ аутентификации"
 
 msgid "Author"
 msgstr "Автор"
@@ -2706,6 +2737,9 @@ msgstr "Соберите своих агентов вместе."
 msgid "Browse and install skills, MCP servers, and agent configs shared by the community."
 msgstr "Просматривайте и устанавливайте навыки, серверы MCP и конфигурации агентов, которыми делится сообщество."
 
+msgid "Browse files"
+msgstr "Просмотр файлов"
+
 msgid "Browse for directory"
 msgstr "Выбрать папку"
 
@@ -3088,6 +3122,9 @@ msgstr "Расчётный + сберегательный + Treasury во вре
 msgid "Checking agents…"
 msgstr "Проверка агентов…"
 
+msgid "Checking for items needing attention…"
+msgstr "Поиск элементов, требующих внимания…"
+
 msgid "Checking host…"
 msgstr "Проверка хоста…"
 
@@ -3142,11 +3179,17 @@ msgstr "Выберите проект в разделе «Пул-реквест�
 msgid "Choose a section."
 msgstr "Выберите раздел."
 
+msgid "Choose a team board to see everyone’s issues."
+msgstr "Выберите доску команды, чтобы увидеть задачи всех участников."
+
 msgid "Choose agent"
 msgstr "Выберите агента"
 
 msgid "Choose an existing repo folder"
 msgstr "Выберите папку существующего репозитория"
+
+msgid "Choose another filter or refresh to check again."
+msgstr "Выберите другой фильтр или обновите страницу, чтобы проверить снова."
 
 msgid "Choose app"
 msgstr "Выберите приложение"
@@ -3160,6 +3203,12 @@ msgstr "Выберите, как открывается представлени
 msgid "Choose how to open file paths when Cmd+clicking in the terminal"
 msgstr "Выберите, как открывать пути файлов при Cmd+клике в терминале"
 
+msgid "Choose team board"
+msgstr "Выбрать доску команды"
+
+msgid "Choose up to 20 people for your My team PR filter. Saved on this Mac."
+msgstr "Выберите до 20 человек для фильтра PR «Моя команда». Список сохраняется на этом Mac."
+
 msgid "Choose what to clear from the in-app browser."
 msgstr "Выберите, что очистить во встроенном браузере."
 
@@ -3168,6 +3217,12 @@ msgstr "Выберите, когда Superset вас уведомляет."
 
 msgid "Choose which agent watches this page for comments"
 msgstr "Выберите, какой агент отслеживает комментарии на этой странице"
+
+msgid "Choose which columns appear and use the arrows to set their left-to-right order."
+msgstr "Выберите видимые столбцы и задайте их порядок слева направо с помощью стрелок."
+
+msgid "Choose which features appear in the app. Changes apply immediately."
+msgstr "Выберите функции, которые будут отображаться в приложении. Изменения применяются сразу."
 
 msgid "Churn"
 msgstr "Отток"
@@ -3345,6 +3400,9 @@ msgstr "Закрыть"
 msgid "Close {0}"
 msgstr "Закрыть {0}"
 
+msgid "Close {appName}"
+msgstr "Закрыть {appName}"
+
 #. placeholder {0}: data.number
 msgid "Close #{0}?"
 msgstr "Закрыть #{0}?"
@@ -3441,9 +3499,6 @@ msgstr "Закрыть фильтр по ревью"
 msgid "Close session"
 msgstr "Закрыть сессию"
 
-msgid "Close Superset"
-msgstr "Закрыть Superset"
-
 msgid "Close tab"
 msgstr "Закрыть вкладку"
 
@@ -3530,6 +3585,9 @@ msgstr "Свернуть"
 msgid "Collapse {0}"
 msgstr "Свернуть {0}"
 
+msgid "Collapse agents"
+msgstr "Свернуть агентов"
+
 msgid "Collapse all"
 msgstr "Свернуть всё"
 
@@ -3544,6 +3602,9 @@ msgstr "Свернуть файл"
 
 msgid "Collapse project"
 msgstr "Свернуть проект"
+
+msgid "Collapse subagents"
+msgstr "Свернуть субагентов"
 
 msgid "Collapse thread"
 msgstr "Свернуть ветку"
@@ -3562,6 +3623,9 @@ msgstr "Сбор данных…"
 
 msgid "Color"
 msgstr "Цвет"
+
+msgid "Columns"
+msgstr "Столбцы"
 
 msgid "Combine all commits"
 msgstr "Свести все коммиты в один"
@@ -3625,6 +3689,9 @@ msgstr "Комментарий не найден"
 
 msgid "Comment not posted"
 msgstr "Комментарий не отправлен"
+
+msgid "Comment on PR"
+msgstr "Комментировать PR"
 
 msgid "Comment on this page"
 msgstr "Комментировать эту страницу"
@@ -3701,6 +3768,9 @@ msgstr "Сравнили со стилем по умолчанию"
 
 msgid "complete"
 msgstr "завершён"
+
+msgid "Complete the required fields in Jira before moving this issue."
+msgstr "Перед перемещением этой задачи заполните обязательные поля в Jira."
 
 msgid "Completed"
 msgstr "Завершено"
@@ -3789,6 +3859,9 @@ msgstr "Подключайте внешние сервисы для синхро
 msgid "Connect Google"
 msgstr "Подключить Google"
 
+msgid "Connect Jira in Settings to see your tickets."
+msgstr "Подключите Jira в настройках, чтобы видеть свои заявки."
+
 msgid "Connect Linear"
 msgstr "Подключить Linear"
 
@@ -3819,6 +3892,9 @@ msgstr "Подключите этот компьютер"
 msgid "Connect your GitHub repositories and sync pull requests. Track CI status and reviews across your team."
 msgstr "Подключите репозитории GitHub и синхронизируйте пул-реквесты. Отслеживайте статус CI и ревью по всей команде."
 
+msgid "Connect your Jira site in Settings to see your issues."
+msgstr "Подключите сайт Jira в настройках, чтобы увидеть свои задачи."
+
 msgid "Connect your Linear workspace to sync issues and manage tasks directly from Superset."
 msgstr "Подключите рабочее пространство Linear, чтобы синхронизировать задачи и управлять ими прямо из Superset."
 
@@ -3842,6 +3918,9 @@ msgstr "{label} подключено"
 
 msgid "Connected as"
 msgstr "Подключено как"
+
+msgid "Connected projects only. Refreshes every minute while this page is open."
+msgstr "Только подключённые проекты. Обновляется каждую минуту, пока эта страница открыта."
 
 msgid "Connected to"
 msgstr "Подключено к"
@@ -4272,6 +4351,9 @@ msgstr "Не удалось загрузить окружения"
 msgid "Could not load environments."
 msgstr "Не удалось загрузить окружения."
 
+msgid "Could not load GitHub PRs. Check GitHub CLI access and try again."
+msgstr "Не удалось загрузить PR из GitHub. Проверьте доступ через GitHub CLI и повторите попытку."
+
 msgid "Could not load image"
 msgstr "Не удалось загрузить изображение"
 
@@ -4305,6 +4387,9 @@ msgstr "Не удалось открыть ссылку"
 msgid "Could not open Photos"
 msgstr "Не удалось открыть «Фото»"
 
+msgid "Could not reach Jira. Check your network or VPN and try again."
+msgstr "Не удалось связаться с Jira. Проверьте сеть или VPN и повторите попытку."
+
 msgid "Could not reach the desktop."
 msgstr "Не удалось подключиться к рабочему столу."
 
@@ -4326,6 +4411,9 @@ msgstr "Не удалось связаться с машиной этой раб
 msgid "Could not reactivate"
 msgstr "Не удалось активировать заново"
 
+msgid "Could not read Jira preferences."
+msgstr "Не удалось прочитать настройки Jira."
+
 msgid "Could not read selected file"
 msgstr "Не удалось прочитать выбранный файл"
 
@@ -4335,11 +4423,20 @@ msgstr "Не удалось прочитать перетащенные файл
 msgid "Could not read the Google account. Please try again."
 msgstr "Не удалось прочитать аккаунт Google. Попробуйте ещё раз."
 
+msgid "Could not read the saved Jira connection. Disconnect and connect again."
+msgstr "Не удалось прочитать сохранённое подключение к Jira. Отключитесь и подключитесь снова."
+
 msgid "Could not record cloud workspace"
 msgstr "Не удалось записать облачную рабочую область"
 
 msgid "Could not record environment"
 msgstr "Не удалось сохранить окружение"
+
+msgid "Could not remove the Jira connection. Check local storage permissions and try again."
+msgstr "Не удалось удалить подключение к Jira. Проверьте права доступа к локальному хранилищу и повторите попытку."
+
+msgid "Could not rename subagent. Try again."
+msgstr "Не удалось переименовать субагента. Повторите попытку."
 
 msgid "Could not rename the session"
 msgstr "Не удалось переименовать сессию"
@@ -4358,6 +4455,12 @@ msgstr "Не удалось закрыть этот комментарий"
 
 msgid "Could not restart the host service"
 msgstr "Не удалось перезапустить службу хоста"
+
+msgid "Could not save Jira preferences."
+msgstr "Не удалось сохранить настройки Jira."
+
+msgid "Could not save the Jira connection. Check local storage permissions and try again."
+msgstr "Не удалось сохранить подключение к Jira. Проверьте права доступа к локальному хранилищу и повторите попытку."
 
 msgid "Could not send"
 msgstr "Не удалось отправить"
@@ -5534,6 +5637,12 @@ msgstr "Открыт черновик"
 msgid "drafted 3 support replies"
 msgstr "подготовил 3 ответа поддержки"
 
+msgid "Drag ended."
+msgstr "Перетаскивание завершено."
+
+msgid "Drag issue"
+msgstr "Перетащить задачу"
+
 msgid "Drag to move"
 msgstr "Перетащите, чтобы переместить"
 
@@ -5542,6 +5651,9 @@ msgstr "Перетащите, чтобы изменить порядок"
 
 msgid "Drag workspaces to reorder in Manual order"
 msgstr "Перетаскивайте рабочие области для изменения порядка в ручной сортировке"
+
+msgid "Dragging issue."
+msgstr "Перетаскивание задачи."
 
 msgid "Drawer"
 msgstr "Шторка"
@@ -5686,6 +5798,9 @@ msgstr "Изменить скрипт запуска"
 msgid "Edit script"
 msgstr "Изменить скрипт"
 
+msgid "Edit team"
+msgstr "Изменить команду"
+
 msgid "Edited"
 msgstr "Изменено"
 
@@ -5763,6 +5878,9 @@ msgstr "Включить {0}"
 msgid "Enable an agent in Settings > Agents first"
 msgstr "Сначала включите агента в Настройки > Агенты"
 
+msgid "Enable attention inbox"
+msgstr "Включить входящие, требующие внимания"
+
 msgid "Enable auto-merge"
 msgstr "Включить автослияние"
 
@@ -5798,6 +5916,12 @@ msgstr "Введите URL в строку поиска выше."
 
 msgid "Enter a valid email address."
 msgstr "Введите корректный адрес email."
+
+msgid "Enter a valid GitHub username."
+msgstr "Введите корректное имя пользователя GitHub."
+
+msgid "Enter a valid Jira server URL."
+msgstr "Введите корректный URL сервера Jira."
 
 msgid "Enter a valid recurrence rule."
 msgstr "Введите корректное правило повторения."
@@ -5966,6 +6090,9 @@ msgstr "Развернуть"
 msgid "Expand {0}"
 msgstr "Развернуть {0}"
 
+msgid "Expand agents"
+msgstr "Развернуть агентов"
+
 msgid "Expand all"
 msgstr "Развернуть всё"
 
@@ -5977,6 +6104,9 @@ msgstr "Развернуть файл"
 
 msgid "Expand project"
 msgstr "Развернуть проект"
+
+msgid "Expand subagents"
+msgstr "Развернуть субагентов"
 
 msgid "Expand thread"
 msgstr "Развернуть ветку"
@@ -6063,6 +6193,9 @@ msgstr "Ошибка"
 
 msgid "Failed <0>· 7d</0>"
 msgstr "С ошибкой <0>· 7 дн.</0>"
+
+msgid "Failed checks"
+msgstr "Неудачные проверки"
 
 msgid "Failed to accept invitation"
 msgstr "Не удалось принять приглашение"
@@ -6472,6 +6605,9 @@ msgstr "Не удалось запустить агента"
 msgid "Failed to start agent session."
 msgstr "Не удалось запустить сессию агента."
 
+msgid "Failed to stop agent"
+msgstr "Не удалось остановить агента"
+
 msgid "Failed to stop workspace run command"
 msgstr "Не удалось остановить команду запуска рабочей области"
 
@@ -6568,6 +6704,9 @@ msgstr "Действия с файлом"
 msgid "File changed on disk"
 msgstr "Файл на диске изменён"
 
+msgid "File contents"
+msgstr "Содержимое файлов"
+
 msgid "File is too large to preview"
 msgstr "Файл слишком большой для предпросмотра"
 
@@ -6591,6 +6730,9 @@ msgstr "Файл удалён на диске."
 
 msgid "File was deleted on disk. You still have unsaved changes."
 msgstr "Файл удалён на диске. У вас остались несохранённые изменения."
+
+msgid "Filenames"
+msgstr "Имена файлов"
 
 msgid "Files"
 msgstr "Файлы"
@@ -6624,6 +6766,9 @@ msgstr "Фильтр по автору: {label}"
 
 msgid "Filter by device"
 msgstr "Фильтр по устройству"
+
+msgid "Filter by member"
+msgstr "Фильтр по участнику"
 
 msgid "Filter by reviews"
 msgstr "Фильтр по ревью"
@@ -6919,6 +7064,9 @@ msgstr "Начните бесплатно · Кредитная карта не 
 msgid "Frequently<0/>asked questions"
 msgstr "Частые<0/>вопросы"
 
+msgid "Freshdesk"
+msgstr "Freshdesk"
+
 msgid "from"
 msgstr "от"
 
@@ -7069,6 +7217,9 @@ msgstr "GitHub отклоняет вызовы API с учётными данн�
 msgid "GitHub issues"
 msgstr "Задачи GitHub"
 
+msgid "GitHub organization or repository"
+msgstr "Организация или репозиторий GitHub"
+
 msgid "GitHub rate limit reached"
 msgstr "Достигнут лимит запросов GitHub"
 
@@ -7077,6 +7228,9 @@ msgstr "GitHub отклонил слияние"
 
 msgid "GitHub rejected this machine's credentials, so pull requests cannot be detected. Run \"gh auth login\" or fix GITHUB_TOKEN; the next retry is at {until}."
 msgstr "GitHub отклонил учётные данные этого компьютера, поэтому pull request не могут быть обнаружены. Выполните \"gh auth login\" или исправьте GITHUB_TOKEN; следующая попытка в {until}."
+
+msgid "GitHub returned incomplete PR results. Try a narrower repository scope."
+msgstr "GitHub вернул неполные результаты PR. Попробуйте ограничить поиск репозиторием."
 
 msgid "GitHub sign-in needed"
 msgstr "Требуется вход в GitHub"
@@ -7261,6 +7415,9 @@ msgstr "Скрыть email"
 
 msgid "Hide file tree"
 msgstr "Скрыть дерево файлов"
+
+msgid "Hide filters"
+msgstr "Скрыть фильтры"
 
 msgid "Hide folder"
 msgstr "Скрыть папку"
@@ -7915,6 +8072,12 @@ msgstr "Комментарий к задаче"
 msgid "Issue created"
 msgstr "Задача создана"
 
+msgid "Issue moved, but refreshing failed. Refresh the issue list."
+msgstr "Задача перемещена, но обновление не удалось. Обновите список задач."
+
+msgid "Issue moved."
+msgstr "Задача перемещена."
+
 msgid "Issue not found."
 msgstr "Задача не найдена."
 
@@ -7948,6 +8111,9 @@ msgstr "Курсив"
 msgid "Item"
 msgstr "Элемент"
 
+msgid "Items appear here when an agent needs input, your PR checks fail, or someone requests your review."
+msgstr "Элементы появляются здесь, когда агенту нужен ваш ввод, проверки ваших PR завершаются неудачно или кто-то запрашивает ваше ревью."
+
 msgid "Its own branch and copy of the files"
 msgstr "Собственная ветка и собственная копия файлов"
 
@@ -7959,6 +8125,24 @@ msgstr "Иван Иванов"
 
 msgid "JetBrains"
 msgstr "JetBrains"
+
+msgid "Jira"
+msgstr "Jira"
+
+msgid "Jira could not complete the request. Check your server URL and try again."
+msgstr "Jira не удалось выполнить запрос. Проверьте URL сервера и повторите попытку."
+
+msgid "Jira denied access. Check your credentials and permissions."
+msgstr "Jira отказала в доступе. Проверьте учётные данные и разрешения."
+
+msgid "Jira redirected the request. Check your server URL."
+msgstr "Jira перенаправила запрос. Проверьте URL сервера."
+
+msgid "Jira returned an unexpected response. Check your server URL and try again."
+msgstr "Jira вернула неожиданный ответ. Проверьте URL сервера и повторите попытку."
+
+msgid "Jira server URL"
+msgstr "URL сервера Jira"
 
 msgid "Join"
 msgstr "Присоединиться"
@@ -8019,6 +8203,9 @@ msgstr "Только мои"
 
 msgid "just now"
 msgstr "только что"
+
+msgid "Kanban"
+msgstr "Канбан"
 
 msgid "Kbd"
 msgstr "Kbd"
@@ -8231,6 +8418,9 @@ msgstr "Выйти из режима комментариев"
 msgid "Leave it empty to go back to the name the terminal reports."
 msgstr "Оставьте поле пустым, чтобы вернуть имя, которое сообщает терминал."
 
+msgid "Leave it empty to use the task name."
+msgstr "Оставьте поле пустым, чтобы использовать название задачи."
+
 msgid "Leave Organization"
 msgstr "Покинуть организацию"
 
@@ -8372,6 +8562,9 @@ msgstr "Привязать пул-реквест"
 msgid "Link task"
 msgstr "Привязать задачу"
 
+msgid "Link workspace"
+msgstr "Связать рабочее пространство"
+
 msgid "Linked {slug} to workspace"
 msgstr "{slug} привязана к рабочей области"
 
@@ -8438,6 +8631,12 @@ msgstr "Загрузить более ранние сообщения"
 msgid "Load more"
 msgstr "Показать ещё"
 
+msgid "Load more results, reconnect unavailable hosts, or check your GitHub connection, then refresh."
+msgstr "Загрузите больше результатов, повторно подключите недоступные хосты или проверьте подключение к GitHub, затем обновите страницу."
+
+msgid "Loaded issues: {shownCount}"
+msgstr "Загружено задач: {shownCount}"
+
 msgid "Loader"
 msgstr "Загрузчик"
 
@@ -8452,6 +8651,9 @@ msgstr "Загрузка настроек агента..."
 
 msgid "Loading and in-flight activity indicators"
 msgstr "Индикаторы загрузки и текущей активности"
+
+msgid "Loading available moves…"
+msgstr "Загрузка доступных перемещений…"
 
 msgid "Loading changes..."
 msgstr "Загрузка изменений..."
@@ -8500,6 +8702,9 @@ msgstr "Загрузка проекта…"
 
 msgid "Loading projects…"
 msgstr "Загрузка проектов…"
+
+msgid "Loading PRs…"
+msgstr "Загрузка PR…"
 
 msgid "Loading pull request…"
 msgstr "Загрузка пул-реквеста…"
@@ -9045,11 +9250,29 @@ msgstr "Почти вся история софта"
 msgid "Move {count} to Group"
 msgstr "Переместить {count} в группу"
 
+msgid "Move {name} left"
+msgstr "Переместить {name} влево"
+
+msgid "Move {name} right"
+msgstr "Переместить {name} вправо"
+
+msgid "Move canceled."
+msgstr "Перемещение отменено."
+
+msgid "Move issue"
+msgstr "Переместить задачу"
+
+msgid "Move to"
+msgstr "Переместить в"
+
 msgid "Move to group"
 msgstr "Переместить в группу"
 
 msgid "Move to Tab"
 msgstr "Переместить во вкладку"
+
+msgid "Moving issue…"
+msgstr "Перемещение задачи…"
 
 msgid "MRR"
 msgstr "MRR"
@@ -9079,6 +9302,12 @@ msgstr "Мой агент"
 
 msgid "My Tasks"
 msgstr "Мои задачи"
+
+msgid "My team"
+msgstr "Моя команда"
+
+msgid "My work"
+msgstr "Моя работа"
 
 msgid "Mystery Machinist"
 msgstr "Загадочный станочник"
@@ -9433,6 +9662,9 @@ msgstr "Авторы не найдены."
 msgid "No automations match"
 msgstr "Нет подходящих автоматизаций"
 
+msgid "No available moves. Open the issue in Jira to check its workflow."
+msgstr "Нет доступных перемещений. Откройте задачу в Jira, чтобы проверить её рабочий процесс."
+
 msgid "No background terminal sessions"
 msgstr "Нет фоновых сессий терминала"
 
@@ -9604,8 +9836,14 @@ msgstr "Нет известных создателей"
 msgid "No labels"
 msgstr "Без меток"
 
+msgid "No linked PR"
+msgstr "Нет связанного PR"
+
 msgid "No live sessions"
 msgstr "Нет активных сессий"
+
+msgid "No loaded items match this filter"
+msgstr "Среди загруженных элементов нет соответствующих этому фильтру"
 
 msgid "no logins"
 msgstr "нет логинов"
@@ -10261,6 +10499,9 @@ msgstr "Открыть {0}"
 msgid "Open {0} website"
 msgstr "Открыть сайт {0}"
 
+msgid "Open {appName}"
+msgstr "Открыть {appName}"
+
 msgid "Open {filePath}"
 msgstr "Открыть {filePath}"
 
@@ -10436,6 +10677,9 @@ msgstr "Открыть в Finder"
 msgid "Open in GitHub"
 msgstr "Открыть в GitHub"
 
+msgid "Open in Jira"
+msgstr "Открыть в Jira"
+
 msgid "Open in Linear"
 msgstr "Открыть в Linear"
 
@@ -10481,6 +10725,9 @@ msgstr "Открыть задачу на GitHub"
 
 msgid "Open issues"
 msgstr "Открытые задачи"
+
+msgid "Open Jira"
+msgstr "Открыть Jira"
 
 msgid "Open leaderboard"
 msgstr "Открыть рейтинг"
@@ -10575,9 +10822,6 @@ msgstr "Открыть панель"
 
 msgid "Open ship options"
 msgstr "Открыть параметры отправки"
-
-msgid "Open Superset"
-msgstr "Открыть Superset"
 
 msgid "Open Superset on that computer"
 msgstr "Откройте Superset на этом компьютере"
@@ -10842,6 +11086,9 @@ msgstr "Владелец — {0}; изменять эту автоматизац
 msgid "Owner"
 msgstr "Владелец"
 
+msgid "owner/repository"
+msgstr "owner/repository"
+
 msgid "Owns every PTY session and survives app restarts."
 msgstr "Владеет всеми PTY-сессиями и переживает перезапуски приложения."
 
@@ -10956,6 +11203,9 @@ msgstr "Отчасти хроника, отчасти ставка. Первые
 msgid "Partial"
 msgstr "Частично"
 
+msgid "Partial results"
+msgstr "Частичные результаты"
+
 msgid "Partner, Transpose Platform"
 msgstr "Партнёр, Transpose Platform"
 
@@ -11058,6 +11308,9 @@ msgstr "Постоянный доступ к папкам «Документы»
 
 msgid "Personal"
 msgstr "Личное"
+
+msgid "Personal access token"
+msgstr "Персональный токен доступа"
 
 msgid "Phantom Forklift"
 msgstr "Призрачный погрузчик"
@@ -11269,6 +11522,9 @@ msgstr "PR #{0} создан"
 msgid "PR Closed"
 msgstr "PR закрыт"
 
+msgid "PR links from Jira tickets and GitHub."
+msgstr "Ссылки на PR из задач Jira и GitHub."
+
 msgid "PR merged"
 msgstr "PR объединён"
 
@@ -11283,6 +11539,9 @@ msgstr "Комментарий в ревью PR"
 
 msgid "PR review submitted…"
 msgstr "Отправлено ревью PR…"
+
+msgid "PR source"
+msgstr "Источник PR"
 
 msgid "PR state"
 msgstr "Состояние PR"
@@ -11358,6 +11617,9 @@ msgstr "Предыдущая ветка"
 
 msgid "Previous comment"
 msgstr "Предыдущий комментарий"
+
+msgid "Previous copies"
+msgstr "Предыдущие копии"
 
 msgid "Previous file"
 msgstr "Предыдущий файл"
@@ -11589,6 +11851,9 @@ msgstr "Создание не удалось, песочница снесена.
 msgid "PRs a week"
 msgstr "PR в неделю"
 
+msgid "PRs unavailable"
+msgstr "PR недоступны"
+
 msgid "Public"
 msgstr "Публичный"
 
@@ -11638,6 +11903,9 @@ msgstr "Пул-реквесты"
 
 msgid "Pull Requests"
 msgstr "Пул-реквесты"
+
+msgid "Pull requests are turned off. Only agent input is shown."
+msgstr "Пул-реквесты отключены. Показаны только запросы ввода от агентов."
 
 msgid "Purple"
 msgstr "Фиолетовый"
@@ -11707,17 +11975,17 @@ msgstr "Тихо"
 msgid "Quit"
 msgstr "Выйти"
 
+msgid "Quit {appName}"
+msgstr "Выйти из {appName}"
+
+msgid "Quit {appName} and stop all background services?"
+msgstr "Выйти из {appName} и остановить все фоновые службы?"
+
+msgid "Quit {appName} Completely"
+msgstr "Полностью выйти из {appName}"
+
 msgid "Quit Completely"
 msgstr "Выйти полностью"
-
-msgid "Quit Superset"
-msgstr "Выйти из Superset"
-
-msgid "Quit Superset and stop all background services?"
-msgstr "Выйти из Superset и остановить все фоновые службы?"
-
-msgid "Quit Superset Completely"
-msgstr "Полностью выйти из Superset"
 
 msgid "Quit the source browser first so its logins are saved to disk. You'll be asked to allow Keychain access."
 msgstr "Сначала закройте исходный браузер, чтобы его логины сохранились на диск. Потребуется разрешить доступ к Keychain."
@@ -11918,6 +12186,9 @@ msgstr "Обновить пул-реквесты"
 msgid "Refresh repositories"
 msgstr "Обновить репозитории"
 
+msgid "Refresh Superset Workspaces…"
+msgstr "Обновить рабочие пространства Superset…"
+
 msgid "Refreshes when Claude Code next runs."
 msgstr "Обновится при следующем запуске Claude Code."
 
@@ -12014,6 +12285,9 @@ msgstr "Удалить {0}"
 
 msgid "Remove {label}?"
 msgstr "Удалить {label}?"
+
+msgid "Remove @{login}"
+msgstr "Удалить @{login}"
 
 msgid "Remove attachment"
 msgstr "Удалить вложение"
@@ -12120,6 +12394,9 @@ msgstr "Переименовать страницу"
 
 msgid "Rename session"
 msgstr "Переименовать сессию"
+
+msgid "Rename subagent"
+msgstr "Переименовать субагента"
 
 msgid "rename the branch"
 msgstr "переименовать ветку"
@@ -12393,6 +12670,9 @@ msgstr "Перезапустить демон терминала?"
 msgid "Restart terminals"
 msgstr "Перезапустить терминалы"
 
+msgid "Restart to find existing Superset workspaces. Their folders will be opened in place."
+msgstr "Перезапустите приложение, чтобы найти существующие рабочие пространства Superset. Их папки откроются в исходном расположении."
+
 msgid "Restart to use the latest version of Superset."
 msgstr "Перезапустите приложение, чтобы использовать последнюю версию Superset."
 
@@ -12558,6 +12838,9 @@ msgstr "Проверяйте пул-реквесты внутри Superset: па
 msgid "Review requested"
 msgstr "Запрошено ревью"
 
+msgid "Review requests"
+msgstr "Запросы на ревью"
+
 msgid "Review required"
 msgstr "Требуется ревью"
 
@@ -12569,6 +12852,9 @@ msgstr "Ветка обсуждения ревью…"
 
 msgid "Reviewed by you"
 msgstr "Проверено вами"
+
+msgid "Reviewer needed"
+msgstr "Требуется рецензент"
 
 msgid "Reviewers"
 msgstr "Ревьюеры"
@@ -12931,6 +13217,9 @@ msgstr "Поиск авторов…"
 msgid "Search automations"
 msgstr "Поиск автоматизаций"
 
+msgid "Search boards…"
+msgstr "Поиск досок…"
+
 msgid "Search branches..."
 msgstr "Поиск веток..."
 
@@ -12939,6 +13228,9 @@ msgstr "Поиск по имени ключа..."
 
 msgid "Search changed files"
 msgstr "Поиск изменённых файлов"
+
+msgid "Search contributors or enter a username…"
+msgstr "Найти участников или ввести имя пользователя…"
 
 msgid "Search developers"
 msgstr "Поиск разработчиков"
@@ -12951,6 +13243,15 @@ msgstr "Поиск по документации..."
 
 msgid "Search environments..."
 msgstr "Поиск окружений..."
+
+msgid "Search file contents"
+msgstr "Поиск по содержимому файлов"
+
+msgid "Search file contents..."
+msgstr "Поиск по содержимому файлов..."
+
+msgid "Search filenames and text in your workspace"
+msgstr "Поиск имён файлов и текста в рабочем пространстве"
 
 msgid "Search files"
 msgstr "Поиск по файлам"
@@ -12984,6 +13285,9 @@ msgstr "Поиск в {frameTitle}…"
 
 msgid "Search issues..."
 msgstr "Поиск задач..."
+
+msgid "Search mode"
+msgstr "Режим поиска"
 
 msgid "Search pages"
 msgstr "Поиск страниц"
@@ -13078,6 +13382,9 @@ msgstr "Тайный начальник смены"
 msgid "Sections"
 msgstr "Разделы"
 
+msgid "Secure storage is unavailable. Unlock your system keychain and try again."
+msgstr "Защищённое хранилище недоступно. Разблокируйте системную связку ключей и повторите попытку."
+
 msgid "Security"
 msgstr "Безопасность"
 
@@ -13125,6 +13432,9 @@ msgstr "Посмотрите, какое место ваши последние 
 
 msgid "Select"
 msgstr "Селект"
+
+msgid "Select a file to open"
+msgstr "Выберите файл для открытия"
 
 msgid "Select a project"
 msgstr "Выберите проект"
@@ -13577,6 +13887,9 @@ msgstr "Показать email"
 msgid "Show file tree"
 msgstr "Показать дерево файлов"
 
+msgid "Show filters"
+msgstr "Показать фильтры"
+
 msgid "Show in bar"
 msgstr "Показать на панели"
 
@@ -13640,9 +13953,6 @@ msgstr "Показать закрытые ({resolvedCount})"
 msgid "Show review comments"
 msgstr "Показать комментарии ревью"
 
-msgid "Show running agents under each workspace in the sidebar, with their live status."
-msgstr "Показывать работающих агентов под каждой рабочей областью в боковой панели, с их текущим статусом."
-
 msgid "Show Scripts Bar"
 msgstr "Показать панель скриптов"
 
@@ -13660,6 +13970,9 @@ msgstr "Показывать вкладку использования на бо
 
 msgid "showArrow opt-in"
 msgstr "showArrow по желанию"
+
+msgid "Showing the first {SEARCH_LIMIT} results. Narrow your search or add a filter."
+msgstr "Показаны первые {SEARCH_LIMIT} результатов. Уточните запрос или добавьте фильтр."
 
 msgid "Shown"
 msgstr "Показанные"
@@ -13928,12 +14241,21 @@ msgstr "Некоторые файлы превышают максимальны�
 msgid "Some models were priced with a fallback rate"
 msgstr "Для части моделей использована резервная ставка тарификации"
 
+msgid "Some PR links could not be loaded. Check Jira permissions and GitHub CLI access, then refresh."
+msgstr "Не удалось загрузить некоторые ссылки на PR. Проверьте разрешения Jira и доступ через GitHub CLI, затем обновите."
+
 #. placeholder {0}: error.message
 msgid "Some repositories could not be loaded: {0}"
 msgstr "Некоторые репозитории не удалось загрузить: {0}"
 
 msgid "Some sessions could not be killed"
 msgstr "Некоторые сессии завершить не удалось"
+
+msgid "Some sources could not be fully checked."
+msgstr "Некоторые источники не удалось проверить полностью."
+
+msgid "Some Superset workspaces could not be connected."
+msgstr "Не удалось подключить некоторые рабочие пространства Superset."
 
 msgid "Some themes were skipped"
 msgstr "Некоторые темы пропущены"
@@ -14279,6 +14601,12 @@ msgstr "Остановить"
 msgid "Stop {0}"
 msgstr "Остановить {0}"
 
+msgid "Stop agent"
+msgstr "Остановить агента"
+
+msgid "Stop agent and subagents"
+msgstr "Остановить агента и субагентов"
+
 msgid "Stop dictation"
 msgstr "Остановить диктовку"
 
@@ -14325,6 +14653,9 @@ msgstr "Структурированный прогресс: цепочка ра
 
 msgid "Subagent"
 msgstr "Субагент"
+
+msgid "Subagent name"
+msgstr "Имя субагента"
 
 msgid "Subagents"
 msgstr "Субагенты"
@@ -14738,6 +15069,9 @@ msgstr "targetHostId не совпадает с хостом рабочей об
 msgid "Task"
 msgstr "Задача"
 
+msgid "Task {shortId}"
+msgstr "Задача {shortId}"
+
 msgid "Task Launch"
 msgstr "Запуск задачи"
 
@@ -14782,6 +15116,9 @@ msgstr "команда"
 
 msgid "Team"
 msgstr "Команда"
+
+msgid "Team board"
+msgstr "Доска команды"
 
 msgid "Team collaboration"
 msgstr "Совместная работа команды"
@@ -15078,6 +15415,9 @@ msgstr "Хост вернулся к предыдущей сборке."
 msgid "The human reads every line before it merges."
 msgstr "Человек читает каждую строку перед слиянием."
 
+msgid "The Jira board changed. Reopen Columns and try again."
+msgstr "Доска Jira изменилась. Снова откройте меню «Столбцы» и повторите попытку."
+
 msgid "The job description shifts. Engineers stop being typists with taste and become dispatchers with taste: decomposing work, routing it to fleets, arbitrating conflicts between agents that both touched the same module."
 msgstr "Описание работы меняется. Инженеры перестают быть машинистками со вкусом и становятся диспетчерами со вкусом: декомпозируют работу, раздают её флотам, разрешают конфликты между агентами, которые оба тронули один модуль."
 
@@ -15327,6 +15667,9 @@ msgstr "Это закроет все сессии терминала вашей 
 msgid "This closes the selected workspaces and their terminals. The project's files and branches stay as they are."
 msgstr "Выбранные рабочие области и их терминалы будут закрыты. Файлы и ветки проекта останутся без изменений."
 
+msgid "This closes the workspace and its terminals. Files and branches stay on disk."
+msgstr "Рабочее пространство и его терминалы будут закрыты. Файлы и ветки останутся на диске."
+
 msgid "This closes the workspace and its terminals. The project's files, branches and other workspaces stay as they are."
 msgstr "Рабочая область и её терминалы будут закрыты. Файлы, ветки и другие рабочие области проекта останутся без изменений."
 
@@ -15416,6 +15759,9 @@ msgstr "Этот тенант Microsoft уже подключён другой �
 
 msgid "This month"
 msgstr "В этом месяце"
+
+msgid "This move requires fields in Jira."
+msgstr "Для этого перемещения нужно заполнить поля в Jira."
 
 msgid "This only changes the display name, not the branch."
 msgstr "Это меняет только отображаемое имя, а не ветку."
@@ -15516,6 +15862,9 @@ msgstr "В этой ветке нет комментария, на которы�
 
 msgid "This thread is not open to agents. A person has to comment on it before an agent can reply."
 msgstr "Эта ветка не передана агенту. Сначала кто-то должен передать её со страницы."
+
+msgid "This transition is no longer available. Refresh the issue and try again."
+msgstr "Этот переход больше недоступен. Обновите задачу и повторите попытку."
 
 msgid "This user runs the host service for this device and can't be removed."
 msgstr "Этот пользователь запускает службу хоста для этого устройства, его нельзя удалить."
@@ -15891,6 +16240,9 @@ msgstr "Опишите задачу для Claude…"
 msgid "Type an email, press Enter"
 msgstr "Введите email, нажмите Enter"
 
+msgid "Type at least 2 characters to find more people."
+msgstr "Введите не менее 2 символов, чтобы найти других людей."
+
 msgid "Type here to send to the terminal"
 msgstr "Пишите здесь, чтобы отправить в терминал"
 
@@ -15899,6 +16251,9 @@ msgstr "Введите название организации для подтв
 
 msgid "Type to search files..."
 msgstr "Начните вводить, чтобы найти файлы..."
+
+msgid "Type to search your workspace"
+msgstr "Введите текст для поиска в рабочем пространстве"
 
 msgid "TypeScript"
 msgstr "TypeScript"
@@ -15980,6 +16335,9 @@ msgstr "Идёт"
 
 msgid "Undo"
 msgstr "Отменить"
+
+msgid "Unfinished"
+msgstr "Незавершённые"
 
 msgid "Ungroup"
 msgstr "Убрать из группы"
@@ -16266,6 +16624,9 @@ msgstr "Использовать «{0}»"
 msgid "Use a workspace-relative path or an absolute folder."
 msgstr "Укажите путь относительно рабочей области или абсолютную папку."
 
+msgid "Use an HTTPS Jira server URL without a username, password, query, or fragment."
+msgstr "Используйте URL сервера Jira с протоколом HTTPS без имени пользователя, пароля, параметров запроса или фрагмента."
+
 msgid "Use another port"
 msgstr "Использовать другой порт"
 
@@ -16274,6 +16635,9 @@ msgstr "Используйте любых агентов"
 
 msgid "Use as workspace run"
 msgstr "Использовать как запуск рабочей области"
+
+msgid "Use automatic name"
+msgstr "Использовать автоматическое имя"
 
 msgid "Use Claude Code, Codex, OpenCode, or any coding agent for each task. Your workspaces, branches, and review flow stay the same."
 msgstr "Используйте Claude Code, Codex, OpenCode или любого кодового агента под каждую задачу. Ваши рабочие области, ветки и процесс ревью остаются прежними."
@@ -16287,6 +16651,9 @@ msgstr "Использовать для новых агентов"
 msgid "Use global default"
 msgstr "Использовать общий по умолчанию"
 
+msgid "Use Move to to choose a status with the keyboard."
+msgstr "Используйте «Переместить в», чтобы выбрать статус с помощью клавиатуры."
+
 msgid "Use Superset on mobile"
 msgstr "Используйте Superset на телефоне"
 
@@ -16295,6 +16662,9 @@ msgstr "Используйте Superset на телефоне с Pro."
 
 msgid "Use the desktop app to start running parallel coding agents."
 msgstr "Используйте десктопное приложение, чтобы запускать параллельных кодовых агентов."
+
+msgid "Use the email address of the Atlassian account that created the token."
+msgstr "Используйте адрес электронной почты аккаунта Atlassian, в котором создан токен."
 
 msgid "Use the new workspace experience."
 msgstr "Использовать новый интерфейс рабочих областей."
@@ -16352,6 +16722,9 @@ msgstr "Пользователь не найден"
 
 msgid "user@example.com"
 msgstr "user@example.com"
+
+msgid "Uses your GitHub CLI login to match Jira keys in PR titles and descriptions."
+msgstr "Использует вход через GitHub CLI для поиска ключей Jira в заголовках и описаниях PR."
 
 msgid "Using random branch name (AI generation timed out)"
 msgstr "Используется случайное имя ветки (истекло время генерации AI)"
@@ -16888,6 +17261,9 @@ msgstr "Рабочая область создана"
 msgid "Workspace created from PR"
 msgstr "Рабочая область создана из PR"
 
+msgid "Workspace created, but linking it to Jira failed."
+msgstr "Рабочая область создана, но связать её с Jira не удалось."
+
 msgid "Workspace details"
 msgstr "Сведения о рабочей области"
 
@@ -17135,6 +17511,9 @@ msgstr "Вы собираетесь сменить свою роль с {current
 msgid "You're about to get Superset"
 msgstr "Сейчас вы получите Superset"
 
+msgid "You're all caught up"
+msgstr "Все дела выполнены"
+
 msgid "You're all set!"
 msgstr "Всё готово!"
 
@@ -17183,6 +17562,12 @@ msgstr "Ваша учётная запись GitHub не может получи
 msgid "Your GitHub link comes from the account you signed in with, so it shows as verified and cannot be edited here."
 msgstr "Ссылка на GitHub берётся из аккаунта, через который вы вошли, поэтому она отмечена как подтверждённая и не редактируется здесь."
 
+msgid "Your Jira account is inactive."
+msgstr "Ваша учётная запись Jira неактивна."
+
+msgid "Your Jira connection is stored on this device."
+msgstr "Ваше подключение к Jira хранится на этом устройстве."
+
 msgid "Your last payment failed. Update your payment method to keep Pro."
 msgstr "Последний платёж не прошёл. Обновите способ оплаты, чтобы сохранить Pro."
 
@@ -17216,6 +17601,9 @@ msgstr "Подписка будет пересчитана соответств�
 
 msgid "Your Superset download is starting."
 msgstr "Загрузка Superset начинается."
+
+msgid "Your team’s issues and pull requests."
+msgstr "Задачи и пул-реквесты вашей команды."
 
 msgid "Your terminal sessions won't be interrupted."
 msgstr "Сессии терминала не будут прерваны."

@@ -189,14 +189,6 @@ msgstr "{0, plural, one {このホストで#件} other {このホストで#件}}
 msgid "{0, plural, one {# result} other {# results}}"
 msgstr "{0, plural, one {#件の結果} other {#件の結果}}"
 
-#. placeholder {0}: agents.length
-msgid "{0, plural, one {# running agent — hide details} other {# running agents — hide details}}"
-msgstr "{0, plural, one {実行中のエージェント#件 — 詳細を隠す} other {実行中のエージェント#件 — 詳細を隠す}}"
-
-#. placeholder {0}: agents.length
-msgid "{0, plural, one {# running agent — show details} other {# running agents — show details}}"
-msgstr "{0, plural, one {実行中のエージェント#件 — 詳細を表示} other {実行中のエージェント#件 — 詳細を表示}}"
-
 #. placeholder {0}: aliveCount ?? 0
 msgid "{0, plural, one {# session running} other {# sessions running}}"
 msgstr "{0, plural, one {#件のセッションが実行中} other {#件のセッションが実行中}}"
@@ -885,6 +877,9 @@ msgstr "人間{share}%"
 msgid "{shown} of {total}"
 msgstr "{total}件中{shown}件"
 
+msgid "{shownCount} of {totalCount} issues"
+msgstr "{totalCount} 件中 {shownCount} 件の課題"
+
 #. placeholder {0}: formatUsd(shownUsd)
 #. placeholder {1}: formatTokens(shownTokens)
 msgid "{shownCount} shown · {0} · {1} tokens"
@@ -898,9 +893,6 @@ msgstr "スター{starCount}件、まだ増えています"
 
 msgid "{stars} stars · {perDay}/day this week · {peakPerDay}/day at peak"
 msgstr "{stars}スター · 今週{perDay}/日 · ピーク{peakPerDay}/日"
-
-msgid "{subagentCount, plural, one {# subagent running} other {# subagents running}}"
-msgstr "{subagentCount, plural, other {# 件のサブエージェントが実行中}}"
 
 msgid "{successCount, plural, one {Created # workspace, {failCount} failed} other {Created # workspaces, {failCount} failed}}"
 msgstr "{successCount, plural, one {#件のワークスペースを作成、{failCount}件失敗} other {#件のワークスペースを作成、{failCount}件失敗}}"
@@ -952,6 +944,9 @@ msgstr "{updatedLabel}をデフォルトに復元しました"
 
 msgid "{used} used"
 msgstr "{used} 使用済み"
+
+msgid "{visibleCount} visible · {shownCount} loaded"
+msgstr "{visibleCount} 件表示 · {shownCount} 件読み込み済み"
 
 msgid "{waiting} Waiting"
 msgstr "{waiting}件待機中"
@@ -1423,6 +1418,9 @@ msgstr "追加"
 msgid "Add {0} account"
 msgstr "{0}アカウントを追加"
 
+msgid "Add @{normalizedSearch}"
+msgstr "@{normalizedSearch} を追加"
+
 msgid "Add a comment…"
 msgstr "コメントを追加…"
 
@@ -1613,6 +1611,9 @@ msgstr "エージェントが完了しました"
 msgid "Agent Independence"
 msgstr "エージェント非依存"
 
+msgid "Agent input, failed checks on your PRs, and reviews requested from you."
+msgstr "入力を待つエージェント、自分のPRで失敗したチェック、自分へのレビュー依頼。"
+
 msgid "Agent launch configuration"
 msgstr "エージェント起動設定"
 
@@ -1753,6 +1754,9 @@ msgstr "すべてのチェックが成功"
 msgid "All checks skipped or cancelled"
 msgstr "すべてのチェックがスキップまたはキャンセルされました"
 
+msgid "All columns are hidden. Use Columns to show them."
+msgstr "すべての列が非表示です。「列」で表示する列を選択してください。"
+
 msgid "All comments"
 msgstr "すべてのコメント"
 
@@ -1796,8 +1800,8 @@ msgstr "{ACCOUNT_DELETION_GRACE_DAYS}日後にすべてのデータが完全に�
 msgid "All of your data will be permanently deleted after {ACCOUNT_DELETION_GRACE_DAYS} days. Sign back in before then to restore your account."
 msgstr "すべてのデータは{ACCOUNT_DELETION_GRACE_DAYS}日後に完全に削除されます。それまでに再度サインインすればアカウントを復元できます。"
 
-msgid "All open terminal sessions will be killed and any running host-services will be stopped. Use “Close Superset” instead if you want services to keep running for the next launch."
-msgstr "開いているターミナルセッションはすべて終了し、実行中のhost-serviceも停止します。次回の起動までサービスを実行し続けたい場合は、「Supersetを閉じる」を使用してください。"
+msgid "All open terminal sessions will be killed and any running host-services will be stopped. Use “Close {appName}” instead if you want services to keep running for the next launch."
+msgstr "開いているターミナルセッションはすべて終了し、実行中のhost-serviceも停止します。次回の起動までサービスを実行し続けたい場合は、「{appName}を閉じる」を使用してください。"
 
 msgid "All pages"
 msgstr "すべてのページ"
@@ -1828,6 +1832,9 @@ msgstr "アップグレード後もすべてのセッションが維持されま
 
 msgid "All sessions were closed and a fresh daemon is running."
 msgstr "すべてのセッションを閉じ、新しいデーモンが動作しています。"
+
+msgid "All statuses"
+msgstr "すべてのステータス"
 
 msgid "All tasks"
 msgstr "すべてのタスク"
@@ -2069,6 +2076,12 @@ msgstr "APIキー"
 msgid "API Keys"
 msgstr "APIキー"
 
+msgid "API token"
+msgstr "APIトークン"
+
+msgid "API token with scopes"
+msgstr "スコープ付きAPIトークン"
+
 msgid "API-equivalent"
 msgstr "API換算"
 
@@ -2199,6 +2212,9 @@ msgstr "Aspect Ratio"
 msgid "Assigned"
 msgstr "割り当て"
 
+msgid "Assigned to me"
+msgstr "自分に割り当て"
+
 msgid "Assignee"
 msgstr "担当者"
 
@@ -2259,6 +2275,18 @@ msgstr "添付にはオンラインのホストが必要です"
 msgid "Attempt before checks pass"
 msgstr "チェック通過前に実行"
 
+msgid "Attention"
+msgstr "要対応"
+
+msgid "Attention filters"
+msgstr "要対応項目のフィルター"
+
+msgid "Attention inbox"
+msgstr "要対応ボックス"
+
+msgid "Attention inbox is turned off"
+msgstr "要対応ボックスはオフになっています"
+
 msgid "Attention queue"
 msgstr "アテンションキュー"
 
@@ -2285,6 +2313,9 @@ msgstr "認証コード"
 
 msgid "Authentication failed"
 msgstr "認証に失敗しました"
+
+msgid "Authentication method"
+msgstr "認証方法"
 
 msgid "Author"
 msgstr "作成者"
@@ -2706,6 +2737,9 @@ msgstr "エージェントを、ひとつの場所に。"
 msgid "Browse and install skills, MCP servers, and agent configs shared by the community."
 msgstr "コミュニティが共有したスキル、MCPサーバー、エージェント設定を閲覧してインストールできます。"
 
+msgid "Browse files"
+msgstr "ファイルを参照"
+
 msgid "Browse for directory"
 msgstr "ディレクトリを参照"
 
@@ -3088,6 +3122,9 @@ msgstr "当座+普通+Treasuryの推移。段差は資金調達のトランシ�
 msgid "Checking agents…"
 msgstr "エージェントを確認中…"
 
+msgid "Checking for items needing attention…"
+msgstr "対応が必要な項目を確認中…"
+
 msgid "Checking host…"
 msgstr "ホストを確認中…"
 
@@ -3142,11 +3179,17 @@ msgstr "プルリクエストを作成する前に、プルリクエスト画面
 msgid "Choose a section."
 msgstr "セクションを選んでください。"
 
+msgid "Choose a team board to see everyone’s issues."
+msgstr "チームボードを選択すると、全員の課題を表示できます。"
+
 msgid "Choose agent"
 msgstr "エージェントを選択"
 
 msgid "Choose an existing repo folder"
 msgstr "既存のリポジトリフォルダを選択"
+
+msgid "Choose another filter or refresh to check again."
+msgstr "別のフィルターを選ぶか、更新してもう一度確認してください。"
 
 msgid "Choose app"
 msgstr "アプリを選択"
@@ -3160,6 +3203,12 @@ msgstr "トップバーから変更ビューをどのように開くかを選択
 msgid "Choose how to open file paths when Cmd+clicking in the terminal"
 msgstr "ターミナルでCmd+クリックしたときのファイルパスの開き方"
 
+msgid "Choose team board"
+msgstr "チームボードを選択"
+
+msgid "Choose up to 20 people for your My team PR filter. Saved on this Mac."
+msgstr "「自分のチーム」のPRフィルターに含めるメンバーを最大20人選択します。このMacに保存されます。"
+
 msgid "Choose what to clear from the in-app browser."
 msgstr "アプリ内ブラウザから消去する項目を選択してください。"
 
@@ -3168,6 +3217,12 @@ msgstr "Supersetから通知するタイミングを選びます。"
 
 msgid "Choose which agent watches this page for comments"
 msgstr "このページのコメントを監視するエージェントを選択"
+
+msgid "Choose which columns appear and use the arrows to set their left-to-right order."
+msgstr "表示する列を選び、矢印で左から右への順序を設定します。"
+
+msgid "Choose which features appear in the app. Changes apply immediately."
+msgstr "アプリに表示する機能を選択します。変更はすぐに適用されます。"
 
 msgid "Churn"
 msgstr "解約"
@@ -3345,6 +3400,9 @@ msgstr "閉じる"
 msgid "Close {0}"
 msgstr "{0}を閉じる"
 
+msgid "Close {appName}"
+msgstr "{appName}を閉じる"
+
 #. placeholder {0}: data.number
 msgid "Close #{0}?"
 msgstr "#{0}をクローズしますか?"
@@ -3441,9 +3499,6 @@ msgstr "レビューフィルターを閉じる"
 msgid "Close session"
 msgstr "セッションを閉じる"
 
-msgid "Close Superset"
-msgstr "Supersetを閉じる"
-
 msgid "Close tab"
 msgstr "タブを閉じる"
 
@@ -3530,6 +3585,9 @@ msgstr "折りたたむ"
 msgid "Collapse {0}"
 msgstr "{0}を折りたたむ"
 
+msgid "Collapse agents"
+msgstr "エージェントを折りたたむ"
+
 msgid "Collapse all"
 msgstr "すべて折りたたむ"
 
@@ -3544,6 +3602,9 @@ msgstr "ファイルを折りたたむ"
 
 msgid "Collapse project"
 msgstr "プロジェクトを折りたたむ"
+
+msgid "Collapse subagents"
+msgstr "サブエージェントを折りたたむ"
 
 msgid "Collapse thread"
 msgstr "スレッドを折りたたむ"
@@ -3562,6 +3623,9 @@ msgstr "収集中…"
 
 msgid "Color"
 msgstr "色"
+
+msgid "Columns"
+msgstr "列"
 
 msgid "Combine all commits"
 msgstr "すべてのコミットを1つに統合"
@@ -3625,6 +3689,9 @@ msgstr "コメントが見つかりません"
 
 msgid "Comment not posted"
 msgstr "コメントを投稿できませんでした"
+
+msgid "Comment on PR"
+msgstr "PR にコメント"
 
 msgid "Comment on this page"
 msgstr "このページにコメント"
@@ -3701,6 +3768,9 @@ msgstr "デフォルトスタイルと比較"
 
 msgid "complete"
 msgstr "終了"
+
+msgid "Complete the required fields in Jira before moving this issue."
+msgstr "このIssueを移動する前に、Jiraで必須項目を入力してください。"
 
 msgid "Completed"
 msgstr "完了"
@@ -3789,6 +3859,9 @@ msgstr "外部サービスを接続してデータを同期します。"
 msgid "Connect Google"
 msgstr "Googleを接続"
 
+msgid "Connect Jira in Settings to see your tickets."
+msgstr "設定で Jira に接続すると、チケットを確認できます。"
+
 msgid "Connect Linear"
 msgstr "Linearを接続"
 
@@ -3819,6 +3892,9 @@ msgstr "このコンピューターに接続"
 msgid "Connect your GitHub repositories and sync pull requests. Track CI status and reviews across your team."
 msgstr "GitHubリポジトリを接続してプルリクエストを同期します。チーム全体のCIステータスとレビューを追跡できます。"
 
+msgid "Connect your Jira site in Settings to see your issues."
+msgstr "設定でJiraサイトに接続して課題を表示してください。"
+
 msgid "Connect your Linear workspace to sync issues and manage tasks directly from Superset."
 msgstr "LinearワークスペースをつなぐとSupersetから直接issueを同期しタスクを管理できます。"
 
@@ -3842,6 +3918,9 @@ msgstr "{label} に接続しました"
 
 msgid "Connected as"
 msgstr "接続アカウント"
+
+msgid "Connected projects only. Refreshes every minute while this page is open."
+msgstr "接続済みプロジェクトのみが対象です。このページを開いている間は毎分更新されます。"
 
 msgid "Connected to"
 msgstr "接続先"
@@ -4272,6 +4351,9 @@ msgstr "環境を読み込めませんでした"
 msgid "Could not load environments."
 msgstr "環境を読み込めませんでした。"
 
+msgid "Could not load GitHub PRs. Check GitHub CLI access and try again."
+msgstr "GitHubのPRを読み込めませんでした。GitHub CLIのアクセス権を確認して再試行してください。"
+
 msgid "Could not load image"
 msgstr "画像を読み込めませんでした"
 
@@ -4305,6 +4387,9 @@ msgstr "リンクを開けませんでした"
 msgid "Could not open Photos"
 msgstr "「写真」を開けませんでした"
 
+msgid "Could not reach Jira. Check your network or VPN and try again."
+msgstr "Jira に接続できませんでした。ネットワークまたは VPN を確認して、もう一度お試しください。"
+
 msgid "Could not reach the desktop."
 msgstr "デスクトップに接続できませんでした。"
 
@@ -4326,6 +4411,9 @@ msgstr "このワークスペースのマシンに接続できませんでした
 msgid "Could not reactivate"
 msgstr "再有効化できませんでした"
 
+msgid "Could not read Jira preferences."
+msgstr "Jiraの設定を読み取れませんでした。"
+
 msgid "Could not read selected file"
 msgstr "選択したファイルを読み取れませんでした"
 
@@ -4335,11 +4423,20 @@ msgstr "ドロップされたファイルを読み取れませんでした"
 msgid "Could not read the Google account. Please try again."
 msgstr "Googleアカウントを読み取れませんでした。もう一度お試しください。"
 
+msgid "Could not read the saved Jira connection. Disconnect and connect again."
+msgstr "保存された Jira 接続を読み取れませんでした。接続を切断して、もう一度接続してください。"
+
 msgid "Could not record cloud workspace"
 msgstr "クラウドワークスペースを記録できませんでした"
 
 msgid "Could not record environment"
 msgstr "環境を保存できませんでした"
+
+msgid "Could not remove the Jira connection. Check local storage permissions and try again."
+msgstr "Jira 接続を削除できませんでした。ローカルストレージの権限を確認して、もう一度お試しください。"
+
+msgid "Could not rename subagent. Try again."
+msgstr "サブエージェントの名前を変更できませんでした。もう一度お試しください。"
 
 msgid "Could not rename the session"
 msgstr "セッションの名前を変更できませんでした"
@@ -4358,6 +4455,12 @@ msgstr "このコメントを解決できませんでした"
 
 msgid "Could not restart the host service"
 msgstr "ホストサービスを再起動できませんでした"
+
+msgid "Could not save Jira preferences."
+msgstr "Jiraの設定を保存できませんでした。"
+
+msgid "Could not save the Jira connection. Check local storage permissions and try again."
+msgstr "Jira 接続を保存できませんでした。ローカルストレージの権限を確認して、もう一度お試しください。"
 
 msgid "Could not send"
 msgstr "送信できませんでした"
@@ -5534,6 +5637,12 @@ msgstr "ドラフト作成"
 msgid "drafted 3 support replies"
 msgstr "サポート返信を3件下書き"
 
+msgid "Drag ended."
+msgstr "ドラッグが終了しました。"
+
+msgid "Drag issue"
+msgstr "Issueをドラッグ"
+
 msgid "Drag to move"
 msgstr "ドラッグして移動"
 
@@ -5542,6 +5651,9 @@ msgstr "ドラッグして並べ替え"
 
 msgid "Drag workspaces to reorder in Manual order"
 msgstr "手動順ではワークスペースをドラッグして並べ替え"
+
+msgid "Dragging issue."
+msgstr "Issueをドラッグ中です。"
 
 msgid "Drawer"
 msgstr "Drawer"
@@ -5686,6 +5798,9 @@ msgstr "実行スクリプトを編集"
 msgid "Edit script"
 msgstr "スクリプトを編集"
 
+msgid "Edit team"
+msgstr "チームを編集"
+
 msgid "Edited"
 msgstr "編集"
 
@@ -5763,6 +5878,9 @@ msgstr "{0}を有効にする"
 msgid "Enable an agent in Settings > Agents first"
 msgstr "先に「設定 > エージェント」でエージェントを有効にしてください"
 
+msgid "Enable attention inbox"
+msgstr "要対応ボックスを有効にする"
+
 msgid "Enable auto-merge"
 msgstr "自動マージを有効にする"
 
@@ -5798,6 +5916,12 @@ msgstr "上の検索バーにURLを入力してください。"
 
 msgid "Enter a valid email address."
 msgstr "有効なメールアドレスを入力してください。"
+
+msgid "Enter a valid GitHub username."
+msgstr "有効なGitHubユーザー名を入力してください。"
+
+msgid "Enter a valid Jira server URL."
+msgstr "有効な Jira サーバーの URL を入力してください。"
 
 msgid "Enter a valid recurrence rule."
 msgstr "有効な繰り返しルールを入力してください。"
@@ -5966,6 +6090,9 @@ msgstr "展開"
 msgid "Expand {0}"
 msgstr "{0}を展開"
 
+msgid "Expand agents"
+msgstr "エージェントを展開"
+
 msgid "Expand all"
 msgstr "すべて展開"
 
@@ -5977,6 +6104,9 @@ msgstr "ファイルを展開"
 
 msgid "Expand project"
 msgstr "プロジェクトを展開"
+
+msgid "Expand subagents"
+msgstr "サブエージェントを展開"
 
 msgid "Expand thread"
 msgstr "スレッドを展開"
@@ -6063,6 +6193,9 @@ msgstr "失敗"
 
 msgid "Failed <0>· 7d</0>"
 msgstr "失敗 <0>· 7日</0>"
+
+msgid "Failed checks"
+msgstr "失敗したチェック"
 
 msgid "Failed to accept invitation"
 msgstr "招待を承諾できませんでした"
@@ -6472,6 +6605,9 @@ msgstr "エージェントの起動に失敗しました"
 msgid "Failed to start agent session."
 msgstr "エージェントセッションの開始に失敗しました。"
 
+msgid "Failed to stop agent"
+msgstr "エージェントを停止できませんでした"
+
 msgid "Failed to stop workspace run command"
 msgstr "ワークスペース実行コマンドの停止に失敗しました"
 
@@ -6568,6 +6704,9 @@ msgstr "ファイルの操作"
 msgid "File changed on disk"
 msgstr "ディスク上のファイルが変更されました"
 
+msgid "File contents"
+msgstr "ファイルの内容"
+
 msgid "File is too large to preview"
 msgstr "ファイルが大きすぎてプレビューできません"
 
@@ -6591,6 +6730,9 @@ msgstr "ファイルはディスク上で削除されました。"
 
 msgid "File was deleted on disk. You still have unsaved changes."
 msgstr "ファイルはディスク上で削除されました。未保存の変更が残っています。"
+
+msgid "Filenames"
+msgstr "ファイル名"
 
 msgid "Files"
 msgstr "ファイル"
@@ -6624,6 +6766,9 @@ msgstr "作成者で絞り込み: {label}"
 
 msgid "Filter by device"
 msgstr "デバイスで絞り込む"
+
+msgid "Filter by member"
+msgstr "メンバーで絞り込む"
 
 msgid "Filter by reviews"
 msgstr "レビューで絞り込む"
@@ -6919,6 +7064,9 @@ msgstr "無料で始められます · クレジットカード不要"
 msgid "Frequently<0/>asked questions"
 msgstr "よくある<0/>ご質問"
 
+msgid "Freshdesk"
+msgstr "Freshdesk"
+
 msgid "from"
 msgstr "元:"
 
@@ -7069,6 +7217,9 @@ msgstr "GitHub はこのマシンの認証情報による API 呼び出しを {u
 msgid "GitHub issues"
 msgstr "GitHub issue"
 
+msgid "GitHub organization or repository"
+msgstr "GitHubの組織またはリポジトリ"
+
 msgid "GitHub rate limit reached"
 msgstr "GitHub のレート制限に達しました"
 
@@ -7077,6 +7228,9 @@ msgstr "GitHubがマージを拒否しました"
 
 msgid "GitHub rejected this machine's credentials, so pull requests cannot be detected. Run \"gh auth login\" or fix GITHUB_TOKEN; the next retry is at {until}."
 msgstr "GitHub がこのマシンの認証情報を拒否したため、プルリクエストを検出できません。\"gh auth login\" を実行するか GITHUB_TOKEN を修正してください。次回の再試行は {until} です。"
+
+msgid "GitHub returned incomplete PR results. Try a narrower repository scope."
+msgstr "GitHubから不完全なPR検索結果が返されました。リポジトリの検索範囲を絞ってください。"
 
 msgid "GitHub sign-in needed"
 msgstr "GitHub へのサインインが必要です"
@@ -7261,6 +7415,9 @@ msgstr "メールを隠す"
 
 msgid "Hide file tree"
 msgstr "ファイルツリーを隠す"
+
+msgid "Hide filters"
+msgstr "フィルターを非表示"
 
 msgid "Hide folder"
 msgstr "フォルダを非表示"
@@ -7915,6 +8072,12 @@ msgstr "Issueコメント"
 msgid "Issue created"
 msgstr "Issueを作成"
 
+msgid "Issue moved, but refreshing failed. Refresh the issue list."
+msgstr "Issueは移動しましたが、更新に失敗しました。Issue一覧を更新してください。"
+
+msgid "Issue moved."
+msgstr "Issueを移動しました。"
+
 msgid "Issue not found."
 msgstr "Issueが見つかりません。"
 
@@ -7948,6 +8111,9 @@ msgstr "斜体"
 msgid "Item"
 msgstr "Item"
 
+msgid "Items appear here when an agent needs input, your PR checks fail, or someone requests your review."
+msgstr "エージェントが入力を必要としている場合、自分のPRのチェックが失敗した場合、またはレビューを依頼された場合に、ここに項目が表示されます。"
+
 msgid "Its own branch and copy of the files"
 msgstr "独自のブランチとファイルのコピー"
 
@@ -7959,6 +8125,24 @@ msgstr "山田太郎"
 
 msgid "JetBrains"
 msgstr "JetBrains"
+
+msgid "Jira"
+msgstr "Jira"
+
+msgid "Jira could not complete the request. Check your server URL and try again."
+msgstr "Jira がリクエストを完了できませんでした。サーバーの URL を確認して、もう一度お試しください。"
+
+msgid "Jira denied access. Check your credentials and permissions."
+msgstr "Jiraへのアクセスが拒否されました。認証情報と権限を確認してください。"
+
+msgid "Jira redirected the request. Check your server URL."
+msgstr "Jira がリクエストをリダイレクトしました。サーバーの URL を確認してください。"
+
+msgid "Jira returned an unexpected response. Check your server URL and try again."
+msgstr "Jira から予期しない応答が返されました。サーバーの URL を確認して、もう一度お試しください。"
+
+msgid "Jira server URL"
+msgstr "Jira サーバーの URL"
 
 msgid "Join"
 msgstr "参加"
@@ -8019,6 +8203,9 @@ msgstr "自分のみ"
 
 msgid "just now"
 msgstr "たった今"
+
+msgid "Kanban"
+msgstr "カンバン"
 
 msgid "Kbd"
 msgstr "Kbd"
@@ -8231,6 +8418,9 @@ msgstr "コメントモードを終了"
 msgid "Leave it empty to go back to the name the terminal reports."
 msgstr "空欄にすると、ターミナルが報告する名前に戻ります。"
 
+msgid "Leave it empty to use the task name."
+msgstr "空欄にするとタスク名を使用します。"
+
 msgid "Leave Organization"
 msgstr "組織から退出"
 
@@ -8372,6 +8562,9 @@ msgstr "プルリクエストをリンク"
 msgid "Link task"
 msgstr "タスクをリンク"
 
+msgid "Link workspace"
+msgstr "ワークスペースをリンク"
+
 msgid "Linked {slug} to workspace"
 msgstr "{slug}をワークスペースにリンクしました"
 
@@ -8438,6 +8631,12 @@ msgstr "以前のメッセージを読み込む"
 msgid "Load more"
 msgstr "もっと見る"
 
+msgid "Load more results, reconnect unavailable hosts, or check your GitHub connection, then refresh."
+msgstr "結果をさらに読み込むか、利用できないホストに再接続するか、GitHubへの接続を確認してから更新してください。"
+
+msgid "Loaded issues: {shownCount}"
+msgstr "読み込み済みの課題: {shownCount}"
+
 msgid "Loader"
 msgstr "ローダー"
 
@@ -8452,6 +8651,9 @@ msgstr "エージェント設定を読み込み中..."
 
 msgid "Loading and in-flight activity indicators"
 msgstr "読み込みと実行中の活動を示すインジケーター"
+
+msgid "Loading available moves…"
+msgstr "利用可能な移動先を読み込み中…"
 
 msgid "Loading changes..."
 msgstr "変更を読み込み中..."
@@ -8500,6 +8702,9 @@ msgstr "プロジェクトを読み込み中…"
 
 msgid "Loading projects…"
 msgstr "プロジェクトを読み込み中…"
+
+msgid "Loading PRs…"
+msgstr "PRを読み込み中…"
 
 msgid "Loading pull request…"
 msgstr "プルリクエストを読み込み中…"
@@ -9045,11 +9250,29 @@ msgstr "ソフトウェアの歴史のほとんど"
 msgid "Move {count} to Group"
 msgstr "{count}件をグループへ移動"
 
+msgid "Move {name} left"
+msgstr "{name} を左に移動"
+
+msgid "Move {name} right"
+msgstr "{name} を右に移動"
+
+msgid "Move canceled."
+msgstr "移動をキャンセルしました。"
+
+msgid "Move issue"
+msgstr "Issueを移動"
+
+msgid "Move to"
+msgstr "移動先"
+
 msgid "Move to group"
 msgstr "グループへ移動"
 
 msgid "Move to Tab"
 msgstr "タブに移動"
+
+msgid "Moving issue…"
+msgstr "Issueを移動中…"
 
 msgid "MRR"
 msgstr "MRR"
@@ -9079,6 +9302,12 @@ msgstr "マイエージェント"
 
 msgid "My Tasks"
 msgstr "マイタスク"
+
+msgid "My team"
+msgstr "自分のチーム"
+
+msgid "My work"
+msgstr "自分の作業"
 
 msgid "Mystery Machinist"
 msgstr "謎の機械工"
@@ -9433,6 +9662,9 @@ msgstr "作成者が見つかりません。"
 msgid "No automations match"
 msgstr "一致するオートメーションがありません"
 
+msgid "No available moves. Open the issue in Jira to check its workflow."
+msgstr "利用可能な移動先がありません。JiraでIssueを開き、ワークフローを確認してください。"
+
 msgid "No background terminal sessions"
 msgstr "バックグラウンドのターミナルセッションはありません"
 
@@ -9604,8 +9836,14 @@ msgstr "既知の作成者はいません"
 msgid "No labels"
 msgstr "ラベルなし"
 
+msgid "No linked PR"
+msgstr "リンクされたPRなし"
+
 msgid "No live sessions"
 msgstr "ライブセッションはありません"
+
+msgid "No loaded items match this filter"
+msgstr "読み込み済みの項目に、このフィルターに一致するものはありません"
 
 msgid "no logins"
 msgstr "ログイン情報なし"
@@ -10261,6 +10499,9 @@ msgstr "{0}を開く"
 msgid "Open {0} website"
 msgstr "{0} のウェブサイトを開く"
 
+msgid "Open {appName}"
+msgstr "{appName}を開く"
+
 msgid "Open {filePath}"
 msgstr "{filePath}を開く"
 
@@ -10436,6 +10677,9 @@ msgstr "Finderで開く"
 msgid "Open in GitHub"
 msgstr "GitHubで開く"
 
+msgid "Open in Jira"
+msgstr "Jiraで開く"
+
 msgid "Open in Linear"
 msgstr "Linearで開く"
 
@@ -10481,6 +10725,9 @@ msgstr "GitHubでissueを開く"
 
 msgid "Open issues"
 msgstr "オープンなIssue"
+
+msgid "Open Jira"
+msgstr "Jira を開く"
 
 msgid "Open leaderboard"
 msgstr "リーダーボードを開く"
@@ -10575,9 +10822,6 @@ msgstr "シートを開く"
 
 msgid "Open ship options"
 msgstr "送信オプションを開く"
-
-msgid "Open Superset"
-msgstr "Supersetを開く"
 
 msgid "Open Superset on that computer"
 msgstr "そのコンピュータでSupersetを開く"
@@ -10842,6 +11086,9 @@ msgstr "{0} が所有 — このオートメーションを編集できるのは
 msgid "Owner"
 msgstr "オーナー"
 
+msgid "owner/repository"
+msgstr "owner/repository"
+
 msgid "Owns every PTY session and survives app restarts."
 msgstr "すべてのPTYセッションを保持し、アプリの再起動後も動き続けます。"
 
@@ -10956,6 +11203,9 @@ msgstr "半分は記録、半分は賭けです。最初の2項目はすでに�
 msgid "Partial"
 msgstr "一部通過"
 
+msgid "Partial results"
+msgstr "一部の結果"
+
 msgid "Partner, Transpose Platform"
 msgstr "パートナー、Transpose Platform"
 
@@ -11058,6 +11308,9 @@ msgstr "書類、ダウンロード、デスクトップ、iCloudへの継続的
 
 msgid "Personal"
 msgstr "個人"
+
+msgid "Personal access token"
+msgstr "個人アクセストークン"
 
 msgid "Phantom Forklift"
 msgstr "幻のフォークリフト"
@@ -11269,6 +11522,9 @@ msgstr "PR #{0} を作成しました"
 msgid "PR Closed"
 msgstr "PRはクローズ済み"
 
+msgid "PR links from Jira tickets and GitHub."
+msgstr "Jiraの課題とGitHubから取得したPRリンク。"
+
 msgid "PR merged"
 msgstr "PRをマージしました"
 
@@ -11283,6 +11539,9 @@ msgstr "PRレビューコメント"
 
 msgid "PR review submitted…"
 msgstr "PRレビュー送信…"
+
+msgid "PR source"
+msgstr "PRの取得元"
 
 msgid "PR state"
 msgstr "PRの状態"
@@ -11358,6 +11617,9 @@ msgstr "前のブランチ"
 
 msgid "Previous comment"
 msgstr "前のコメント"
+
+msgid "Previous copies"
+msgstr "以前のコピー"
 
 msgid "Previous file"
 msgstr "前のファイル"
@@ -11589,6 +11851,9 @@ msgstr "プロビジョニングに失敗し、サンドボックスは破棄さ
 msgid "PRs a week"
 msgstr "週あたりPR"
 
+msgid "PRs unavailable"
+msgstr "PRを取得できません"
+
 msgid "Public"
 msgstr "パブリック"
 
@@ -11638,6 +11903,9 @@ msgstr "プルリクエスト"
 
 msgid "Pull Requests"
 msgstr "プルリクエスト"
+
+msgid "Pull requests are turned off. Only agent input is shown."
+msgstr "プルリクエストはオフになっています。入力を待つエージェントのみ表示しています。"
 
 msgid "Purple"
 msgstr "紫"
@@ -11707,17 +11975,17 @@ msgstr "静か"
 msgid "Quit"
 msgstr "終了"
 
+msgid "Quit {appName}"
+msgstr "{appName}を終了"
+
+msgid "Quit {appName} and stop all background services?"
+msgstr "{appName}を終了して、すべてのバックグラウンドサービスを停止しますか?"
+
+msgid "Quit {appName} Completely"
+msgstr "{appName}を完全に終了"
+
 msgid "Quit Completely"
 msgstr "完全に終了"
-
-msgid "Quit Superset"
-msgstr "Supersetを終了"
-
-msgid "Quit Superset and stop all background services?"
-msgstr "Supersetを終了して、すべてのバックグラウンドサービスを停止しますか?"
-
-msgid "Quit Superset Completely"
-msgstr "Supersetを完全に終了"
 
 msgid "Quit the source browser first so its logins are saved to disk. You'll be asked to allow Keychain access."
 msgstr "ログイン情報をディスクに保存させるため、先に元のブラウザを終了してください。キーチェーンへのアクセス許可を求められます。"
@@ -11918,6 +12186,9 @@ msgstr "プルリクエストを更新"
 msgid "Refresh repositories"
 msgstr "リポジトリを更新"
 
+msgid "Refresh Superset Workspaces…"
+msgstr "Superset ワークスペースを再検出…"
+
 msgid "Refreshes when Claude Code next runs."
 msgstr "次に Claude Code を実行すると更新されます。"
 
@@ -12014,6 +12285,9 @@ msgstr "{0}を削除"
 
 msgid "Remove {label}?"
 msgstr "{label}を削除しますか?"
+
+msgid "Remove @{login}"
+msgstr "@{login} を削除"
 
 msgid "Remove attachment"
 msgstr "添付ファイルを削除"
@@ -12120,6 +12394,9 @@ msgstr "ページの名前を変更"
 
 msgid "Rename session"
 msgstr "セッションの名前を変更"
+
+msgid "Rename subagent"
+msgstr "サブエージェントの名前を変更"
 
 msgid "rename the branch"
 msgstr "ブランチ名を変更する"
@@ -12393,6 +12670,9 @@ msgstr "ターミナルデーモンを再起動しますか?"
 msgid "Restart terminals"
 msgstr "ターミナルを再起動"
 
+msgid "Restart to find existing Superset workspaces. Their folders will be opened in place."
+msgstr "再起動して既存の Superset ワークスペースを検出します。フォルダーは元の場所で開かれます。"
+
 msgid "Restart to use the latest version of Superset."
 msgstr "再起動すると最新バージョンの Superset を使用できます。"
 
@@ -12558,6 +12838,9 @@ msgstr "Supersetの中でプルリクエストをレビューできます。差�
 msgid "Review requested"
 msgstr "レビューリクエスト"
 
+msgid "Review requests"
+msgstr "レビュー依頼"
+
 msgid "Review required"
 msgstr "レビュー必須"
 
@@ -12569,6 +12852,9 @@ msgstr "レビュースレッド…"
 
 msgid "Reviewed by you"
 msgstr "自分がレビュー済み"
+
+msgid "Reviewer needed"
+msgstr "レビュー担当者が必要"
 
 msgid "Reviewers"
 msgstr "レビュアー"
@@ -12931,6 +13217,9 @@ msgstr "作成者を検索…"
 msgid "Search automations"
 msgstr "オートメーションを検索"
 
+msgid "Search boards…"
+msgstr "ボードを検索…"
+
 msgid "Search branches..."
 msgstr "ブランチを検索..."
 
@@ -12939,6 +13228,9 @@ msgstr "キー名で検索..."
 
 msgid "Search changed files"
 msgstr "変更されたファイルを検索"
+
+msgid "Search contributors or enter a username…"
+msgstr "コントリビューターを検索するか、ユーザー名を入力…"
 
 msgid "Search developers"
 msgstr "開発者を検索"
@@ -12951,6 +13243,15 @@ msgstr "ドキュメントを検索..."
 
 msgid "Search environments..."
 msgstr "環境を検索..."
+
+msgid "Search file contents"
+msgstr "ファイルの内容を検索"
+
+msgid "Search file contents..."
+msgstr "ファイルの内容を検索..."
+
+msgid "Search filenames and text in your workspace"
+msgstr "ワークスペース内のファイル名とテキストを検索"
 
 msgid "Search files"
 msgstr "ファイルを検索"
@@ -12984,6 +13285,9 @@ msgstr "{frameTitle}内を検索…"
 
 msgid "Search issues..."
 msgstr "Issueを検索..."
+
+msgid "Search mode"
+msgstr "検索モード"
 
 msgid "Search pages"
 msgstr "ページを検索"
@@ -13078,6 +13382,9 @@ msgstr "秘密のシフトリーダー"
 msgid "Sections"
 msgstr "セクション"
 
+msgid "Secure storage is unavailable. Unlock your system keychain and try again."
+msgstr "安全なストレージを利用できません。システムのキーチェーンのロックを解除して、もう一度お試しください。"
+
 msgid "Security"
 msgstr "セキュリティ"
 
@@ -13125,6 +13432,9 @@ msgstr "直近30日の実績が公開リーダーボードでどの位置にな�
 
 msgid "Select"
 msgstr "Select"
+
+msgid "Select a file to open"
+msgstr "開くファイルを選択"
 
 msgid "Select a project"
 msgstr "プロジェクトを選択してください"
@@ -13577,6 +13887,9 @@ msgstr "メールを表示"
 msgid "Show file tree"
 msgstr "ファイルツリーを表示"
 
+msgid "Show filters"
+msgstr "フィルターを表示"
+
 msgid "Show in bar"
 msgstr "バーに表示"
 
@@ -13640,9 +13953,6 @@ msgstr "解決済みを表示 ({resolvedCount})"
 msgid "Show review comments"
 msgstr "レビューコメントを表示"
 
-msgid "Show running agents under each workspace in the sidebar, with their live status."
-msgstr "サイドバーの各ワークスペースの下に、実行中のエージェントとそのライブステータスを表示します。"
-
 msgid "Show Scripts Bar"
 msgstr "スクリプトバーを表示"
 
@@ -13660,6 +13970,9 @@ msgstr "サイドバーに使用状況タブを表示"
 
 msgid "showArrow opt-in"
 msgstr "showArrowで有効化"
+
+msgid "Showing the first {SEARCH_LIMIT} results. Narrow your search or add a filter."
+msgstr "最初の {SEARCH_LIMIT} 件を表示しています。検索を絞り込むか、フィルターを追加してください。"
 
 msgid "Shown"
 msgstr "表示中"
@@ -13928,12 +14241,21 @@ msgstr "一部のファイルは最大サイズを超えているため追加さ
 msgid "Some models were priced with a fallback rate"
 msgstr "一部のモデルはフォールバックのレートで計算しています"
 
+msgid "Some PR links could not be loaded. Check Jira permissions and GitHub CLI access, then refresh."
+msgstr "一部のPRリンクを読み込めませんでした。Jiraの権限とGitHub CLIのアクセス権を確認して更新してください。"
+
 #. placeholder {0}: error.message
 msgid "Some repositories could not be loaded: {0}"
 msgstr "一部のリポジトリを読み込めませんでした: {0}"
 
 msgid "Some sessions could not be killed"
 msgstr "一部のセッションを終了できませんでした"
+
+msgid "Some sources could not be fully checked."
+msgstr "一部の情報源を完全に確認できませんでした。"
+
+msgid "Some Superset workspaces could not be connected."
+msgstr "一部の Superset ワークスペースに接続できませんでした。"
 
 msgid "Some themes were skipped"
 msgstr "一部のテーマはスキップされました"
@@ -14279,6 +14601,12 @@ msgstr "停止"
 msgid "Stop {0}"
 msgstr "{0}を停止"
 
+msgid "Stop agent"
+msgstr "エージェントを停止"
+
+msgid "Stop agent and subagents"
+msgstr "エージェントとサブエージェントを停止"
+
 msgid "Stop dictation"
 msgstr "音声入力を停止"
 
@@ -14325,6 +14653,9 @@ msgstr "構造化された進捗: 思考の連鎖、タスク、計画"
 
 msgid "Subagent"
 msgstr "サブエージェント"
+
+msgid "Subagent name"
+msgstr "サブエージェント名"
 
 msgid "Subagents"
 msgstr "サブエージェント"
@@ -14738,6 +15069,9 @@ msgstr "targetHostIdがワークスペースのホストと一致しません"
 msgid "Task"
 msgstr "タスク"
 
+msgid "Task {shortId}"
+msgstr "タスク {shortId}"
+
 msgid "Task Launch"
 msgstr "タスク起動"
 
@@ -14782,6 +15116,9 @@ msgstr "チーム"
 
 msgid "Team"
 msgstr "チーム"
+
+msgid "Team board"
+msgstr "チームボード"
 
 msgid "Team collaboration"
 msgstr "チームでのコラボレーション"
@@ -15078,6 +15415,9 @@ msgstr "ホストは以前のビルドに戻りました。"
 msgid "The human reads every line before it merges."
 msgstr "人間がマージ前に全行を読む。"
 
+msgid "The Jira board changed. Reopen Columns and try again."
+msgstr "Jira ボードが変更されました。「列」を開き直して、もう一度お試しください。"
+
 msgid "The job description shifts. Engineers stop being typists with taste and become dispatchers with taste: decomposing work, routing it to fleets, arbitrating conflicts between agents that both touched the same module."
 msgstr "職務の中身が変わります。エンジニアは審美眼のあるタイピストであることをやめ、審美眼のあるディスパッチャーになります。作業を分解し、フリートに割り振り、同じモジュールに触れたエージェント同士の衝突を裁く役です。"
 
@@ -15327,6 +15667,9 @@ msgstr "組織のすべてのターミナルセッション{runningCountSuffix}�
 msgid "This closes the selected workspaces and their terminals. The project's files and branches stay as they are."
 msgstr "選択したワークスペースとそのターミナルを閉じます。プロジェクトのファイルとブランチはそのまま残ります。"
 
+msgid "This closes the workspace and its terminals. Files and branches stay on disk."
+msgstr "ワークスペースとそのターミナルを閉じます。ファイルとブランチはディスクに残ります。"
+
 msgid "This closes the workspace and its terminals. The project's files, branches and other workspaces stay as they are."
 msgstr "ワークスペースとそのターミナルを閉じます。プロジェクトのファイル、ブランチ、他のワークスペースはそのまま残ります。"
 
@@ -15416,6 +15759,9 @@ msgstr "このMicrosoftテナントは別のSuperset組織がすでに接続し�
 
 msgid "This month"
 msgstr "今月"
+
+msgid "This move requires fields in Jira."
+msgstr "この移動にはJiraでの項目入力が必要です。"
 
 msgid "This only changes the display name, not the branch."
 msgstr "変更されるのは表示名だけで、ブランチは変わりません。"
@@ -15516,6 +15862,9 @@ msgstr "このスレッドには返信できるコメントがありません。
 
 msgid "This thread is not open to agents. A person has to comment on it before an agent can reply."
 msgstr "このスレッドはエージェントに公開されていません。エージェントが返信するには、まず人がコメントする必要があります。"
+
+msgid "This transition is no longer available. Refresh the issue and try again."
+msgstr "このトランジションは利用できなくなりました。Issueを更新して再試行してください。"
 
 msgid "This user runs the host service for this device and can't be removed."
 msgstr "このユーザーはこのデバイスのホストサービスを実行しているため、削除できません。"
@@ -15891,6 +16240,9 @@ msgstr "Claudeへのタスクを入力…"
 msgid "Type an email, press Enter"
 msgstr "メールアドレスを入力してEnter"
 
+msgid "Type at least 2 characters to find more people."
+msgstr "他のユーザーを検索するには2文字以上入力してください。"
+
 msgid "Type here to send to the terminal"
 msgstr "ここに入力してターミナルに送信"
 
@@ -15899,6 +16251,9 @@ msgstr "確認のため組織名を入力してください。"
 
 msgid "Type to search files..."
 msgstr "入力してファイルを検索..."
+
+msgid "Type to search your workspace"
+msgstr "入力してワークスペースを検索"
 
 msgid "TypeScript"
 msgstr "TypeScript"
@@ -15980,6 +16335,9 @@ msgstr "進行中"
 
 msgid "Undo"
 msgstr "取り消す"
+
+msgid "Unfinished"
+msgstr "未完了"
 
 msgid "Ungroup"
 msgstr "グループ解除"
@@ -16266,6 +16624,9 @@ msgstr "「{0}」を使用"
 msgid "Use a workspace-relative path or an absolute folder."
 msgstr "ワークスペースからの相対パスか絶対パスのフォルダを指定します。"
 
+msgid "Use an HTTPS Jira server URL without a username, password, query, or fragment."
+msgstr "ユーザー名、パスワード、クエリ、フラグメントを含まない HTTPS の Jira サーバー URL を使用してください。"
+
 msgid "Use another port"
 msgstr "別のポートを使用"
 
@@ -16274,6 +16635,9 @@ msgstr "好きなエージェントを使う"
 
 msgid "Use as workspace run"
 msgstr "ワークスペースの実行に使用"
+
+msgid "Use automatic name"
+msgstr "自動の名前を使用"
 
 msgid "Use Claude Code, Codex, OpenCode, or any coding agent for each task. Your workspaces, branches, and review flow stay the same."
 msgstr "タスクごとにClaude Code、Codex、OpenCode、その他どのコーディングエージェントでも使えます。ワークスペース、ブランチ、レビューの流れはそのままです。"
@@ -16287,6 +16651,9 @@ msgstr "新規エージェントに使用"
 msgid "Use global default"
 msgstr "グローバルのデフォルトを使用"
 
+msgid "Use Move to to choose a status with the keyboard."
+msgstr "「移動先」を使うと、キーボードでステータスを選択できます。"
+
 msgid "Use Superset on mobile"
 msgstr "モバイルでSupersetを使う"
 
@@ -16295,6 +16662,9 @@ msgstr "Pro でスマートフォンから Superset を使えます。"
 
 msgid "Use the desktop app to start running parallel coding agents."
 msgstr "デスクトップアプリで並列コーディングエージェントの実行を始めましょう。"
+
+msgid "Use the email address of the Atlassian account that created the token."
+msgstr "トークンを作成したAtlassianアカウントのメールアドレスを使用してください。"
 
 msgid "Use the new workspace experience."
 msgstr "新しいワークスペース体験を使用します。"
@@ -16352,6 +16722,9 @@ msgstr "ユーザーが見つかりません"
 
 msgid "user@example.com"
 msgstr "user@example.com"
+
+msgid "Uses your GitHub CLI login to match Jira keys in PR titles and descriptions."
+msgstr "GitHub CLIのログインを使用し、PRのタイトルと説明からJiraキーを検索します。"
 
 msgid "Using random branch name (AI generation timed out)"
 msgstr "ランダムなブランチ名を使用します(AI生成がタイムアウトしました)"
@@ -16888,6 +17261,9 @@ msgstr "ワークスペースを作成しました"
 msgid "Workspace created from PR"
 msgstr "PRからワークスペースを作成しました"
 
+msgid "Workspace created, but linking it to Jira failed."
+msgstr "ワークスペースは作成されましたが、Jiraとのリンクに失敗しました。"
+
 msgid "Workspace details"
 msgstr "ワークスペースの詳細"
 
@@ -17135,6 +17511,9 @@ msgstr "自分のロールを{currentRoleName}から{newRoleName}に変更しよ
 msgid "You're about to get Superset"
 msgstr "まもなくSupersetを入手できます"
 
+msgid "You're all caught up"
+msgstr "対応が必要な項目はありません"
+
 msgid "You're all set!"
 msgstr "準備完了です!"
 
@@ -17183,6 +17562,12 @@ msgstr "あなたの GitHub アカウントはこの環境のリポジトリに�
 msgid "Your GitHub link comes from the account you signed in with, so it shows as verified and cannot be edited here."
 msgstr "GitHub のリンクはサインインしたアカウントから取得されるため、確認済みと表示され、ここでは編集できません。"
 
+msgid "Your Jira account is inactive."
+msgstr "Jira アカウントが無効になっています。"
+
+msgid "Your Jira connection is stored on this device."
+msgstr "Jira 接続はこのデバイスに保存されます。"
+
 msgid "Your last payment failed. Update your payment method to keep Pro."
 msgstr "前回の支払いに失敗しました。Pro を継続するには支払い方法を更新してください。"
 
@@ -17216,6 +17601,9 @@ msgstr "サブスクリプションはそれに応じて調整されます。"
 
 msgid "Your Superset download is starting."
 msgstr "Supersetのダウンロードを開始しています。"
+
+msgid "Your team’s issues and pull requests."
+msgstr "チームの課題とプルリクエスト。"
 
 msgid "Your terminal sessions won't be interrupted."
 msgstr "ターミナルセッションは中断されません。"

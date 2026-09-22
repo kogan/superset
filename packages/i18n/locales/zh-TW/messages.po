@@ -189,14 +189,6 @@ msgstr "{0, plural, one {此主機上#個結果} other {此主機上#個結果}}
 msgid "{0, plural, one {# result} other {# results}}"
 msgstr "{0, plural, one {#個結果} other {#個結果}}"
 
-#. placeholder {0}: agents.length
-msgid "{0, plural, one {# running agent — hide details} other {# running agents — hide details}}"
-msgstr "{0, plural, one {#個執行中的代理程式，隱藏詳情} other {#個執行中的代理程式，隱藏詳情}}"
-
-#. placeholder {0}: agents.length
-msgid "{0, plural, one {# running agent — show details} other {# running agents — show details}}"
-msgstr "{0, plural, one {#個執行中的代理程式，顯示詳情} other {#個執行中的代理程式，顯示詳情}}"
-
 #. placeholder {0}: aliveCount ?? 0
 msgid "{0, plural, one {# session running} other {# sessions running}}"
 msgstr "{0, plural, one {#個會話執行中} other {#個會話執行中}}"
@@ -885,6 +877,9 @@ msgstr "人類{share}%"
 msgid "{shown} of {total}"
 msgstr "{shown}/{total}"
 
+msgid "{shownCount} of {totalCount} issues"
+msgstr "共 {totalCount} 個議題，已顯示 {shownCount} 個"
+
 #. placeholder {0}: formatUsd(shownUsd)
 #. placeholder {1}: formatTokens(shownTokens)
 msgid "{shownCount} shown · {0} · {1} tokens"
@@ -898,9 +893,6 @@ msgstr "{starCount}個星標，還在成長"
 
 msgid "{stars} stars · {perDay}/day this week · {peakPerDay}/day at peak"
 msgstr "{stars}個星標 · 本週{perDay}/天 · 尖峰{peakPerDay}/天"
-
-msgid "{subagentCount, plural, one {# subagent running} other {# subagents running}}"
-msgstr "{subagentCount, plural, other {# 個子代理程式執行中}}"
 
 msgid "{successCount, plural, one {Created # workspace, {failCount} failed} other {Created # workspaces, {failCount} failed}}"
 msgstr "{successCount, plural, one {已建立#個工作區，{failCount}個失敗} other {已建立#個工作區，{failCount}個失敗}}"
@@ -952,6 +944,9 @@ msgstr "{updatedLabel}已恢復為預設值"
 
 msgid "{used} used"
 msgstr "已使用 {used}"
+
+msgid "{visibleCount} visible · {shownCount} loaded"
+msgstr "顯示 {visibleCount} 項 · 已載入 {shownCount} 項"
 
 msgid "{waiting} Waiting"
 msgstr "{waiting}人等待"
@@ -1423,6 +1418,9 @@ msgstr "新增"
 msgid "Add {0} account"
 msgstr "新增{0}帳戶"
 
+msgid "Add @{normalizedSearch}"
+msgstr "新增 @{normalizedSearch}"
+
 msgid "Add a comment…"
 msgstr "新增留言…"
 
@@ -1613,6 +1611,9 @@ msgstr "代理程式已完成"
 msgid "Agent Independence"
 msgstr "代理程式無關"
 
+msgid "Agent input, failed checks on your PRs, and reviews requested from you."
+msgstr "等待輸入的代理程式、你的 PR 中失敗的檢查，以及向你提出的審查請求。"
+
 msgid "Agent launch configuration"
 msgstr "代理程式啟動配置"
 
@@ -1753,6 +1754,9 @@ msgstr "全部檢查通過"
 msgid "All checks skipped or cancelled"
 msgstr "所有檢查已跳過或取消"
 
+msgid "All columns are hidden. Use Columns to show them."
+msgstr "所有欄均已隱藏。請使用「欄」選單顯示它們。"
+
 msgid "All comments"
 msgstr "所有評論"
 
@@ -1796,8 +1800,8 @@ msgstr "你的所有資料將在{ACCOUNT_DELETION_GRACE_DAYS}天後被永久刪�
 msgid "All of your data will be permanently deleted after {ACCOUNT_DELETION_GRACE_DAYS} days. Sign back in before then to restore your account."
 msgstr "你的所有資料將在{ACCOUNT_DELETION_GRACE_DAYS}天後被永久刪除。在此之前重新登入即可恢復帳戶。"
 
-msgid "All open terminal sessions will be killed and any running host-services will be stopped. Use “Close Superset” instead if you want services to keep running for the next launch."
-msgstr "所有開啟的終端會話都會被結束，正在執行的主機服務也會停止。如果希望服務繼續執行以便下次啟動，請改用「關閉Superset」。"
+msgid "All open terminal sessions will be killed and any running host-services will be stopped. Use “Close {appName}” instead if you want services to keep running for the next launch."
+msgstr "所有開啟的終端會話都會被結束，正在執行的主機服務也會停止。如果希望服務繼續執行以便下次啟動，請改用「關閉{appName}」。"
 
 msgid "All pages"
 msgstr "所有頁面"
@@ -1828,6 +1832,9 @@ msgstr "升級過程中所有會話都已保留。"
 
 msgid "All sessions were closed and a fresh daemon is running."
 msgstr "所有會話已關閉，全新的守護程式正在執行。"
+
+msgid "All statuses"
+msgstr "所有狀態"
 
 msgid "All tasks"
 msgstr "全部任務"
@@ -2069,6 +2076,12 @@ msgstr "API金鑰"
 msgid "API Keys"
 msgstr "API金鑰"
 
+msgid "API token"
+msgstr "API 權杖"
+
+msgid "API token with scopes"
+msgstr "具權限範圍的 API 權杖"
+
 msgid "API-equivalent"
 msgstr "按API價折算"
 
@@ -2199,6 +2212,9 @@ msgstr "寬高比"
 msgid "Assigned"
 msgstr "已指派"
 
+msgid "Assigned to me"
+msgstr "指派給我"
+
 msgid "Assignee"
 msgstr "負責人"
 
@@ -2259,6 +2275,18 @@ msgstr "附件需要主機線上"
 msgid "Attempt before checks pass"
 msgstr "在檢查通過前就嘗試"
 
+msgid "Attention"
+msgstr "待處理"
+
+msgid "Attention filters"
+msgstr "待處理事項篩選"
+
+msgid "Attention inbox"
+msgstr "待處理收件匣"
+
+msgid "Attention inbox is turned off"
+msgstr "待處理收件匣已關閉"
+
 msgid "Attention queue"
 msgstr "待處理佇列"
 
@@ -2285,6 +2313,9 @@ msgstr "認證碼"
 
 msgid "Authentication failed"
 msgstr "認證失敗"
+
+msgid "Authentication method"
+msgstr "驗證方式"
 
 msgid "Author"
 msgstr "作者"
@@ -2706,6 +2737,9 @@ msgstr "把你的代理程式聚到一起。"
 msgid "Browse and install skills, MCP servers, and agent configs shared by the community."
 msgstr "瀏覽並安裝社群共享的技能、MCP伺服器和代理程式配置。"
 
+msgid "Browse files"
+msgstr "瀏覽檔案"
+
 msgid "Browse for directory"
 msgstr "瀏覽目錄"
 
@@ -3088,6 +3122,9 @@ msgstr "活期+儲蓄+國庫帳戶隨時間變化；臺階處為融資到帳"
 msgid "Checking agents…"
 msgstr "正在檢查代理程式…"
 
+msgid "Checking for items needing attention…"
+msgstr "正在檢查需要處理的事項…"
+
 msgid "Checking host…"
 msgstr "正在檢查主機…"
 
@@ -3142,11 +3179,17 @@ msgstr "開拉取請求之前，請先在「拉取請求」裡選擇一個專案
 msgid "Choose a section."
 msgstr "選擇一個分區。"
 
+msgid "Choose a team board to see everyone’s issues."
+msgstr "選擇團隊看板以查看所有成員的議題。"
+
 msgid "Choose agent"
 msgstr "選擇代理程式"
 
 msgid "Choose an existing repo folder"
 msgstr "選擇已有的儲存庫資料夾"
+
+msgid "Choose another filter or refresh to check again."
+msgstr "請選擇其他篩選條件，或重新整理後再檢查一次。"
 
 msgid "Choose app"
 msgstr "選擇應用"
@@ -3160,6 +3203,12 @@ msgstr "選擇從頂欄開啟變更檢視的方式"
 msgid "Choose how to open file paths when Cmd+clicking in the terminal"
 msgstr "選擇在終端中Cmd+點選檔案路徑時的開啟方式"
 
+msgid "Choose team board"
+msgstr "選擇團隊看板"
+
+msgid "Choose up to 20 people for your My team PR filter. Saved on this Mac."
+msgstr "為「我的團隊」PR篩選器選擇最多20人。儲存在此Mac上。"
+
 msgid "Choose what to clear from the in-app browser."
 msgstr "選擇要從應用程式內瀏覽器清除的內容。"
 
@@ -3168,6 +3217,12 @@ msgstr "選擇Superset在什麼時候通知你。"
 
 msgid "Choose which agent watches this page for comments"
 msgstr "選擇由哪個代理程式關注此頁面的評論"
+
+msgid "Choose which columns appear and use the arrows to set their left-to-right order."
+msgstr "選擇要顯示的欄，並使用箭頭設定由左至右的順序。"
+
+msgid "Choose which features appear in the app. Changes apply immediately."
+msgstr "選擇應用程式中顯示的功能。變更會立即生效。"
 
 msgid "Churn"
 msgstr "流失"
@@ -3345,6 +3400,9 @@ msgstr "關閉"
 msgid "Close {0}"
 msgstr "關閉{0}"
 
+msgid "Close {appName}"
+msgstr "關閉{appName}"
+
 #. placeholder {0}: data.number
 msgid "Close #{0}?"
 msgstr "關閉#{0}？"
@@ -3441,9 +3499,6 @@ msgstr "關閉審查篩選"
 msgid "Close session"
 msgstr "關閉會話"
 
-msgid "Close Superset"
-msgstr "關閉Superset"
-
 msgid "Close tab"
 msgstr "關閉分頁"
 
@@ -3530,6 +3585,9 @@ msgstr "摺疊"
 msgid "Collapse {0}"
 msgstr "收起{0}"
 
+msgid "Collapse agents"
+msgstr "摺疊代理程式"
+
 msgid "Collapse all"
 msgstr "全部摺疊"
 
@@ -3544,6 +3602,9 @@ msgstr "摺疊檔案"
 
 msgid "Collapse project"
 msgstr "收起專案"
+
+msgid "Collapse subagents"
+msgstr "摺疊子代理"
 
 msgid "Collapse thread"
 msgstr "摺疊討論"
@@ -3562,6 +3623,9 @@ msgstr "正在收集…"
 
 msgid "Color"
 msgstr "顏色"
+
+msgid "Columns"
+msgstr "欄"
 
 msgid "Combine all commits"
 msgstr "把所有提交合成一個"
@@ -3625,6 +3689,9 @@ msgstr "未找到評論"
 
 msgid "Comment not posted"
 msgstr "評論未發布"
+
+msgid "Comment on PR"
+msgstr "在 PR 留言"
 
 msgid "Comment on this page"
 msgstr "評論這個頁面"
@@ -3701,6 +3768,9 @@ msgstr "與預設樣式做了對比"
 
 msgid "complete"
 msgstr "已結束"
+
+msgid "Complete the required fields in Jira before moving this issue."
+msgstr "移動此議題前，請在 Jira 中填寫必填欄位。"
 
 msgid "Completed"
 msgstr "完成時間"
@@ -3789,6 +3859,9 @@ msgstr "連線外部服務以同步資料。"
 msgid "Connect Google"
 msgstr "連線Google"
 
+msgid "Connect Jira in Settings to see your tickets."
+msgstr "在設定中連線至 Jira，即可查看你的工單。"
+
 msgid "Connect Linear"
 msgstr "連線Linear"
 
@@ -3819,6 +3892,9 @@ msgstr "連線至這台電腦"
 msgid "Connect your GitHub repositories and sync pull requests. Track CI status and reviews across your team."
 msgstr "連線你的GitHub儲存庫並同步拉取請求。追蹤整個團隊的CI狀態和程式碼審查。"
 
+msgid "Connect your Jira site in Settings to see your issues."
+msgstr "在設定中連接 Jira 網站以查看議題。"
+
 msgid "Connect your Linear workspace to sync issues and manage tasks directly from Superset."
 msgstr "連線你的Linear工作區，同步問題並直接在Superset中管理任務。"
 
@@ -3842,6 +3918,9 @@ msgstr "已連線 {label}"
 
 msgid "Connected as"
 msgstr "已連線為"
+
+msgid "Connected projects only. Refreshes every minute while this page is open."
+msgstr "僅限已連線的專案。此頁面開啟期間每分鐘重新整理一次。"
 
 msgid "Connected to"
 msgstr "已連線到"
@@ -4272,6 +4351,9 @@ msgstr "無法載入環境"
 msgid "Could not load environments."
 msgstr "無法載入環境。"
 
+msgid "Could not load GitHub PRs. Check GitHub CLI access and try again."
+msgstr "無法載入 GitHub PR。請檢查 GitHub CLI 存取權限後再試一次。"
+
 msgid "Could not load image"
 msgstr "無法載入圖片"
 
@@ -4305,6 +4387,9 @@ msgstr "無法開啟連結"
 msgid "Could not open Photos"
 msgstr "無法開啟「照片」"
 
+msgid "Could not reach Jira. Check your network or VPN and try again."
+msgstr "無法連線至 Jira。請檢查網路或 VPN，然後再試一次。"
+
 msgid "Could not reach the desktop."
 msgstr "無法連線至桌面。"
 
@@ -4326,6 +4411,9 @@ msgstr "無法連線到這個工作區所在的機器"
 msgid "Could not reactivate"
 msgstr "無法重新啟用"
 
+msgid "Could not read Jira preferences."
+msgstr "無法讀取 Jira 偏好設定。"
+
 msgid "Could not read selected file"
 msgstr "無法讀取所選檔案"
 
@@ -4335,11 +4423,20 @@ msgstr "無法讀取拖入的檔案"
 msgid "Could not read the Google account. Please try again."
 msgstr "無法讀取該Google帳戶。請重試。"
 
+msgid "Could not read the saved Jira connection. Disconnect and connect again."
+msgstr "無法讀取已儲存的 Jira 連線。請斷開連線後重新連線。"
+
 msgid "Could not record cloud workspace"
 msgstr "無法記錄雲端工作區"
 
 msgid "Could not record environment"
 msgstr "無法儲存環境"
+
+msgid "Could not remove the Jira connection. Check local storage permissions and try again."
+msgstr "無法移除 Jira 連線。請檢查本機儲存空間的權限，然後再試一次。"
+
+msgid "Could not rename subagent. Try again."
+msgstr "無法重新命名子代理。請重試。"
 
 msgid "Could not rename the session"
 msgstr "無法重新命名會話"
@@ -4358,6 +4455,12 @@ msgstr "無法解決此留言"
 
 msgid "Could not restart the host service"
 msgstr "無法重新啟動主機服務"
+
+msgid "Could not save Jira preferences."
+msgstr "無法儲存 Jira 偏好設定。"
+
+msgid "Could not save the Jira connection. Check local storage permissions and try again."
+msgstr "無法儲存 Jira 連線。請檢查本機儲存空間的權限，然後再試一次。"
 
 msgid "Could not send"
 msgstr "無法傳送"
@@ -5534,6 +5637,12 @@ msgstr "建立了草稿"
 msgid "drafted 3 support replies"
 msgstr "起草了3條支援回覆"
 
+msgid "Drag ended."
+msgstr "拖曳已結束。"
+
+msgid "Drag issue"
+msgstr "拖曳議題"
+
 msgid "Drag to move"
 msgstr "拖曳以移動"
 
@@ -5542,6 +5651,9 @@ msgstr "拖曳以重新排序"
 
 msgid "Drag workspaces to reorder in Manual order"
 msgstr "在手動排序中拖曳工作區以重新排列"
+
+msgid "Dragging issue."
+msgstr "正在拖曳議題。"
 
 msgid "Drawer"
 msgstr "抽屜"
@@ -5686,6 +5798,9 @@ msgstr "編輯執行指令碼"
 msgid "Edit script"
 msgstr "編輯指令碼"
 
+msgid "Edit team"
+msgstr "編輯團隊"
+
 msgid "Edited"
 msgstr "已編輯"
 
@@ -5763,6 +5878,9 @@ msgstr "啟用{0}"
 msgid "Enable an agent in Settings > Agents first"
 msgstr "請先在設定 > 代理程式中啟用一個代理程式"
 
+msgid "Enable attention inbox"
+msgstr "啟用待處理收件匣"
+
 msgid "Enable auto-merge"
 msgstr "啟用自動合併"
 
@@ -5798,6 +5916,12 @@ msgstr "在上方的搜尋欄中輸入URL。"
 
 msgid "Enter a valid email address."
 msgstr "請輸入有效的電子郵件地址。"
+
+msgid "Enter a valid GitHub username."
+msgstr "請輸入有效的GitHub使用者名稱。"
+
+msgid "Enter a valid Jira server URL."
+msgstr "請輸入有效的 Jira 伺服器 URL。"
 
 msgid "Enter a valid recurrence rule."
 msgstr "請輸入有效的重複規則。"
@@ -5966,6 +6090,9 @@ msgstr "展開"
 msgid "Expand {0}"
 msgstr "展開{0}"
 
+msgid "Expand agents"
+msgstr "展開代理程式"
+
 msgid "Expand all"
 msgstr "全部展開"
 
@@ -5977,6 +6104,9 @@ msgstr "展開檔案"
 
 msgid "Expand project"
 msgstr "展開專案"
+
+msgid "Expand subagents"
+msgstr "展開子代理"
 
 msgid "Expand thread"
 msgstr "展開討論"
@@ -6063,6 +6193,9 @@ msgstr "失敗"
 
 msgid "Failed <0>· 7d</0>"
 msgstr "失敗 <0>· 7天</0>"
+
+msgid "Failed checks"
+msgstr "失敗的檢查"
 
 msgid "Failed to accept invitation"
 msgstr "接受邀請失敗"
@@ -6472,6 +6605,9 @@ msgstr "啟動代理程式失敗"
 msgid "Failed to start agent session."
 msgstr "啟動代理程式會話失敗。"
 
+msgid "Failed to stop agent"
+msgstr "無法停止代理"
+
 msgid "Failed to stop workspace run command"
 msgstr "停止工作區執行命令失敗"
 
@@ -6568,6 +6704,9 @@ msgstr "檔案操作"
 msgid "File changed on disk"
 msgstr "磁碟上的檔案已變更"
 
+msgid "File contents"
+msgstr "檔案內容"
+
 msgid "File is too large to preview"
 msgstr "檔案過大，無法預覽"
 
@@ -6591,6 +6730,9 @@ msgstr "檔案已在磁碟上被刪除。"
 
 msgid "File was deleted on disk. You still have unsaved changes."
 msgstr "檔案已在磁碟上被刪除。你仍有未儲存的更改。"
+
+msgid "Filenames"
+msgstr "檔案名稱"
 
 msgid "Files"
 msgstr "檔案"
@@ -6624,6 +6766,9 @@ msgstr "依作者篩選：{label}"
 
 msgid "Filter by device"
 msgstr "依裝置篩選"
+
+msgid "Filter by member"
+msgstr "依成員篩選"
 
 msgid "Filter by reviews"
 msgstr "按審查篩選"
@@ -6919,6 +7064,9 @@ msgstr "免費開始 · 無需信用卡"
 msgid "Frequently<0/>asked questions"
 msgstr "常見<0/>問題"
 
+msgid "Freshdesk"
+msgstr "Freshdesk"
+
 msgid "from"
 msgstr "基於"
 
@@ -7069,6 +7217,9 @@ msgstr "GitHub 在 {until} 之前拒絕此電腦憑證的 API 呼叫。現有的
 msgid "GitHub issues"
 msgstr "GitHub議題"
 
+msgid "GitHub organization or repository"
+msgstr "GitHub 組織或儲存庫"
+
 msgid "GitHub rate limit reached"
 msgstr "已達到 GitHub 速率限制"
 
@@ -7077,6 +7228,9 @@ msgstr "GitHub拒絕了此次合併"
 
 msgid "GitHub rejected this machine's credentials, so pull requests cannot be detected. Run \"gh auth login\" or fix GITHUB_TOKEN; the next retry is at {until}."
 msgstr "GitHub 拒絕了此電腦的憑證，因此無法偵測提取請求。請執行 \"gh auth login\" 或修正 GITHUB_TOKEN；下次重試時間為 {until}。"
+
+msgid "GitHub returned incomplete PR results. Try a narrower repository scope."
+msgstr "GitHub 傳回不完整的 PR 結果。請嘗試縮小儲存庫搜尋範圍。"
 
 msgid "GitHub sign-in needed"
 msgstr "需要登入 GitHub"
@@ -7261,6 +7415,9 @@ msgstr "隱藏電子郵件"
 
 msgid "Hide file tree"
 msgstr "隱藏檔案樹"
+
+msgid "Hide filters"
+msgstr "隱藏篩選條件"
 
 msgid "Hide folder"
 msgstr "隱藏資料夾"
@@ -7915,6 +8072,12 @@ msgstr "議題評論"
 msgid "Issue created"
 msgstr "問題已建立"
 
+msgid "Issue moved, but refreshing failed. Refresh the issue list."
+msgstr "議題已移動，但重新整理失敗。請重新整理議題清單。"
+
+msgid "Issue moved."
+msgstr "議題已移動。"
+
 msgid "Issue not found."
 msgstr "未找到議題。"
 
@@ -7948,6 +8111,9 @@ msgstr "斜體"
 msgid "Item"
 msgstr "條目"
 
+msgid "Items appear here when an agent needs input, your PR checks fail, or someone requests your review."
+msgstr "當代理程式需要輸入、你的 PR 檢查失敗，或有人請求你審查時，相關事項會顯示在這裡。"
+
 msgid "Its own branch and copy of the files"
 msgstr "獨立的分支和檔案副本"
 
@@ -7959,6 +8125,24 @@ msgstr "張三"
 
 msgid "JetBrains"
 msgstr "JetBrains"
+
+msgid "Jira"
+msgstr "Jira"
+
+msgid "Jira could not complete the request. Check your server URL and try again."
+msgstr "Jira 無法完成請求。請檢查伺服器 URL，然後再試一次。"
+
+msgid "Jira denied access. Check your credentials and permissions."
+msgstr "Jira 拒絕存取。請檢查憑證和權限。"
+
+msgid "Jira redirected the request. Check your server URL."
+msgstr "Jira 重新導向了請求。請檢查伺服器 URL。"
+
+msgid "Jira returned an unexpected response. Check your server URL and try again."
+msgstr "Jira 傳回非預期的回應。請檢查伺服器 URL，然後再試一次。"
+
+msgid "Jira server URL"
+msgstr "Jira 伺服器 URL"
 
 msgid "Join"
 msgstr "加入"
@@ -8019,6 +8203,9 @@ msgstr "僅我的"
 
 msgid "just now"
 msgstr "剛剛"
+
+msgid "Kanban"
+msgstr "看板"
 
 msgid "Kbd"
 msgstr "Kbd"
@@ -8231,6 +8418,9 @@ msgstr "退出評論模式"
 msgid "Leave it empty to go back to the name the terminal reports."
 msgstr "留空即可恢復終端回報的名稱。"
 
+msgid "Leave it empty to use the task name."
+msgstr "留空以使用任務名稱。"
+
 msgid "Leave Organization"
 msgstr "退出組織"
 
@@ -8372,6 +8562,9 @@ msgstr "關聯拉取請求"
 msgid "Link task"
 msgstr "關聯任務"
 
+msgid "Link workspace"
+msgstr "連結工作區"
+
 msgid "Linked {slug} to workspace"
 msgstr "已將{slug}關聯到工作區"
 
@@ -8438,6 +8631,12 @@ msgstr "載入更早的訊息"
 msgid "Load more"
 msgstr "載入更多"
 
+msgid "Load more results, reconnect unavailable hosts, or check your GitHub connection, then refresh."
+msgstr "請載入更多結果、重新連線至無法使用的主機，或檢查 GitHub 連線，然後重新整理。"
+
+msgid "Loaded issues: {shownCount}"
+msgstr "已載入議題：{shownCount}"
+
 msgid "Loader"
 msgstr "載入器"
 
@@ -8452,6 +8651,9 @@ msgstr "正在載入代理程式設定..."
 
 msgid "Loading and in-flight activity indicators"
 msgstr "載入狀態與進行中活動的指示器"
+
+msgid "Loading available moves…"
+msgstr "正在載入可用的移動操作…"
 
 msgid "Loading changes..."
 msgstr "正在載入更改..."
@@ -8500,6 +8702,9 @@ msgstr "正在載入專案…"
 
 msgid "Loading projects…"
 msgstr "正在載入專案…"
+
+msgid "Loading PRs…"
+msgstr "正在載入 PR…"
 
 msgid "Loading pull request…"
 msgstr "正在載入拉取請求…"
@@ -9045,11 +9250,29 @@ msgstr "軟體史的大部分時間"
 msgid "Move {count} to Group"
 msgstr "將{count}個移動到群組"
 
+msgid "Move {name} left"
+msgstr "將 {name} 向左移動"
+
+msgid "Move {name} right"
+msgstr "將 {name} 向右移動"
+
+msgid "Move canceled."
+msgstr "已取消移動。"
+
+msgid "Move issue"
+msgstr "移動議題"
+
+msgid "Move to"
+msgstr "移動到"
+
 msgid "Move to group"
 msgstr "移動到群組"
 
 msgid "Move to Tab"
 msgstr "移動到分頁"
+
+msgid "Moving issue…"
+msgstr "正在移動議題…"
 
 msgid "MRR"
 msgstr "MRR"
@@ -9079,6 +9302,12 @@ msgstr "我的代理程式"
 
 msgid "My Tasks"
 msgstr "我的任務"
+
+msgid "My team"
+msgstr "我的團隊"
+
+msgid "My work"
+msgstr "我的工作"
 
 msgid "Mystery Machinist"
 msgstr "神秘機械師"
@@ -9433,6 +9662,9 @@ msgstr "未找到作者。"
 msgid "No automations match"
 msgstr "沒有匹配的自動化"
 
+msgid "No available moves. Open the issue in Jira to check its workflow."
+msgstr "沒有可用的移動操作。請在 Jira 中開啟議題以檢查其工作流程。"
+
 msgid "No background terminal sessions"
 msgstr "沒有背景終端會話"
 
@@ -9604,8 +9836,14 @@ msgstr "沒有已知的建立者"
 msgid "No labels"
 msgstr "無標籤"
 
+msgid "No linked PR"
+msgstr "沒有連結的 PR"
+
 msgid "No live sessions"
 msgstr "沒有活動會話"
+
+msgid "No loaded items match this filter"
+msgstr "已載入的事項中沒有符合此篩選條件的結果"
 
 msgid "no logins"
 msgstr "無登入資訊"
@@ -10261,6 +10499,9 @@ msgstr "開啟{0}"
 msgid "Open {0} website"
 msgstr "開啟 {0} 官網"
 
+msgid "Open {appName}"
+msgstr "開啟{appName}"
+
 msgid "Open {filePath}"
 msgstr "開啟{filePath}"
 
@@ -10436,6 +10677,9 @@ msgstr "在Finder中開啟"
 msgid "Open in GitHub"
 msgstr "在GitHub中開啟"
 
+msgid "Open in Jira"
+msgstr "在 Jira 中開啟"
+
 msgid "Open in Linear"
 msgstr "在Linear中開啟"
 
@@ -10481,6 +10725,9 @@ msgstr "在GitHub中開啟議題"
 
 msgid "Open issues"
 msgstr "開啟的議題"
+
+msgid "Open Jira"
+msgstr "開啟 Jira"
 
 msgid "Open leaderboard"
 msgstr "開啟排行榜"
@@ -10575,9 +10822,6 @@ msgstr "開啟側邊面板"
 
 msgid "Open ship options"
 msgstr "開啟發布選項"
-
-msgid "Open Superset"
-msgstr "開啟Superset"
 
 msgid "Open Superset on that computer"
 msgstr "在那台電腦上開啟Superset"
@@ -10842,6 +11086,9 @@ msgstr "歸{0}所有，只有本人能編輯這個自動化。"
 msgid "Owner"
 msgstr "擁有者"
 
+msgid "owner/repository"
+msgstr "owner/repository"
+
 msgid "Owns every PTY session and survives app restarts."
 msgstr "持有所有PTY會話，並在應用重啟後繼續存活。"
 
@@ -10956,6 +11203,9 @@ msgstr "一半是記錄，一半是下注。前兩條已經在發生。其餘的
 msgid "Partial"
 msgstr "部分開啟"
 
+msgid "Partial results"
+msgstr "部分結果"
+
 msgid "Partner, Transpose Platform"
 msgstr "合夥人，Transpose Platform"
 
@@ -11058,6 +11308,9 @@ msgstr "持續存取「文稿」「下載」「桌面」和iCloud。"
 
 msgid "Personal"
 msgstr "個人"
+
+msgid "Personal access token"
+msgstr "個人存取權杖"
 
 msgid "Phantom Forklift"
 msgstr "幽靈堆高機"
@@ -11269,6 +11522,9 @@ msgstr "已建立PR #{0}"
 msgid "PR Closed"
 msgstr "PR已關閉"
 
+msgid "PR links from Jira tickets and GitHub."
+msgstr "來自 Jira 議題和 GitHub 的 PR 連結。"
+
 msgid "PR merged"
 msgstr "PR已合併"
 
@@ -11283,6 +11539,9 @@ msgstr "PR審查評論"
 
 msgid "PR review submitted…"
 msgstr "提交了PR審查…"
+
+msgid "PR source"
+msgstr "PR 來源"
 
 msgid "PR state"
 msgstr "PR狀態"
@@ -11358,6 +11617,9 @@ msgstr "上一個分支"
 
 msgid "Previous comment"
 msgstr "上一條評論"
+
+msgid "Previous copies"
+msgstr "先前的副本"
 
 msgid "Previous file"
 msgstr "上一個檔案"
@@ -11589,6 +11851,9 @@ msgstr "預配失敗，沙箱已被銷燬。目前沒有任何處理程序在執
 msgid "PRs a week"
 msgstr "PR/週"
 
+msgid "PRs unavailable"
+msgstr "PR 無法使用"
+
 msgid "Public"
 msgstr "公開"
 
@@ -11638,6 +11903,9 @@ msgstr "拉取請求"
 
 msgid "Pull Requests"
 msgstr "拉取請求"
+
+msgid "Pull requests are turned off. Only agent input is shown."
+msgstr "拉取請求已關閉。僅顯示等待輸入的代理程式。"
 
 msgid "Purple"
 msgstr "紫色"
@@ -11707,17 +11975,17 @@ msgstr "輕"
 msgid "Quit"
 msgstr "退出"
 
+msgid "Quit {appName}"
+msgstr "退出{appName}"
+
+msgid "Quit {appName} and stop all background services?"
+msgstr "退出{appName}並停止所有背景服務？"
+
+msgid "Quit {appName} Completely"
+msgstr "完全退出{appName}"
+
 msgid "Quit Completely"
 msgstr "完全退出"
-
-msgid "Quit Superset"
-msgstr "退出Superset"
-
-msgid "Quit Superset and stop all background services?"
-msgstr "退出Superset並停止所有背景服務？"
-
-msgid "Quit Superset Completely"
-msgstr "完全退出Superset"
 
 msgid "Quit the source browser first so its logins are saved to disk. You'll be asked to allow Keychain access."
 msgstr "請先退出源瀏覽器，讓它把登入資訊寫入磁碟。系統會請求你允許存取鑰匙圈。"
@@ -11918,6 +12186,9 @@ msgstr "重新整理拉取請求"
 msgid "Refresh repositories"
 msgstr "重新整理儲存庫"
 
+msgid "Refresh Superset Workspaces…"
+msgstr "重新整理 Superset 工作區…"
+
 msgid "Refreshes when Claude Code next runs."
 msgstr "下次執行 Claude Code 時重新整理。"
 
@@ -12014,6 +12285,9 @@ msgstr "移除{0}"
 
 msgid "Remove {label}?"
 msgstr "移除{label}？"
+
+msgid "Remove @{login}"
+msgstr "移除 @{login}"
 
 msgid "Remove attachment"
 msgstr "移除附件"
@@ -12120,6 +12394,9 @@ msgstr "重新命名頁面"
 
 msgid "Rename session"
 msgstr "重新命名會話"
+
+msgid "Rename subagent"
+msgstr "重新命名子代理"
 
 msgid "rename the branch"
 msgstr "重新命名分支"
@@ -12393,6 +12670,9 @@ msgstr "重啟終端守護程式？"
 msgid "Restart terminals"
 msgstr "重啟終端"
 
+msgid "Restart to find existing Superset workspaces. Their folders will be opened in place."
+msgstr "重新啟動以尋找現有的 Superset 工作區。資料夾會在原位置開啟。"
+
 msgid "Restart to use the latest version of Superset."
 msgstr "重新啟動以使用最新版本的 Superset。"
 
@@ -12558,6 +12838,9 @@ msgstr "在Superset裡審查拉取請求：差異面板、代理程式輔助審�
 msgid "Review requested"
 msgstr "已請求審查"
 
+msgid "Review requests"
+msgstr "審查請求"
+
 msgid "Review required"
 msgstr "需要審查"
 
@@ -12569,6 +12852,9 @@ msgstr "審查討論…"
 
 msgid "Reviewed by you"
 msgstr "你已審查"
+
+msgid "Reviewer needed"
+msgstr "需要審核者"
 
 msgid "Reviewers"
 msgstr "審查者"
@@ -12931,6 +13217,9 @@ msgstr "搜尋作者…"
 msgid "Search automations"
 msgstr "搜尋自動化"
 
+msgid "Search boards…"
+msgstr "搜尋看板…"
+
 msgid "Search branches..."
 msgstr "搜尋分支..."
 
@@ -12939,6 +13228,9 @@ msgstr "依鍵名搜尋..."
 
 msgid "Search changed files"
 msgstr "搜尋更改的檔案"
+
+msgid "Search contributors or enter a username…"
+msgstr "搜尋貢獻者或輸入使用者名稱…"
 
 msgid "Search developers"
 msgstr "搜尋開發者"
@@ -12951,6 +13243,15 @@ msgstr "搜尋文件..."
 
 msgid "Search environments..."
 msgstr "搜尋環境..."
+
+msgid "Search file contents"
+msgstr "搜尋檔案內容"
+
+msgid "Search file contents..."
+msgstr "搜尋檔案內容..."
+
+msgid "Search filenames and text in your workspace"
+msgstr "搜尋工作區中的檔案名稱和文字"
 
 msgid "Search files"
 msgstr "搜尋檔案"
@@ -12984,6 +13285,9 @@ msgstr "在{frameTitle}中搜尋…"
 
 msgid "Search issues..."
 msgstr "搜尋議題..."
+
+msgid "Search mode"
+msgstr "搜尋模式"
 
 msgid "Search pages"
 msgstr "搜尋頁面"
@@ -13078,6 +13382,9 @@ msgstr "秘密班長"
 msgid "Sections"
 msgstr "分區"
 
+msgid "Secure storage is unavailable. Unlock your system keychain and try again."
+msgstr "無法使用安全儲存空間。請解鎖系統鑰匙圈，然後再試一次。"
+
 msgid "Security"
 msgstr "安全"
 
@@ -13125,6 +13432,9 @@ msgstr "看看你最近 30 天的表現在公開排行榜上的位置。僅包�
 
 msgid "Select"
 msgstr "選擇框"
+
+msgid "Select a file to open"
+msgstr "選取要開啟的檔案"
 
 msgid "Select a project"
 msgstr "請選擇專案"
@@ -13577,6 +13887,9 @@ msgstr "顯示電子郵件"
 msgid "Show file tree"
 msgstr "顯示檔案樹"
 
+msgid "Show filters"
+msgstr "顯示篩選條件"
+
 msgid "Show in bar"
 msgstr "在工具列顯示"
 
@@ -13640,9 +13953,6 @@ msgstr "顯示已解決 ({resolvedCount})"
 msgid "Show review comments"
 msgstr "顯示評審評論"
 
-msgid "Show running agents under each workspace in the sidebar, with their live status."
-msgstr "在側邊欄每個工作區下顯示正在執行的代理程式及其即時狀態。"
-
 msgid "Show Scripts Bar"
 msgstr "顯示指令碼欄"
 
@@ -13660,6 +13970,9 @@ msgstr "在側邊欄顯示用量分頁"
 
 msgid "showArrow opt-in"
 msgstr "showArrow按需開啟"
+
+msgid "Showing the first {SEARCH_LIMIT} results. Narrow your search or add a filter."
+msgstr "顯示前 {SEARCH_LIMIT} 個結果。請縮小搜尋範圍或新增篩選條件。"
 
 msgid "Shown"
 msgstr "已顯示"
@@ -13928,12 +14241,21 @@ msgstr "部分檔案超過大小上限，未新增。"
 msgid "Some models were priced with a fallback rate"
 msgstr "部分模型按備用費率計價"
 
+msgid "Some PR links could not be loaded. Check Jira permissions and GitHub CLI access, then refresh."
+msgstr "部分 PR 連結無法載入。請檢查 Jira 權限和 GitHub CLI 存取權限，然後重新整理。"
+
 #. placeholder {0}: error.message
 msgid "Some repositories could not be loaded: {0}"
 msgstr "部分儲存庫無法載入：{0}"
 
 msgid "Some sessions could not be killed"
 msgstr "部分會話無法終止"
+
+msgid "Some sources could not be fully checked."
+msgstr "未能完整檢查部分來源。"
+
+msgid "Some Superset workspaces could not be connected."
+msgstr "無法連接部分 Superset 工作區。"
 
 msgid "Some themes were skipped"
 msgstr "部分主題已被跳過"
@@ -14279,6 +14601,12 @@ msgstr "停止"
 msgid "Stop {0}"
 msgstr "停止{0}"
 
+msgid "Stop agent"
+msgstr "停止代理"
+
+msgid "Stop agent and subagents"
+msgstr "停止代理及其子代理"
+
 msgid "Stop dictation"
 msgstr "停止語音輸入"
 
@@ -14325,6 +14653,9 @@ msgstr "結構化進度：思維鏈、任務、計劃"
 
 msgid "Subagent"
 msgstr "子代理程式"
+
+msgid "Subagent name"
+msgstr "子代理名稱"
 
 msgid "Subagents"
 msgstr "子代理程式"
@@ -14738,6 +15069,9 @@ msgstr "targetHostId與該工作區的主機不匹配"
 msgid "Task"
 msgstr "任務"
 
+msgid "Task {shortId}"
+msgstr "任務 {shortId}"
+
 msgid "Task Launch"
 msgstr "任務啟動"
 
@@ -14782,6 +15116,9 @@ msgstr "團隊"
 
 msgid "Team"
 msgstr "團隊"
+
+msgid "Team board"
+msgstr "團隊看板"
 
 msgid "Team collaboration"
 msgstr "團隊協作"
@@ -15078,6 +15415,9 @@ msgstr "主機已回退到先前的版本。"
 msgid "The human reads every line before it merges."
 msgstr "合併前人類會逐行閱讀。"
 
+msgid "The Jira board changed. Reopen Columns and try again."
+msgstr "Jira 看板已變更。請重新開啟「欄」選單並重試。"
+
 msgid "The job description shifts. Engineers stop being typists with taste and become dispatchers with taste: decomposing work, routing it to fleets, arbitrating conflicts between agents that both touched the same module."
 msgstr "崗位描述變了。工程師不再是有品味的打字員，而成了有品味的排程員：拆解工作、分派給代理程式叢集、在兩個改了同一個模組的代理程式之間做裁決。"
 
@@ -15327,6 +15667,9 @@ msgstr "這會關閉你組織的所有終端會話{runningCountSuffix}並啟動�
 msgid "This closes the selected workspaces and their terminals. The project's files and branches stay as they are."
 msgstr "這將關閉所選工作區及其終端機。專案的檔案和分支保持不變。"
 
+msgid "This closes the workspace and its terminals. Files and branches stay on disk."
+msgstr "這會關閉工作區及其終端機。檔案與分支會保留在磁碟上。"
+
 msgid "This closes the workspace and its terminals. The project's files, branches and other workspaces stay as they are."
 msgstr "這將關閉該工作區及其終端機。專案的檔案、分支和其他工作區保持不變。"
 
@@ -15416,6 +15759,9 @@ msgstr "這個Microsoft租戶已被另一個Superset組織連線。"
 
 msgid "This month"
 msgstr "本月"
+
+msgid "This move requires fields in Jira."
+msgstr "此移動操作需要在 Jira 中填寫欄位。"
 
 msgid "This only changes the display name, not the branch."
 msgstr "這只會更改顯示名稱，不會更改分支。"
@@ -15516,6 +15862,9 @@ msgstr "這個討論裡沒有可回覆的評論。"
 
 msgid "This thread is not open to agents. A person has to comment on it before an agent can reply."
 msgstr "此討論串尚未移交給代理程式。需要有人先從頁面上移交。"
+
+msgid "This transition is no longer available. Refresh the issue and try again."
+msgstr "此狀態轉換已無法使用。請重新整理議題後再試一次。"
 
 msgid "This user runs the host service for this device and can't be removed."
 msgstr "此使用者在此裝置上執行主機服務，無法被移除。"
@@ -15891,6 +16240,9 @@ msgstr "給Claude寫個任務…"
 msgid "Type an email, press Enter"
 msgstr "輸入電子郵件後按 Enter"
 
+msgid "Type at least 2 characters to find more people."
+msgstr "輸入至少 2 個字元以尋找更多人員。"
+
 msgid "Type here to send to the terminal"
 msgstr "在此輸入以傳送到終端"
 
@@ -15899,6 +16251,9 @@ msgstr "輸入組織名稱以確認。"
 
 msgid "Type to search files..."
 msgstr "輸入以搜尋檔案..."
+
+msgid "Type to search your workspace"
+msgstr "輸入以搜尋工作區"
 
 msgid "TypeScript"
 msgstr "TypeScript"
@@ -15980,6 +16335,9 @@ msgstr "進行中"
 
 msgid "Undo"
 msgstr "撤銷"
+
+msgid "Unfinished"
+msgstr "未完成"
 
 msgid "Ungroup"
 msgstr "取消群組"
@@ -16266,6 +16624,9 @@ msgstr "使用「{0}」"
 msgid "Use a workspace-relative path or an absolute folder."
 msgstr "使用相對於工作區的路徑或絕對路徑資料夾。"
 
+msgid "Use an HTTPS Jira server URL without a username, password, query, or fragment."
+msgstr "請使用不含使用者名稱、密碼、查詢字串或片段的 HTTPS Jira 伺服器 URL。"
+
 msgid "Use another port"
 msgstr "使用其他埠"
 
@@ -16274,6 +16635,9 @@ msgstr "使用任意代理程式"
 
 msgid "Use as workspace run"
 msgstr "用作工作區執行指令碼"
+
+msgid "Use automatic name"
+msgstr "使用自動名稱"
 
 msgid "Use Claude Code, Codex, OpenCode, or any coding agent for each task. Your workspaces, branches, and review flow stay the same."
 msgstr "每個任務都可以用Claude Code、Codex、OpenCode或任何編碼代理程式。工作區、分支和審查流程保持不變。"
@@ -16287,6 +16651,9 @@ msgstr "用於新代理程式"
 msgid "Use global default"
 msgstr "使用全域性預設值"
 
+msgid "Use Move to to choose a status with the keyboard."
+msgstr "使用「移動到」透過鍵盤選擇狀態。"
+
 msgid "Use Superset on mobile"
 msgstr "在手機上使用 Superset"
 
@@ -16295,6 +16662,9 @@ msgstr "透過 Pro 在手機上使用 Superset。"
 
 msgid "Use the desktop app to start running parallel coding agents."
 msgstr "使用桌面應用程式開始並行執行編碼代理程式。"
+
+msgid "Use the email address of the Atlassian account that created the token."
+msgstr "請使用建立權杖的 Atlassian 帳戶電子郵件地址。"
 
 msgid "Use the new workspace experience."
 msgstr "使用全新的工作區體驗。"
@@ -16352,6 +16722,9 @@ msgstr "未找到使用者"
 
 msgid "user@example.com"
 msgstr "user@example.com"
+
+msgid "Uses your GitHub CLI login to match Jira keys in PR titles and descriptions."
+msgstr "使用您的 GitHub CLI 登入資訊，在 PR 標題和說明中比對 Jira 編號。"
 
 msgid "Using random branch name (AI generation timed out)"
 msgstr "使用隨機分支名（AI生成逾時）"
@@ -16888,6 +17261,9 @@ msgstr "工作區已建立"
 msgid "Workspace created from PR"
 msgstr "已從PR建立工作區"
 
+msgid "Workspace created, but linking it to Jira failed."
+msgstr "工作區已建立，但連結至 Jira 失敗。"
+
 msgid "Workspace details"
 msgstr "工作區詳細資料"
 
@@ -17135,6 +17511,9 @@ msgstr "你即將把自己的角色從{currentRoleName}改為{newRoleName}。恢
 msgid "You're about to get Superset"
 msgstr "馬上就能用上Superset"
 
+msgid "You're all caught up"
+msgstr "沒有待處理事項"
+
 msgid "You're all set!"
 msgstr "一切就緒！"
 
@@ -17183,6 +17562,12 @@ msgstr "你的 GitHub 帳戶無法存取此環境中的某個儲存庫"
 msgid "Your GitHub link comes from the account you signed in with, so it shows as verified and cannot be edited here."
 msgstr "你的 GitHub 連結來自登入所用的帳號，因此顯示為已驗證，無法在此編輯。"
 
+msgid "Your Jira account is inactive."
+msgstr "你的 Jira 帳號已停用。"
+
+msgid "Your Jira connection is stored on this device."
+msgstr "你的 Jira 連線儲存在此裝置上。"
+
 msgid "Your last payment failed. Update your payment method to keep Pro."
 msgstr "上次付款失敗。請更新支付方式以繼續使用 Pro。"
 
@@ -17216,6 +17601,9 @@ msgstr "你的訂閱將相應調整。"
 
 msgid "Your Superset download is starting."
 msgstr "您的 Superset 下載即將開始。"
+
+msgid "Your team’s issues and pull requests."
+msgstr "團隊的議題與提取要求。"
 
 msgid "Your terminal sessions won't be interrupted."
 msgstr "你的終端會話不會被中斷。"
