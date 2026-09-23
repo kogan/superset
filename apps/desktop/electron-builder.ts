@@ -113,6 +113,7 @@ const config: Configuration = {
 
 	// macOS
 	mac: {
+		artifactName: `superset-plus-plus-\${version}-\${arch}.\${ext}`,
 		...(existsSync(macIconPath) ? { icon: macIconPath } : {}),
 		category: "public.app-category.utilities",
 		target: "default",
