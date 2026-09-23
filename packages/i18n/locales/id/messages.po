@@ -14532,8 +14532,14 @@ msgstr "Hentikan {0} lokal"
 msgid "Stop response"
 msgstr "Hentikan respons"
 
+msgid "Stop subagent"
+msgstr "Hentikan subagen"
+
 msgid "Stop Superset here to delete from another device."
 msgstr "Hentikan Superset di sini untuk menghapus dari perangkat lain."
+
+msgid "Stop this subagent using the agent's own controls."
+msgstr "Hentikan subagen ini menggunakan kontrol agen itu sendiri."
 
 msgid "Stop watching"
 msgstr "Berhenti memantau"
@@ -14983,9 +14989,6 @@ msgstr "targetHostId tidak cocok dengan host workspace"
 
 msgid "Task"
 msgstr "Tugas"
-
-msgid "Task {shortId}"
-msgstr "Tugas {shortId}"
 
 msgid "Task Launch"
 msgstr "Peluncuran Tugas"

@@ -14532,8 +14532,14 @@ msgstr "停止本地 {0}"
 msgid "Stop response"
 msgstr "停止回覆"
 
+msgid "Stop subagent"
+msgstr "停止子代理"
+
 msgid "Stop Superset here to delete from another device."
 msgstr "在此停止Superset，然後從其他裝置刪除。"
+
+msgid "Stop this subagent using the agent's own controls."
+msgstr "請使用代理本身的控制功能停止此子代理。"
 
 msgid "Stop watching"
 msgstr "停止關注"
@@ -14983,9 +14989,6 @@ msgstr "targetHostId與該工作區的主機不匹配"
 
 msgid "Task"
 msgstr "任務"
-
-msgid "Task {shortId}"
-msgstr "任務 {shortId}"
 
 msgid "Task Launch"
 msgstr "任務啟動"

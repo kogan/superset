@@ -14532,8 +14532,14 @@ msgstr "Zatrzymaj lokalny {0}"
 msgid "Stop response"
 msgstr "Zatrzymaj odpowiedź"
 
+msgid "Stop subagent"
+msgstr "Zatrzymaj podagenta"
+
 msgid "Stop Superset here to delete from another device."
 msgstr "Zatrzymaj tutaj Superset, aby usunąć hosta z innego urządzenia."
+
+msgid "Stop this subagent using the agent's own controls."
+msgstr "Zatrzymaj tego podagenta za pomocą elementów sterujących samego agenta."
 
 msgid "Stop watching"
 msgstr "Przestań obserwować"
@@ -14983,9 +14989,6 @@ msgstr "targetHostId nie pasuje do hosta obszaru roboczego"
 
 msgid "Task"
 msgstr "Zadanie"
-
-msgid "Task {shortId}"
-msgstr "Zadanie {shortId}"
 
 msgid "Task Launch"
 msgstr "Uruchomienie zadania"

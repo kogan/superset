@@ -14532,8 +14532,14 @@ msgstr "Zastavit lokální {0}"
 msgid "Stop response"
 msgstr "Zastavit odpověď"
 
+msgid "Stop subagent"
+msgstr "Zastavit podagenta"
+
 msgid "Stop Superset here to delete from another device."
 msgstr "Ukončete tady Superset, ať ho smažete z jiného zařízení."
+
+msgid "Stop this subagent using the agent's own controls."
+msgstr "Zastavte tohoto podagenta pomocí ovládacích prvků samotného agenta."
 
 msgid "Stop watching"
 msgstr "Přestat sledovat"
@@ -14983,9 +14989,6 @@ msgstr "targetHostId neodpovídá hostu pracovního prostoru"
 
 msgid "Task"
 msgstr "Úkol"
-
-msgid "Task {shortId}"
-msgstr "Úkol {shortId}"
 
 msgid "Task Launch"
 msgstr "Spuštění úkolu"

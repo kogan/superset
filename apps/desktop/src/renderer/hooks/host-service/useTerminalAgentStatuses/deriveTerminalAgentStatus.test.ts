@@ -82,3 +82,22 @@ describe("deriveTerminalAgentStatus", () => {
 		).toBe("idle");
 	});
 });
+
+it("keeps child input visible while its parent is working", () => {
+	expect(
+		deriveTerminalAgentStatus({
+			lastEventType: "Start",
+			lastEventAt: 1,
+			lastSeenAt: 100,
+			subagents: [{ needsInput: true }],
+		}),
+	).toBe("permission");
+	expect(
+		deriveTerminalAgentStatus({
+			lastEventType: "Start",
+			lastEventAt: 1,
+			lastSeenAt: 100,
+			subagents: [{ needsInput: true, endedAt: 2 }],
+		}),
+	).toBe("working");
+});

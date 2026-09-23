@@ -14,7 +14,9 @@ import type { PaneStatus } from "shared/tabs-types";
  */
 export type RunningAgentStatus = PaneStatus;
 
-export type DashboardSidebarRunningSubagent = SubagentDisplay;
+export type DashboardSidebarRunningSubagent = SubagentDisplay & {
+	needsInput?: true;
+};
 
 export interface DashboardSidebarRunningAgent {
 	/** Stable key for React lists, derived from the notification source. */
@@ -63,6 +65,7 @@ export function useDashboardSidebarWorkspaceRunningAgents(
 					binding.agentId,
 				subagents: (binding.subagents ?? []).map((subagent) => ({
 					id: subagent.id,
+					needsInput: subagent.needsInput,
 					description: subagent.description,
 					customName: subagent.customName,
 					...(subagent.agentType ? { agentType: subagent.agentType } : {}),

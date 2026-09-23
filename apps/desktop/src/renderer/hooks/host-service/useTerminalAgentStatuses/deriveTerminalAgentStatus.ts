@@ -9,11 +9,17 @@ export function deriveTerminalAgentStatus({
 	lastEventType,
 	lastEventAt,
 	lastSeenAt,
+	subagents,
 }: {
 	lastEventType: string;
 	lastEventAt: number;
 	lastSeenAt: number | undefined;
+	subagents?: readonly { needsInput?: true; endedAt?: number }[];
 }): PaneStatus {
+	if (
+		subagents?.some((child) => child.needsInput && child.endedAt === undefined)
+	)
+		return "permission";
 	if (lastEventType === "Start") return "working";
 	if (lastEventType === "PermissionRequest") return "permission";
 	if (lastEventType === "Failed") return "failed";

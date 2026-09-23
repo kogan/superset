@@ -14532,8 +14532,14 @@ msgstr "Lokale {0} stoppen"
 msgid "Stop response"
 msgstr "Antwoord stoppen"
 
+msgid "Stop subagent"
+msgstr "Subagent stoppen"
+
 msgid "Stop Superset here to delete from another device."
 msgstr "Stop Superset hier om vanaf een ander apparaat te verwijderen."
+
+msgid "Stop this subagent using the agent's own controls."
+msgstr "Stop deze subagent met de bediening van de agent zelf."
 
 msgid "Stop watching"
 msgstr "Stoppen met volgen"
@@ -14983,9 +14989,6 @@ msgstr "targetHostId komt niet overeen met de host van de werkruimte"
 
 msgid "Task"
 msgstr "Taak"
-
-msgid "Task {shortId}"
-msgstr "Taak {shortId}"
 
 msgid "Task Launch"
 msgstr "Start via taak"

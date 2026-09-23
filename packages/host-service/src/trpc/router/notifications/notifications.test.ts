@@ -172,6 +172,77 @@ function createDbContext({
 }
 
 describe("notificationsRouter.hook", () => {
+	it("coalesces question and permission hooks for the same wait, then notifies for the next question", async () => {
+		const { ctx, broadcastAgentLifecycle } = createContext("workspace-1");
+		const caller = notificationsRouter.createCaller(ctx);
+		const event = {
+			terminalId: "terminal-1",
+			agent: { agentId: "claude", sessionId: "parent" },
+		};
+		await caller.hook({ ...event, eventType: "PreToolUse" });
+		await caller.hook({ ...event, eventType: "PermissionRequest" });
+		await caller.hook({ ...event, eventType: "Notification" });
+		expect(broadcastAgentLifecycle).toHaveBeenCalledTimes(1);
+		await caller.hook({ ...event, eventType: "PostToolUse" });
+		await caller.hook({ ...event, eventType: "PreToolUse" });
+		expect(broadcastAgentLifecycle).toHaveBeenCalledTimes(3);
+	});
+
+	it("notifies once per child question without changing the parent's session or status", async () => {
+		const { ctx, broadcastAgentLifecycle, terminalAgentStore } =
+			createContext("workspace-1");
+		const caller = notificationsRouter.createCaller(ctx);
+		await caller.hook({
+			terminalId: "terminal-1",
+			eventType: "Start",
+			agent: { agentId: "codex", sessionId: "parent" },
+		});
+		const question = {
+			terminalId: "terminal-1",
+			eventType: "PreToolUse",
+			subagent: { id: "child", sessionId: "child" },
+			preview: "Which database?",
+		};
+		await caller.hook(question);
+		await caller.hook(question);
+		expect(broadcastAgentLifecycle).toHaveBeenCalledTimes(2);
+		expect(broadcastAgentLifecycle.mock.calls[1]?.[0]).toMatchObject({
+			terminalId: "terminal-1",
+			eventType: "PermissionRequest",
+			subagent: { id: "child" },
+			preview: "Which database?",
+		});
+		expect(terminalAgentStore.get("terminal-1")).toMatchObject({
+			agentSessionId: "parent",
+			lastEventType: "Start",
+			subagents: [{ id: "child", sessionId: "child", needsInput: true }],
+		});
+		await caller.hook({ ...question, eventType: "PostToolUse" });
+		expect(
+			terminalAgentStore.getSubagent("terminal-1", "child")?.needsInput,
+		).toBeUndefined();
+		await caller.hook(question);
+		expect(broadcastAgentLifecycle).toHaveBeenCalledTimes(3);
+		await caller.hook({ ...question, eventType: "SubagentStop" });
+		expect(
+			terminalAgentStore.getSubagent("terminal-1", "child")?.needsInput,
+		).toBeUndefined();
+		expect(terminalAgentStore.get("terminal-1")?.lastEventType).toBe("Start");
+	});
+
+	it("ignores child questions without a live parent binding", async () => {
+		const { ctx, broadcastAgentLifecycle } = createContext("workspace-1");
+		const caller = notificationsRouter.createCaller(ctx);
+		expect(
+			await caller.hook({
+				terminalId: "terminal-1",
+				eventType: "PreToolUse",
+				subagent: { id: "child" },
+			}),
+		).toEqual({ success: true, ignored: true });
+		expect(broadcastAgentLifecycle).not.toHaveBeenCalled();
+	});
+
 	it("routes subagent events to the roster without a lifecycle broadcast or session capture", async () => {
 		const {
 			ctx,

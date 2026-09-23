@@ -9,6 +9,7 @@ import { z } from "zod";
 import type { HostDb } from "../../../db";
 import { terminalSessions, workspaces } from "../../../db/schema";
 import type { EventBus } from "../../../events";
+import { getToolEnvironment } from "../../../terminal/clean-shell-env";
 import {
 	hasHarnessSession,
 	readHarnessTranscript,
@@ -33,6 +34,10 @@ import {
 	seedEndedTerminalAgentBinding,
 	unclaimResumeCandidateBinding,
 } from "../../../terminal-agents/persistence";
+import {
+	controlSubagent,
+	getSubagentStopTarget,
+} from "../../../terminal-agents/stop-subagent/stop-subagent";
 import type { HostServiceContext } from "../../../types";
 import { protectedProcedure, router } from "../../index";
 import {
@@ -394,6 +399,66 @@ const agentDefinitionIdSchema = z.union([
 
 const GET_OR_CREATE_TIMEOUT_MS = 10_000;
 
+const subagentControlInput = z.object({
+	workspaceId: z.string().min(1),
+	terminalId: z.string().min(1),
+	subagentId: z.string().min(1).max(256),
+});
+
+function resolveSubagentControl(
+	ctx: HostServiceContext,
+	input: z.infer<typeof subagentControlInput>,
+) {
+	const session = ctx.db.query.terminalSessions
+		.findFirst({
+			where: eq(terminalSessions.id, input.terminalId),
+		})
+		.sync();
+	const binding = ctx.terminalAgentStore.get(input.terminalId);
+	const subagent = ctx.terminalAgentStore.getSubagent(
+		input.terminalId,
+		input.subagentId,
+	);
+	if (
+		!session ||
+		session.originWorkspaceId !== input.workspaceId ||
+		session.status !== "active" ||
+		session.endedAt !== null ||
+		!binding ||
+		binding.workspaceId !== input.workspaceId ||
+		!subagent
+	)
+		throw new TRPCError({
+			code: "NOT_FOUND",
+			message: "Active subagent not found in this workspace",
+		});
+	const target = getSubagentStopTarget(binding, subagent);
+	if (!target)
+		throw new TRPCError({
+			code: "PRECONDITION_FAILED",
+			message: "This agent does not expose independent subagent controls",
+		});
+	return {
+		target,
+		subagent,
+		isStillCurrent: () => {
+			const current = ctx.terminalAgentStore.get(input.terminalId);
+			const child = ctx.terminalAgentStore.getSubagent(
+				input.terminalId,
+				input.subagentId,
+			);
+			return (
+				current?.workspaceId === input.workspaceId &&
+				current.agentSessionId === binding.agentSessionId &&
+				current.startedAt === binding.startedAt &&
+				child?.startedAt === subagent.startedAt &&
+				child.endedAt === undefined &&
+				child.sessionId === subagent.sessionId
+			);
+		},
+	};
+}
+
 export const terminalAgentsRouter = router({
 	list: protectedProcedure.query(({ ctx }) => {
 		return ctx.terminalAgentStore.list();
@@ -444,6 +509,61 @@ export const terminalAgentsRouter = router({
 				input.subagentId,
 			),
 		),
+
+	subagentStopCapability: protectedProcedure
+		.input(subagentControlInput)
+		.query(async ({ ctx, input }) => {
+			try {
+				const control = resolveSubagentControl(ctx, input);
+				await controlSubagent(control.target, {
+					mode: "probe",
+					env: await getToolEnvironment(),
+					isStillCurrent: control.isStillCurrent,
+				});
+				return { supported: true };
+			} catch {
+				return { supported: false };
+			}
+		}),
+
+	stopSubagent: protectedProcedure
+		.input(subagentControlInput)
+		.mutation(async ({ ctx, input }) => {
+			const control = resolveSubagentControl(ctx, input);
+			try {
+				await controlSubagent(control.target, {
+					mode: "stop",
+					env: await getToolEnvironment(),
+					isStillCurrent: control.isStillCurrent,
+				});
+			} catch (cause) {
+				throw new TRPCError({
+					code: "PRECONDITION_FAILED",
+					message: "Could not stop this subagent independently",
+					cause,
+				});
+			}
+			const currentChild = ctx.terminalAgentStore.getSubagent(
+				input.terminalId,
+				input.subagentId,
+			);
+			if (
+				control.isStillCurrent() &&
+				currentChild?.lastEventAt === control.subagent.lastEventAt
+			) {
+				const occurredAt = Date.now();
+				ctx.terminalAgentStore.recordSubagentEvent({
+					...input,
+					eventType: "SubagentStop",
+					occurredAt,
+				});
+				ctx.eventBus.broadcastAgentBindingsChanged({
+					workspaceId: input.workspaceId,
+					occurredAt,
+				});
+			}
+			return { subagentId: input.subagentId };
+		}),
 
 	renameSubagent: protectedProcedure
 		.input(

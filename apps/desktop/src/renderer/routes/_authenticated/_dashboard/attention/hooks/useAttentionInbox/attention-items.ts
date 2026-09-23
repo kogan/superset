@@ -95,7 +95,15 @@ export function agentAttentionItems({
 		const label = labels[index] ?? binding.agentId;
 		const occurrence = (occurrences.get(label) ?? 0) + 1;
 		occurrences.set(label, occurrence);
-		if (binding.lastEventType !== "PermissionRequest") return [];
+		const waitingChildren =
+			binding.subagents?.filter(
+				(child) => child.needsInput && child.endedAt === undefined,
+			) ?? [];
+		if (
+			binding.lastEventType !== "PermissionRequest" &&
+			waitingChildren.length === 0
+		)
+			return [];
 		return [
 			{
 				kind: "agent",
@@ -107,7 +115,10 @@ export function agentAttentionItems({
 				workspaceName,
 				workspaceId,
 				terminalId: binding.terminalId,
-				updatedAt: binding.lastEventAt,
+				updatedAt: Math.max(
+					binding.lastEventAt,
+					...waitingChildren.map((child) => child.lastEventAt),
+				),
 			},
 		];
 	});

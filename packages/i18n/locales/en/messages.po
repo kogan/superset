@@ -14532,8 +14532,14 @@ msgstr "Stop local {0}"
 msgid "Stop response"
 msgstr "Stop response"
 
+msgid "Stop subagent"
+msgstr "Stop subagent"
+
 msgid "Stop Superset here to delete from another device."
 msgstr "Stop Superset here to delete from another device."
+
+msgid "Stop this subagent using the agent's own controls."
+msgstr "Stop this subagent using the agent's own controls."
 
 msgid "Stop watching"
 msgstr "Stop watching"
@@ -14983,9 +14989,6 @@ msgstr "targetHostId does not match the workspace's host"
 
 msgid "Task"
 msgstr "Task"
-
-msgid "Task {shortId}"
-msgstr "Task {shortId}"
 
 msgid "Task Launch"
 msgstr "Task Launch"

@@ -2,7 +2,7 @@ import { describe, expect, it } from "bun:test";
 import { getCodexGlobalHooksJsonContent } from "./agent-wrappers-claude-codex-opencode";
 
 const command =
-	'[ -n "$SUPERSET_HOME_DIR" ] && [ -x "$SUPERSET_HOME_DIR/hooks/notify.sh" ] && SUPERSET_HOOK_HARNESS=codex "$SUPERSET_HOME_DIR/hooks/notify.sh" || true';
+	'[ -n "$SUPERSET_HOME_DIR" ] && [ -x "$SUPERSET_HOME_DIR/hooks/superestset-notify.sh" ] && SUPERSET_HOOK_HARNESS=codex "$SUPERSET_HOME_DIR/hooks/superestset-notify.sh" || true';
 
 describe("Codex working status hooks", () => {
 	it("reasserts working after every tool while keeping pre-tool waiting scoped", () => {
@@ -11,7 +11,7 @@ describe("Codex working status hooks", () => {
 		const hooks = JSON.parse(content).hooks;
 
 		expect(hooks.PreToolUse).toContainEqual({
-			matcher: "^request_user_input$",
+			matcher: "(^|[.:/])request_user_input(_async)?$",
 			hooks: [{ type: "command", command }],
 		});
 		expect(hooks.PostToolUse).toContainEqual({

@@ -14532,8 +14532,14 @@ msgstr "Остановить локальный {0}"
 msgid "Stop response"
 msgstr "Остановить ответ"
 
+msgid "Stop subagent"
+msgstr "Остановить субагента"
+
 msgid "Stop Superset here to delete from another device."
 msgstr "Остановите Superset здесь, чтобы удалить с другого устройства."
+
+msgid "Stop this subagent using the agent's own controls."
+msgstr "Остановите этого субагента с помощью средств управления самого агента."
 
 msgid "Stop watching"
 msgstr "Прекратить отслеживание"
@@ -14983,9 +14989,6 @@ msgstr "targetHostId не совпадает с хостом рабочей об
 
 msgid "Task"
 msgstr "Задача"
-
-msgid "Task {shortId}"
-msgstr "Задача {shortId}"
 
 msgid "Task Launch"
 msgstr "Запуск задачи"

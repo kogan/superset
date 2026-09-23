@@ -26,6 +26,7 @@ export function useTerminalAgentStatuses(
 				binding.terminalId,
 				deriveTerminalAgentStatus({
 					lastEventType: binding.lastEventType,
+					subagents: binding.subagents,
 					lastEventAt: binding.lastEventAt,
 					lastSeenAt: terminalSeenAt[binding.terminalId],
 				}),

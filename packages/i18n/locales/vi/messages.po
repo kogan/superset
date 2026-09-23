@@ -14532,8 +14532,14 @@ msgstr "Dừng {0} cục bộ"
 msgid "Stop response"
 msgstr "Dừng phản hồi"
 
+msgid "Stop subagent"
+msgstr "Dừng tác nhân phụ"
+
 msgid "Stop Superset here to delete from another device."
 msgstr "Hãy dừng Superset ở đây để xóa từ thiết bị khác."
+
+msgid "Stop this subagent using the agent's own controls."
+msgstr "Dừng tác nhân phụ này bằng các nút điều khiển của chính tác nhân."
 
 msgid "Stop watching"
 msgstr "Ngừng theo dõi"
@@ -14983,9 +14989,6 @@ msgstr "targetHostId không khớp với host của workspace"
 
 msgid "Task"
 msgstr "Tác vụ"
-
-msgid "Task {shortId}"
-msgstr "Tác vụ {shortId}"
 
 msgid "Task Launch"
 msgstr "Khởi chạy tác vụ"

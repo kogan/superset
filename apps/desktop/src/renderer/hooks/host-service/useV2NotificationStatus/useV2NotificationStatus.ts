@@ -97,6 +97,7 @@ export function useV2AttentionWorkspaceCount(): number {
 			for (const binding of bindings ?? []) {
 				const status = deriveTerminalAgentStatus({
 					lastEventType: binding.lastEventType,
+					subagents: binding.subagents,
 					lastEventAt: binding.lastEventAt,
 					lastSeenAt: terminalSeenAt[binding.terminalId],
 				});

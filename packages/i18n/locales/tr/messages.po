@@ -14532,8 +14532,14 @@ msgstr "Yerel {0} durdur"
 msgid "Stop response"
 msgstr "Yanıtı durdur"
 
+msgid "Stop subagent"
+msgstr "Alt aracıyı durdur"
+
 msgid "Stop Superset here to delete from another device."
 msgstr "Başka bir cihazdan silmek için Superset'i burada durdurun."
+
+msgid "Stop this subagent using the agent's own controls."
+msgstr "Bu alt aracıyı aracının kendi kontrollerini kullanarak durdurun."
 
 msgid "Stop watching"
 msgstr "İzlemeyi durdur"
@@ -14983,9 +14989,6 @@ msgstr "targetHostId, çalışma alanının host'uyla eşleşmiyor"
 
 msgid "Task"
 msgstr "Görev"
-
-msgid "Task {shortId}"
-msgstr "Görev {shortId}"
 
 msgid "Task Launch"
 msgstr "Görev başlatma"

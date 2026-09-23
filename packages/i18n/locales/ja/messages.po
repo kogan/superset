@@ -14532,8 +14532,14 @@ msgstr "ローカルの {0} を停止"
 msgid "Stop response"
 msgstr "応答を停止"
 
+msgid "Stop subagent"
+msgstr "サブエージェントを停止"
+
 msgid "Stop Superset here to delete from another device."
 msgstr "別のデバイスから削除するには、ここでSupersetを停止してください。"
+
+msgid "Stop this subagent using the agent's own controls."
+msgstr "このサブエージェントは、エージェント自体の操作機能で停止してください。"
 
 msgid "Stop watching"
 msgstr "監視を停止"
@@ -14983,9 +14989,6 @@ msgstr "targetHostIdがワークスペースのホストと一致しません"
 
 msgid "Task"
 msgstr "タスク"
-
-msgid "Task {shortId}"
-msgstr "タスク {shortId}"
 
 msgid "Task Launch"
 msgstr "タスク起動"

@@ -51,6 +51,35 @@ const page = (overrides: Partial<PullRequestsPage> = {}): PullRequestsPage => ({
 });
 
 describe("agent attention", () => {
+	test("child questions stay in Attention while the parent keeps working", () => {
+		const child = {
+			id: "child",
+			startedAt: 3,
+			lastEventAt: 4,
+			needsInput: true as const,
+		};
+		expect(
+			agentAttentionItems({
+				workspaceId: "workspace",
+				workspaceName: "test",
+				bindings: [{ ...binding, lastEventType: "Start", subagents: [child] }],
+			}),
+		).toMatchObject([{ terminalId: "terminal-a", updatedAt: 4 }]);
+		expect(
+			agentAttentionItems({
+				workspaceId: "workspace",
+				workspaceName: "test",
+				bindings: [
+					{
+						...binding,
+						lastEventType: "Start",
+						subagents: [{ ...child, needsInput: undefined }],
+					},
+				],
+			}),
+		).toEqual([]);
+	});
+
 	test("only a current permission request needs input", () => {
 		for (const lastEventType of [
 			"Start",

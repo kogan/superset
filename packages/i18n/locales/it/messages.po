@@ -14532,8 +14532,14 @@ msgstr "Arresta {0} locale"
 msgid "Stop response"
 msgstr "Interrompi la risposta"
 
+msgid "Stop subagent"
+msgstr "Interrompi sottoagente"
+
 msgid "Stop Superset here to delete from another device."
 msgstr "Chiudi Superset qui per eliminarlo da un altro dispositivo."
+
+msgid "Stop this subagent using the agent's own controls."
+msgstr "Interrompi questo sottoagente usando i controlli dell’agente."
 
 msgid "Stop watching"
 msgstr "Smetti di osservare"
@@ -14983,9 +14989,6 @@ msgstr "targetHostId non corrisponde all'host del workspace"
 
 msgid "Task"
 msgstr "Task"
-
-msgid "Task {shortId}"
-msgstr "Attività {shortId}"
 
 msgid "Task Launch"
 msgstr "Avvio del task"

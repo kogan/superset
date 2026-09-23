@@ -823,3 +823,32 @@ describe("session account attribution", () => {
 		expect(store.get("account-terminal")?.account).toBeUndefined();
 	});
 });
+
+it("retains an unanswered child question past the inactivity timeout without keeping answered children forever", () => {
+	const store = new TerminalAgentStore();
+	const occurredAt = Date.now() - 11 * 60_000;
+	store.recordEvent({
+		terminalId: "terminal",
+		workspaceId: "workspace",
+		agentId: "codex",
+		agentSessionId: "root",
+		eventType: "Start",
+		occurredAt,
+	});
+	store.recordSubagentEvent({
+		terminalId: "terminal",
+		workspaceId: "workspace",
+		subagentId: "child",
+		eventType: "PreToolUse",
+		occurredAt,
+	});
+	expect(store.getSubagent("terminal", "child")?.needsInput).toBe(true);
+	store.recordSubagentEvent({
+		terminalId: "terminal",
+		workspaceId: "workspace",
+		subagentId: "child",
+		eventType: "PostToolUse",
+		occurredAt,
+	});
+	expect(store.getSubagent("terminal", "child")).toBeUndefined();
+});

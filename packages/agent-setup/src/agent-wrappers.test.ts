@@ -26,7 +26,7 @@ let mockedHomeDir = path.join(TEST_ROOT, "home");
 
 mock.module("./notify-hook", () => ({
 	NOTIFY_SCRIPT_NAME: "superestset-notify.sh",
-	NOTIFY_SCRIPT_MARKER: "# SuperestSet agent notification hook v19",
+	NOTIFY_SCRIPT_MARKER: "# SuperestSet agent notification hook v20",
 	getNotifyScriptPath: () => path.join(TEST_HOOKS_DIR, "superestset-notify.sh"),
 	getNotifyScriptContent: () => "#!/bin/bash\nexit 0\n",
 	createNotifyScript: () => {},
@@ -1923,9 +1923,22 @@ describe("agent-wrappers codex hooks.json", () => {
 			).toBe(true);
 		}
 
+		const matcher = new RegExp(parsed.hooks.PreToolUse[0].matcher ?? "(?!)");
+		for (const name of [
+			"request_user_input",
+			"functions.request_user_input",
+			"functions.request_user_input_async",
+		])
+			expect(matcher.test(name)).toBe(true);
+		for (const name of [
+			"exec_command",
+			"other_request_user_input",
+			"request_user_input_extra",
+		])
+			expect(matcher.test(name)).toBe(false);
 		expect(parsed.hooks.PreToolUse).toEqual([
 			{
-				matcher: "^request_user_input$",
+				matcher: "(^|[.:/])request_user_input(_async)?$",
 				hooks: [{ type: "command", command: expectedCommand }],
 			},
 		]);
@@ -2054,7 +2067,7 @@ describe("agent-wrappers codex hooks.json", () => {
 		}
 
 		for (const [eventName, matcher] of [
-			["PreToolUse", "^request_user_input$"],
+			["PreToolUse", "(^|[.:/])request_user_input(_async)?$"],
 			["PostToolUse", "*"],
 		] as const) {
 			expect(parsed.hooks[eventName]).toHaveLength(2);

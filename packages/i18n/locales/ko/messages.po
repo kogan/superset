@@ -14532,8 +14532,14 @@ msgstr "로컬 {0} 중지"
 msgid "Stop response"
 msgstr "응답 중지"
 
+msgid "Stop subagent"
+msgstr "하위 에이전트 중지"
+
 msgid "Stop Superset here to delete from another device."
 msgstr "다른 기기에서 삭제하려면 여기에서 Superset을 종료하세요."
+
+msgid "Stop this subagent using the agent's own controls."
+msgstr "에이전트 자체 제어 기능을 사용하여 이 하위 에이전트를 중지하세요."
 
 msgid "Stop watching"
 msgstr "감시 중지"
@@ -14983,9 +14989,6 @@ msgstr "targetHostId가 워크스페이스의 호스트와 일치하지 않습�
 
 msgid "Task"
 msgstr "작업"
-
-msgid "Task {shortId}"
-msgstr "작업 {shortId}"
 
 msgid "Task Launch"
 msgstr "작업 실행"

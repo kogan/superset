@@ -53,6 +53,128 @@ describe("subagent task descriptions", () => {
 		);
 	});
 
+	it("keeps the child's task name when its transcript includes parent metadata", () => {
+		const file = transcript([
+			{
+				type: "session_meta",
+				payload: {
+					agent_path: "/root/review_checkout",
+					parent_thread_id: "parent",
+				},
+			},
+			{ type: "session_meta", payload: { id: "parent" } },
+			{
+				type: "response_item",
+				payload: {
+					type: "message",
+					role: "user",
+					content: "An unrelated task inherited from the parent",
+				},
+			},
+		]);
+		expect(readSubagentDescription(getSubagentHarness("codex"), file)).toBe(
+			"Review checkout",
+		);
+	});
+
+	it("does not name an untitled child after an inherited parent prompt or nickname", () => {
+		const file = transcript([
+			{
+				type: "session_meta",
+				payload: {
+					agent_path: "/root/default",
+					agent_nickname: "Carver",
+					parent_thread_id: "parent",
+				},
+			},
+			{
+				type: "session_meta",
+				payload: { agent_path: "/root/parent_task" },
+			},
+			{
+				type: "response_item",
+				payload: {
+					type: "message",
+					role: "user",
+					content: "An unrelated task inherited from the parent",
+				},
+			},
+		]);
+		expect(
+			readSubagentDescription(getSubagentHarness("codex"), file),
+		).toBeUndefined();
+	});
+
+	it("uses a delegated task prompt when the child's path is a generated identifier", () => {
+		const agentPath = "/root/01a0bef7-7643-7363-8d0a-2ecfe716b372";
+		const file = transcript([
+			{
+				type: "session_meta",
+				payload: { agent_path: agentPath, parent_thread_id: "parent" },
+			},
+			{
+				type: "response_item",
+				payload: {
+					type: "message",
+					role: "user",
+					content: "An unrelated task inherited from the parent",
+				},
+			},
+			{
+				type: "response_item",
+				payload: {
+					type: "agent_message",
+					author: "/root",
+					recipient: agentPath,
+					content: `Message Type: NEW_TASK\nTask name: ${agentPath}\nSender: /root\nPayload:\nReview checkout errors\nOnly inspect the checkout module.`,
+				},
+			},
+		]);
+		expect(readSubagentDescription(getSubagentHarness("codex"), file)).toBe(
+			"Review checkout errors",
+		);
+	});
+
+	it("ignores inherited task messages addressed to other agents", () => {
+		const file = transcript([
+			{
+				type: "session_meta",
+				payload: { agent_path: "/root/task_e716b372" },
+			},
+			{
+				type: "response_item",
+				payload: {
+					type: "agent_message",
+					author: "/root",
+					recipient: "/root/other_task",
+					content:
+						"Message Type: NEW_TASK\nTask name: /root/other_task\nSender: /root\nPayload:\nUnrelated task",
+				},
+			},
+		]);
+		expect(
+			readSubagentDescription(getSubagentHarness("codex"), file),
+		).toBeUndefined();
+	});
+
+	it("humanizes nested Codex task metadata without losing acronyms", () => {
+		const file = transcript([
+			{
+				type: "session_meta",
+				payload: {
+					source: {
+						subagent: {
+							thread_spawn: { agent_path: "/root/reviewCheckout_API-tests/" },
+						},
+					},
+				},
+			},
+		]);
+		expect(readSubagentDescription(getSubagentHarness("codex"), file)).toBe(
+			"Review Checkout API tests",
+		);
+	});
+
 	it("falls back to the task prompt, skipping setup messages and limiting length", () => {
 		const file = transcript([
 			{

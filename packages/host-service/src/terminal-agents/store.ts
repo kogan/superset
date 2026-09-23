@@ -1,5 +1,6 @@
 import { EventEmitter } from "node:events";
 import type { AgentDefinitionId } from "@superset/shared/agent-catalog";
+import { mapEventType } from "../events/map-event-type";
 import { readSubagentDescription } from "./subagent-description";
 import {
 	getSubagentHarness,
@@ -28,6 +29,7 @@ interface RecordEventInput {
 }
 
 interface RecordSubagentEventInput {
+	sessionId?: string;
 	terminalId: string;
 	workspaceId: string;
 	/** Raw hook event name (`SubagentStart`, `PostToolUse`, `SubagentStop`, …). */
@@ -278,6 +280,7 @@ export class TerminalAgentStore extends EventEmitter {
 				...(transcriptPath ? { transcriptPath } : {}),
 				lastEventAt: occurredAt,
 				endedAt: occurredAt,
+				needsInput: undefined,
 			});
 			this.emit("change", workspaceId);
 			return;
@@ -289,8 +292,13 @@ export class TerminalAgentStore extends EventEmitter {
 
 		const nextType = agentType ?? existing?.agentType;
 		const nextPath = transcriptPath ?? existing?.transcriptPath;
+		const lifecycle = mapEventType(eventType);
+		const needsInput =
+			lifecycle === "PermissionRequest" || (!lifecycle && existing?.needsInput);
 		const next: TerminalSubagent = {
 			id: subagentId,
+			sessionId: input.sessionId ?? existing?.sessionId,
+			...(needsInput ? { needsInput: true } : {}),
 			description: existing?.description,
 			customName: existing?.customName,
 			...(nextType ? { agentType: nextType } : {}),
@@ -324,6 +332,7 @@ export class TerminalAgentStore extends EventEmitter {
 	 */
 	recordSubagentHook(input: RecordSubagentHookInput): boolean {
 		const parent = this.byTerminal.get(input.terminalId);
+		if (!parent || parent.workspaceId !== input.workspaceId) return false;
 		const harness = getSubagentHarness(parent?.agentId);
 		if (
 			parent?.agentSessionId &&
@@ -341,6 +350,7 @@ export class TerminalAgentStore extends EventEmitter {
 			workspaceId: input.workspaceId,
 			eventType: input.eventType,
 			subagentId: input.subagentId,
+			sessionId: input.hint.sessionId,
 			...(input.agentType ? { agentType: input.agentType } : {}),
 			...(transcriptPath ? { transcriptPath } : {}),
 			occurredAt: input.occurredAt,
@@ -542,7 +552,8 @@ export class TerminalAgentStore extends EventEmitter {
 		for (const [id, subagent] of roster) {
 			const expired =
 				subagent.endedAt === undefined
-					? subagent.lastEventAt < now - SUBAGENT_STALE_MS
+					? !subagent.needsInput &&
+						subagent.lastEventAt < now - SUBAGENT_STALE_MS
 					: subagent.endedAt < now - SUBAGENT_ENDED_RETENTION_MS;
 			if (expired) roster.delete(id);
 		}

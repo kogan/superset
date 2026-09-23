@@ -86,6 +86,10 @@ const CLAUDE_MANAGED_EVENTS: Record<string, { matcher?: string }> = {
 	PostToolUse: { matcher: "*" },
 	PostToolUseFailure: { matcher: "*" },
 	PermissionRequest: { matcher: "*" },
+	PreToolUse: { matcher: "^AskUserQuestion$" },
+	Notification: { matcher: "^(permission_prompt|elicitation_dialog)$" },
+	Elicitation: {},
+	ElicitationResult: {},
 };
 
 function claudeHooksSpec(
@@ -186,7 +190,7 @@ const CODEX_MANAGED_EVENTS: Record<string, { matcher?: string }> = {
 	UserPromptSubmit: {},
 	// A planning question blocks on user input; resume working after its answer.
 	// Match only this tool so ordinary tool calls never signal a waiting state.
-	PreToolUse: { matcher: "^request_user_input$" },
+	PreToolUse: { matcher: "(^|[.:/])request_user_input(_async)?$" },
 	// Reassert working state after any tool call so a cleared or missed Start
 	// self-heals during a turn, matching Claude's lifecycle behavior.
 	PostToolUse: { matcher: "*" },
