@@ -11539,9 +11539,6 @@ msgstr "Vorige branch"
 msgid "Previous comment"
 msgstr "Vorige opmerking"
 
-msgid "Previous copies"
-msgstr "Eerdere kopieën"
-
 msgid "Previous file"
 msgstr "Vorig bestand"
 

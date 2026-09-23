@@ -11539,9 +11539,6 @@ msgstr "前のブランチ"
 msgid "Previous comment"
 msgstr "前のコメント"
 
-msgid "Previous copies"
-msgstr "以前のコピー"
-
 msgid "Previous file"
 msgstr "前のファイル"
 

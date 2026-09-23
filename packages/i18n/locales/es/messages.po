@@ -11539,9 +11539,6 @@ msgstr "Rama anterior"
 msgid "Previous comment"
 msgstr "Comentario anterior"
 
-msgid "Previous copies"
-msgstr "Copias anteriores"
-
 msgid "Previous file"
 msgstr "Archivo anterior"
 

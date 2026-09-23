@@ -11539,9 +11539,6 @@ msgstr "Nhánh trước"
 msgid "Previous comment"
 msgstr "Bình luận trước"
 
-msgid "Previous copies"
-msgstr "Các bản sao trước"
-
 msgid "Previous file"
 msgstr "Tệp trước"
 

@@ -11539,9 +11539,6 @@ msgstr "이전 브랜치"
 msgid "Previous comment"
 msgstr "이전 코멘트"
 
-msgid "Previous copies"
-msgstr "이전 복사본"
-
 msgid "Previous file"
 msgstr "이전 파일"
 

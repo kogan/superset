@@ -11539,9 +11539,6 @@ msgstr "Branche précédente"
 msgid "Previous comment"
 msgstr "Commentaire précédent"
 
-msgid "Previous copies"
-msgstr "Copies précédentes"
-
 msgid "Previous file"
 msgstr "Fichier précédent"
 

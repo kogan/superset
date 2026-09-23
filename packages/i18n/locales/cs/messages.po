@@ -11539,9 +11539,6 @@ msgstr "Předchozí větev"
 msgid "Previous comment"
 msgstr "Předchozí komentář"
 
-msgid "Previous copies"
-msgstr "Předchozí kopie"
-
 msgid "Previous file"
 msgstr "Předchozí soubor"
 

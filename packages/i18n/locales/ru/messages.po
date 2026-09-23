@@ -11539,9 +11539,6 @@ msgstr "Предыдущая ветка"
 msgid "Previous comment"
 msgstr "Предыдущий комментарий"
 
-msgid "Previous copies"
-msgstr "Предыдущие копии"
-
 msgid "Previous file"
 msgstr "Предыдущий файл"
 

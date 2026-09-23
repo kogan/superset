@@ -11539,9 +11539,6 @@ msgstr "Önceki dal"
 msgid "Previous comment"
 msgstr "Önceki yorum"
 
-msgid "Previous copies"
-msgstr "Önceki kopyalar"
-
 msgid "Previous file"
 msgstr "Önceki dosya"
 

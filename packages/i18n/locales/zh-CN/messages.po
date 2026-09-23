@@ -11539,9 +11539,6 @@ msgstr "上一个分支"
 msgid "Previous comment"
 msgstr "上一条评论"
 
-msgid "Previous copies"
-msgstr "以前的副本"
-
 msgid "Previous file"
 msgstr "上一个文件"
 
