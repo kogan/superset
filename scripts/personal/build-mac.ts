@@ -184,3 +184,6 @@ await run(
 	],
 	desktop,
 );
+if (!process.argv.includes("--dir")) {
+	await run(["bun", "run", "scripts/personal/verify-mac-release.ts"]);
+}
