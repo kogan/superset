@@ -47,6 +47,7 @@ import { env } from "main/env.main";
 import { exitImmediately } from "main/index";
 import { hasCustomRingtone } from "main/lib/custom-ringtones";
 import { getHostServiceCoordinator } from "main/lib/host-service-coordinator";
+import { allowIdeClose } from "main/lib/ide/close-guard";
 import { applyAppLanguage, languageEvents } from "main/lib/language";
 import { localDb } from "main/lib/local-db";
 import {
@@ -895,7 +896,8 @@ export const createSettingsRouter = () => {
 				return { success: true };
 			}),
 
-		restartApp: publicProcedure.mutation(() => {
+		restartApp: publicProcedure.mutation(async () => {
+			if (!(await allowIdeClose())) return { success: false };
 			app.relaunch();
 			exitImmediately();
 			return { success: true };

@@ -346,10 +346,6 @@ msgstr "{1} ile biten {0}"
 msgid "{0} failing"
 msgstr "{0} başarısız"
 
-#. placeholder {0}: collisions.length
-msgid "{0} files already exist in {where}. Do you want to replace them?"
-msgstr "{where} konumunda {0} dosya zaten var. Bunları değiştirmek istiyor musunuz?"
-
 #. placeholder {0}: displayName(variables.name)
 msgid "{0} installed"
 msgstr "{0} kuruldu"
@@ -1233,9 +1229,6 @@ msgstr "Kurulumdan ilk ajan çalıştırmanıza, rehberli bir ilk çalışma ala
 msgid "A faster, clearer diff experience for reviewing what your agents changed."
 msgstr "Ajanlarınızın neyi değiştirdiğini incelemek için daha hızlı, daha net bir fark deneyimi."
 
-msgid "A file named '{firstName}' already exists in {where}. Do you want to replace it?"
-msgstr "{where} konumunda '{firstName}' adlı bir dosya zaten var. Değiştirmek istiyor musunuz?"
-
 msgid "A focused burn-down of crashes, hangs, and reconnect failures across the app."
 msgstr "Uygulama genelinde çökmelerin, donmaların ve yeniden bağlanma hatalarının odaklı biçimde azaltılması."
 
@@ -1542,11 +1535,8 @@ msgstr "Çalışma alanına ekle"
 msgid "Add your own terminal agent to this device."
 msgstr "Bu cihaza kendi terminal ajanınızı ekleyin."
 
-msgid "Added {added} files to {where}"
-msgstr "{where} konumuna {added} dosya eklendi"
-
-msgid "Added 1 file to {where}"
-msgstr "{where} konumuna 1 dosya eklendi"
+msgid "Added"
+msgstr "Eklendi"
 
 msgid "Added only when launching with a prompt — e.g. <0>--</0>, <1>--prompt</1>, <2>-i</2>."
 msgstr "Yalnızca istemle başlatılırken eklenir — örn. <0>--</0>, <1>--prompt</1>, <2>-i</2>."
@@ -2152,12 +2142,6 @@ msgstr "Ortamı arşivle"
 msgid "Archived"
 msgstr "Arşivlenmiş"
 
-msgid "Are you sure you want to delete this file? This action cannot be undone."
-msgstr "Bu dosyayı silmek istediğinizden emin misiniz? Bu işlem geri alınamaz."
-
-msgid "Are you sure you want to delete this folder? This action cannot be undone."
-msgstr "Bu klasörü silmek istediğinizden emin misiniz? Bu işlem geri alınamaz."
-
 msgid "Are you sure you want to leave this organization? You will lose access immediately.{billingNote}"
 msgstr "Bu kuruluştan ayrılmak istediğinizden emin misiniz? Erişiminizi hemen kaybedersiniz.{billingNote}"
 
@@ -2664,6 +2648,9 @@ msgstr "Dal"
 msgid "Branch behavior for new workspaces on this device. Projects can override the prefix individually."
 msgstr "Bu cihazdaki yeni çalışma alanları için dal davranışı. Projeler ön eki tek tek geçersiz kılabilir."
 
+msgid "Branch Changes"
+msgstr "Dal Değişiklikleri"
+
 msgid "Branch copied"
 msgstr "Dal kopyalandı"
 
@@ -2736,9 +2723,6 @@ msgstr "Ajanlarınızı bir araya getirin."
 
 msgid "Browse and install skills, MCP servers, and agent configs shared by the community."
 msgstr "Toplulukça paylaşılan becerilere, MCP sunucularına ve ajan yapılandırmalarına göz atın ve kurun."
-
-msgid "Browse files"
-msgstr "Dosyalara göz at"
 
 msgid "Browse for directory"
 msgstr "Dizine gözat"
@@ -3591,9 +3575,6 @@ msgstr "Ajanları daralt"
 msgid "Collapse all"
 msgstr "Tümünü daralt"
 
-msgid "Collapse All"
-msgstr "Tümünü daralt"
-
 msgid "Collapse all files"
 msgstr "Tüm dosyaları daralt"
 
@@ -3822,6 +3803,9 @@ msgstr "Çalışma alanı çalıştırma komutunu yapılandır"
 
 msgid "Confirm before quitting"
 msgstr "Çıkmadan önce onay iste"
+
+msgid "Conflicting"
+msgstr "Çakışma"
 
 msgid "Connect"
 msgstr "Bağla"
@@ -4417,9 +4401,6 @@ msgstr "Jira tercihleri okunamadı."
 msgid "Could not read selected file"
 msgstr "Seçilen dosya okunamadı"
 
-msgid "Could not read the dropped files"
-msgstr "Bırakılan dosyalar okunamadı"
-
 msgid "Could not read the Google account. Please try again."
 msgstr "Google hesabı okunamadı. Lütfen yeniden deneyin."
 
@@ -4799,14 +4780,8 @@ msgstr "{creatorLabel} tarafından oluşturuldu, {createdAtLabel}"
 msgid "Created {createdDate}"
 msgstr "Oluşturulma: {createdDate}"
 
-msgid "Created {createdDirs} folders in {where}"
-msgstr "{where} konumunda {createdDirs} klasör oluşturuldu"
-
 msgid "Created <0>· 7d</0>"
 msgstr "Oluşturulan <0>· 7g</0>"
-
-msgid "Created 1 folder in {where}"
-msgstr "{where} konumunda 1 klasör oluşturuldu"
 
 msgid "Created by"
 msgstr "Oluşturan"
@@ -5087,9 +5062,6 @@ msgstr "“{title}” silinsin mi?"
 msgid "Delete {0}?"
 msgstr "{0} silinsin mi?"
 
-msgid "Delete {name}?"
-msgstr "{name} silinsin mi?"
-
 msgid "Delete account"
 msgstr "Hesabı sil"
 
@@ -5199,9 +5171,6 @@ msgstr "\"{projectName}\" silindi"
 msgid "Deleted \"{projectName}\" from {0} of {1} devices — unreachable devices keep their copy"
 msgstr "\"{projectName}\", {1} cihazdan {0} tanesinden silindi — erişilemeyen cihazlar kopyalarını korur"
 
-msgid "Deleted {name}"
-msgstr "{name} silindi"
-
 msgid "deleted or unavailable — pick another"
 msgstr "silinmiş veya kullanılamıyor — başka birini seçin"
 
@@ -5223,9 +5192,6 @@ msgstr "Bu host'u, erişimini ve çalışma alanlarını siler. Makinedeki dosya
 #. placeholder {1}: targets.length
 msgid "Deleting {0} of {1}…"
 msgstr "{1} öğeden {0} tanesi siliniyor…"
-
-msgid "Deleting {name}..."
-msgstr "{name} siliniyor..."
 
 msgid "Deleting automation..."
 msgstr "Otomasyon siliniyor..."
@@ -5667,9 +5633,6 @@ msgstr "Çalışma alanlarını, ajanları ve oturumları betiklerden, CI'den ve
 msgid "Drop files to attach"
 msgstr "Eklemek için dosyaları bırakın"
 
-msgid "Drop into {label}"
-msgstr "{label} içine bırakın"
-
 msgid "Drop to attach"
 msgstr "Eklemek için bırakın"
 
@@ -5862,6 +5825,9 @@ msgstr "E-posta desteği"
 msgid "Embedded browser improvements"
 msgstr "Gömülü tarayıcı iyileştirmeleri"
 
+msgid "Embedded IDE"
+msgstr "Gömülü IDE"
+
 msgid "Empty"
 msgstr "Boş"
 
@@ -5883,6 +5849,9 @@ msgstr "İlgi bekleyenler kutusunu etkinleştir"
 
 msgid "Enable auto-merge"
 msgstr "Otomatik birleştirmeyi etkinleştir"
+
+msgid "Enable Embedded IDE in Settings > General > Features."
+msgstr "Ayarlar > Genel > Özellikler bölümünden gömülü IDE’yi etkinleştirin."
 
 msgid "Enable relay access…"
 msgstr "Röle erişimini etkinleştir…"
@@ -6200,12 +6169,6 @@ msgstr "Başarısız kontroller"
 msgid "Failed to accept invitation"
 msgstr "Davet kabul edilemedi"
 
-msgid "Failed to add {failed} files"
-msgstr "{failed} dosya eklenemedi"
-
-msgid "Failed to add 1 file"
-msgstr "1 dosya eklenemedi"
-
 msgid "Failed to add agent"
 msgstr "Ajan eklenemedi"
 
@@ -6277,17 +6240,8 @@ msgstr "Panoya kopyalanamadı"
 msgid "Failed to copy workspace ID: {0}"
 msgstr "Çalışma alanı kimliği kopyalanamadı: {0}"
 
-msgid "Failed to create {failedDirs} folders"
-msgstr "{failedDirs} klasör oluşturulamadı"
-
-msgid "Failed to create 1 folder"
-msgstr "1 klasör oluşturulamadı"
-
 msgid "Failed to create automation"
 msgstr "Otomasyon oluşturulamadı"
-
-msgid "Failed to create item"
-msgstr "Öğe oluşturulamadı"
 
 msgid "Failed to create organization"
 msgstr "Kuruluş oluşturulamadı"
@@ -6320,9 +6274,6 @@ msgstr "PR'dan çalışma alanı oluşturulamadı"
 msgid "Failed to delete"
 msgstr "Silinemedi"
 
-msgid "Failed to delete {name}"
-msgstr "{name} silinemedi"
-
 #. placeholder {0}: "message" in e ? e.message : String(e.kind)
 msgid "Failed to delete {workspaceName}: {0}"
 msgstr "{workspaceName} silinemedi: {0}"
@@ -6338,9 +6289,6 @@ msgstr "Kuruluş silinemedi"
 
 msgid "Failed to delete team"
 msgstr "Takım silinemedi"
-
-msgid "Failed to discard the new item"
-msgstr "Yeni öğe atılamadı"
 
 msgid "Failed to enable relay access"
 msgstr "Röle erişimi etkinleştirilemedi"
@@ -6479,9 +6427,6 @@ msgstr "PR bağlantısı kaldırılamadı: {0}"
 msgid "Failed to remove terminal"
 msgstr "Terminal kaldırılamadı"
 
-msgid "Failed to rename"
-msgstr "Yeniden adlandırılamadı"
-
 msgid "Failed to rename branch"
 msgstr "Dal yeniden adlandırılamadı"
 
@@ -6490,12 +6435,6 @@ msgstr "Oturumu yeniden adlandırma başarısız oldu"
 
 msgid "Failed to reorder"
 msgstr "Yeniden sıralanamadı"
-
-msgid "Failed to replace {replaceFailed} files"
-msgstr "{replaceFailed} dosya değiştirilemedi"
-
-msgid "Failed to replace 1 file"
-msgstr "1 dosya değiştirilemedi"
 
 msgid "Failed to reset"
 msgstr "Sıfırlanamadı"
@@ -8222,12 +8161,6 @@ msgstr "Beklemeye devam et"
 msgid "Keep working"
 msgstr "Çalışmaya devam et"
 
-msgid "Kept the new file — it changed after it was created"
-msgstr "Yeni dosya korundu — oluşturulduktan sonra değişti"
-
-msgid "Kept the new folder — it is no longer empty"
-msgstr "Yeni klasör korundu — artık boş değil"
-
 msgid "Key name"
 msgstr "Anahtar adı"
 
@@ -8669,9 +8602,6 @@ msgstr "Konuşma yükleniyor..."
 
 msgid "Loading diff…"
 msgstr "Fark yükleniyor…"
-
-msgid "Loading files..."
-msgstr "Dosyalar yükleniyor..."
 
 msgid "Loading fonts..."
 msgstr "Yazı tipleri yükleniyor..."
@@ -9168,6 +9098,9 @@ msgstr "Kullanılan modeller"
 msgid "Moderate reasoning effort"
 msgstr "Orta düzey akıl yürütme çabası"
 
+msgid "Modified"
+msgstr "Değiştirildi"
+
 msgid "Monitor agents from your phone."
 msgstr "Ajanları telefonunuzdan izleyin."
 
@@ -9445,18 +9378,6 @@ msgstr "Yeni bulut çalışma alanı"
 
 msgid "New environment"
 msgstr "Yeni ortam"
-
-msgid "New File"
-msgstr "Yeni dosya"
-
-msgid "New File..."
-msgstr "Yeni dosya..."
-
-msgid "New Folder"
-msgstr "Yeni klasör"
-
-msgid "New Folder..."
-msgstr "Yeni klasör..."
 
 msgid "New group"
 msgstr "Yeni grup"
@@ -10587,16 +10508,19 @@ msgid "Open file"
 msgstr "Dosyayı aç"
 
 msgid "Open File"
-msgstr "Dosyayı aç"
-
-msgid "Open File in New Tab"
-msgstr "Dosyayı yeni sekmede aç"
+msgstr "Dosyayı Aç"
 
 msgid "Open from folder"
 msgstr "Klasörden aç"
 
+msgid "Open full IDE panes in worktrees. Turning this off preserves open sessions."
+msgstr "Çalışma ağaçlarında tam özellikli IDE panelleri açın. Kapatıldığında açık oturumlar korunur."
+
 msgid "Open full screen"
 msgstr "Tam ekranda aç"
+
+msgid "Open IDE"
+msgstr "IDE’yi aç"
 
 msgid "Open importer"
 msgstr "İçe aktarıcıyı aç"
@@ -10668,9 +10592,6 @@ msgstr "Harici tarayıcıda aç"
 msgid "Open in File pane"
 msgstr "Dosya bölmesinde aç"
 
-msgid "Open in file viewer"
-msgstr "Dosya görüntüleyicide aç"
-
 msgid "Open in Finder"
 msgstr "Finder'da aç"
 
@@ -10684,9 +10605,6 @@ msgid "Open in Linear"
 msgstr "Linear'da aç"
 
 msgid "Open in new tab"
-msgstr "Yeni sekmede aç"
-
-msgid "Open in New Tab"
 msgstr "Yeni sekmede aç"
 
 msgid "Open in PostHog"
@@ -11570,6 +11488,9 @@ msgstr "Ön ek"
 msgid "Preparing"
 msgstr "Hazırlanıyor"
 
+msgid "Preparing IDE. First use downloads the editor runtime."
+msgstr "IDE hazırlanıyor. İlk kullanımda düzenleyici çalışma ortamı indirilir."
+
 msgid "Preserve commit history"
 msgstr "Commit geçmişini korur"
 
@@ -12404,8 +12325,8 @@ msgstr "dalı yeniden adlandırma"
 msgid "Rename workspace"
 msgstr "Çalışma alanını yeniden adlandır"
 
-msgid "Rename..."
-msgstr "Yeniden adlandır..."
+msgid "Renamed"
+msgstr "Yeniden Adlandırıldı"
 
 msgid "Renaming branch to {newName}..."
 msgstr "Dal {newName} olarak yeniden adlandırılıyor..."
@@ -12448,23 +12369,11 @@ msgstr "Konuyu yeniden aç"
 msgid "reorder agents"
 msgstr "ajanları yeniden sıralama"
 
-msgid "Replace"
-msgstr "Değiştir"
-
-msgid "Replace All"
-msgstr "Tümünü değiştir"
-
 msgid "Replace custom audio"
 msgstr "Özel sesi değiştir"
 
 msgid "Replace this agent's launch settings with the current bundled configuration."
 msgstr "Bu ajanın başlatma ayarlarını, birlikte gelen güncel yapılandırmayla değiştirin."
-
-msgid "Replaced {replaced} files in {where}"
-msgstr "{where} konumunda {replaced} dosya değiştirildi"
-
-msgid "Replaced 1 file in {where}"
-msgstr "{where} konumunda 1 dosya değiştirildi"
 
 msgid "Reply"
 msgstr "Yanıtla"
@@ -13100,6 +13009,12 @@ msgstr "ajan komutunu kaydetme"
 msgid "Save to get URL"
 msgstr "URL için kaydedin"
 
+msgid "Save your files before closing the IDE."
+msgstr "IDE’yi kapatmadan önce dosyalarınızı kaydedin."
+
+msgid "Save your files first. This ends IDE terminals and debugging sessions in this worktree."
+msgstr "Önce dosyalarınızı kaydedin. Bu işlem, bu çalışma ağacındaki IDE terminallerini ve hata ayıklama oturumlarını sonlandırır."
+
 msgid "Saved"
 msgstr "Kaydedildi"
 
@@ -13432,9 +13347,6 @@ msgstr "Son 30 gününüzün herkese açık liderlik tablosunda nereye düştü�
 
 msgid "Select"
 msgstr "Seçim"
-
-msgid "Select a file to open"
-msgstr "Açılacak bir dosya seçin"
 
 msgid "Select a project"
 msgstr "Bir proje seçin"
@@ -14610,6 +14522,12 @@ msgstr "Ajanı ve alt ajanları durdur"
 msgid "Stop dictation"
 msgstr "Sesle yazmayı durdur"
 
+msgid "Stop IDE"
+msgstr "IDE’yi durdur"
+
+msgid "Stop IDE?"
+msgstr "IDE durdurulsun mu?"
+
 #. placeholder {0}: owner.processName
 msgid "Stop local {0}"
 msgstr "Yerel {0} durdur"
@@ -15282,9 +15200,6 @@ msgstr "Bu bağlantı uygulamada bir yere gitmiyor."
 msgid "That machine is no longer available"
 msgstr "O makine artık kullanılamıyor"
 
-msgid "That name isn't allowed."
-msgstr "Bu ada izin verilmiyor."
-
 msgid "The 2026 bet"
 msgstr "2026 bahsi"
 
@@ -15632,9 +15547,6 @@ msgstr "Bu {plugin} hesabını zaten {owner} bağlamış. Önce bağlantıyı ke
 
 msgid "This {plugin} account is already connected by another Superset organization."
 msgstr "Bu {plugin} hesabı zaten başka bir Superset kuruluşuna bağlı."
-
-msgid "This action is irreversible."
-msgstr "Bu işlem geri alınamaz."
 
 msgid "This agent no longer exists on the selected device (its agents may have been reset). Runs will fail until you pick a new one."
 msgstr "Bu ajan seçili cihazda artık yok (ajanları sıfırlanmış olabilir). Yeni bir tane seçene kadar çalıştırmalar başarısız olacak."
@@ -16077,9 +15989,6 @@ msgstr "Çok fazla istek. Lütfen daha sonra yeniden deneyin."
 msgid "Too many support reports. Try again later."
 msgstr "Çok fazla destek bildirimi. Daha sonra yeniden deneyin."
 
-msgid "Too many untitled items here already."
-msgstr "Burada zaten çok fazla adsız öğe var."
-
 msgid "Too old for this app to talk to. Update the Superset app on that device to reconnect."
 msgstr "Bu uygulamanın iletişim kuramayacağı kadar eski. Yeniden bağlanmak için o cihazdaki Superset uygulamasını güncelleyin."
 
@@ -16270,6 +16179,9 @@ msgstr "V2 düzenleyicilerde ve fark görünümlerinde kullanılan tipografi."
 msgid "Unable to check for updates. Please check your internet connection."
 msgstr "Güncellemeler denetlenemiyor. Lütfen internet bağlantınızı kontrol edin."
 
+msgid "Unable to load branch changes. Check the Superset Branch Changes output."
+msgstr "Dal değişiklikleri yüklenemedi. Superset Branch Changes çıktısını kontrol edin."
+
 msgid "Unable to load diff"
 msgstr "Fark yüklenemiyor"
 
@@ -16284,6 +16196,9 @@ msgstr "İnceleme durumu yüklenemiyor"
 
 msgid "Unable to load user info"
 msgstr "Kullanıcı bilgileri yüklenemiyor"
+
+msgid "Unable to open changes. Refresh the branch changes list and try again."
+msgstr "Değişiklikler açılamadı. Dal değişiklikleri listesini yenileyip tekrar deneyin."
 
 msgid "Unable to read file"
 msgstr "Dosya okunamıyor"
@@ -17294,9 +17209,6 @@ msgstr "Çalışma alanı yolu henüz kullanılamıyor"
 msgid "Workspace pinning & bulk actions"
 msgstr "Çalışma alanı sabitleme ve toplu eylemler"
 
-msgid "workspace root"
-msgstr "çalışma alanı kökü"
-
 msgid "Workspace Run"
 msgstr "Çalışma alanı çalıştırması"
 
@@ -17308,9 +17220,6 @@ msgstr "Çalışma alanı çalıştırması: {workspaceRunState}"
 
 msgid "Workspace settings"
 msgstr "Çalışma alanı ayarları"
-
-msgid "Workspace worktree not available"
-msgstr "Çalışma alanı worktree'si kullanılamıyor"
 
 msgid "workspaces"
 msgstr "çalışma alanları"

@@ -1,34 +1,39 @@
 ---
-title: Editor & Files
-description: File explorer, built-in editor, and cross-workspace search
+title: IDE
+description: A full IDE for each worktree, with extensions and debugging
 ---
 
-You don't have to leave Superset to look at or fix a file. Each workspace has a file tree, a fast built-in editor, and search that spans workspaces.
+Each worktree has its own embedded IDE with a file explorer, extensions, terminals, and debugging.
 
-## File Explorer
+## Embedded IDE
 
-Browse and manage your workspace's files from the sidebar:
+Choose **IDE** in the workspace's top bar or new-tab menu. The IDE opens that worktree's checkout using code-server, an open-source distribution of VS Code. The first launch downloads the editor runtime; later launches reuse it.
 
-![The file tree with git decorations](/images/file-tree.png)
+File search results, terminal file links, and **Open IDE** in a diff open the file in the same worktree's IDE. A line link moves to that line without reloading the IDE or closing other files. Browse and manage files in the IDE's Explorer.
 
-- Hierarchical tree with **git decorations** showing changed files
-- Create, rename, delete, move, and copy files with context menus
-- Toggle hidden files; refresh directory listings
-- Search files with instant results
-- **Material icon theme** for at-a-glance file types
+Opening the IDE also reveals the worktree's **Changes** panel with **All changes** selected. This compares the branch with its base and includes committed changes. Use **Changes** in the IDE toolbar to return to that comparison. The IDE's own Source Control view lists uncommitted edits and requires workspace trust; it stays disabled in Restricted Mode until you choose to trust the folder.
 
-## Built-in Editor
+Use the **Dark / Light** selector beside **Stop IDE** to change the editor's appearance. Each worktree remembers its choice, and new profiles start in dark mode. To choose another VS Code theme, open the IDE command palette and run **Preferences: Color Theme**.
 
-The editor is CodeMirror-based: small, fast to load, and light on memory, built for quick fixes between agent runs, not to replace your IDE.
+You can turn the feature off in **Settings → General → Features → Embedded IDE**. This hides the entry points and prevents saved IDE panes from starting again. Open sessions remain available so you can save your work and stop them with **Stop IDE**.
 
-![The built-in editor](/images/codemirror.png)
+The IDE includes the command palette, IntelliSense, code navigation, refactoring, source control, integrated terminals, and debugging. JavaScript and TypeScript language support and the JavaScript debugger are included. Node.js and any other tools your project uses must be installed on the workspace's host.
 
-Ways in:
+For Python, install these extensions from the IDE's Extensions view:
 
-- Click any file in the explorer
-- From a diff: double-click a line or right-click → **Edit Here** to jump to that exact spot in the raw file (see [Diff Viewer](/diff-viewer))
+- **Python** (`ms-python.python`) for interpreter selection and Python commands.
+- **Python Debugger** (`ms-python.debugpy`) for breakpoints and debugging.
+- **BasedPyright** (`detachhead.basedpyright`) for completion, navigation, and type checking.
 
-For longer editing sessions, **⌘O** opens the workspace in your IDE ([IDE Integration](/use-with-ide)).
+Select an installed Python interpreter and use **Run and Debug** to configure a launch. Extensions come from Open VSX, or you can install compatible VSIX files. Microsoft Marketplace-only extensions may be unavailable or incompatible.
+
+Each workspace keeps its own extensions and settings. Switching tabs or workspaces preserves the running IDE and unsaved buffers. Closing an IDE pane closes its view; **Stop IDE** also ends that workspace's IDE terminals and debugging sessions. Save files before closing or stopping. Workspace deletion and host shutdown stop the runtime too.
+
+The runtime supports macOS and Linux on Apple Silicon/ARM64 and x64. Native Windows hosts are not supported yet. For a remote workspace, extensions, terminals, and debug adapters run on the remote host and the desktop connects through Superset's authenticated forwarding.
+
+Existing Files tabs migrate into the IDE. If the old editor still holds unsaved or conflicted changes, its recovery view stays open until you save or close it.
+
+**⌘O** opens the workspace in an external IDE ([IDE Integration](/use-with-ide)).
 
 ## Cross-Workspace Search
 
@@ -36,15 +41,12 @@ The search bar can search across all open workspaces, not just the active one, u
 
 ![Cross-workspace search](/images/search-bar.png)
 
-## Image Viewer
-
-Images open fitted to the pane, with standard viewer navigation:
-
-- **Zoom**: pinch, or Ctrl/⌘ + scroll (anchored at the cursor, 25%–1600%)
-- **Pan**: two-finger scroll, or click and drag
-- **Keyboard**: **+**/**−** to zoom, arrow keys to pan, **0** to reset
-- **Reset**: double-click, or click the zoom badge that appears while zoomed
-
 ## Tabs, Splits, and Panes
 
-The whole workspace shell is composable: **Tab → Split → Pane** with drag-and-drop everywhere. Drop a pane onto the tab strip to spawn a new tab; mix terminals, files, diffs, and browser panes in one layout. The browser pane keeps its state when you switch workspaces.
+The workspace shell supports tabs and split panes. Drop a pane onto the tab strip to create a new tab; mix terminals, the IDE, diffs, and browser panes in one layout. Moving an IDE pane keeps it connected to its original worktree.
+
+### Branch changes inside the IDE
+
+In the IDE Explorer, expand **Branch Changes** to see committed and local changes against the worktree's base branch. Selecting a file opens a native VS Code diff. Use the file's **Open File** action to edit it directly. Added, modified, renamed, and deleted files have status badges, including in the regular Explorer tree. The list refreshes after saving, returning to the IDE, and periodically while it is focused.
+
+The comparison uses the same configured base branch as Superset's Changes sidebar and the merge base of that branch. It reads local Git refs without fetching. This read-only comparison works in Restricted Mode; debugging and other extensions still follow VS Code workspace trust.

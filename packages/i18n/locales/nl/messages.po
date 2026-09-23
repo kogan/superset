@@ -346,10 +346,6 @@ msgstr "{0} eindigend op {1}"
 msgid "{0} failing"
 msgstr "{0} mislukt"
 
-#. placeholder {0}: collisions.length
-msgid "{0} files already exist in {where}. Do you want to replace them?"
-msgstr "{0} bestanden bestaan al in {where}. Wil je ze vervangen?"
-
 #. placeholder {0}: displayName(variables.name)
 msgid "{0} installed"
 msgstr "{0} geïnstalleerd"
@@ -1233,9 +1229,6 @@ msgstr "Een snellere weg van installatie naar je eerste agentrun, met een begele
 msgid "A faster, clearer diff experience for reviewing what your agents changed."
 msgstr "Een snellere, duidelijkere diff-ervaring om te reviewen wat je agents hebben veranderd."
 
-msgid "A file named '{firstName}' already exists in {where}. Do you want to replace it?"
-msgstr "Er bestaat al een bestand met de naam '{firstName}' in {where}. Wil je het vervangen?"
-
 msgid "A focused burn-down of crashes, hangs, and reconnect failures across the app."
 msgstr "Een gerichte opruiming van crashes, vastlopers en mislukte herverbindingen door de hele app."
 
@@ -1542,11 +1535,8 @@ msgstr "Toevoegen aan werkruimte"
 msgid "Add your own terminal agent to this device."
 msgstr "Voeg je eigen terminalagent toe aan dit apparaat."
 
-msgid "Added {added} files to {where}"
-msgstr "{added} bestanden toegevoegd aan {where}"
-
-msgid "Added 1 file to {where}"
-msgstr "1 bestand toegevoegd aan {where}"
+msgid "Added"
+msgstr "Toegevoegd"
 
 msgid "Added only when launching with a prompt — e.g. <0>--</0>, <1>--prompt</1>, <2>-i</2>."
 msgstr "Alleen toegevoegd bij starten met een prompt — bijv. <0>--</0>, <1>--prompt</1>, <2>-i</2>."
@@ -2152,12 +2142,6 @@ msgstr "Omgeving archiveren"
 msgid "Archived"
 msgstr "Gearchiveerd"
 
-msgid "Are you sure you want to delete this file? This action cannot be undone."
-msgstr "Weet je zeker dat je dit bestand wilt verwijderen? Dit kan niet ongedaan worden gemaakt."
-
-msgid "Are you sure you want to delete this folder? This action cannot be undone."
-msgstr "Weet je zeker dat je deze map wilt verwijderen? Dit kan niet ongedaan worden gemaakt."
-
 msgid "Are you sure you want to leave this organization? You will lose access immediately.{billingNote}"
 msgstr "Weet je zeker dat je deze organisatie wilt verlaten? Je verliest direct toegang.{billingNote}"
 
@@ -2664,6 +2648,9 @@ msgstr "Branch"
 msgid "Branch behavior for new workspaces on this device. Projects can override the prefix individually."
 msgstr "Branchgedrag voor nieuwe werkruimtes op dit apparaat. Projecten kunnen de prefix apart overschrijven."
 
+msgid "Branch Changes"
+msgstr "Branchwijzigingen"
+
 msgid "Branch copied"
 msgstr "Branch gekopieerd"
 
@@ -2736,9 +2723,6 @@ msgstr "Breng je agents samen."
 
 msgid "Browse and install skills, MCP servers, and agent configs shared by the community."
 msgstr "Blader door skills, MCP-servers en agentconfiguraties die de community deelt, en installeer ze."
-
-msgid "Browse files"
-msgstr "Bestanden verkennen"
 
 msgid "Browse for directory"
 msgstr "Map kiezen"
@@ -3591,9 +3575,6 @@ msgstr "Agents inklappen"
 msgid "Collapse all"
 msgstr "Alles inklappen"
 
-msgid "Collapse All"
-msgstr "Alles inklappen"
-
 msgid "Collapse all files"
 msgstr "Alle bestanden inklappen"
 
@@ -3822,6 +3803,9 @@ msgstr "Run-commando van werkruimte configureren"
 
 msgid "Confirm before quitting"
 msgstr "Bevestigen voor afsluiten"
+
+msgid "Conflicting"
+msgstr "Conflict"
 
 msgid "Connect"
 msgstr "Verbinden"
@@ -4417,9 +4401,6 @@ msgstr "Jira-voorkeuren konden niet worden gelezen."
 msgid "Could not read selected file"
 msgstr "Kan het gekozen bestand niet lezen"
 
-msgid "Could not read the dropped files"
-msgstr "Kan de neergezette bestanden niet lezen"
-
 msgid "Could not read the Google account. Please try again."
 msgstr "Kan het Google-account niet uitlezen. Probeer het opnieuw."
 
@@ -4799,14 +4780,8 @@ msgstr "Aangemaakt {createdAtLabel} door {creatorLabel}"
 msgid "Created {createdDate}"
 msgstr "Aangemaakt {createdDate}"
 
-msgid "Created {createdDirs} folders in {where}"
-msgstr "{createdDirs} mappen aangemaakt in {where}"
-
 msgid "Created <0>· 7d</0>"
 msgstr "Aangemaakt <0>· 7d</0>"
-
-msgid "Created 1 folder in {where}"
-msgstr "1 map aangemaakt in {where}"
 
 msgid "Created by"
 msgstr "Gemaakt door"
@@ -5087,9 +5062,6 @@ msgstr "“{title}” verwijderen?"
 msgid "Delete {0}?"
 msgstr "{0} verwijderen?"
 
-msgid "Delete {name}?"
-msgstr "{name} verwijderen?"
-
 msgid "Delete account"
 msgstr "Account verwijderen"
 
@@ -5199,9 +5171,6 @@ msgstr "\"{projectName}\" verwijderd"
 msgid "Deleted \"{projectName}\" from {0} of {1} devices — unreachable devices keep their copy"
 msgstr "\"{projectName}\" verwijderd van {0} van {1} apparaten — onbereikbare apparaten houden hun kopie"
 
-msgid "Deleted {name}"
-msgstr "{name} verwijderd"
-
 msgid "deleted or unavailable — pick another"
 msgstr "verwijderd of niet beschikbaar — kies een andere"
 
@@ -5223,9 +5192,6 @@ msgstr "Verwijdert deze host, de toegang en de werkruimtes. Bestanden op de mach
 #. placeholder {1}: targets.length
 msgid "Deleting {0} of {1}…"
 msgstr "{0} van {1} verwijderen…"
-
-msgid "Deleting {name}..."
-msgstr "{name} verwijderen..."
 
 msgid "Deleting automation..."
 msgstr "Automatisering verwijderen..."
@@ -5667,9 +5633,6 @@ msgstr "Stuur werkruimtes, agents en sessies programmatisch aan vanuit scripts, 
 msgid "Drop files to attach"
 msgstr "Sleep bestanden hierheen om bij te voegen"
 
-msgid "Drop into {label}"
-msgstr "Neerzetten in {label}"
-
 msgid "Drop to attach"
 msgstr "Sleep hier om bij te voegen"
 
@@ -5862,6 +5825,9 @@ msgstr "Support e-mailen"
 msgid "Embedded browser improvements"
 msgstr "Verbeteringen aan de ingebouwde browser"
 
+msgid "Embedded IDE"
+msgstr "Ingebouwde IDE"
+
 msgid "Empty"
 msgstr "Leeg"
 
@@ -5883,6 +5849,9 @@ msgstr "Inbox voor aandachtspunten inschakelen"
 
 msgid "Enable auto-merge"
 msgstr "Auto-merge inschakelen"
+
+msgid "Enable Embedded IDE in Settings > General > Features."
+msgstr "Schakel de ingebouwde IDE in via Instellingen > Algemeen > Functies."
 
 msgid "Enable relay access…"
 msgstr "Relaytoegang inschakelen…"
@@ -6200,12 +6169,6 @@ msgstr "Mislukte controles"
 msgid "Failed to accept invitation"
 msgstr "Accepteren van uitnodiging mislukt"
 
-msgid "Failed to add {failed} files"
-msgstr "Toevoegen van {failed} bestanden mislukt"
-
-msgid "Failed to add 1 file"
-msgstr "Toevoegen van 1 bestand mislukt"
-
 msgid "Failed to add agent"
 msgstr "Toevoegen van agent mislukt"
 
@@ -6277,17 +6240,8 @@ msgstr "Kopiëren naar klembord mislukt"
 msgid "Failed to copy workspace ID: {0}"
 msgstr "Kopiëren van werkruimte-ID mislukt: {0}"
 
-msgid "Failed to create {failedDirs} folders"
-msgstr "Aanmaken van {failedDirs} mappen mislukt"
-
-msgid "Failed to create 1 folder"
-msgstr "Aanmaken van 1 map mislukt"
-
 msgid "Failed to create automation"
 msgstr "Aanmaken van automatisering mislukt"
-
-msgid "Failed to create item"
-msgstr "Aanmaken van item mislukt"
 
 msgid "Failed to create organization"
 msgstr "Aanmaken van organisatie mislukt"
@@ -6320,9 +6274,6 @@ msgstr "Aanmaken van werkruimte vanuit PR mislukt"
 msgid "Failed to delete"
 msgstr "Verwijderen mislukt"
 
-msgid "Failed to delete {name}"
-msgstr "Verwijderen van {name} mislukt"
-
 #. placeholder {0}: "message" in e ? e.message : String(e.kind)
 msgid "Failed to delete {workspaceName}: {0}"
 msgstr "Verwijderen van {workspaceName} mislukt: {0}"
@@ -6338,9 +6289,6 @@ msgstr "Verwijderen van organisatie mislukt"
 
 msgid "Failed to delete team"
 msgstr "Verwijderen van team mislukt"
-
-msgid "Failed to discard the new item"
-msgstr "Verwerpen van het nieuwe item mislukt"
 
 msgid "Failed to enable relay access"
 msgstr "Inschakelen van relaytoegang mislukt"
@@ -6479,9 +6427,6 @@ msgstr "Verwijderen van PR-koppeling mislukt: {0}"
 msgid "Failed to remove terminal"
 msgstr "Verwijderen van terminal mislukt"
 
-msgid "Failed to rename"
-msgstr "Naam wijzigen mislukt"
-
 msgid "Failed to rename branch"
 msgstr "Naam van branch wijzigen mislukt"
 
@@ -6490,12 +6435,6 @@ msgstr "Naam van de sessie wijzigen mislukt"
 
 msgid "Failed to reorder"
 msgstr "Herordenen mislukt"
-
-msgid "Failed to replace {replaceFailed} files"
-msgstr "Vervangen van {replaceFailed} bestanden mislukt"
-
-msgid "Failed to replace 1 file"
-msgstr "Vervangen van 1 bestand mislukt"
 
 msgid "Failed to reset"
 msgstr "Resetten mislukt"
@@ -8222,12 +8161,6 @@ msgstr "Blijven wachten"
 msgid "Keep working"
 msgstr "Doorwerken"
 
-msgid "Kept the new file — it changed after it was created"
-msgstr "Nieuw bestand behouden — het is na het aanmaken gewijzigd"
-
-msgid "Kept the new folder — it is no longer empty"
-msgstr "Nieuwe map behouden — die is niet meer leeg"
-
 msgid "Key name"
 msgstr "Naam van sleutel"
 
@@ -8669,9 +8602,6 @@ msgstr "Gesprek laden..."
 
 msgid "Loading diff…"
 msgstr "Diff laden…"
-
-msgid "Loading files..."
-msgstr "Bestanden laden..."
 
 msgid "Loading fonts..."
 msgstr "Lettertypen laden..."
@@ -9168,6 +9098,9 @@ msgstr "Gebruikte modellen"
 msgid "Moderate reasoning effort"
 msgstr "Gemiddelde redeneerinspanning"
 
+msgid "Modified"
+msgstr "Gewijzigd"
+
 msgid "Monitor agents from your phone."
 msgstr "Volg agents vanaf je telefoon."
 
@@ -9445,18 +9378,6 @@ msgstr "Nieuwe cloudwerkruimte"
 
 msgid "New environment"
 msgstr "Nieuwe omgeving"
-
-msgid "New File"
-msgstr "Nieuw bestand"
-
-msgid "New File..."
-msgstr "Nieuw bestand..."
-
-msgid "New Folder"
-msgstr "Nieuwe map"
-
-msgid "New Folder..."
-msgstr "Nieuwe map..."
 
 msgid "New group"
 msgstr "Nieuwe groep"
@@ -10589,14 +10510,17 @@ msgstr "Bestand openen"
 msgid "Open File"
 msgstr "Bestand openen"
 
-msgid "Open File in New Tab"
-msgstr "Bestand openen in nieuw tabblad"
-
 msgid "Open from folder"
 msgstr "Openen vanuit map"
 
+msgid "Open full IDE panes in worktrees. Turning this off preserves open sessions."
+msgstr "Open volledige IDE-panelen in werkbomen. Bij uitschakelen blijven geopende sessies behouden."
+
 msgid "Open full screen"
 msgstr "Openen op volledig scherm"
+
+msgid "Open IDE"
+msgstr "IDE openen"
 
 msgid "Open importer"
 msgstr "Importer openen"
@@ -10668,9 +10592,6 @@ msgstr "Openen in externe browser"
 msgid "Open in File pane"
 msgstr "Openen in bestandspaneel"
 
-msgid "Open in file viewer"
-msgstr "Openen in bestandsviewer"
-
 msgid "Open in Finder"
 msgstr "Openen in Finder"
 
@@ -10684,9 +10605,6 @@ msgid "Open in Linear"
 msgstr "Openen in Linear"
 
 msgid "Open in new tab"
-msgstr "Openen in nieuw tabblad"
-
-msgid "Open in New Tab"
 msgstr "Openen in nieuw tabblad"
 
 msgid "Open in PostHog"
@@ -11570,6 +11488,9 @@ msgstr "Prefix"
 msgid "Preparing"
 msgstr "Voorbereiden"
 
+msgid "Preparing IDE. First use downloads the editor runtime."
+msgstr "IDE wordt voorbereid. Bij het eerste gebruik wordt de editorruntime gedownload."
+
 msgid "Preserve commit history"
 msgstr "Commitgeschiedenis behouden"
 
@@ -12404,8 +12325,8 @@ msgstr "de branch hernoemen"
 msgid "Rename workspace"
 msgstr "Werkruimte hernoemen"
 
-msgid "Rename..."
-msgstr "Naam wijzigen..."
+msgid "Renamed"
+msgstr "Hernoemd"
 
 msgid "Renaming branch to {newName}..."
 msgstr "Branch hernoemen naar {newName}..."
@@ -12448,23 +12369,11 @@ msgstr "Thread heropenen"
 msgid "reorder agents"
 msgstr "agents herordenen"
 
-msgid "Replace"
-msgstr "Vervangen"
-
-msgid "Replace All"
-msgstr "Alles vervangen"
-
 msgid "Replace custom audio"
 msgstr "Eigen audio vervangen"
 
 msgid "Replace this agent's launch settings with the current bundled configuration."
 msgstr "Vervang de startinstellingen van deze agent door de meegeleverde configuratie."
-
-msgid "Replaced {replaced} files in {where}"
-msgstr "{replaced} bestanden vervangen in {where}"
-
-msgid "Replaced 1 file in {where}"
-msgstr "1 bestand vervangen in {where}"
 
 msgid "Reply"
 msgstr "Antwoorden"
@@ -13100,6 +13009,12 @@ msgstr "het agentcommando opslaan"
 msgid "Save to get URL"
 msgstr "Opslaan voor URL"
 
+msgid "Save your files before closing the IDE."
+msgstr "Sla uw bestanden op voordat u de IDE sluit."
+
+msgid "Save your files first. This ends IDE terminals and debugging sessions in this worktree."
+msgstr "Sla eerst uw bestanden op. Dit beëindigt IDE-terminals en debugsessies in deze werkboom."
+
 msgid "Saved"
 msgstr "Opgeslagen"
 
@@ -13432,9 +13347,6 @@ msgstr "Bekijk waar je laatste 30 dagen staan op de publieke ranglijst. Alleen t
 
 msgid "Select"
 msgstr "Select"
-
-msgid "Select a file to open"
-msgstr "Selecteer een bestand om te openen"
 
 msgid "Select a project"
 msgstr "Kies een project"
@@ -14610,6 +14522,12 @@ msgstr "Agent en subagenten stoppen"
 msgid "Stop dictation"
 msgstr "Dicteren stoppen"
 
+msgid "Stop IDE"
+msgstr "IDE stoppen"
+
+msgid "Stop IDE?"
+msgstr "IDE stoppen?"
+
 #. placeholder {0}: owner.processName
 msgid "Stop local {0}"
 msgstr "Lokale {0} stoppen"
@@ -15282,9 +15200,6 @@ msgstr "Die link leidt nergens heen in de app."
 msgid "That machine is no longer available"
 msgstr "Die machine is niet meer beschikbaar"
 
-msgid "That name isn't allowed."
-msgstr "Die naam is niet toegestaan."
-
 msgid "The 2026 bet"
 msgstr "De weddenschap voor 2026"
 
@@ -15632,9 +15547,6 @@ msgstr "Dit {plugin}-account is al verbonden door {owner}. Vraag om het eerst lo
 
 msgid "This {plugin} account is already connected by another Superset organization."
 msgstr "Dit {plugin}-account is al verbonden door een andere Superset-organisatie."
-
-msgid "This action is irreversible."
-msgstr "Deze actie kan niet worden teruggedraaid."
 
 msgid "This agent no longer exists on the selected device (its agents may have been reset). Runs will fail until you pick a new one."
 msgstr "Deze agent bestaat niet meer op het gekozen apparaat (de agents zijn mogelijk gereset). Runs mislukken totdat je een nieuwe kiest."
@@ -16077,9 +15989,6 @@ msgstr "Te veel verzoeken. Probeer het later opnieuw."
 msgid "Too many support reports. Try again later."
 msgstr "Te veel supportmeldingen. Probeer het later opnieuw."
 
-msgid "Too many untitled items here already."
-msgstr "Er zijn hier al te veel naamloze items."
-
 msgid "Too old for this app to talk to. Update the Superset app on that device to reconnect."
 msgstr "Te oud om met deze app te communiceren. Werk de Superset-app op dat apparaat bij om opnieuw te verbinden."
 
@@ -16270,6 +16179,9 @@ msgstr "Typografie in V2-editors en diff-weergaven."
 msgid "Unable to check for updates. Please check your internet connection."
 msgstr "Kan niet op updates controleren. Controleer je internetverbinding."
 
+msgid "Unable to load branch changes. Check the Superset Branch Changes output."
+msgstr "Kan branchwijzigingen niet laden. Controleer de uitvoer van Superset Branch Changes."
+
 msgid "Unable to load diff"
 msgstr "Kan diff niet laden"
 
@@ -16284,6 +16196,9 @@ msgstr "Kan reviewstatus niet laden"
 
 msgid "Unable to load user info"
 msgstr "Kan gebruikersinfo niet laden"
+
+msgid "Unable to open changes. Refresh the branch changes list and try again."
+msgstr "Kan wijzigingen niet openen. Vernieuw de lijst met branchwijzigingen en probeer het opnieuw."
 
 msgid "Unable to read file"
 msgstr "Kan bestand niet lezen"
@@ -17294,9 +17209,6 @@ msgstr "Het werkruimtepad is nog niet beschikbaar"
 msgid "Workspace pinning & bulk actions"
 msgstr "Werkruimtes vastzetten en bulkacties"
 
-msgid "workspace root"
-msgstr "root van de werkruimte"
-
 msgid "Workspace Run"
 msgstr "Werkruimte-run"
 
@@ -17308,9 +17220,6 @@ msgstr "Werkruimte-run: {workspaceRunState}"
 
 msgid "Workspace settings"
 msgstr "Instellingen van werkruimte"
-
-msgid "Workspace worktree not available"
-msgstr "Worktree van werkruimte niet beschikbaar"
 
 msgid "workspaces"
 msgstr "werkruimtes"

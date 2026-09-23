@@ -346,10 +346,6 @@ msgstr "{0}，尾号{1}"
 msgid "{0} failing"
 msgstr "{0}个失败"
 
-#. placeholder {0}: collisions.length
-msgid "{0} files already exist in {where}. Do you want to replace them?"
-msgstr "{where}中已存在{0}个文件。是否要替换它们？"
-
 #. placeholder {0}: displayName(variables.name)
 msgid "{0} installed"
 msgstr "{0}已安装"
@@ -1233,9 +1229,6 @@ msgstr "从安装到第一次运行智能体的更快路径，并有引导式的
 msgid "A faster, clearer diff experience for reviewing what your agents changed."
 msgstr "更快、更清晰的差异体验，便于审查智能体改了什么。"
 
-msgid "A file named '{firstName}' already exists in {where}. Do you want to replace it?"
-msgstr "{where}中已存在名为「{firstName}」的文件。是否要替换它？"
-
 msgid "A focused burn-down of crashes, hangs, and reconnect failures across the app."
 msgstr "集中清理全应用的崩溃、卡死和重连失败。"
 
@@ -1542,11 +1535,8 @@ msgstr "添加到工作区"
 msgid "Add your own terminal agent to this device."
 msgstr "向此设备添加你自己的终端智能体。"
 
-msgid "Added {added} files to {where}"
-msgstr "已向{where}添加{added}个文件"
-
-msgid "Added 1 file to {where}"
-msgstr "已向{where}添加1个文件"
+msgid "Added"
+msgstr "已添加"
 
 msgid "Added only when launching with a prompt — e.g. <0>--</0>, <1>--prompt</1>, <2>-i</2>."
 msgstr "仅在带提示词启动时添加，例如<0>--</0>、<1>--prompt</1>、<2>-i</2>。"
@@ -2152,12 +2142,6 @@ msgstr "归档环境"
 msgid "Archived"
 msgstr "已归档"
 
-msgid "Are you sure you want to delete this file? This action cannot be undone."
-msgstr "确定要删除此文件吗？此操作无法撤销。"
-
-msgid "Are you sure you want to delete this folder? This action cannot be undone."
-msgstr "确定要删除此文件夹吗？此操作无法撤销。"
-
 msgid "Are you sure you want to leave this organization? You will lose access immediately.{billingNote}"
 msgstr "确定要退出此组织吗？你将立即失去访问权限。{billingNote}"
 
@@ -2664,6 +2648,9 @@ msgstr "分支"
 msgid "Branch behavior for new workspaces on this device. Projects can override the prefix individually."
 msgstr "本设备上新建工作区的分支行为。项目可以单独覆盖前缀。"
 
+msgid "Branch Changes"
+msgstr "分支更改"
+
 msgid "Branch copied"
 msgstr "分支已复制"
 
@@ -2736,9 +2723,6 @@ msgstr "把你的智能体聚到一起。"
 
 msgid "Browse and install skills, MCP servers, and agent configs shared by the community."
 msgstr "浏览并安装社区共享的技能、MCP服务器和智能体配置。"
-
-msgid "Browse files"
-msgstr "浏览文件"
 
 msgid "Browse for directory"
 msgstr "浏览目录"
@@ -3591,9 +3575,6 @@ msgstr "折叠智能体"
 msgid "Collapse all"
 msgstr "全部折叠"
 
-msgid "Collapse All"
-msgstr "全部折叠"
-
 msgid "Collapse all files"
 msgstr "折叠所有文件"
 
@@ -3822,6 +3803,9 @@ msgstr "配置工作区运行命令"
 
 msgid "Confirm before quitting"
 msgstr "退出前确认"
+
+msgid "Conflicting"
+msgstr "冲突"
 
 msgid "Connect"
 msgstr "连接"
@@ -4417,9 +4401,6 @@ msgstr "无法读取 Jira 偏好设置。"
 msgid "Could not read selected file"
 msgstr "无法读取所选文件"
 
-msgid "Could not read the dropped files"
-msgstr "无法读取拖入的文件"
-
 msgid "Could not read the Google account. Please try again."
 msgstr "无法读取该Google账户。请重试。"
 
@@ -4799,14 +4780,8 @@ msgstr "由{creatorLabel}创建于{createdAtLabel}"
 msgid "Created {createdDate}"
 msgstr "创建于{createdDate}"
 
-msgid "Created {createdDirs} folders in {where}"
-msgstr "已在{where}创建{createdDirs}个文件夹"
-
 msgid "Created <0>· 7d</0>"
 msgstr "已创建 <0>· 7天</0>"
-
-msgid "Created 1 folder in {where}"
-msgstr "已在{where}创建1个文件夹"
 
 msgid "Created by"
 msgstr "创建者"
@@ -5087,9 +5062,6 @@ msgstr "删除“{title}”？"
 msgid "Delete {0}?"
 msgstr "删除{0}？"
 
-msgid "Delete {name}?"
-msgstr "删除{name}？"
-
 msgid "Delete account"
 msgstr "删除账户"
 
@@ -5199,9 +5171,6 @@ msgstr "已删除“{projectName}”"
 msgid "Deleted \"{projectName}\" from {0} of {1} devices — unreachable devices keep their copy"
 msgstr "已从{1}台设备中的{0}台删除“{projectName}”——无法访问的设备仍保留副本"
 
-msgid "Deleted {name}"
-msgstr "已删除{name}"
-
 msgid "deleted or unavailable — pick another"
 msgstr "已删除或不可用，请另选一个"
 
@@ -5223,9 +5192,6 @@ msgstr "删除该主机、其访问权限及其工作区。机器上的文件会
 #. placeholder {1}: targets.length
 msgid "Deleting {0} of {1}…"
 msgstr "正在删除第{0}个，共{1}个…"
-
-msgid "Deleting {name}..."
-msgstr "正在删除{name}..."
 
 msgid "Deleting automation..."
 msgstr "正在删除自动化..."
@@ -5667,9 +5633,6 @@ msgstr "从脚本、CI或你自己的工具以编程方式驱动工作区、智�
 msgid "Drop files to attach"
 msgstr "拖放文件以添加附件"
 
-msgid "Drop into {label}"
-msgstr "拖放到{label}"
-
 msgid "Drop to attach"
 msgstr "拖放以添加附件"
 
@@ -5862,6 +5825,9 @@ msgstr "邮件支持"
 msgid "Embedded browser improvements"
 msgstr "内嵌浏览器改进"
 
+msgid "Embedded IDE"
+msgstr "内嵌 IDE"
+
 msgid "Empty"
 msgstr "空状态"
 
@@ -5883,6 +5849,9 @@ msgstr "启用待处理收件箱"
 
 msgid "Enable auto-merge"
 msgstr "启用自动合并"
+
+msgid "Enable Embedded IDE in Settings > General > Features."
+msgstr "请在设置 > 通用 > 功能中启用内嵌 IDE。"
 
 msgid "Enable relay access…"
 msgstr "启用中继访问…"
@@ -6200,12 +6169,6 @@ msgstr "失败的检查"
 msgid "Failed to accept invitation"
 msgstr "接受邀请失败"
 
-msgid "Failed to add {failed} files"
-msgstr "添加{failed}个文件失败"
-
-msgid "Failed to add 1 file"
-msgstr "添加1个文件失败"
-
 msgid "Failed to add agent"
 msgstr "添加智能体失败"
 
@@ -6277,17 +6240,8 @@ msgstr "复制到剪贴板失败"
 msgid "Failed to copy workspace ID: {0}"
 msgstr "复制工作区ID失败：{0}"
 
-msgid "Failed to create {failedDirs} folders"
-msgstr "创建{failedDirs}个文件夹失败"
-
-msgid "Failed to create 1 folder"
-msgstr "创建1个文件夹失败"
-
 msgid "Failed to create automation"
 msgstr "创建自动化失败"
-
-msgid "Failed to create item"
-msgstr "创建项失败"
 
 msgid "Failed to create organization"
 msgstr "创建组织失败"
@@ -6320,9 +6274,6 @@ msgstr "从PR创建工作区失败"
 msgid "Failed to delete"
 msgstr "删除失败"
 
-msgid "Failed to delete {name}"
-msgstr "删除{name}失败"
-
 #. placeholder {0}: "message" in e ? e.message : String(e.kind)
 msgid "Failed to delete {workspaceName}: {0}"
 msgstr "删除{workspaceName}失败：{0}"
@@ -6338,9 +6289,6 @@ msgstr "删除组织失败"
 
 msgid "Failed to delete team"
 msgstr "删除团队失败"
-
-msgid "Failed to discard the new item"
-msgstr "放弃新建项失败"
 
 msgid "Failed to enable relay access"
 msgstr "启用中继访问失败"
@@ -6479,9 +6427,6 @@ msgstr "移除PR链接失败：{0}"
 msgid "Failed to remove terminal"
 msgstr "移除终端失败"
 
-msgid "Failed to rename"
-msgstr "重命名失败"
-
 msgid "Failed to rename branch"
 msgstr "重命名分支失败"
 
@@ -6490,12 +6435,6 @@ msgstr "重命名会话失败"
 
 msgid "Failed to reorder"
 msgstr "重新排序失败"
-
-msgid "Failed to replace {replaceFailed} files"
-msgstr "替换{replaceFailed}个文件失败"
-
-msgid "Failed to replace 1 file"
-msgstr "替换1个文件失败"
 
 msgid "Failed to reset"
 msgstr "重置失败"
@@ -8222,12 +8161,6 @@ msgstr "继续等待"
 msgid "Keep working"
 msgstr "继续工作"
 
-msgid "Kept the new file — it changed after it was created"
-msgstr "已保留新文件 — 它在创建后发生了更改"
-
-msgid "Kept the new folder — it is no longer empty"
-msgstr "已保留新文件夹 — 它已不再为空"
-
 msgid "Key name"
 msgstr "密钥名称"
 
@@ -8669,9 +8602,6 @@ msgstr "正在加载对话..."
 
 msgid "Loading diff…"
 msgstr "正在加载差异…"
-
-msgid "Loading files..."
-msgstr "正在加载文件..."
 
 msgid "Loading fonts..."
 msgstr "正在加载字体..."
@@ -9168,6 +9098,9 @@ msgstr "使用的模型"
 msgid "Moderate reasoning effort"
 msgstr "适中的推理投入"
 
+msgid "Modified"
+msgstr "已修改"
+
 msgid "Monitor agents from your phone."
 msgstr "在手机上监控智能体。"
 
@@ -9445,18 +9378,6 @@ msgstr "新建云端工作区"
 
 msgid "New environment"
 msgstr "新建环境"
-
-msgid "New File"
-msgstr "新建文件"
-
-msgid "New File..."
-msgstr "新建文件..."
-
-msgid "New Folder"
-msgstr "新建文件夹"
-
-msgid "New Folder..."
-msgstr "新建文件夹..."
 
 msgid "New group"
 msgstr "新建分组"
@@ -10589,14 +10510,17 @@ msgstr "打开文件"
 msgid "Open File"
 msgstr "打开文件"
 
-msgid "Open File in New Tab"
-msgstr "在新标签页中打开文件"
-
 msgid "Open from folder"
 msgstr "从文件夹打开"
 
+msgid "Open full IDE panes in worktrees. Turning this off preserves open sessions."
+msgstr "在工作树中打开完整的 IDE 面板。关闭此功能会保留已打开的会话。"
+
 msgid "Open full screen"
 msgstr "全屏打开"
+
+msgid "Open IDE"
+msgstr "打开 IDE"
 
 msgid "Open importer"
 msgstr "打开导入器"
@@ -10668,9 +10592,6 @@ msgstr "在外部浏览器中打开"
 msgid "Open in File pane"
 msgstr "在“文件”面板中打开"
 
-msgid "Open in file viewer"
-msgstr "在文件查看器中打开"
-
 msgid "Open in Finder"
 msgstr "在Finder中打开"
 
@@ -10685,9 +10606,6 @@ msgstr "在Linear中打开"
 
 msgid "Open in new tab"
 msgstr "在新标签页打开"
-
-msgid "Open in New Tab"
-msgstr "在新标签页中打开"
 
 msgid "Open in PostHog"
 msgstr "在PostHog中打开"
@@ -11570,6 +11488,9 @@ msgstr "前缀"
 msgid "Preparing"
 msgstr "正在准备"
 
+msgid "Preparing IDE. First use downloads the editor runtime."
+msgstr "正在准备 IDE。首次使用将下载编辑器运行环境。"
+
 msgid "Preserve commit history"
 msgstr "保留提交历史"
 
@@ -12404,8 +12325,8 @@ msgstr "重命名分支"
 msgid "Rename workspace"
 msgstr "重命名工作区"
 
-msgid "Rename..."
-msgstr "重命名..."
+msgid "Renamed"
+msgstr "已重命名"
 
 msgid "Renaming branch to {newName}..."
 msgstr "正在将分支重命名为{newName}..."
@@ -12448,23 +12369,11 @@ msgstr "重新打开讨论串"
 msgid "reorder agents"
 msgstr "重新排序智能体"
 
-msgid "Replace"
-msgstr "替换"
-
-msgid "Replace All"
-msgstr "全部替换"
-
 msgid "Replace custom audio"
 msgstr "替换自定义音频"
 
 msgid "Replace this agent's launch settings with the current bundled configuration."
 msgstr "用当前内置配置替换此智能体的启动设置。"
-
-msgid "Replaced {replaced} files in {where}"
-msgstr "已替换{where}中的{replaced}个文件"
-
-msgid "Replaced 1 file in {where}"
-msgstr "已替换{where}中的1个文件"
 
 msgid "Reply"
 msgstr "回复"
@@ -13100,6 +13009,12 @@ msgstr "保存智能体命令"
 msgid "Save to get URL"
 msgstr "保存以获取URL"
 
+msgid "Save your files before closing the IDE."
+msgstr "关闭 IDE 前请保存文件。"
+
+msgid "Save your files first. This ends IDE terminals and debugging sessions in this worktree."
+msgstr "请先保存文件。此操作将结束此工作树中的 IDE 终端和调试会话。"
+
 msgid "Saved"
 msgstr "已保存"
 
@@ -13432,9 +13347,6 @@ msgstr "看看你最近30天在公开排行榜上的位置。仅包含token数�
 
 msgid "Select"
 msgstr "选择框"
-
-msgid "Select a file to open"
-msgstr "选择要打开的文件"
 
 msgid "Select a project"
 msgstr "请选择项目"
@@ -14610,6 +14522,12 @@ msgstr "停止智能体及其子智能体"
 msgid "Stop dictation"
 msgstr "停止语音输入"
 
+msgid "Stop IDE"
+msgstr "停止 IDE"
+
+msgid "Stop IDE?"
+msgstr "停止 IDE？"
+
 #. placeholder {0}: owner.processName
 msgid "Stop local {0}"
 msgstr "停止本地 {0}"
@@ -15282,9 +15200,6 @@ msgstr "该链接在应用中没有对应的位置。"
 msgid "That machine is no longer available"
 msgstr "该机器已不可用"
 
-msgid "That name isn't allowed."
-msgstr "该名称不被允许。"
-
 msgid "The 2026 bet"
 msgstr "2026年的赌注"
 
@@ -15632,9 +15547,6 @@ msgstr "该 {plugin} 账户已由 {owner} 连接。请先请其断开连接。"
 
 msgid "This {plugin} account is already connected by another Superset organization."
 msgstr "该 {plugin} 账户已被另一个 Superset 组织连接。"
-
-msgid "This action is irreversible."
-msgstr "此操作不可逆。"
 
 msgid "This agent no longer exists on the selected device (its agents may have been reset). Runs will fail until you pick a new one."
 msgstr "所选设备上已不存在这个智能体（它的智能体可能被重置过）。在你选择新的智能体之前，运行都会失败。"
@@ -16077,9 +15989,6 @@ msgstr "请求过于频繁。请稍后重试。"
 msgid "Too many support reports. Try again later."
 msgstr "支持请求次数过多。请稍后重试。"
 
-msgid "Too many untitled items here already."
-msgstr "这里未命名的项已经太多了。"
-
 msgid "Too old for this app to talk to. Update the Superset app on that device to reconnect."
 msgstr "版本太旧，此应用无法与其通信。更新那台设备上的 Superset 应用以重新连接。"
 
@@ -16270,6 +16179,9 @@ msgstr "V2编辑器和差异视图中使用的排版。"
 msgid "Unable to check for updates. Please check your internet connection."
 msgstr "无法检查更新。请检查你的网络连接。"
 
+msgid "Unable to load branch changes. Check the Superset Branch Changes output."
+msgstr "无法加载分支更改。请查看 Superset Branch Changes 输出。"
+
 msgid "Unable to load diff"
 msgstr "无法加载差异"
 
@@ -16284,6 +16196,9 @@ msgstr "无法加载评审状态"
 
 msgid "Unable to load user info"
 msgstr "无法加载用户信息"
+
+msgid "Unable to open changes. Refresh the branch changes list and try again."
+msgstr "无法打开更改。请刷新分支更改列表后重试。"
 
 msgid "Unable to read file"
 msgstr "无法读取文件"
@@ -17294,9 +17209,6 @@ msgstr "工作区路径尚不可用"
 msgid "Workspace pinning & bulk actions"
 msgstr "工作区固定与批量操作"
 
-msgid "workspace root"
-msgstr "工作区根目录"
-
 msgid "Workspace Run"
 msgstr "工作区运行"
 
@@ -17308,9 +17220,6 @@ msgstr "工作区运行：{workspaceRunState}"
 
 msgid "Workspace settings"
 msgstr "工作区设置"
-
-msgid "Workspace worktree not available"
-msgstr "工作区worktree不可用"
 
 msgid "workspaces"
 msgstr "工作区"

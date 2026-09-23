@@ -43,8 +43,8 @@ export const createAutoUpdateRouter = () => {
 			checkForUpdatesInteractive();
 		}),
 
-		install: publicProcedure.mutation(() => {
-			installUpdate();
+		install: publicProcedure.mutation(async () => {
+			await installUpdate();
 		}),
 
 		dismiss: publicProcedure.mutation(() => {

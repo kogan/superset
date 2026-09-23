@@ -13,6 +13,7 @@ import { createExternalRouter } from "./external";
 import { createFilesystemRouter } from "./filesystem";
 import { createGithubStarRouter } from "./github-star";
 import { createHostServiceCoordinatorRouter } from "./host-service-coordinator";
+import { createIdeRouter } from "./ide/ide";
 import { createJiraRouter } from "./jira";
 import { createKeyboardLayoutRouter } from "./keyboardLayout";
 import { createMenuRouter } from "./menu";
@@ -37,6 +38,7 @@ export const createAppRouter = (getWindow: () => BrowserWindow | null) => {
 	return router({
 		analytics: createAnalyticsRouter(),
 		browser: createBrowserRouter(),
+		ide: createIdeRouter(),
 		browserHistory: createBrowserHistoryRouter(),
 		downloads: createDownloadsRouter(),
 		screenshots: createScreenshotsRouter(),

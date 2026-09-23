@@ -346,10 +346,6 @@ msgstr "{0} terminada en {1}"
 msgid "{0} failing"
 msgstr "{0} fallidas"
 
-#. placeholder {0}: collisions.length
-msgid "{0} files already exist in {where}. Do you want to replace them?"
-msgstr "Ya hay {0} archivos en {where}. ¿Quieres reemplazarlos?"
-
 #. placeholder {0}: displayName(variables.name)
 msgid "{0} installed"
 msgstr "{0} instalado"
@@ -1233,9 +1229,6 @@ msgstr "Un camino más rápido desde la instalación hasta la primera ejecución
 msgid "A faster, clearer diff experience for reviewing what your agents changed."
 msgstr "Una experiencia de diff más rápida y clara para revisar lo que cambiaron tus agentes."
 
-msgid "A file named '{firstName}' already exists in {where}. Do you want to replace it?"
-msgstr "Ya hay un archivo llamado '{firstName}' en {where}. ¿Quieres reemplazarlo?"
-
 msgid "A focused burn-down of crashes, hangs, and reconnect failures across the app."
 msgstr "Una tanda centrada en eliminar cierres inesperados, bloqueos y fallos de reconexión en toda la app."
 
@@ -1542,11 +1535,8 @@ msgstr "Añadir al espacio de trabajo"
 msgid "Add your own terminal agent to this device."
 msgstr "Añade tu propio agente de terminal a este dispositivo."
 
-msgid "Added {added} files to {where}"
-msgstr "Se añadieron {added} archivos a {where}"
-
-msgid "Added 1 file to {where}"
-msgstr "Se añadió 1 archivo a {where}"
+msgid "Added"
+msgstr "Añadido"
 
 msgid "Added only when launching with a prompt — e.g. <0>--</0>, <1>--prompt</1>, <2>-i</2>."
 msgstr "Se añaden solo al lanzar con un prompt, p. ej. <0>--</0>, <1>--prompt</1>, <2>-i</2>."
@@ -2152,12 +2142,6 @@ msgstr "Archivar entorno"
 msgid "Archived"
 msgstr "Archivados"
 
-msgid "Are you sure you want to delete this file? This action cannot be undone."
-msgstr "¿Seguro que quieres eliminar este archivo? Esta acción no se puede deshacer."
-
-msgid "Are you sure you want to delete this folder? This action cannot be undone."
-msgstr "¿Seguro que quieres eliminar esta carpeta? Esta acción no se puede deshacer."
-
 msgid "Are you sure you want to leave this organization? You will lose access immediately.{billingNote}"
 msgstr "¿Seguro que quieres salir de esta organización? Perderás el acceso de inmediato.{billingNote}"
 
@@ -2664,6 +2648,9 @@ msgstr "Rama"
 msgid "Branch behavior for new workspaces on this device. Projects can override the prefix individually."
 msgstr "Comportamiento de las ramas para los espacios de trabajo nuevos en este dispositivo. Los proyectos pueden anular el prefijo individualmente."
 
+msgid "Branch Changes"
+msgstr "Cambios de la rama"
+
 msgid "Branch copied"
 msgstr "Rama copiada"
 
@@ -2736,9 +2723,6 @@ msgstr "Reúne a todos tus agentes."
 
 msgid "Browse and install skills, MCP servers, and agent configs shared by the community."
 msgstr "Explora e instala skills, servidores MCP y configuraciones de agentes compartidas por la comunidad."
-
-msgid "Browse files"
-msgstr "Explorar archivos"
 
 msgid "Browse for directory"
 msgstr "Examinar directorios"
@@ -3591,9 +3575,6 @@ msgstr "Contraer agentes"
 msgid "Collapse all"
 msgstr "Contraer todo"
 
-msgid "Collapse All"
-msgstr "Contraer todo"
-
 msgid "Collapse all files"
 msgstr "Contraer todos los archivos"
 
@@ -3822,6 +3803,9 @@ msgstr "Configurar el comando de ejecución del espacio de trabajo"
 
 msgid "Confirm before quitting"
 msgstr "Confirmar antes de salir"
+
+msgid "Conflicting"
+msgstr "En conflicto"
 
 msgid "Connect"
 msgstr "Conectar"
@@ -4417,9 +4401,6 @@ msgstr "No se pudieron leer las preferencias de Jira."
 msgid "Could not read selected file"
 msgstr "No se pudo leer el archivo seleccionado"
 
-msgid "Could not read the dropped files"
-msgstr "No se pudieron leer los archivos soltados"
-
 msgid "Could not read the Google account. Please try again."
 msgstr "No se pudo leer la cuenta de Google. Inténtalo de nuevo."
 
@@ -4799,14 +4780,8 @@ msgstr "Creado {createdAtLabel} por {creatorLabel}"
 msgid "Created {createdDate}"
 msgstr "Creado el {createdDate}"
 
-msgid "Created {createdDirs} folders in {where}"
-msgstr "Se crearon {createdDirs} carpetas en {where}"
-
 msgid "Created <0>· 7d</0>"
 msgstr "Creados <0>· 7 d</0>"
-
-msgid "Created 1 folder in {where}"
-msgstr "Se creó 1 carpeta en {where}"
 
 msgid "Created by"
 msgstr "Creado por"
@@ -5087,9 +5062,6 @@ msgstr "¿Eliminar “{title}”?"
 msgid "Delete {0}?"
 msgstr "¿Eliminar {0}?"
 
-msgid "Delete {name}?"
-msgstr "¿Eliminar {name}?"
-
 msgid "Delete account"
 msgstr "Eliminar cuenta"
 
@@ -5199,9 +5171,6 @@ msgstr "\"{projectName}\" eliminado"
 msgid "Deleted \"{projectName}\" from {0} of {1} devices — unreachable devices keep their copy"
 msgstr "\"{projectName}\" se eliminó de {0} de {1} dispositivos; los dispositivos no accesibles conservan su copia"
 
-msgid "Deleted {name}"
-msgstr "{name} eliminado"
-
 msgid "deleted or unavailable — pick another"
 msgstr "eliminado o no disponible: elige otro"
 
@@ -5223,9 +5192,6 @@ msgstr "Elimina este host, su acceso y sus espacios de trabajo. Los archivos de 
 #. placeholder {1}: targets.length
 msgid "Deleting {0} of {1}…"
 msgstr "Eliminando {0} de {1}…"
-
-msgid "Deleting {name}..."
-msgstr "Eliminando {name}..."
 
 msgid "Deleting automation..."
 msgstr "Eliminando la automatización..."
@@ -5667,9 +5633,6 @@ msgstr "Controla espacios de trabajo, agentes y sesiones mediante scripts, CI o 
 msgid "Drop files to attach"
 msgstr "Soltar archivos para adjuntar"
 
-msgid "Drop into {label}"
-msgstr "Soltar en {label}"
-
 msgid "Drop to attach"
 msgstr "Soltar para adjuntar"
 
@@ -5862,6 +5825,9 @@ msgstr "Soporte por correo"
 msgid "Embedded browser improvements"
 msgstr "Mejoras del navegador integrado"
 
+msgid "Embedded IDE"
+msgstr "IDE integrado"
+
 msgid "Empty"
 msgstr "Vacío"
 
@@ -5883,6 +5849,9 @@ msgstr "Activar la bandeja de pendientes"
 
 msgid "Enable auto-merge"
 msgstr "Activar la fusión automática"
+
+msgid "Enable Embedded IDE in Settings > General > Features."
+msgstr "Activa el IDE integrado en Configuración > General > Funciones."
 
 msgid "Enable relay access…"
 msgstr "Habilitar el acceso por relay…"
@@ -6200,12 +6169,6 @@ msgstr "Comprobaciones fallidas"
 msgid "Failed to accept invitation"
 msgstr "No se pudo aceptar la invitación"
 
-msgid "Failed to add {failed} files"
-msgstr "No se pudieron añadir {failed} archivos"
-
-msgid "Failed to add 1 file"
-msgstr "No se pudo añadir 1 archivo"
-
 msgid "Failed to add agent"
 msgstr "No se pudo añadir el agente"
 
@@ -6277,17 +6240,8 @@ msgstr "No se pudo copiar al portapapeles"
 msgid "Failed to copy workspace ID: {0}"
 msgstr "No se pudo copiar el ID del espacio de trabajo: {0}"
 
-msgid "Failed to create {failedDirs} folders"
-msgstr "No se pudieron crear {failedDirs} carpetas"
-
-msgid "Failed to create 1 folder"
-msgstr "No se pudo crear 1 carpeta"
-
 msgid "Failed to create automation"
 msgstr "No se pudo crear la automatización"
-
-msgid "Failed to create item"
-msgstr "No se pudo crear el elemento"
 
 msgid "Failed to create organization"
 msgstr "No se pudo crear la organización"
@@ -6320,9 +6274,6 @@ msgstr "No se pudo crear el espacio de trabajo a partir de la PR"
 msgid "Failed to delete"
 msgstr "No se pudo eliminar"
 
-msgid "Failed to delete {name}"
-msgstr "No se pudo eliminar {name}"
-
 #. placeholder {0}: "message" in e ? e.message : String(e.kind)
 msgid "Failed to delete {workspaceName}: {0}"
 msgstr "No se pudo eliminar {workspaceName}: {0}"
@@ -6338,9 +6289,6 @@ msgstr "No se pudo eliminar la organización"
 
 msgid "Failed to delete team"
 msgstr "No se pudo eliminar el equipo"
-
-msgid "Failed to discard the new item"
-msgstr "No se pudo descartar el elemento nuevo"
 
 msgid "Failed to enable relay access"
 msgstr "No se pudo habilitar el acceso por relay"
@@ -6479,9 +6427,6 @@ msgstr "No se pudo quitar el enlace de la PR: {0}"
 msgid "Failed to remove terminal"
 msgstr "No se pudo quitar la terminal"
 
-msgid "Failed to rename"
-msgstr "No se pudo cambiar el nombre"
-
 msgid "Failed to rename branch"
 msgstr "No se pudo cambiar el nombre de la rama"
 
@@ -6490,12 +6435,6 @@ msgstr "Error al cambiar el nombre de la sesión"
 
 msgid "Failed to reorder"
 msgstr "No se pudo reordenar"
-
-msgid "Failed to replace {replaceFailed} files"
-msgstr "No se pudieron reemplazar {replaceFailed} archivos"
-
-msgid "Failed to replace 1 file"
-msgstr "No se pudo reemplazar 1 archivo"
 
 msgid "Failed to reset"
 msgstr "No se pudo restablecer"
@@ -8222,12 +8161,6 @@ msgstr "Seguir esperando"
 msgid "Keep working"
 msgstr "Seguir trabajando"
 
-msgid "Kept the new file — it changed after it was created"
-msgstr "Se conservó el archivo nuevo: cambió después de crearse"
-
-msgid "Kept the new folder — it is no longer empty"
-msgstr "Se conservó la carpeta nueva: ya no está vacía"
-
 msgid "Key name"
 msgstr "Nombre de la clave"
 
@@ -8669,9 +8602,6 @@ msgstr "Cargando la conversación..."
 
 msgid "Loading diff…"
 msgstr "Cargando diff…"
-
-msgid "Loading files..."
-msgstr "Cargando los archivos..."
 
 msgid "Loading fonts..."
 msgstr "Cargando fuentes..."
@@ -9168,6 +9098,9 @@ msgstr "Modelos usados"
 msgid "Moderate reasoning effort"
 msgstr "Esfuerzo de razonamiento moderado"
 
+msgid "Modified"
+msgstr "Modificado"
+
 msgid "Monitor agents from your phone."
 msgstr "Supervisa los agentes desde el móvil."
 
@@ -9445,18 +9378,6 @@ msgstr "Nuevo espacio de trabajo en la nube"
 
 msgid "New environment"
 msgstr "Nuevo entorno"
-
-msgid "New File"
-msgstr "Archivo nuevo"
-
-msgid "New File..."
-msgstr "Archivo nuevo..."
-
-msgid "New Folder"
-msgstr "Carpeta nueva"
-
-msgid "New Folder..."
-msgstr "Carpeta nueva..."
 
 msgid "New group"
 msgstr "Nuevo grupo"
@@ -10587,16 +10508,19 @@ msgid "Open file"
 msgstr "Abrir el archivo"
 
 msgid "Open File"
-msgstr "Abrir el archivo"
-
-msgid "Open File in New Tab"
-msgstr "Abrir el archivo en una pestaña nueva"
+msgstr "Abrir archivo"
 
 msgid "Open from folder"
 msgstr "Abrir desde una carpeta"
 
+msgid "Open full IDE panes in worktrees. Turning this off preserves open sessions."
+msgstr "Abre paneles de IDE completos en los árboles de trabajo. Desactivarlo conserva las sesiones abiertas."
+
 msgid "Open full screen"
 msgstr "Abrir en pantalla completa"
+
+msgid "Open IDE"
+msgstr "Abrir IDE"
 
 msgid "Open importer"
 msgstr "Abrir el importador"
@@ -10668,9 +10592,6 @@ msgstr "Abrir en el navegador externo"
 msgid "Open in File pane"
 msgstr "Abrir en el panel de archivos"
 
-msgid "Open in file viewer"
-msgstr "Abrir en el visor de archivos"
-
 msgid "Open in Finder"
 msgstr "Abrir en Finder"
 
@@ -10684,9 +10605,6 @@ msgid "Open in Linear"
 msgstr "Abrir en Linear"
 
 msgid "Open in new tab"
-msgstr "Abrir en una pestaña nueva"
-
-msgid "Open in New Tab"
 msgstr "Abrir en una pestaña nueva"
 
 msgid "Open in PostHog"
@@ -11570,6 +11488,9 @@ msgstr "Prefijo"
 msgid "Preparing"
 msgstr "Preparando"
 
+msgid "Preparing IDE. First use downloads the editor runtime."
+msgstr "Preparando el IDE. El primer uso descarga el entorno de ejecución del editor."
+
 msgid "Preserve commit history"
 msgstr "Conservar el historial de commits"
 
@@ -12404,8 +12325,8 @@ msgstr "cambiar el nombre de la rama"
 msgid "Rename workspace"
 msgstr "Cambiar el nombre del espacio de trabajo"
 
-msgid "Rename..."
-msgstr "Cambiar el nombre..."
+msgid "Renamed"
+msgstr "Renombrado"
 
 msgid "Renaming branch to {newName}..."
 msgstr "Cambiando el nombre de la rama a {newName}..."
@@ -12448,23 +12369,11 @@ msgstr "Reabrir el hilo"
 msgid "reorder agents"
 msgstr "reordenar los agentes"
 
-msgid "Replace"
-msgstr "Reemplazar"
-
-msgid "Replace All"
-msgstr "Reemplazar todo"
-
 msgid "Replace custom audio"
 msgstr "Reemplazar el audio propio"
 
 msgid "Replace this agent's launch settings with the current bundled configuration."
 msgstr "Sustituye la configuración de lanzamiento de este agente por la configuración incluida actual."
-
-msgid "Replaced {replaced} files in {where}"
-msgstr "Se reemplazaron {replaced} archivos en {where}"
-
-msgid "Replaced 1 file in {where}"
-msgstr "Se reemplazó 1 archivo en {where}"
 
 msgid "Reply"
 msgstr "Responder"
@@ -13100,6 +13009,12 @@ msgstr "guardar el comando del agente"
 msgid "Save to get URL"
 msgstr "Guarda para obtener la URL"
 
+msgid "Save your files before closing the IDE."
+msgstr "Guarda tus archivos antes de cerrar el IDE."
+
+msgid "Save your files first. This ends IDE terminals and debugging sessions in this worktree."
+msgstr "Guarda tus archivos primero. Esto finaliza los terminales del IDE y las sesiones de depuración de este árbol de trabajo."
+
 msgid "Saved"
 msgstr "Guardado"
 
@@ -13432,9 +13347,6 @@ msgstr "Descubre en qué puesto de la clasificación pública quedan tus último
 
 msgid "Select"
 msgstr "Selector"
-
-msgid "Select a file to open"
-msgstr "Selecciona un archivo para abrir"
 
 msgid "Select a project"
 msgstr "Selecciona un proyecto"
@@ -14610,6 +14522,12 @@ msgstr "Detener agente y subagentes"
 msgid "Stop dictation"
 msgstr "Detener el dictado"
 
+msgid "Stop IDE"
+msgstr "Detener IDE"
+
+msgid "Stop IDE?"
+msgstr "¿Detener el IDE?"
+
 #. placeholder {0}: owner.processName
 msgid "Stop local {0}"
 msgstr "Detener {0} local"
@@ -15282,9 +15200,6 @@ msgstr "Ese enlace no lleva a ninguna parte de la app."
 msgid "That machine is no longer available"
 msgstr "Esa máquina ya no está disponible"
 
-msgid "That name isn't allowed."
-msgstr "Ese nombre no está permitido."
-
 msgid "The 2026 bet"
 msgstr "La apuesta de 2026"
 
@@ -15632,9 +15547,6 @@ msgstr "{owner} ya conectó esta cuenta de {plugin}. Pídele que la desconecte p
 
 msgid "This {plugin} account is already connected by another Superset organization."
 msgstr "Esta cuenta de {plugin} ya está conectada por otra organización de Superset."
-
-msgid "This action is irreversible."
-msgstr "Esta acción es irreversible."
 
 msgid "This agent no longer exists on the selected device (its agents may have been reset). Runs will fail until you pick a new one."
 msgstr "Este agente ya no existe en el dispositivo seleccionado (puede que sus agentes se hayan restablecido). Las ejecuciones fallarán hasta que elijas uno nuevo."
@@ -16077,9 +15989,6 @@ msgstr "Demasiadas solicitudes. Inténtalo de nuevo más tarde."
 msgid "Too many support reports. Try again later."
 msgstr "Demasiados informes de soporte. Inténtalo más tarde."
 
-msgid "Too many untitled items here already."
-msgstr "Ya hay demasiados elementos sin título aquí."
-
 msgid "Too old for this app to talk to. Update the Superset app on that device to reconnect."
 msgstr "Demasiado antiguo para que esta app se comunique con él. Actualiza la app de Superset en ese dispositivo para reconectar."
 
@@ -16270,6 +16179,9 @@ msgstr "Tipografía usada en los editores y las vistas de diff de V2."
 msgid "Unable to check for updates. Please check your internet connection."
 msgstr "No se pudo buscar actualizaciones. Comprueba tu conexión a internet."
 
+msgid "Unable to load branch changes. Check the Superset Branch Changes output."
+msgstr "No se pudieron cargar los cambios de la rama. Revisa la salida de Superset Branch Changes."
+
 msgid "Unable to load diff"
 msgstr "No se pudo cargar el diff"
 
@@ -16284,6 +16196,9 @@ msgstr "No se pudo cargar el estado de la revisión"
 
 msgid "Unable to load user info"
 msgstr "No se pudo cargar la información del usuario"
+
+msgid "Unable to open changes. Refresh the branch changes list and try again."
+msgstr "No se pudieron abrir los cambios. Actualiza la lista de cambios de la rama e inténtalo de nuevo."
 
 msgid "Unable to read file"
 msgstr "No se pudo leer el archivo"
@@ -17294,9 +17209,6 @@ msgstr "La ruta del espacio de trabajo aún no está disponible"
 msgid "Workspace pinning & bulk actions"
 msgstr "Fijar espacios de trabajo y acciones en lote"
 
-msgid "workspace root"
-msgstr "raíz del espacio de trabajo"
-
 msgid "Workspace Run"
 msgstr "Ejecución del espacio de trabajo"
 
@@ -17308,9 +17220,6 @@ msgstr "Ejecución del espacio de trabajo: {workspaceRunState}"
 
 msgid "Workspace settings"
 msgstr "Configuración del espacio de trabajo"
-
-msgid "Workspace worktree not available"
-msgstr "El worktree del espacio de trabajo no está disponible"
 
 msgid "workspaces"
 msgstr "espacios de trabajo"

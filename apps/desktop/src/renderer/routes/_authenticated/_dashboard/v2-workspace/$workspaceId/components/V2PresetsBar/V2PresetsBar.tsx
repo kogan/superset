@@ -10,7 +10,7 @@ import {
 } from "@superset/ui/dropdown-menu";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@superset/ui/tooltip";
 import { useNavigate } from "@tanstack/react-router";
-import { Eye, EyeOff, FolderTree, Settings } from "lucide-react";
+import { Eye, EyeOff, Settings } from "lucide-react";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { HiMiniCommandLine } from "react-icons/hi2";
 import {
@@ -31,7 +31,6 @@ import { BuiltinPresetBarItem } from "./components/BuiltinPresetBarItem";
 import { V2PresetBarItem } from "./components/V2PresetBarItem";
 
 interface V2PresetsBarProps {
-	onOpenFiles: () => void;
 	matchedPresets: V2TerminalPresetRow[];
 	executePreset: (preset: V2TerminalPresetRow) => void | Promise<void>;
 	showPresetsBar: boolean;
@@ -73,7 +72,6 @@ function getVisiblePresetOrder(
 }
 
 export function V2PresetsBar({
-	onOpenFiles,
 	matchedPresets,
 	executePreset,
 	showPresetsBar,
@@ -344,15 +342,7 @@ export function V2PresetsBar({
 					</DropdownMenuItem>
 				</DropdownMenuContent>
 			</DropdownMenu>
-			<Button
-				variant="ghost"
-				size="sm"
-				className="h-7 shrink-0 gap-1.5 px-2 text-xs text-muted-foreground"
-				onClick={onOpenFiles}
-			>
-				<FolderTree className="size-3.5" />
-				<Trans>Files</Trans>
-			</Button>
+
 			{visiblePresets.map(({ preset }, visibleIndex) => {
 				const hotkeyId = PRESET_HOTKEY_IDS[visibleIndex];
 				return (

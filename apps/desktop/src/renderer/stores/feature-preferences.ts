@@ -8,6 +8,7 @@ const preferencesSchema = z.object({
 	pullRequests: z.boolean().catch(true),
 	pages: z.boolean().catch(true),
 	fileContentSearch: z.boolean().catch(true),
+	embeddedIde: z.boolean().catch(true),
 });
 type FeaturePreferences = z.infer<typeof preferencesSchema>;
 type FeaturePreferencesState = FeaturePreferences & {

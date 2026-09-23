@@ -210,7 +210,7 @@ export function DiffHeaderMetadata({
 									type="button"
 									onClick={handleOpenClick}
 									aria-label={t({
-										message: "Open in file viewer",
+										message: "Open IDE",
 									})}
 									className="rounded p-1 text-muted-foreground/60 transition-colors hover:bg-accent hover:text-muted-foreground"
 								>

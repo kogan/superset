@@ -27,6 +27,7 @@ export function JiraKanbanCard({
 	prUnavailable,
 	moveBusy,
 	onMove,
+	onOpenPullRequest,
 }: {
 	issue: JiraIssue;
 	columnStatus: string;
@@ -36,6 +37,7 @@ export function JiraKanbanCard({
 	prUnavailable: boolean;
 	moveBusy: boolean;
 	onMove: (issue: JiraIssue) => void;
+	onOpenPullRequest: (url: string) => void;
 }) {
 	const { t } = useLingui();
 	const { formatDateTime } = useFormat();
@@ -138,6 +140,7 @@ export function JiraKanbanCard({
 			</div>
 			<div className="mt-3 border-t pt-3">
 				<JiraPullRequestLinks
+					onOpenPullRequest={onOpenPullRequest}
 					links={issue.pullRequests}
 					loading={prLoading}
 					unavailable={prUnavailable}

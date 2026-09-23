@@ -13,8 +13,8 @@ import { cn } from "@superset/ui/utils";
 import { workspaceTrpc } from "@superset/workspace-client";
 import {
 	Circle,
+	CodeXml,
 	FileText,
-	FolderTree,
 	GitCompareArrows,
 	GitPullRequest,
 	Globe,
@@ -86,9 +86,10 @@ import { CommentPaneTitle } from "./components/CommentPane/components/CommentPan
 import { DesktopPane } from "./components/DesktopPane";
 import { DiffPane } from "./components/DiffPane";
 import { DiffPaneHeaderExtras } from "./components/DiffPane/components/DiffPaneHeaderExtras";
-import { FileExplorerPane } from "./components/FileExplorerPane";
 import { FilePane } from "./components/FilePane";
 import { FilePaneHeaderExtras } from "./components/FilePane/components/FilePaneHeaderExtras";
+import { IdePane } from "./components/IdePane";
+import { ideRuntimeRegistry } from "./components/IdePane/ideRuntimeRegistry";
 import { PagePane } from "./components/PagePane";
 import { PagePaneHeaderExtras } from "./components/PagePaneHeaderExtras";
 import { PagePaneTitle } from "./components/PagePaneTitle";
@@ -233,16 +234,38 @@ export function usePaneRegistry({
 
 	return useMemo<PaneRegistry<PaneViewerData>>(
 		() => ({
-			"file-explorer": {
-				getIcon: () => <FolderTree className="size-3.5" />,
-				getTitle: () => t({ message: "Files" }),
-				renderPane: (ctx: RendererContext<PaneViewerData>) => (
-					<FileExplorerPane
-						context={ctx}
-						workspaceId={workspaceId}
-						onOpenFile={onOpenFile}
-					/>
-				),
+			ide: {
+				getIcon: () => <CodeXml className="size-3.5" />,
+				getTitle: () => t({ message: "IDE" }),
+				renderPane: (ctx: RendererContext<PaneViewerData>) => {
+					const data = ctx.pane.data;
+					if (!("kind" in data) || data.kind !== "ide") return null;
+					return (
+						<IdePane
+							paneId={ctx.pane.id}
+							workspaceId={data.workspaceId}
+							onFocus={ctx.actions.focus}
+						/>
+					);
+				},
+				onBeforeClose: async (pane) => {
+					try {
+						const allowed = await ideRuntimeRegistry.canClose(pane.id);
+						if (!allowed)
+							toast.error(
+								t({ message: "Save your files before closing the IDE." }),
+							);
+						return allowed;
+					} catch (error) {
+						toast.error(errorMessage(error));
+						return false;
+					}
+				},
+				onAfterRemove: (pane) => {
+					void ideRuntimeRegistry
+						.close(pane.id)
+						.catch((error) => toast.error(errorMessage(error)));
+				},
 			},
 			file: {
 				getIcon: (ctx: RendererContext<PaneViewerData>) => {

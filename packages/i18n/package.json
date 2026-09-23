@@ -35,6 +35,10 @@
 		"./server": {
 			"types": "./src/server.ts",
 			"default": "./src/server.ts"
+		},
+		"./ide-extension": {
+			"types": "./src/ide-extension.ts",
+			"default": "./src/ide-extension.ts"
 		}
 	},
 	"scripts": {

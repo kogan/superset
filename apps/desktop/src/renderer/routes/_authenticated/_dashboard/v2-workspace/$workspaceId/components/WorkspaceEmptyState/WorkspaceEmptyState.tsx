@@ -2,16 +2,17 @@ import { useLingui } from "@lingui/react/macro";
 import { useMemo } from "react";
 import type { IconType } from "react-icons";
 import { BsTerminalPlus } from "react-icons/bs";
-import { LuFolderTree, LuGitCompareArrows, LuSearch } from "react-icons/lu";
+import { LuCodeXml, LuGitCompareArrows, LuSearch } from "react-icons/lu";
 import { TbMessageCirclePlus, TbWorld } from "react-icons/tb";
 import { GitHubStarPill } from "renderer/components/GitHubStarPill";
 import { useHotkeyDisplay } from "renderer/hotkeys";
 import supersetEmptyStateWordmark from "renderer/screens/main/components/WorkspaceView/ContentView/TabsContent/assets/superset-empty-state-wordmark.svg";
 import { EmptyTabActionButton } from "renderer/screens/main/components/WorkspaceView/ContentView/TabsContent/components/EmptyTabActionButton";
+import { useFeaturePreferences } from "renderer/stores/feature-preferences";
 import { useTheme } from "renderer/stores/theme";
 
 interface WorkspaceEmptyStateProps {
-	onOpenFiles: () => void;
+	onOpenIde: () => void;
 	onOpenBrowser: () => void;
 	onOpenChanges: () => void;
 	onOpenChatV3?: (() => void) | undefined;
@@ -28,7 +29,7 @@ interface WorkspaceEmptyStateAction {
 }
 
 export function WorkspaceEmptyState({
-	onOpenFiles,
+	onOpenIde,
 	onOpenBrowser,
 	onOpenChanges,
 	onOpenChatV3,
@@ -37,6 +38,7 @@ export function WorkspaceEmptyState({
 }: WorkspaceEmptyStateProps) {
 	const { t } = useLingui();
 	const activeTheme = useTheme();
+	const ideEnabled = useFeaturePreferences((state) => state.embeddedIde);
 	const { keys: newGroupDisplay } = useHotkeyDisplay("NEW_GROUP");
 	const { keys: newBrowserDisplay } = useHotkeyDisplay("NEW_BROWSER");
 	const { keys: quickOpenDisplay } = useHotkeyDisplay("QUICK_OPEN");
@@ -44,13 +46,18 @@ export function WorkspaceEmptyState({
 
 	const actions = useMemo<Array<WorkspaceEmptyStateAction>>(
 		() => [
-			{
-				id: "browse-files",
-				label: t({ message: "Browse files" }),
-				display: [],
-				icon: LuFolderTree,
-				onClick: onOpenFiles,
-			},
+			...(ideEnabled
+				? [
+						{
+							id: "ide",
+							label: t({ message: "Open IDE" }),
+							display: [],
+							icon: LuCodeXml,
+							onClick: onOpenIde,
+						},
+					]
+				: []),
+
 			{
 				id: "terminal",
 				label: t({
@@ -104,7 +111,8 @@ export function WorkspaceEmptyState({
 		[
 			newBrowserDisplay,
 			newGroupDisplay,
-			onOpenFiles,
+			onOpenIde,
+			ideEnabled,
 			onOpenBrowser,
 			onOpenChanges,
 			onOpenChatV3,

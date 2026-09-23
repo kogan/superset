@@ -6,6 +6,7 @@ import type { EventBus } from "./events";
 import type { PageWatchManager } from "./page-watch/index.ts";
 import type { WorkspaceFilesystemManager } from "./runtime/filesystem";
 import type { GitCredentialProvider, GitFactory } from "./runtime/git";
+import type { WorkspaceIdeManager } from "./runtime/ide/ide";
 import type { PullRequestRuntimeManager } from "./runtime/pull-requests";
 import type { TerminalAgentStore } from "./terminal-agents";
 import type { ExecGh } from "./trpc/router/workspace-creation/utils/exec-gh";
@@ -14,6 +15,7 @@ export type ApiClient = TRPCClient<AppRouter>;
 
 export interface HostServiceRuntime {
 	filesystem: WorkspaceFilesystemManager;
+	ide: WorkspaceIdeManager;
 	pullRequests: PullRequestRuntimeManager;
 	pageWatch: PageWatchManager;
 }

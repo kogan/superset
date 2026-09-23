@@ -10,8 +10,11 @@ import {
 	applyRememberedV2PaneSelection,
 	rememberV2PaneSelection,
 } from "renderer/stores/v2-pane-selection";
+import { getDocument } from "../../state/fileDocumentStore";
 import type { PaneViewerData } from "../../types";
+import { ideRuntimeRegistry } from "../usePaneRegistry/components/IdePane/ideRuntimeRegistry";
 import { dropUnavailablePanes } from "./utils/dropUnavailablePanes";
+import { migrateLegacyFilePanes } from "./utils/migrateLegacyFilePanes";
 import {
 	getSharedPaneLayoutSnapshot,
 	preserveLocalPaneSelection,
@@ -46,12 +49,16 @@ export function useV2WorkspacePaneLayout() {
 			(collections.v2WorkspaceLocalState.get(workspaceId)?.paneLayout as
 				| WorkspaceState<PaneViewerData>
 				| undefined) ?? EMPTY_STATE;
-		const seededLayout = applyRememberedV2PaneSelection(
+		const migration = migrateLegacyFilePanes({
+			state: applyRememberedV2PaneSelection(workspaceId, persistedLayout),
 			workspaceId,
-			persistedLayout,
-		);
+			getDocument: (filePath) => getDocument(workspaceId, filePath),
+		});
+		const seededLayout = migration.state;
 		return {
 			workspaceId,
+			migratedFiles: migration.files,
+			queuedFiles: new Set<string>(),
 			seededSnapshot: getSnapshot(seededLayout),
 			store: createWorkspaceStore<PaneViewerData>({
 				initialState: seededLayout,
@@ -82,18 +89,23 @@ export function useV2WorkspacePaneLayout() {
 		[isPagesEnabled],
 	);
 
-	const persistedPaneLayout = useMemo(
+	const persistedMigration = useMemo(
 		() =>
-			dropUnavailablePanes(
-				localWorkspaceState?.workspaceId === workspaceId
-					? ((localWorkspaceState.paneLayout as
-							| WorkspaceState<PaneViewerData>
-							| undefined) ?? EMPTY_STATE)
-					: EMPTY_STATE,
-				unavailableKinds,
-			),
+			migrateLegacyFilePanes({
+				state: dropUnavailablePanes(
+					localWorkspaceState?.workspaceId === workspaceId
+						? ((localWorkspaceState.paneLayout as
+								| WorkspaceState<PaneViewerData>
+								| undefined) ?? EMPTY_STATE)
+						: EMPTY_STATE,
+					unavailableKinds,
+				),
+				workspaceId,
+				getDocument: (filePath) => getDocument(workspaceId, filePath),
+			}),
 		[localWorkspaceState, workspaceId, unavailableKinds],
 	);
+	const persistedPaneLayout = persistedMigration.state;
 
 	useEffect(() => {
 		syncStateRef.current = {
@@ -111,17 +123,44 @@ export function useV2WorkspacePaneLayout() {
 		if (!isLayoutReady) return;
 
 		const nextSnapshot = getSnapshot(persistedPaneLayout);
-		if (nextSnapshot === syncStateRef.current.lastSyncedSnapshot) {
-			return;
+		if (nextSnapshot !== syncStateRef.current.lastSyncedSnapshot) {
+			syncStateRef.current.lastSyncedSnapshot = nextSnapshot;
+			store
+				.getState()
+				.replaceState((current) =>
+					preserveLocalPaneSelection(current, persistedPaneLayout),
+				);
 		}
-
-		syncStateRef.current.lastSyncedSnapshot = nextSnapshot;
-		store
-			.getState()
-			.replaceState((current) =>
-				preserveLocalPaneSelection(current, persistedPaneLayout),
-			);
-	}, [persistedPaneLayout, store, isLayoutReady]);
+		for (const file of [
+			...workspaceRuntime.migratedFiles,
+			...persistedMigration.files,
+		]) {
+			if (workspaceRuntime.queuedFiles.has(file.sourcePaneId)) continue;
+			if (!store.getState().getPane(file.paneId)) continue;
+			workspaceRuntime.queuedFiles.add(file.sourcePaneId);
+			ideRuntimeRegistry.queueFile(file.paneId, file.request);
+		}
+		if (
+			persistedMigration.files.length > 0 ||
+			(localWorkspaceState?.paneLayout &&
+				getSnapshot(
+					localWorkspaceState.paneLayout as WorkspaceState<PaneViewerData>,
+				) !== nextSnapshot)
+		) {
+			collections.v2WorkspaceLocalState.update(workspaceId, (draft) => {
+				draft.paneLayout = persistedPaneLayout;
+			});
+		}
+	}, [
+		persistedPaneLayout,
+		persistedMigration.files,
+		store,
+		isLayoutReady,
+		workspaceRuntime,
+		localWorkspaceState,
+		collections,
+		workspaceId,
+	]);
 
 	useEffect(() => {
 		const unsubscribe = store.subscribe((nextStore) => {
