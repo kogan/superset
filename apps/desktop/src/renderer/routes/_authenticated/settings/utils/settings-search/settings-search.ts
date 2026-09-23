@@ -41,6 +41,7 @@ export const SETTING_ITEM_ID = {
 	BEHAVIOR_FEATURE_PULL_REQUESTS: "behavior-feature-pull-requests",
 	BEHAVIOR_FEATURE_PAGES: "behavior-feature-pages",
 	BEHAVIOR_FEATURE_CONTENT_SEARCH: "behavior-feature-content-search",
+	BEHAVIOR_FEATURE_IDE: "behavior-feature-ide",
 	BEHAVIOR_CONFIRM_QUIT: "behavior-confirm-quit",
 	BEHAVIOR_FILE_OPEN_MODE: "behavior-file-open-mode",
 	BEHAVIOR_CHANGES_OPEN_TARGET: "behavior-changes-open-target",
@@ -198,6 +199,7 @@ export const SETTING_ITEM_VARIANT: Record<SettingItemId, SettingVariant> = {
 	[SETTING_ITEM_ID.BEHAVIOR_FEATURE_PULL_REQUESTS]: "v2",
 	[SETTING_ITEM_ID.BEHAVIOR_FEATURE_PAGES]: "v2",
 	[SETTING_ITEM_ID.BEHAVIOR_FEATURE_CONTENT_SEARCH]: "v2",
+	[SETTING_ITEM_ID.BEHAVIOR_FEATURE_IDE]: "v2",
 	[SETTING_ITEM_ID.BEHAVIOR_CONFIRM_QUIT]: "shared",
 	[SETTING_ITEM_ID.BEHAVIOR_FILE_OPEN_MODE]: "v1",
 	// The top-bar Changes control is a v2-only surface.
@@ -831,6 +833,22 @@ export const SETTINGS_ITEMS: SettingsItem[] = [
 			"sidebar",
 			"search",
 			"pages",
+		],
+	},
+	{
+		id: SETTING_ITEM_ID.BEHAVIOR_FEATURE_IDE,
+		section: "behavior",
+		title: "Embedded IDE",
+		description: "Enable IDE panes with extensions and debugging in worktrees",
+		keywords: [
+			"features",
+			"toggle",
+			"enable",
+			"disable",
+			"vscode",
+			"editor",
+			"ide",
+			"code-server",
 		],
 	},
 	{

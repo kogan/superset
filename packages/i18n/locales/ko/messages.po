@@ -346,10 +346,6 @@ msgstr "{0} 끝자리 {1}"
 msgid "{0} failing"
 msgstr "{0} 실패"
 
-#. placeholder {0}: collisions.length
-msgid "{0} files already exist in {where}. Do you want to replace them?"
-msgstr "{where}에 파일 {0}개가 이미 있습니다. 바꿀까요?"
-
 #. placeholder {0}: displayName(variables.name)
 msgid "{0} installed"
 msgstr "{0} 설치됨"
@@ -1233,9 +1229,6 @@ msgstr "설치부터 첫 에이전트 실행까지 더 빠른 경로와, 안내�
 msgid "A faster, clearer diff experience for reviewing what your agents changed."
 msgstr "에이전트가 무엇을 바꿨는지 리뷰하기 위한 더 빠르고 명확한 차이 보기입니다."
 
-msgid "A file named '{firstName}' already exists in {where}. Do you want to replace it?"
-msgstr "{where}에 '{firstName}'(이)라는 파일이 이미 있습니다. 바꿀까요?"
-
 msgid "A focused burn-down of crashes, hangs, and reconnect failures across the app."
 msgstr "앱 전반의 크래시, 멈춤, 재연결 실패를 집중적으로 줄입니다."
 
@@ -1542,11 +1535,8 @@ msgstr "워크스페이스에 추가"
 msgid "Add your own terminal agent to this device."
 msgstr "이 기기에 직접 만든 터미널 에이전트를 추가합니다."
 
-msgid "Added {added} files to {where}"
-msgstr "{where}에 파일 {added}개를 추가했습니다"
-
-msgid "Added 1 file to {where}"
-msgstr "{where}에 파일 1개를 추가했습니다"
+msgid "Added"
+msgstr "추가됨"
 
 msgid "Added only when launching with a prompt — e.g. <0>--</0>, <1>--prompt</1>, <2>-i</2>."
 msgstr "프롬프트와 함께 실행할 때만 추가됩니다 — 예: <0>--</0>, <1>--prompt</1>, <2>-i</2>."
@@ -2152,12 +2142,6 @@ msgstr "환경 보관"
 msgid "Archived"
 msgstr "보관됨"
 
-msgid "Are you sure you want to delete this file? This action cannot be undone."
-msgstr "이 파일을 삭제할까요? 되돌릴 수 없습니다."
-
-msgid "Are you sure you want to delete this folder? This action cannot be undone."
-msgstr "이 폴더를 삭제할까요? 되돌릴 수 없습니다."
-
 msgid "Are you sure you want to leave this organization? You will lose access immediately.{billingNote}"
 msgstr "이 조직에서 나갈까요? 즉시 접근 권한을 잃게 됩니다.{billingNote}"
 
@@ -2664,6 +2648,9 @@ msgstr "브랜치"
 msgid "Branch behavior for new workspaces on this device. Projects can override the prefix individually."
 msgstr "이 기기에서 새 워크스페이스를 만들 때의 브랜치 동작입니다. 프로젝트별로 접두사를 따로 지정할 수 있습니다."
 
+msgid "Branch Changes"
+msgstr "브랜치 변경 사항"
+
 msgid "Branch copied"
 msgstr "브랜치 복사됨"
 
@@ -2736,9 +2723,6 @@ msgstr "에이전트를 한곳에 모으세요."
 
 msgid "Browse and install skills, MCP servers, and agent configs shared by the community."
 msgstr "커뮤니티가 공유한 스킬, MCP 서버, 에이전트 설정을 둘러보고 설치하세요."
-
-msgid "Browse files"
-msgstr "파일 찾아보기"
 
 msgid "Browse for directory"
 msgstr "디렉터리 찾아보기"
@@ -3591,9 +3575,6 @@ msgstr "에이전트 접기"
 msgid "Collapse all"
 msgstr "모두 접기"
 
-msgid "Collapse All"
-msgstr "모두 접기"
-
 msgid "Collapse all files"
 msgstr "모든 파일 접기"
 
@@ -3822,6 +3803,9 @@ msgstr "워크스페이스 실행 명령 구성"
 
 msgid "Confirm before quitting"
 msgstr "종료 전 확인"
+
+msgid "Conflicting"
+msgstr "충돌"
 
 msgid "Connect"
 msgstr "연결"
@@ -4417,9 +4401,6 @@ msgstr "Jira 환경설정을 읽지 못했습니다."
 msgid "Could not read selected file"
 msgstr "선택한 파일을 읽을 수 없습니다"
 
-msgid "Could not read the dropped files"
-msgstr "끌어다 놓은 파일을 읽을 수 없습니다"
-
 msgid "Could not read the Google account. Please try again."
 msgstr "Google 계정을 읽을 수 없습니다. 다시 시도해 주세요."
 
@@ -4799,14 +4780,8 @@ msgstr "{creatorLabel}이(가) {createdAtLabel} 생성"
 msgid "Created {createdDate}"
 msgstr "{createdDate} 생성"
 
-msgid "Created {createdDirs} folders in {where}"
-msgstr "{where}에 폴더 {createdDirs}개를 만들었습니다"
-
 msgid "Created <0>· 7d</0>"
 msgstr "생성됨 <0>· 7일</0>"
-
-msgid "Created 1 folder in {where}"
-msgstr "{where}에 폴더 1개를 만들었습니다"
 
 msgid "Created by"
 msgstr "만든 사람"
@@ -5087,9 +5062,6 @@ msgstr "“{title}”을(를) 삭제할까요?"
 msgid "Delete {0}?"
 msgstr "{0}을(를) 삭제할까요?"
 
-msgid "Delete {name}?"
-msgstr "{name}을(를) 삭제할까요?"
-
 msgid "Delete account"
 msgstr "계정 삭제"
 
@@ -5199,9 +5171,6 @@ msgstr "\"{projectName}\"을(를) 삭제했습니다"
 msgid "Deleted \"{projectName}\" from {0} of {1} devices — unreachable devices keep their copy"
 msgstr "기기 {1}대 중 {0}대에서 \"{projectName}\"을(를) 삭제했습니다 — 연결할 수 없는 기기에는 사본이 남습니다"
 
-msgid "Deleted {name}"
-msgstr "{name}을(를) 삭제했습니다"
-
 msgid "deleted or unavailable — pick another"
 msgstr "삭제되었거나 사용할 수 없습니다 — 다른 항목을 선택하세요"
 
@@ -5223,9 +5192,6 @@ msgstr "이 호스트와 그 접근 권한, 워크스페이스를 삭제합니�
 #. placeholder {1}: targets.length
 msgid "Deleting {0} of {1}…"
 msgstr "{1}개 중 {0}개 삭제 중…"
-
-msgid "Deleting {name}..."
-msgstr "{name}을(를) 삭제하는 중..."
 
 msgid "Deleting automation..."
 msgstr "자동화를 삭제하는 중..."
@@ -5667,9 +5633,6 @@ msgstr "스크립트, CI, 자체 도구에서 워크스페이스, 에이전트, 
 msgid "Drop files to attach"
 msgstr "파일을 놓으면 첨부됩니다"
 
-msgid "Drop into {label}"
-msgstr "{label}에 놓기"
-
 msgid "Drop to attach"
 msgstr "여기에 놓으면 첨부됩니다"
 
@@ -5862,6 +5825,9 @@ msgstr "이메일 지원"
 msgid "Embedded browser improvements"
 msgstr "내장 브라우저 개선"
 
+msgid "Embedded IDE"
+msgstr "내장 IDE"
+
 msgid "Empty"
 msgstr "비어 있음"
 
@@ -5883,6 +5849,9 @@ msgstr "확인할 항목함 활성화"
 
 msgid "Enable auto-merge"
 msgstr "자동 머지 활성화"
+
+msgid "Enable Embedded IDE in Settings > General > Features."
+msgstr "설정 > 일반 > 기능에서 내장 IDE를 활성화하세요."
 
 msgid "Enable relay access…"
 msgstr "릴레이 접근 활성화…"
@@ -6200,12 +6169,6 @@ msgstr "실패한 검사"
 msgid "Failed to accept invitation"
 msgstr "초대를 수락하지 못했습니다"
 
-msgid "Failed to add {failed} files"
-msgstr "파일 {failed}개를 추가하지 못했습니다"
-
-msgid "Failed to add 1 file"
-msgstr "파일 1개를 추가하지 못했습니다"
-
 msgid "Failed to add agent"
 msgstr "에이전트를 추가하지 못했습니다"
 
@@ -6277,17 +6240,8 @@ msgstr "클립보드에 복사하지 못했습니다"
 msgid "Failed to copy workspace ID: {0}"
 msgstr "워크스페이스 ID를 복사하지 못했습니다: {0}"
 
-msgid "Failed to create {failedDirs} folders"
-msgstr "폴더 {failedDirs}개를 만들지 못했습니다"
-
-msgid "Failed to create 1 folder"
-msgstr "폴더 1개를 만들지 못했습니다"
-
 msgid "Failed to create automation"
 msgstr "자동화를 만들지 못했습니다"
-
-msgid "Failed to create item"
-msgstr "항목을 만들지 못했습니다"
 
 msgid "Failed to create organization"
 msgstr "조직을 만들지 못했습니다"
@@ -6320,9 +6274,6 @@ msgstr "PR에서 워크스페이스를 만들지 못했습니다"
 msgid "Failed to delete"
 msgstr "삭제하지 못했습니다"
 
-msgid "Failed to delete {name}"
-msgstr "{name}을(를) 삭제하지 못했습니다"
-
 #. placeholder {0}: "message" in e ? e.message : String(e.kind)
 msgid "Failed to delete {workspaceName}: {0}"
 msgstr "{workspaceName}을(를) 삭제하지 못했습니다: {0}"
@@ -6338,9 +6289,6 @@ msgstr "조직을 삭제하지 못했습니다"
 
 msgid "Failed to delete team"
 msgstr "팀을 삭제하지 못했습니다"
-
-msgid "Failed to discard the new item"
-msgstr "새 항목을 버리지 못했습니다"
 
 msgid "Failed to enable relay access"
 msgstr "릴레이 접근을 활성화하지 못했습니다"
@@ -6479,9 +6427,6 @@ msgstr "PR 링크를 제거하지 못했습니다: {0}"
 msgid "Failed to remove terminal"
 msgstr "터미널을 제거하지 못했습니다"
 
-msgid "Failed to rename"
-msgstr "이름을 변경하지 못했습니다"
-
 msgid "Failed to rename branch"
 msgstr "브랜치 이름을 변경하지 못했습니다"
 
@@ -6490,12 +6435,6 @@ msgstr "세션 이름 변경 실패"
 
 msgid "Failed to reorder"
 msgstr "순서를 변경하지 못했습니다"
-
-msgid "Failed to replace {replaceFailed} files"
-msgstr "파일 {replaceFailed}개를 바꾸지 못했습니다"
-
-msgid "Failed to replace 1 file"
-msgstr "파일 1개를 바꾸지 못했습니다"
 
 msgid "Failed to reset"
 msgstr "초기화하지 못했습니다"
@@ -8222,12 +8161,6 @@ msgstr "계속 기다리기"
 msgid "Keep working"
 msgstr "계속 작업"
 
-msgid "Kept the new file — it changed after it was created"
-msgstr "새 파일을 유지했습니다 — 생성 후 내용이 바뀌었습니다"
-
-msgid "Kept the new folder — it is no longer empty"
-msgstr "새 폴더를 유지했습니다 — 더 이상 비어 있지 않습니다"
-
 msgid "Key name"
 msgstr "키 이름"
 
@@ -8669,9 +8602,6 @@ msgstr "대화를 불러오는 중..."
 
 msgid "Loading diff…"
 msgstr "차이 불러오는 중…"
-
-msgid "Loading files..."
-msgstr "파일을 불러오는 중..."
 
 msgid "Loading fonts..."
 msgstr "글꼴 불러오는 중..."
@@ -9168,6 +9098,9 @@ msgstr "사용한 모델"
 msgid "Moderate reasoning effort"
 msgstr "적당한 추론"
 
+msgid "Modified"
+msgstr "수정됨"
+
 msgid "Monitor agents from your phone."
 msgstr "휴대폰에서 에이전트를 모니터링합니다."
 
@@ -9445,18 +9378,6 @@ msgstr "새 클라우드 워크스페이스"
 
 msgid "New environment"
 msgstr "새 환경"
-
-msgid "New File"
-msgstr "새 파일"
-
-msgid "New File..."
-msgstr "새 파일..."
-
-msgid "New Folder"
-msgstr "새 폴더"
-
-msgid "New Folder..."
-msgstr "새 폴더..."
 
 msgid "New group"
 msgstr "새 그룹"
@@ -10589,14 +10510,17 @@ msgstr "파일 열기"
 msgid "Open File"
 msgstr "파일 열기"
 
-msgid "Open File in New Tab"
-msgstr "새 탭에서 파일 열기"
-
 msgid "Open from folder"
 msgstr "폴더에서 열기"
 
+msgid "Open full IDE panes in worktrees. Turning this off preserves open sessions."
+msgstr "작업 트리에서 모든 기능을 갖춘 IDE 창을 엽니다. 이 기능을 꺼도 열린 세션은 유지됩니다."
+
 msgid "Open full screen"
 msgstr "전체 화면으로 열기"
+
+msgid "Open IDE"
+msgstr "IDE 열기"
 
 msgid "Open importer"
 msgstr "가져오기 도구 열기"
@@ -10668,9 +10592,6 @@ msgstr "외부 브라우저에서 열기"
 msgid "Open in File pane"
 msgstr "파일 패널에서 열기"
 
-msgid "Open in file viewer"
-msgstr "파일 뷰어에서 열기"
-
 msgid "Open in Finder"
 msgstr "Finder에서 열기"
 
@@ -10684,9 +10605,6 @@ msgid "Open in Linear"
 msgstr "Linear에서 열기"
 
 msgid "Open in new tab"
-msgstr "새 탭에서 열기"
-
-msgid "Open in New Tab"
 msgstr "새 탭에서 열기"
 
 msgid "Open in PostHog"
@@ -11570,6 +11488,9 @@ msgstr "접두사"
 msgid "Preparing"
 msgstr "준비 중"
 
+msgid "Preparing IDE. First use downloads the editor runtime."
+msgstr "IDE를 준비하고 있습니다. 처음 사용할 때 편집기 런타임을 다운로드합니다."
+
 msgid "Preserve commit history"
 msgstr "커밋 기록 유지"
 
@@ -11617,9 +11538,6 @@ msgstr "이전 브랜치"
 
 msgid "Previous comment"
 msgstr "이전 코멘트"
-
-msgid "Previous copies"
-msgstr "이전 복사본"
 
 msgid "Previous file"
 msgstr "이전 파일"
@@ -12404,8 +12322,8 @@ msgstr "브랜치 이름을 변경할"
 msgid "Rename workspace"
 msgstr "워크스페이스 이름 변경"
 
-msgid "Rename..."
-msgstr "이름 변경..."
+msgid "Renamed"
+msgstr "이름 변경됨"
 
 msgid "Renaming branch to {newName}..."
 msgstr "브랜치 이름을 {newName}(으)로 변경하는 중..."
@@ -12448,23 +12366,11 @@ msgstr "스레드 다시 열기"
 msgid "reorder agents"
 msgstr "에이전트 순서를 변경할"
 
-msgid "Replace"
-msgstr "바꾸기"
-
-msgid "Replace All"
-msgstr "모두 바꾸기"
-
 msgid "Replace custom audio"
 msgstr "사용자 지정 오디오 교체"
 
 msgid "Replace this agent's launch settings with the current bundled configuration."
 msgstr "이 에이전트의 실행 설정을 현재 번들된 구성으로 바꿉니다."
-
-msgid "Replaced {replaced} files in {where}"
-msgstr "{where}에서 파일 {replaced}개를 바꿨습니다"
-
-msgid "Replaced 1 file in {where}"
-msgstr "{where}에서 파일 1개를 바꿨습니다"
 
 msgid "Reply"
 msgstr "답글"
@@ -13100,6 +13006,12 @@ msgstr "에이전트 명령을 저장할"
 msgid "Save to get URL"
 msgstr "저장하면 URL이 생성됩니다"
 
+msgid "Save your files before closing the IDE."
+msgstr "IDE를 닫기 전에 파일을 저장하세요."
+
+msgid "Save your files first. This ends IDE terminals and debugging sessions in this worktree."
+msgstr "먼저 파일을 저장하세요. 이 작업 트리의 IDE 터미널과 디버깅 세션이 종료됩니다."
+
 msgid "Saved"
 msgstr "저장됨"
 
@@ -13432,9 +13344,6 @@ msgstr "최근 30일 사용량이 공개 리더보드에서 어디쯤인지 확�
 
 msgid "Select"
 msgstr "선택"
-
-msgid "Select a file to open"
-msgstr "열 파일을 선택하세요"
 
 msgid "Select a project"
 msgstr "프로젝트를 선택하세요"
@@ -14610,6 +14519,12 @@ msgstr "에이전트 및 하위 에이전트 중지"
 msgid "Stop dictation"
 msgstr "받아쓰기 중지"
 
+msgid "Stop IDE"
+msgstr "IDE 중지"
+
+msgid "Stop IDE?"
+msgstr "IDE를 중지할까요?"
+
 #. placeholder {0}: owner.processName
 msgid "Stop local {0}"
 msgstr "로컬 {0} 중지"
@@ -15282,9 +15197,6 @@ msgstr "이 링크는 앱의 어디로도 연결되지 않습니다."
 msgid "That machine is no longer available"
 msgstr "해당 머신을 더 이상 사용할 수 없습니다"
 
-msgid "That name isn't allowed."
-msgstr "사용할 수 없는 이름입니다."
-
 msgid "The 2026 bet"
 msgstr "2026년의 베팅"
 
@@ -15632,9 +15544,6 @@ msgstr "이 {plugin} 계정은 이미 {owner}님이 연결했습니다. 먼저 �
 
 msgid "This {plugin} account is already connected by another Superset organization."
 msgstr "이 {plugin} 계정은 이미 다른 Superset 조직에 연결되어 있습니다."
-
-msgid "This action is irreversible."
-msgstr "이 동작은 되돌릴 수 없습니다."
 
 msgid "This agent no longer exists on the selected device (its agents may have been reset). Runs will fail until you pick a new one."
 msgstr "이 에이전트는 선택한 기기에 더 이상 존재하지 않습니다 (에이전트가 초기화되었을 수 있습니다). 새 에이전트를 선택할 때까지 실행이 실패합니다."
@@ -16077,9 +15986,6 @@ msgstr "요청이 너무 많습니다. 잠시 후 다시 시도해 주세요."
 msgid "Too many support reports. Try again later."
 msgstr "지원 요청이 너무 많습니다. 나중에 다시 시도하세요."
 
-msgid "Too many untitled items here already."
-msgstr "여기에 이름 없는 항목이 이미 너무 많습니다."
-
 msgid "Too old for this app to talk to. Update the Superset app on that device to reconnect."
 msgstr "너무 오래되어 이 앱과 통신할 수 없습니다. 해당 기기의 Superset 앱을 업데이트하여 다시 연결하세요."
 
@@ -16270,6 +16176,9 @@ msgstr "V2 편집기와 차이 보기에 사용하는 타이포그래피입니�
 msgid "Unable to check for updates. Please check your internet connection."
 msgstr "업데이트를 확인할 수 없습니다. 인터넷 연결을 확인해 주세요."
 
+msgid "Unable to load branch changes. Check the Superset Branch Changes output."
+msgstr "브랜치 변경 사항을 불러올 수 없습니다. Superset Branch Changes 출력을 확인하세요."
+
 msgid "Unable to load diff"
 msgstr "차이를 불러올 수 없습니다"
 
@@ -16284,6 +16193,9 @@ msgstr "리뷰 상태를 불러올 수 없습니다"
 
 msgid "Unable to load user info"
 msgstr "사용자 정보를 불러올 수 없습니다"
+
+msgid "Unable to open changes. Refresh the branch changes list and try again."
+msgstr "변경 사항을 열 수 없습니다. 브랜치 변경 목록을 새로 고친 후 다시 시도하세요."
 
 msgid "Unable to read file"
 msgstr "파일을 읽을 수 없습니다"
@@ -17294,9 +17206,6 @@ msgstr "작업 공간 경로를 아직 사용할 수 없습니다"
 msgid "Workspace pinning & bulk actions"
 msgstr "워크스페이스 고정 및 일괄 작업"
 
-msgid "workspace root"
-msgstr "워크스페이스 루트"
-
 msgid "Workspace Run"
 msgstr "워크스페이스 실행"
 
@@ -17308,9 +17217,6 @@ msgstr "워크스페이스 실행: {workspaceRunState}"
 
 msgid "Workspace settings"
 msgstr "워크스페이스 설정"
-
-msgid "Workspace worktree not available"
-msgstr "워크스페이스 worktree를 사용할 수 없습니다"
 
 msgid "workspaces"
 msgstr "워크스페이스"

@@ -346,10 +346,6 @@ msgstr "{0} končící na {1}"
 msgid "{0} failing"
 msgstr "{0} selhává"
 
-#. placeholder {0}: collisions.length
-msgid "{0} files already exist in {where}. Do you want to replace them?"
-msgstr "V {where} už existuje {0} souborů. Chcete je nahradit?"
-
 #. placeholder {0}: displayName(variables.name)
 msgid "{0} installed"
 msgstr "{0} nainstalováno"
@@ -1233,9 +1229,6 @@ msgstr "Rychlejší cesta od instalace k prvnímu běhu agenta, s prvním pracov
 msgid "A faster, clearer diff experience for reviewing what your agents changed."
 msgstr "Rychlejší a přehlednější práce s rozdíly při revizi toho, co agenti změnili."
 
-msgid "A file named '{firstName}' already exists in {where}. Do you want to replace it?"
-msgstr "V {where} už existuje soubor s názvem „{firstName}“. Chcete ho nahradit?"
-
 msgid "A focused burn-down of crashes, hangs, and reconnect failures across the app."
 msgstr "Soustředěné likvidování pádů, zaseknutí a selhání při opětovném připojení napříč aplikací."
 
@@ -1542,11 +1535,8 @@ msgstr "Přidat do pracovního prostoru"
 msgid "Add your own terminal agent to this device."
 msgstr "Přidejte na toto zařízení vlastního terminálového agenta."
 
-msgid "Added {added} files to {where}"
-msgstr "Přidáno {added} souborů do {where}"
-
-msgid "Added 1 file to {where}"
-msgstr "Přidán 1 soubor do {where}"
+msgid "Added"
+msgstr "Přidáno"
 
 msgid "Added only when launching with a prompt — e.g. <0>--</0>, <1>--prompt</1>, <2>-i</2>."
 msgstr "Přidá se jen při spuštění s promptem — např. <0>--</0>, <1>--prompt</1>, <2>-i</2>."
@@ -2152,12 +2142,6 @@ msgstr "Archivovat prostředí"
 msgid "Archived"
 msgstr "Archivované"
 
-msgid "Are you sure you want to delete this file? This action cannot be undone."
-msgstr "Opravdu chcete tento soubor smazat? Tuto akci nelze vrátit zpět."
-
-msgid "Are you sure you want to delete this folder? This action cannot be undone."
-msgstr "Opravdu chcete tuto složku smazat? Tuto akci nelze vrátit zpět."
-
 msgid "Are you sure you want to leave this organization? You will lose access immediately.{billingNote}"
 msgstr "Opravdu chcete opustit tuto organizaci? Přístup ztratíte okamžitě.{billingNote}"
 
@@ -2664,6 +2648,9 @@ msgstr "Větev"
 msgid "Branch behavior for new workspaces on this device. Projects can override the prefix individually."
 msgstr "Chování větví u nových pracovních prostorů na tomto zařízení. Projekty si prefix mohou nastavit samostatně."
 
+msgid "Branch Changes"
+msgstr "Změny větve"
+
 msgid "Branch copied"
 msgstr "Větev zkopírována"
 
@@ -2736,9 +2723,6 @@ msgstr "Sjednoťte své agenty."
 
 msgid "Browse and install skills, MCP servers, and agent configs shared by the community."
 msgstr "Procházejte a instalujte skills, MCP servery a konfigurace agentů sdílené komunitou."
-
-msgid "Browse files"
-msgstr "Procházet soubory"
 
 msgid "Browse for directory"
 msgstr "Procházet adresáře"
@@ -3591,9 +3575,6 @@ msgstr "Sbalit agenty"
 msgid "Collapse all"
 msgstr "Sbalit vše"
 
-msgid "Collapse All"
-msgstr "Sbalit vše"
-
 msgid "Collapse all files"
 msgstr "Sbalit všechny soubory"
 
@@ -3822,6 +3803,9 @@ msgstr "Nastavit spouštěcí příkaz pracovního prostoru"
 
 msgid "Confirm before quitting"
 msgstr "Potvrdit před ukončením"
+
+msgid "Conflicting"
+msgstr "Konfliktní"
 
 msgid "Connect"
 msgstr "Připojit"
@@ -4417,9 +4401,6 @@ msgstr "Předvolby Jira se nepodařilo přečíst."
 msgid "Could not read selected file"
 msgstr "Vybraný soubor se nepodařilo přečíst"
 
-msgid "Could not read the dropped files"
-msgstr "Přetažené soubory se nepodařilo přečíst"
-
 msgid "Could not read the Google account. Please try again."
 msgstr "Nepodařilo se přečíst účet Google. Zkuste to prosím znovu."
 
@@ -4799,14 +4780,8 @@ msgstr "Vytvořeno {createdAtLabel}, autor: {creatorLabel}"
 msgid "Created {createdDate}"
 msgstr "Vytvořeno {createdDate}"
 
-msgid "Created {createdDirs} folders in {where}"
-msgstr "Vytvořeno {createdDirs} složek v {where}"
-
 msgid "Created <0>· 7d</0>"
 msgstr "Vytvořeno <0>· 7 d</0>"
-
-msgid "Created 1 folder in {where}"
-msgstr "Vytvořena 1 složka v {where}"
 
 msgid "Created by"
 msgstr "Vytvořil(a)"
@@ -5087,9 +5062,6 @@ msgstr "Smazat „{title}“?"
 msgid "Delete {0}?"
 msgstr "Smazat {0}?"
 
-msgid "Delete {name}?"
-msgstr "Smazat {name}?"
-
 msgid "Delete account"
 msgstr "Smazat účet"
 
@@ -5199,9 +5171,6 @@ msgstr "„{projectName}“ smazán"
 msgid "Deleted \"{projectName}\" from {0} of {1} devices — unreachable devices keep their copy"
 msgstr "„{projectName}“ smazán z {0} z {1} zařízení — nedostupná zařízení si kopii ponechala"
 
-msgid "Deleted {name}"
-msgstr "{name} smazán"
-
 msgid "deleted or unavailable — pick another"
 msgstr "smazán nebo nedostupný — vyberte jiný"
 
@@ -5223,9 +5192,6 @@ msgstr "Smaže tohoto hosta, přístup k němu i jeho pracovní prostory. Soubor
 #. placeholder {1}: targets.length
 msgid "Deleting {0} of {1}…"
 msgstr "Mažu {0} z {1}…"
-
-msgid "Deleting {name}..."
-msgstr "Mažu {name}..."
 
 msgid "Deleting automation..."
 msgstr "Mažu automatizaci..."
@@ -5667,9 +5633,6 @@ msgstr "Řiďte pracovní prostory, agenty a relace programově ze skriptů, CI 
 msgid "Drop files to attach"
 msgstr "Přetažením přiložte soubory"
 
-msgid "Drop into {label}"
-msgstr "Přetáhněte do {label}"
-
 msgid "Drop to attach"
 msgstr "Přetažením přiložíte"
 
@@ -5862,6 +5825,9 @@ msgstr "Podpora e-mailem"
 msgid "Embedded browser improvements"
 msgstr "Vylepšení vestavěného prohlížeče"
 
+msgid "Embedded IDE"
+msgstr "Integrované IDE"
+
 msgid "Empty"
 msgstr "Prázdné"
 
@@ -5883,6 +5849,9 @@ msgstr "Zapnout přehled položek vyžadujících pozornost"
 
 msgid "Enable auto-merge"
 msgstr "Zapnout auto-merge"
+
+msgid "Enable Embedded IDE in Settings > General > Features."
+msgstr "Povolte integrované IDE v Nastavení > Obecné > Funkce."
 
 msgid "Enable relay access…"
 msgstr "Povolit přístup přes relay…"
@@ -6200,12 +6169,6 @@ msgstr "Neúspěšné kontroly"
 msgid "Failed to accept invitation"
 msgstr "Nepodařilo se přijmout pozvánku"
 
-msgid "Failed to add {failed} files"
-msgstr "Nepodařilo se přidat {failed} souborů"
-
-msgid "Failed to add 1 file"
-msgstr "Nepodařilo se přidat 1 soubor"
-
 msgid "Failed to add agent"
 msgstr "Nepodařilo se přidat agenta"
 
@@ -6277,17 +6240,8 @@ msgstr "Nepodařilo se zkopírovat do schránky"
 msgid "Failed to copy workspace ID: {0}"
 msgstr "Nepodařilo se zkopírovat ID pracovního prostoru: {0}"
 
-msgid "Failed to create {failedDirs} folders"
-msgstr "Nepodařilo se vytvořit {failedDirs} složek"
-
-msgid "Failed to create 1 folder"
-msgstr "Nepodařilo se vytvořit 1 složku"
-
 msgid "Failed to create automation"
 msgstr "Nepodařilo se vytvořit automatizaci"
-
-msgid "Failed to create item"
-msgstr "Nepodařilo se vytvořit položku"
 
 msgid "Failed to create organization"
 msgstr "Nepodařilo se vytvořit organizaci"
@@ -6320,9 +6274,6 @@ msgstr "Nepodařilo se vytvořit pracovní prostor z PR"
 msgid "Failed to delete"
 msgstr "Nepodařilo se smazat"
 
-msgid "Failed to delete {name}"
-msgstr "Nepodařilo se smazat {name}"
-
 #. placeholder {0}: "message" in e ? e.message : String(e.kind)
 msgid "Failed to delete {workspaceName}: {0}"
 msgstr "Nepodařilo se smazat {workspaceName}: {0}"
@@ -6338,9 +6289,6 @@ msgstr "Nepodařilo se smazat organizaci"
 
 msgid "Failed to delete team"
 msgstr "Nepodařilo se smazat tým"
-
-msgid "Failed to discard the new item"
-msgstr "Nepodařilo se zahodit novou položku"
 
 msgid "Failed to enable relay access"
 msgstr "Nepodařilo se povolit přístup přes relay"
@@ -6479,9 +6427,6 @@ msgstr "Nepodařilo se odebrat propojení s PR: {0}"
 msgid "Failed to remove terminal"
 msgstr "Nepodařilo se odebrat terminál"
 
-msgid "Failed to rename"
-msgstr "Nepodařilo se přejmenovat"
-
 msgid "Failed to rename branch"
 msgstr "Nepodařilo se přejmenovat větev"
 
@@ -6490,12 +6435,6 @@ msgstr "Přejmenování relace se nezdařilo"
 
 msgid "Failed to reorder"
 msgstr "Nepodařilo se změnit pořadí"
-
-msgid "Failed to replace {replaceFailed} files"
-msgstr "Nepodařilo se nahradit {replaceFailed} souborů"
-
-msgid "Failed to replace 1 file"
-msgstr "Nepodařilo se nahradit 1 soubor"
 
 msgid "Failed to reset"
 msgstr "Nepodařilo se resetovat"
@@ -8222,12 +8161,6 @@ msgstr "Počkat dál"
 msgid "Keep working"
 msgstr "Pokračovat v práci"
 
-msgid "Kept the new file — it changed after it was created"
-msgstr "Nový soubor byl zachován — po vytvoření se změnil"
-
-msgid "Kept the new folder — it is no longer empty"
-msgstr "Nová složka byla zachována — už není prázdná"
-
 msgid "Key name"
 msgstr "Název klíče"
 
@@ -8669,9 +8602,6 @@ msgstr "Načítám konverzaci..."
 
 msgid "Loading diff…"
 msgstr "Načítám rozdíly…"
-
-msgid "Loading files..."
-msgstr "Načítám soubory..."
 
 msgid "Loading fonts..."
 msgstr "Načítám fonty..."
@@ -9168,6 +9098,9 @@ msgstr "Použité modely"
 msgid "Moderate reasoning effort"
 msgstr "Střední míra uvažování"
 
+msgid "Modified"
+msgstr "Změněno"
+
 msgid "Monitor agents from your phone."
 msgstr "Sledujte agenty z telefonu."
 
@@ -9445,18 +9378,6 @@ msgstr "Nový cloudový pracovní prostor"
 
 msgid "New environment"
 msgstr "Nové prostředí"
-
-msgid "New File"
-msgstr "Nový soubor"
-
-msgid "New File..."
-msgstr "Nový soubor..."
-
-msgid "New Folder"
-msgstr "Nová složka"
-
-msgid "New Folder..."
-msgstr "Nová složka..."
 
 msgid "New group"
 msgstr "Nová skupina"
@@ -10589,14 +10510,17 @@ msgstr "Otevřít soubor"
 msgid "Open File"
 msgstr "Otevřít soubor"
 
-msgid "Open File in New Tab"
-msgstr "Otevřít soubor na nové kartě"
-
 msgid "Open from folder"
 msgstr "Otevřít ze složky"
 
+msgid "Open full IDE panes in worktrees. Turning this off preserves open sessions."
+msgstr "Otevírejte plnohodnotné IDE v pracovních stromech. Vypnutí zachová otevřené relace."
+
 msgid "Open full screen"
 msgstr "Otevřít na celou obrazovku"
+
+msgid "Open IDE"
+msgstr "Otevřít IDE"
 
 msgid "Open importer"
 msgstr "Otevřít import"
@@ -10668,9 +10592,6 @@ msgstr "Otevřít v externím prohlížeči"
 msgid "Open in File pane"
 msgstr "Otevřít v panelu souboru"
 
-msgid "Open in file viewer"
-msgstr "Otevřít v prohlížeči souborů"
-
 msgid "Open in Finder"
 msgstr "Otevřít ve Finderu"
 
@@ -10684,9 +10605,6 @@ msgid "Open in Linear"
 msgstr "Otevřít v Linearu"
 
 msgid "Open in new tab"
-msgstr "Otevřít na nové kartě"
-
-msgid "Open in New Tab"
 msgstr "Otevřít na nové kartě"
 
 msgid "Open in PostHog"
@@ -11570,6 +11488,9 @@ msgstr "Prefix"
 msgid "Preparing"
 msgstr "Připravuji"
 
+msgid "Preparing IDE. First use downloads the editor runtime."
+msgstr "Připravuje se IDE. Při prvním použití se stáhne prostředí editoru."
+
 msgid "Preserve commit history"
 msgstr "Zachová historii commitů"
 
@@ -11617,9 +11538,6 @@ msgstr "Předchozí větev"
 
 msgid "Previous comment"
 msgstr "Předchozí komentář"
-
-msgid "Previous copies"
-msgstr "Předchozí kopie"
 
 msgid "Previous file"
 msgstr "Předchozí soubor"
@@ -12404,8 +12322,8 @@ msgstr "přejmenovat větev"
 msgid "Rename workspace"
 msgstr "Přejmenovat pracovní prostor"
 
-msgid "Rename..."
-msgstr "Přejmenovat..."
+msgid "Renamed"
+msgstr "Přejmenováno"
 
 msgid "Renaming branch to {newName}..."
 msgstr "Přejmenovávám větev na {newName}..."
@@ -12448,23 +12366,11 @@ msgstr "Znovu otevřít vlákno"
 msgid "reorder agents"
 msgstr "změnit pořadí agentů"
 
-msgid "Replace"
-msgstr "Nahradit"
-
-msgid "Replace All"
-msgstr "Nahradit vše"
-
 msgid "Replace custom audio"
 msgstr "Nahradit vlastní zvuk"
 
 msgid "Replace this agent's launch settings with the current bundled configuration."
 msgstr "Nahradit nastavení spouštění tohoto agenta aktuální dodávanou konfigurací."
-
-msgid "Replaced {replaced} files in {where}"
-msgstr "Nahrazeno {replaced} souborů v {where}"
-
-msgid "Replaced 1 file in {where}"
-msgstr "Nahrazen 1 soubor v {where}"
 
 msgid "Reply"
 msgstr "Odpovědět"
@@ -13100,6 +13006,12 @@ msgstr "uložit příkaz agenta"
 msgid "Save to get URL"
 msgstr "Uložením získáte URL"
 
+msgid "Save your files before closing the IDE."
+msgstr "Před zavřením IDE uložte soubory."
+
+msgid "Save your files first. This ends IDE terminals and debugging sessions in this worktree."
+msgstr "Nejprve uložte soubory. Tím se ukončí terminály IDE a ladicí relace v tomto pracovním stromu."
+
 msgid "Saved"
 msgstr "Uloženo"
 
@@ -13432,9 +13344,6 @@ msgstr "Podívejte se, kde se vašich posledních 30 dní umístí ve veřejném
 
 msgid "Select"
 msgstr "Výběr"
-
-msgid "Select a file to open"
-msgstr "Vyberte soubor k otevření"
 
 msgid "Select a project"
 msgstr "Vyberte projekt"
@@ -14610,6 +14519,12 @@ msgstr "Zastavit agenta a podagenty"
 msgid "Stop dictation"
 msgstr "Zastavit diktování"
 
+msgid "Stop IDE"
+msgstr "Zastavit IDE"
+
+msgid "Stop IDE?"
+msgstr "Zastavit IDE?"
+
 #. placeholder {0}: owner.processName
 msgid "Stop local {0}"
 msgstr "Zastavit lokální {0}"
@@ -15282,9 +15197,6 @@ msgstr "Tento odkaz v aplikaci nikam nevede."
 msgid "That machine is no longer available"
 msgstr "Tento počítač už není dostupný"
 
-msgid "That name isn't allowed."
-msgstr "Takový název není povolený."
-
 msgid "The 2026 bet"
 msgstr "Sázka na rok 2026"
 
@@ -15632,9 +15544,6 @@ msgstr "Účet {plugin} už připojil(a) {owner}. Požádejte ho/ji, aby ho nejp
 
 msgid "This {plugin} account is already connected by another Superset organization."
 msgstr "Tento účet {plugin} už je připojený k jiné organizaci Supersetu."
-
-msgid "This action is irreversible."
-msgstr "Tuto akci nelze vrátit zpět."
 
 msgid "This agent no longer exists on the selected device (its agents may have been reset). Runs will fail until you pick a new one."
 msgstr "Tento agent už na vybraném zařízení neexistuje (jeho agenti mohli být resetováni). Běhy budou selhávat, dokud nevyberete jiného."
@@ -16077,9 +15986,6 @@ msgstr "Příliš mnoho požadavků. Zkuste to prosím později."
 msgid "Too many support reports. Try again later."
 msgstr "Příliš mnoho hlášení na podporu. Zkuste to později."
 
-msgid "Too many untitled items here already."
-msgstr "Tady už je nepojmenovaných položek příliš mnoho."
-
 msgid "Too old for this app to talk to. Update the Superset app on that device to reconnect."
 msgstr "Příliš staré pro komunikaci s touto aplikací. Aktualizujte aplikaci Superset na tom zařízení pro opětovné připojení."
 
@@ -16270,6 +16176,9 @@ msgstr "Typografie použitá v editorech V2 a v zobrazení rozdílů."
 msgid "Unable to check for updates. Please check your internet connection."
 msgstr "Aktualizace nelze zkontrolovat. Zkontrolujte prosím připojení k internetu."
 
+msgid "Unable to load branch changes. Check the Superset Branch Changes output."
+msgstr "Změny větve nelze načíst. Zkontrolujte výstup Superset Branch Changes."
+
 msgid "Unable to load diff"
 msgstr "Nelze načíst diff"
 
@@ -16284,6 +16193,9 @@ msgstr "Nelze načíst stav revize"
 
 msgid "Unable to load user info"
 msgstr "Nepodařilo se načíst informace o uživateli"
+
+msgid "Unable to open changes. Refresh the branch changes list and try again."
+msgstr "Změny nelze otevřít. Obnovte seznam změn větve a zkuste to znovu."
 
 msgid "Unable to read file"
 msgstr "Soubor nelze přečíst"
@@ -17294,9 +17206,6 @@ msgstr "Cesta pracovního prostoru zatím není dostupná"
 msgid "Workspace pinning & bulk actions"
 msgstr "Připínání pracovních prostorů a hromadné akce"
 
-msgid "workspace root"
-msgstr "kořen pracovního prostoru"
-
 msgid "Workspace Run"
 msgstr "Spuštění pracovního prostoru"
 
@@ -17308,9 +17217,6 @@ msgstr "Spuštění pracovního prostoru: {workspaceRunState}"
 
 msgid "Workspace settings"
 msgstr "Nastavení pracovního prostoru"
-
-msgid "Workspace worktree not available"
-msgstr "Worktree pracovního prostoru není k dispozici"
 
 msgid "workspaces"
 msgstr "pracovní prostory"

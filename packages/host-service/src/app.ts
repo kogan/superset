@@ -1,3 +1,4 @@
+import { dirname, join } from "node:path";
 import { createNodeWebSocket } from "@hono/node-ws";
 import { trpcServer } from "@hono/trpc-server";
 import { Octokit } from "@octokit/rest";
@@ -9,12 +10,14 @@ const MAX_DISPLAY_BUFFER_BYTES = 32 * 1024 * 1024;
 const MAX_DISPLAY_PENDING = 64;
 
 import { TRPCError } from "@trpc/server";
+import { eq } from "drizzle-orm";
 import type { MiddlewareHandler } from "hono";
 import { Hono } from "hono";
 import { cors } from "hono/cors";
 import { createApiClient } from "./api";
 import { createChatV3Mount, registerChatV3Routes } from "./chat-v3";
 import { createDb, type HostDb } from "./db";
+import { workspaces } from "./db/schema";
 import { EventBus, GitWatcher, registerEventBusRoute } from "./events";
 import { agentIsBusy, PageWatchManager } from "./page-watch/index.ts";
 import { registerForwardMuxRoute } from "./ports/forward-mux-route";
@@ -26,6 +29,10 @@ import { registerBrowserCdpRoute } from "./runtime/browser-bridge/browser-cdp-ro
 import { WorkspaceFilesystemManager } from "./runtime/filesystem";
 import type { GitCredentialProvider } from "./runtime/git";
 import { createGitEnvResolver, createGitFactory } from "./runtime/git";
+import {
+	IdeWorkspaceUnavailableError,
+	WorkspaceIdeManager,
+} from "./runtime/ide/ide";
 import { runProjectBackfill } from "./runtime/project-backfill";
 import { PullRequestRuntimeManager } from "./runtime/pull-requests";
 import {
@@ -146,6 +153,20 @@ export function createApp(options: CreateAppOptions): CreateAppResult {
 	const execGh: ExecGh = options.execGh ?? defaultExecGh;
 
 	const filesystem = new WorkspaceFilesystemManager({ db });
+	const ide = new WorkspaceIdeManager({
+		dataDirectory: join(dirname(config.dbPath), "ide"),
+		resolveWorkspace: (workspaceId) => {
+			const workspace = db.query.workspaces
+				.findFirst({
+					where: eq(workspaces.id, workspaceId),
+				})
+				.sync();
+			if (!workspace || workspace.archivedAt !== null) {
+				throw new IdeWorkspaceUnavailableError();
+			}
+			return workspace.worktreePath;
+		},
+	});
 	// GitWatcher is the single source of truth for `.git/` and worktree fs
 	// activity per workspace. Both EventBus (broadcasts to clients) and the
 	// pull-requests runtime (event-driven branch sync) subscribe to it.
@@ -261,6 +282,7 @@ export function createApp(options: CreateAppOptions): CreateAppResult {
 
 	const runtime = {
 		filesystem,
+		ide,
 		pullRequests: pullRequestRuntime,
 		pageWatch,
 	};
@@ -378,8 +400,10 @@ export function createApp(options: CreateAppOptions): CreateAppResult {
 	registerForwardMuxRoute({
 		app,
 		upgradeWebSocket,
-		getPortsByWorkspace: (workspaceId) =>
-			portManager.getPortsByWorkspace(workspaceId),
+		getPortsByWorkspace: (workspaceId) => [
+			...portManager.getPortsByWorkspace(workspaceId),
+			...ide.getForwardPorts(workspaceId),
+		],
 	});
 	registerWorkspaceTerminalRoute({
 		app,
@@ -443,6 +467,11 @@ export function createApp(options: CreateAppOptions): CreateAppResult {
 			await chatV3.dispose();
 		} catch (err) {
 			console.warn("[host-service] chatV3.dispose failed:", err);
+		}
+		try {
+			await ide.close();
+		} catch (err) {
+			console.warn("[host-service] ide.close failed:", err);
 		}
 		// Retire the host-worker threads (and reap their in-flight git
 		// children) here rather than leaving them to process.exit(): exit joins

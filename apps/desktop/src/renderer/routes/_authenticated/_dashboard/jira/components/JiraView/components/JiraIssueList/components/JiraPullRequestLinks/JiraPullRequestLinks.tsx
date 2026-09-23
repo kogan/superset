@@ -1,18 +1,17 @@
 import { Trans, useLingui } from "@lingui/react/macro";
-import { errorMessage } from "@superset/i18n/errors";
-import { toast } from "@superset/ui/sonner";
 import type { JiraPullRequest } from "lib/trpc/routers/jira/jira-pull-requests";
 import { LuGitPullRequest } from "react-icons/lu";
-import { electronTrpcClient } from "renderer/lib/trpc-client";
 
 export function JiraPullRequestLinks({
 	links,
 	loading,
 	unavailable,
+	onOpenPullRequest,
 }: {
 	links: JiraPullRequest[];
 	loading: boolean;
 	unavailable: boolean;
+	onOpenPullRequest: (url: string) => void;
 }) {
 	const { t } = useLingui();
 	if (links.length === 0)
@@ -39,9 +38,7 @@ export function JiraPullRequestLinks({
 					title={`${link.repository}: ${link.title}`}
 					onClick={(event) => {
 						event.preventDefault();
-						void electronTrpcClient.external.openUrl
-							.mutate(link.url)
-							.catch((error: unknown) => toast.error(errorMessage(error)));
+						onOpenPullRequest(link.url);
 					}}
 					className="inline-flex items-center gap-1 rounded border px-2 py-1 text-xs hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
 				>

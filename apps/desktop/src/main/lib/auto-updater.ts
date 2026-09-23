@@ -10,6 +10,7 @@ import { env } from "main/env.main";
 import { setSkipQuitConfirmation } from "main/index";
 import { appState } from "main/lib/app-state";
 import { isUnpackagedStandaloneRuntime } from "main/lib/auto-update-mode";
+import { allowIdeClose } from "main/lib/ide/close-guard";
 import {
 	isEnvironmentUpdateError,
 	isUpstreamServerError,
@@ -147,6 +148,7 @@ let currentError: string | undefined;
 let currentProgress: AutoUpdateProgress | undefined;
 let isDismissed = false;
 let isInstalling = false;
+let installCloseCheckPending = false;
 
 function emitStatus(
 	status: AutoUpdateStatus,
@@ -190,7 +192,7 @@ export function isUpdateReadyToInstall(): boolean {
 	return isInstalling || currentStatus === AUTO_UPDATE_STATUS.READY;
 }
 
-export function installUpdate(): void {
+export async function installUpdate(): Promise<void> {
 	if (env.NODE_ENV === "development") {
 		// Simulate the real lifecycle so the renderer can be previewed with the
 		// simulate* mutations: installing lingers, then the post-update
@@ -208,7 +210,7 @@ export function installUpdate(): void {
 	// finished staging. Without this guard, repeat clicks fan out into
 	// parallel quitAndInstall calls once Squirrel fires — racing to swap
 	// the binary and leaving the app on the old version.
-	if (isInstalling) {
+	if (isInstalling || installCloseCheckPending) {
 		log.info(
 			"[auto-updater] Install already in progress, ignoring duplicate request",
 		);
@@ -220,9 +222,15 @@ export function installUpdate(): void {
 		);
 		return;
 	}
-	isInstalling = true;
-	setSkipQuitConfirmation();
-	autoUpdater.quitAndInstall(false, true);
+	installCloseCheckPending = true;
+	try {
+		if (!(await allowIdeClose())) return;
+		isInstalling = true;
+		setSkipQuitConfirmation();
+		autoUpdater.quitAndInstall(false, true);
+	} finally {
+		installCloseCheckPending = false;
+	}
 }
 
 export function dismissUpdate(): void {

@@ -1,9 +1,6 @@
-import { useLingui } from "@lingui/react/macro";
 import { eq } from "@tanstack/db";
 import { useLiveQuery } from "@tanstack/react-db";
 import { type ReactNode, useEffect, useRef, useState } from "react";
-import { LuFile } from "react-icons/lu";
-import { useWorkspaceGitStatus } from "renderer/routes/_authenticated/_dashboard/v2-workspace/$workspaceId/providers/WorkspaceGitStatusProvider";
 import { useCollections } from "renderer/routes/_authenticated/providers/CollectionsProvider";
 import {
 	WORKSPACE_SIDEBAR_TABS,
@@ -16,7 +13,6 @@ import {
 	DEFAULT_WORKSPACE_SIDEBAR_TAB,
 	setWorkspaceSidebarTab,
 } from "../../utils/setWorkspaceSidebarTab";
-import { FilesTab } from "./components/FilesTab";
 import { PRActionHeader } from "./components/PRActionHeader";
 import { SidebarHeader } from "./components/SidebarHeader";
 import { type SelectedDiffTarget, useChangesTab } from "./hooks/useChangesTab";
@@ -32,11 +28,6 @@ function isSidebarTabId(tab: string): tab is SidebarTabId {
 	return (WORKSPACE_SIDEBAR_TABS as readonly string[]).includes(tab);
 }
 
-export interface PendingReveal {
-	path: string;
-	isDirectory: boolean;
-}
-
 interface WorkspaceSidebarProps {
 	onSelectFile: (absolutePath: string, openInNewTab?: boolean) => void;
 	onSelectDiffFile?: (
@@ -49,11 +40,8 @@ interface WorkspaceSidebarProps {
 	onOpenComment?: (comment: CommentPaneData) => void;
 	/** Opens the linked PR's summary pane; the Review tab's title falls back to GitHub without it. */
 	onOpenPullRequest?: (prNumber: number) => void;
-	onSearch?: () => void;
-	selectedFilePath?: string;
 	/** The diff pane's current file, highlighted in the Changes tab. */
 	selectedDiffTarget?: SelectedDiffTarget;
-	pendingReveal?: PendingReveal | null;
 	workspaceId: string;
 	/** Run button rendered by the page, hosted in the sidebar's top strip. */
 	runButton: ReactNode;
@@ -66,16 +54,11 @@ export function WorkspaceSidebar({
 	onSelectDiffFile,
 	onOpenComment,
 	onOpenPullRequest,
-	onSearch,
-	selectedFilePath,
 	selectedDiffTarget,
-	pendingReveal,
 	workspaceId,
 	runButton,
 	pagesMenu,
 }: WorkspaceSidebarProps) {
-	const { t } = useLingui();
-	const gitStatus = useWorkspaceGitStatus();
 	const collections = useCollections();
 	const { data: [localState] = [] } = useLiveQuery(
 		(query) =>
@@ -135,23 +118,7 @@ export function WorkspaceSidebar({
 		onOpenInDiff,
 	});
 
-	const filesTab: SidebarTabDefinition = {
-		id: "files",
-		label: t({ message: "Files" }),
-		icon: LuFile,
-		content: (
-			<FilesTab
-				onSelectFile={onSelectFile}
-				selectedFilePath={selectedFilePath}
-				pendingReveal={pendingReveal}
-				workspaceId={workspaceId}
-				gitStatus={gitStatus.data}
-				onSearch={onSearch}
-			/>
-		),
-	};
-
-	const tabs: SidebarTabDefinition[] = [filesTab, changesTab, reviewTab];
+	const tabs: SidebarTabDefinition[] = [changesTab, reviewTab];
 	const activeTabDef = tabs.find((t) => t.id === activeTab) ?? tabs[0];
 
 	const tabCount = tabs.length;

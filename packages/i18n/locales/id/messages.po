@@ -346,10 +346,6 @@ msgstr "{0} berakhiran {1}"
 msgid "{0} failing"
 msgstr "{0} gagal"
 
-#. placeholder {0}: collisions.length
-msgid "{0} files already exist in {where}. Do you want to replace them?"
-msgstr "{0} file sudah ada di {where}. Ingin menggantinya?"
-
 #. placeholder {0}: displayName(variables.name)
 msgid "{0} installed"
 msgstr "{0} terpasang"
@@ -1233,9 +1229,6 @@ msgstr "Jalur lebih cepat dari pemasangan sampai run agen pertama Anda, dengan w
 msgid "A faster, clearer diff experience for reviewing what your agents changed."
 msgstr "Pengalaman diff yang lebih cepat dan jelas untuk mereview apa yang diubah agen Anda."
 
-msgid "A file named '{firstName}' already exists in {where}. Do you want to replace it?"
-msgstr "File bernama '{firstName}' sudah ada di {where}. Ingin menggantinya?"
-
 msgid "A focused burn-down of crashes, hangs, and reconnect failures across the app."
 msgstr "Pembersihan terfokus atas crash, hang, dan kegagalan sambung ulang di seluruh aplikasi."
 
@@ -1542,11 +1535,8 @@ msgstr "Tambahkan ke workspace"
 msgid "Add your own terminal agent to this device."
 msgstr "Tambahkan agen terminal Anda sendiri ke perangkat ini."
 
-msgid "Added {added} files to {where}"
-msgstr "Menambahkan {added} file ke {where}"
-
-msgid "Added 1 file to {where}"
-msgstr "Menambahkan 1 file ke {where}"
+msgid "Added"
+msgstr "Ditambahkan"
 
 msgid "Added only when launching with a prompt — e.g. <0>--</0>, <1>--prompt</1>, <2>-i</2>."
 msgstr "Ditambahkan hanya saat menjalankan dengan prompt — mis. <0>--</0>, <1>--prompt</1>, <2>-i</2>."
@@ -2152,12 +2142,6 @@ msgstr "Arsipkan environment"
 msgid "Archived"
 msgstr "Diarsipkan"
 
-msgid "Are you sure you want to delete this file? This action cannot be undone."
-msgstr "Yakin ingin menghapus file ini? Tindakan ini tidak bisa dibatalkan."
-
-msgid "Are you sure you want to delete this folder? This action cannot be undone."
-msgstr "Yakin ingin menghapus folder ini? Tindakan ini tidak bisa dibatalkan."
-
 msgid "Are you sure you want to leave this organization? You will lose access immediately.{billingNote}"
 msgstr "Yakin ingin keluar dari organisasi ini? Anda akan langsung kehilangan akses.{billingNote}"
 
@@ -2664,6 +2648,9 @@ msgstr "Branch"
 msgid "Branch behavior for new workspaces on this device. Projects can override the prefix individually."
 msgstr "Perilaku branch untuk workspace baru di perangkat ini. Tiap proyek bisa menimpa prefix-nya sendiri."
 
+msgid "Branch Changes"
+msgstr "Perubahan Cabang"
+
 msgid "Branch copied"
 msgstr "Branch disalin"
 
@@ -2736,9 +2723,6 @@ msgstr "Satukan agen-agen Anda."
 
 msgid "Browse and install skills, MCP servers, and agent configs shared by the community."
 msgstr "Jelajahi dan pasang skill, server MCP, dan konfigurasi agen yang dibagikan komunitas."
-
-msgid "Browse files"
-msgstr "Telusuri file"
 
 msgid "Browse for directory"
 msgstr "Telusuri direktori"
@@ -3591,9 +3575,6 @@ msgstr "Ciutkan agen"
 msgid "Collapse all"
 msgstr "Ciutkan semua"
 
-msgid "Collapse All"
-msgstr "Ciutkan Semua"
-
 msgid "Collapse all files"
 msgstr "Ciutkan semua file"
 
@@ -3822,6 +3803,9 @@ msgstr "Atur perintah run workspace"
 
 msgid "Confirm before quitting"
 msgstr "Konfirmasi sebelum keluar"
+
+msgid "Conflicting"
+msgstr "Konflik"
 
 msgid "Connect"
 msgstr "Hubungkan"
@@ -4417,9 +4401,6 @@ msgstr "Tidak dapat membaca preferensi Jira."
 msgid "Could not read selected file"
 msgstr "Tidak bisa membaca file yang dipilih"
 
-msgid "Could not read the dropped files"
-msgstr "Tidak bisa membaca file yang dilepas"
-
 msgid "Could not read the Google account. Please try again."
 msgstr "Tidak bisa membaca akun Google. Silakan coba lagi."
 
@@ -4799,14 +4780,8 @@ msgstr "Dibuat {createdAtLabel} oleh {creatorLabel}"
 msgid "Created {createdDate}"
 msgstr "Dibuat {createdDate}"
 
-msgid "Created {createdDirs} folders in {where}"
-msgstr "Membuat {createdDirs} folder di {where}"
-
 msgid "Created <0>· 7d</0>"
 msgstr "Dibuat <0>· 7h</0>"
-
-msgid "Created 1 folder in {where}"
-msgstr "Membuat 1 folder di {where}"
 
 msgid "Created by"
 msgstr "Dibuat oleh"
@@ -5087,9 +5062,6 @@ msgstr "Hapus “{title}”?"
 msgid "Delete {0}?"
 msgstr "Hapus {0}?"
 
-msgid "Delete {name}?"
-msgstr "Hapus {name}?"
-
 msgid "Delete account"
 msgstr "Hapus akun"
 
@@ -5199,9 +5171,6 @@ msgstr "Menghapus \"{projectName}\""
 msgid "Deleted \"{projectName}\" from {0} of {1} devices — unreachable devices keep their copy"
 msgstr "Menghapus \"{projectName}\" dari {0} dari {1} perangkat — perangkat yang tak terjangkau tetap menyimpan salinannya"
 
-msgid "Deleted {name}"
-msgstr "Menghapus {name}"
-
 msgid "deleted or unavailable — pick another"
 msgstr "dihapus atau tidak tersedia — pilih yang lain"
 
@@ -5223,9 +5192,6 @@ msgstr "Menghapus host ini, aksesnya, dan workspace-nya. File di mesin itu tetap
 #. placeholder {1}: targets.length
 msgid "Deleting {0} of {1}…"
 msgstr "Menghapus {0} dari {1}…"
-
-msgid "Deleting {name}..."
-msgstr "Menghapus {name}..."
 
 msgid "Deleting automation..."
 msgstr "Menghapus otomatisasi..."
@@ -5667,9 +5633,6 @@ msgstr "Kendalikan workspace, agen, dan sesi secara terprogram dari skrip, CI, a
 msgid "Drop files to attach"
 msgstr "Lepas file untuk melampirkan"
 
-msgid "Drop into {label}"
-msgstr "Lepas ke {label}"
-
 msgid "Drop to attach"
 msgstr "Lepas untuk melampirkan"
 
@@ -5862,6 +5825,9 @@ msgstr "Email Dukungan"
 msgid "Embedded browser improvements"
 msgstr "Peningkatan browser tertanam"
 
+msgid "Embedded IDE"
+msgstr "IDE terintegrasi"
+
 msgid "Empty"
 msgstr "Kosong"
 
@@ -5883,6 +5849,9 @@ msgstr "Aktifkan kotak masuk yang perlu perhatian"
 
 msgid "Enable auto-merge"
 msgstr "Aktifkan auto-merge"
+
+msgid "Enable Embedded IDE in Settings > General > Features."
+msgstr "Aktifkan IDE terintegrasi di Pengaturan > Umum > Fitur."
 
 msgid "Enable relay access…"
 msgstr "Aktifkan akses relay…"
@@ -6200,12 +6169,6 @@ msgstr "Pemeriksaan gagal"
 msgid "Failed to accept invitation"
 msgstr "Gagal menerima undangan"
 
-msgid "Failed to add {failed} files"
-msgstr "Gagal menambahkan {failed} file"
-
-msgid "Failed to add 1 file"
-msgstr "Gagal menambahkan 1 file"
-
 msgid "Failed to add agent"
 msgstr "Gagal menambah agen"
 
@@ -6277,17 +6240,8 @@ msgstr "Gagal menyalin ke clipboard"
 msgid "Failed to copy workspace ID: {0}"
 msgstr "Gagal menyalin ID workspace: {0}"
 
-msgid "Failed to create {failedDirs} folders"
-msgstr "Gagal membuat {failedDirs} folder"
-
-msgid "Failed to create 1 folder"
-msgstr "Gagal membuat 1 folder"
-
 msgid "Failed to create automation"
 msgstr "Gagal membuat otomatisasi"
-
-msgid "Failed to create item"
-msgstr "Gagal membuat item"
 
 msgid "Failed to create organization"
 msgstr "Gagal membuat organisasi"
@@ -6320,9 +6274,6 @@ msgstr "Gagal membuat workspace dari PR"
 msgid "Failed to delete"
 msgstr "Gagal menghapus"
 
-msgid "Failed to delete {name}"
-msgstr "Gagal menghapus {name}"
-
 #. placeholder {0}: "message" in e ? e.message : String(e.kind)
 msgid "Failed to delete {workspaceName}: {0}"
 msgstr "Gagal menghapus {workspaceName}: {0}"
@@ -6338,9 +6289,6 @@ msgstr "Gagal menghapus organisasi"
 
 msgid "Failed to delete team"
 msgstr "Gagal menghapus tim"
-
-msgid "Failed to discard the new item"
-msgstr "Gagal membuang item baru"
 
 msgid "Failed to enable relay access"
 msgstr "Gagal mengaktifkan akses relay"
@@ -6479,9 +6427,6 @@ msgstr "Gagal menghapus tautan PR: {0}"
 msgid "Failed to remove terminal"
 msgstr "Gagal menghapus terminal"
 
-msgid "Failed to rename"
-msgstr "Gagal mengganti nama"
-
 msgid "Failed to rename branch"
 msgstr "Gagal mengganti nama branch"
 
@@ -6490,12 +6435,6 @@ msgstr "Gagal mengganti nama sesi"
 
 msgid "Failed to reorder"
 msgstr "Gagal mengurutkan ulang"
-
-msgid "Failed to replace {replaceFailed} files"
-msgstr "Gagal mengganti {replaceFailed} file"
-
-msgid "Failed to replace 1 file"
-msgstr "Gagal mengganti 1 file"
 
 msgid "Failed to reset"
 msgstr "Gagal mereset"
@@ -8222,12 +8161,6 @@ msgstr "Tunggu saja"
 msgid "Keep working"
 msgstr "Lanjut bekerja"
 
-msgid "Kept the new file — it changed after it was created"
-msgstr "File baru dipertahankan — isinya berubah setelah dibuat"
-
-msgid "Kept the new folder — it is no longer empty"
-msgstr "Folder baru dipertahankan — sudah tidak kosong"
-
 msgid "Key name"
 msgstr "Nama kunci"
 
@@ -8669,9 +8602,6 @@ msgstr "Memuat percakapan..."
 
 msgid "Loading diff…"
 msgstr "Memuat diff…"
-
-msgid "Loading files..."
-msgstr "Memuat file..."
 
 msgid "Loading fonts..."
 msgstr "Memuat font..."
@@ -9168,6 +9098,9 @@ msgstr "Model yang dipakai"
 msgid "Moderate reasoning effort"
 msgstr "Upaya penalaran sedang"
 
+msgid "Modified"
+msgstr "Diubah"
+
 msgid "Monitor agents from your phone."
 msgstr "Pantau agen dari ponsel Anda."
 
@@ -9445,18 +9378,6 @@ msgstr "Workspace cloud baru"
 
 msgid "New environment"
 msgstr "Environment baru"
-
-msgid "New File"
-msgstr "File Baru"
-
-msgid "New File..."
-msgstr "File Baru..."
-
-msgid "New Folder"
-msgstr "Folder Baru"
-
-msgid "New Folder..."
-msgstr "Folder Baru..."
 
 msgid "New group"
 msgstr "Grup baru"
@@ -10589,14 +10510,17 @@ msgstr "Buka file"
 msgid "Open File"
 msgstr "Buka File"
 
-msgid "Open File in New Tab"
-msgstr "Buka File di Tab Baru"
-
 msgid "Open from folder"
 msgstr "Buka dari folder"
 
+msgid "Open full IDE panes in worktrees. Turning this off preserves open sessions."
+msgstr "Buka panel IDE lengkap di worktree. Menonaktifkan fitur ini mempertahankan sesi yang terbuka."
+
 msgid "Open full screen"
 msgstr "Buka layar penuh"
+
+msgid "Open IDE"
+msgstr "Buka IDE"
 
 msgid "Open importer"
 msgstr "Buka importer"
@@ -10668,9 +10592,6 @@ msgstr "Buka di browser eksternal"
 msgid "Open in File pane"
 msgstr "Buka di panel File"
 
-msgid "Open in file viewer"
-msgstr "Buka di penampil file"
-
 msgid "Open in Finder"
 msgstr "Buka di Finder"
 
@@ -10685,9 +10606,6 @@ msgstr "Buka di Linear"
 
 msgid "Open in new tab"
 msgstr "Buka di tab baru"
-
-msgid "Open in New Tab"
-msgstr "Buka di Tab Baru"
 
 msgid "Open in PostHog"
 msgstr "Buka di PostHog"
@@ -11570,6 +11488,9 @@ msgstr "Prefix"
 msgid "Preparing"
 msgstr "Menyiapkan"
 
+msgid "Preparing IDE. First use downloads the editor runtime."
+msgstr "Menyiapkan IDE. Penggunaan pertama mengunduh runtime editor."
+
 msgid "Preserve commit history"
 msgstr "Pertahankan riwayat commit"
 
@@ -11617,9 +11538,6 @@ msgstr "Branch sebelumnya"
 
 msgid "Previous comment"
 msgstr "Komentar sebelumnya"
-
-msgid "Previous copies"
-msgstr "Salinan sebelumnya"
 
 msgid "Previous file"
 msgstr "File sebelumnya"
@@ -12404,8 +12322,8 @@ msgstr "mengganti nama branch"
 msgid "Rename workspace"
 msgstr "Ganti nama workspace"
 
-msgid "Rename..."
-msgstr "Ganti nama..."
+msgid "Renamed"
+msgstr "Diganti Nama"
 
 msgid "Renaming branch to {newName}..."
 msgstr "Mengganti nama branch menjadi {newName}..."
@@ -12448,23 +12366,11 @@ msgstr "Buka lagi thread"
 msgid "reorder agents"
 msgstr "mengurutkan ulang agen"
 
-msgid "Replace"
-msgstr "Ganti"
-
-msgid "Replace All"
-msgstr "Ganti Semua"
-
 msgid "Replace custom audio"
 msgstr "Ganti audio kustom"
 
 msgid "Replace this agent's launch settings with the current bundled configuration."
 msgstr "Ganti pengaturan peluncuran agen ini dengan konfigurasi bawaan yang berlaku sekarang."
-
-msgid "Replaced {replaced} files in {where}"
-msgstr "Mengganti {replaced} file di {where}"
-
-msgid "Replaced 1 file in {where}"
-msgstr "Mengganti 1 file di {where}"
 
 msgid "Reply"
 msgstr "Balas"
@@ -13100,6 +13006,12 @@ msgstr "menyimpan perintah agen"
 msgid "Save to get URL"
 msgstr "Simpan untuk dapat URL"
 
+msgid "Save your files before closing the IDE."
+msgstr "Simpan file Anda sebelum menutup IDE."
+
+msgid "Save your files first. This ends IDE terminals and debugging sessions in this worktree."
+msgstr "Simpan file Anda terlebih dahulu. Ini mengakhiri terminal IDE dan sesi debugging di worktree ini."
+
 msgid "Saved"
 msgstr "Tersimpan"
 
@@ -13432,9 +13344,6 @@ msgstr "Lihat posisi 30 hari terakhir Anda di papan peringkat publik. Hanya juml
 
 msgid "Select"
 msgstr "Select"
-
-msgid "Select a file to open"
-msgstr "Pilih file untuk dibuka"
 
 msgid "Select a project"
 msgstr "Pilih sebuah proyek"
@@ -14610,6 +14519,12 @@ msgstr "Hentikan agen dan subagen"
 msgid "Stop dictation"
 msgstr "Hentikan dikte"
 
+msgid "Stop IDE"
+msgstr "Hentikan IDE"
+
+msgid "Stop IDE?"
+msgstr "Hentikan IDE?"
+
 #. placeholder {0}: owner.processName
 msgid "Stop local {0}"
 msgstr "Hentikan {0} lokal"
@@ -15282,9 +15197,6 @@ msgstr "Tautan itu tidak mengarah ke mana pun di aplikasi."
 msgid "That machine is no longer available"
 msgstr "Mesin itu sudah tidak tersedia"
 
-msgid "That name isn't allowed."
-msgstr "Nama itu tidak diizinkan."
-
 msgid "The 2026 bet"
 msgstr "Taruhan 2026"
 
@@ -15632,9 +15544,6 @@ msgstr "Akun {plugin} ini sudah dihubungkan oleh {owner}. Minta dia memutuskanny
 
 msgid "This {plugin} account is already connected by another Superset organization."
 msgstr "Akun {plugin} ini sudah dihubungkan oleh organisasi Superset lain."
-
-msgid "This action is irreversible."
-msgstr "Tindakan ini tidak bisa dibatalkan."
 
 msgid "This agent no longer exists on the selected device (its agents may have been reset). Runs will fail until you pick a new one."
 msgstr "Agen ini sudah tidak ada di perangkat yang dipilih (agennya mungkin telah direset). Run akan gagal sampai Anda memilih yang baru."
@@ -16077,9 +15986,6 @@ msgstr "Terlalu banyak permintaan. Silakan coba lagi nanti."
 msgid "Too many support reports. Try again later."
 msgstr "Terlalu banyak laporan dukungan. Coba lagi nanti."
 
-msgid "Too many untitled items here already."
-msgstr "Sudah terlalu banyak item tanpa judul di sini."
-
 msgid "Too old for this app to talk to. Update the Superset app on that device to reconnect."
 msgstr "Terlalu lama untuk berkomunikasi dengan aplikasi ini. Perbarui aplikasi Superset di perangkat itu untuk tersambung kembali."
 
@@ -16270,6 +16176,9 @@ msgstr "Tipografi yang dipakai di editor dan tampilan diff V2."
 msgid "Unable to check for updates. Please check your internet connection."
 msgstr "Tidak bisa memeriksa pembaruan. Silakan periksa koneksi internet Anda."
 
+msgid "Unable to load branch changes. Check the Superset Branch Changes output."
+msgstr "Tidak dapat memuat perubahan cabang. Periksa keluaran Superset Branch Changes."
+
 msgid "Unable to load diff"
 msgstr "Tidak bisa memuat diff"
 
@@ -16284,6 +16193,9 @@ msgstr "Tidak bisa memuat status review"
 
 msgid "Unable to load user info"
 msgstr "Tidak bisa memuat info pengguna"
+
+msgid "Unable to open changes. Refresh the branch changes list and try again."
+msgstr "Tidak dapat membuka perubahan. Segarkan daftar perubahan cabang dan coba lagi."
 
 msgid "Unable to read file"
 msgstr "Tidak bisa membaca file"
@@ -17294,9 +17206,6 @@ msgstr "Jalur ruang kerja belum tersedia"
 msgid "Workspace pinning & bulk actions"
 msgstr "Penyematan workspace & aksi massal"
 
-msgid "workspace root"
-msgstr "root workspace"
-
 msgid "Workspace Run"
 msgstr "Run Workspace"
 
@@ -17308,9 +17217,6 @@ msgstr "Run workspace: {workspaceRunState}"
 
 msgid "Workspace settings"
 msgstr "Pengaturan workspace"
-
-msgid "Workspace worktree not available"
-msgstr "Worktree workspace tidak tersedia"
 
 msgid "workspaces"
 msgstr "workspace"

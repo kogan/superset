@@ -102,17 +102,10 @@ export function FileRowContextMenuItems({
 				disabled={!onOpenFile || !absolutePath}
 			>
 				<FileText />
-				<Trans>Open File</Trans>
+				<Trans>Open IDE</Trans>
 				{fileTier && (
 					<DropdownMenuShortcut>{modifierLabel(fileTier)}</DropdownMenuShortcut>
 				)}
-			</DropdownMenuItem>
-			<DropdownMenuItem
-				onSelect={() => absolutePath && onOpenFile?.(absolutePath, true)}
-				disabled={!onOpenFile || !absolutePath}
-			>
-				<SquarePlus />
-				<Trans>Open File in New Tab</Trans>
 			</DropdownMenuItem>
 			<DropdownMenuItem
 				onSelect={() => onOpenInEditor?.(file.path)}

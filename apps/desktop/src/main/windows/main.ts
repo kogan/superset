@@ -13,6 +13,7 @@ import { createTrpcContext } from "lib/trpc/context";
 import { createAppRouter } from "lib/trpc/routers";
 import { resolveDevWorkspaceName } from "main/lib/dev-workspace-name";
 import { getIconPath } from "main/lib/dock-icon";
+import { allowIdeClose } from "main/lib/ide/close-guard";
 import { localDb } from "main/lib/local-db";
 import { isExpectedRendererExit } from "main/lib/renderer-exit";
 import { NOTIFICATION_EVENTS, PLATFORM } from "shared/constants";
@@ -592,6 +593,8 @@ export async function createPlatformWindow({
 		console.error(`  Error:`, error);
 	});
 
+	let ideCloseApproved = false;
+	let ideClosePending = false;
 	window.on("close", (event) => {
 		// Outside macOS the last window is the app: quit through its
 		// confirmation instead of leaving a windowless process, and keep the
@@ -599,6 +602,24 @@ export async function createPlatformWindow({
 		if (!appQuitting && !PLATFORM.IS_MAC && getAllWindows().length === 1) {
 			event.preventDefault();
 			app.quit();
+			return;
+		}
+		if (!appQuitting && !ideCloseApproved) {
+			event.preventDefault();
+			if (ideClosePending) return;
+			ideClosePending = true;
+			void allowIdeClose(window)
+				.then((allowed) => {
+					if (!allowed || window.isDestroyed()) return;
+					ideCloseApproved = true;
+					window.close();
+				})
+				.catch((error: unknown) =>
+					log.error("[ide] Window close failed", error),
+				)
+				.finally(() => {
+					ideClosePending = false;
+				});
 			return;
 		}
 		// Save window state first, before any cleanup

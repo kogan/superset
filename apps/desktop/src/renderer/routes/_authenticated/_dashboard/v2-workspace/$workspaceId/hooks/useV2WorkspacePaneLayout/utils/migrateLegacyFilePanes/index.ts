@@ -1,0 +1,1 @@
+export { migrateLegacyFilePanes } from "./migrateLegacyFilePanes";

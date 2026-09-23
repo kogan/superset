@@ -346,10 +346,6 @@ msgstr "{0} kết thúc bằng {1}"
 msgid "{0} failing"
 msgstr "{0} đang lỗi"
 
-#. placeholder {0}: collisions.length
-msgid "{0} files already exist in {where}. Do you want to replace them?"
-msgstr "{0} tệp đã tồn tại trong {where}. Bạn có muốn thay thế chúng không?"
-
 #. placeholder {0}: displayName(variables.name)
 msgid "{0} installed"
 msgstr "Đã cài {0}"
@@ -1233,9 +1229,6 @@ msgstr "Đường đi nhanh hơn từ lúc cài đến lần chạy agent đầu
 msgid "A faster, clearer diff experience for reviewing what your agents changed."
 msgstr "Trải nghiệm xem diff nhanh và rõ hơn để review những gì agent đã thay đổi."
 
-msgid "A file named '{firstName}' already exists in {where}. Do you want to replace it?"
-msgstr "Đã có tệp tên '{firstName}' trong {where}. Bạn có muốn thay thế không?"
-
 msgid "A focused burn-down of crashes, hangs, and reconnect failures across the app."
 msgstr "Đợt tập trung xử lý crash, treo và lỗi kết nối lại trên toàn ứng dụng."
 
@@ -1542,11 +1535,8 @@ msgstr "Thêm vào workspace"
 msgid "Add your own terminal agent to this device."
 msgstr "Thêm agent terminal của riêng bạn vào thiết bị này."
 
-msgid "Added {added} files to {where}"
-msgstr "Đã thêm {added} tệp vào {where}"
-
-msgid "Added 1 file to {where}"
-msgstr "Đã thêm 1 tệp vào {where}"
+msgid "Added"
+msgstr "Đã thêm"
 
 msgid "Added only when launching with a prompt — e.g. <0>--</0>, <1>--prompt</1>, <2>-i</2>."
 msgstr "Chỉ thêm vào khi khởi chạy kèm prompt — ví dụ <0>--</0>, <1>--prompt</1>, <2>-i</2>."
@@ -2152,12 +2142,6 @@ msgstr "Lưu trữ environment"
 msgid "Archived"
 msgstr "Đã lưu trữ"
 
-msgid "Are you sure you want to delete this file? This action cannot be undone."
-msgstr "Bạn chắc chắn muốn xóa tệp này? Không thể hoàn tác."
-
-msgid "Are you sure you want to delete this folder? This action cannot be undone."
-msgstr "Bạn chắc chắn muốn xóa thư mục này? Không thể hoàn tác."
-
 msgid "Are you sure you want to leave this organization? You will lose access immediately.{billingNote}"
 msgstr "Bạn chắc chắn muốn rời tổ chức này? Bạn sẽ mất quyền truy cập ngay lập tức.{billingNote}"
 
@@ -2664,6 +2648,9 @@ msgstr "Nhánh"
 msgid "Branch behavior for new workspaces on this device. Projects can override the prefix individually."
 msgstr "Hành vi nhánh cho workspace mới trên thiết bị này. Từng dự án có thể ghi đè tiền tố riêng."
 
+msgid "Branch Changes"
+msgstr "Thay đổi của nhánh"
+
 msgid "Branch copied"
 msgstr "Đã sao chép tên nhánh"
 
@@ -2736,9 +2723,6 @@ msgstr "Quy tụ các agent của bạn."
 
 msgid "Browse and install skills, MCP servers, and agent configs shared by the community."
 msgstr "Duyệt và cài skill, server MCP và cấu hình agent do cộng đồng chia sẻ."
-
-msgid "Browse files"
-msgstr "Duyệt tệp"
 
 msgid "Browse for directory"
 msgstr "Duyệt thư mục"
@@ -3591,9 +3575,6 @@ msgstr "Thu gọn tác nhân"
 msgid "Collapse all"
 msgstr "Thu gọn tất cả"
 
-msgid "Collapse All"
-msgstr "Thu gọn tất cả"
-
 msgid "Collapse all files"
 msgstr "Thu gọn tất cả tệp"
 
@@ -3822,6 +3803,9 @@ msgstr "Cấu hình lệnh chạy của workspace"
 
 msgid "Confirm before quitting"
 msgstr "Xác nhận trước khi thoát"
+
+msgid "Conflicting"
+msgstr "Xung đột"
 
 msgid "Connect"
 msgstr "Kết nối"
@@ -4417,9 +4401,6 @@ msgstr "Không thể đọc tùy chọn Jira."
 msgid "Could not read selected file"
 msgstr "Không thể đọc tệp đã chọn"
 
-msgid "Could not read the dropped files"
-msgstr "Không thể đọc các tệp đã thả"
-
 msgid "Could not read the Google account. Please try again."
 msgstr "Không đọc được tài khoản Google. Vui lòng thử lại."
 
@@ -4799,14 +4780,8 @@ msgstr "Tạo {createdAtLabel} bởi {creatorLabel}"
 msgid "Created {createdDate}"
 msgstr "Tạo {createdDate}"
 
-msgid "Created {createdDirs} folders in {where}"
-msgstr "Đã tạo {createdDirs} thư mục trong {where}"
-
 msgid "Created <0>· 7d</0>"
 msgstr "Đã tạo <0>· 7 ngày</0>"
-
-msgid "Created 1 folder in {where}"
-msgstr "Đã tạo 1 thư mục trong {where}"
 
 msgid "Created by"
 msgstr "Người tạo"
@@ -5087,9 +5062,6 @@ msgstr "Xóa “{title}”?"
 msgid "Delete {0}?"
 msgstr "Xóa {0}?"
 
-msgid "Delete {name}?"
-msgstr "Xóa {name}?"
-
 msgid "Delete account"
 msgstr "Xóa tài khoản"
 
@@ -5199,9 +5171,6 @@ msgstr "Đã xóa \"{projectName}\""
 msgid "Deleted \"{projectName}\" from {0} of {1} devices — unreachable devices keep their copy"
 msgstr "Đã xóa \"{projectName}\" trên {0}/{1} thiết bị — các thiết bị không kết nối được vẫn giữ bản sao"
 
-msgid "Deleted {name}"
-msgstr "Đã xóa {name}"
-
 msgid "deleted or unavailable — pick another"
 msgstr "đã bị xóa hoặc không khả dụng — hãy chọn cái khác"
 
@@ -5223,9 +5192,6 @@ msgstr "Xóa host này, quyền truy cập và các workspace của nó. Tệp t
 #. placeholder {1}: targets.length
 msgid "Deleting {0} of {1}…"
 msgstr "Đang xóa {0} trong {1}…"
-
-msgid "Deleting {name}..."
-msgstr "Đang xóa {name}..."
 
 msgid "Deleting automation..."
 msgstr "Đang xóa tự động hóa..."
@@ -5667,9 +5633,6 @@ msgstr "Điều khiển workspace, agent và phiên bằng lập trình từ scr
 msgid "Drop files to attach"
 msgstr "Thả tệp để đính kèm"
 
-msgid "Drop into {label}"
-msgstr "Thả vào {label}"
-
 msgid "Drop to attach"
 msgstr "Thả để đính kèm"
 
@@ -5862,6 +5825,9 @@ msgstr "Hỗ trợ qua email"
 msgid "Embedded browser improvements"
 msgstr "Cải tiến trình duyệt tích hợp"
 
+msgid "Embedded IDE"
+msgstr "IDE tích hợp"
+
 msgid "Empty"
 msgstr "Rỗng"
 
@@ -5883,6 +5849,9 @@ msgstr "Bật hộp thư mục cần chú ý"
 
 msgid "Enable auto-merge"
 msgstr "Bật tự động merge"
+
+msgid "Enable Embedded IDE in Settings > General > Features."
+msgstr "Bật IDE tích hợp trong Cài đặt > Chung > Tính năng."
 
 msgid "Enable relay access…"
 msgstr "Bật truy cập relay…"
@@ -6200,12 +6169,6 @@ msgstr "Kiểm tra thất bại"
 msgid "Failed to accept invitation"
 msgstr "Không thể chấp nhận lời mời"
 
-msgid "Failed to add {failed} files"
-msgstr "Không thể thêm {failed} tệp"
-
-msgid "Failed to add 1 file"
-msgstr "Không thể thêm 1 tệp"
-
 msgid "Failed to add agent"
 msgstr "Không thể thêm agent"
 
@@ -6277,17 +6240,8 @@ msgstr "Không thể sao chép vào clipboard"
 msgid "Failed to copy workspace ID: {0}"
 msgstr "Không thể sao chép ID workspace: {0}"
 
-msgid "Failed to create {failedDirs} folders"
-msgstr "Không thể tạo {failedDirs} thư mục"
-
-msgid "Failed to create 1 folder"
-msgstr "Không thể tạo 1 thư mục"
-
 msgid "Failed to create automation"
 msgstr "Không thể tạo tự động hóa"
-
-msgid "Failed to create item"
-msgstr "Không thể tạo mục"
 
 msgid "Failed to create organization"
 msgstr "Không thể tạo tổ chức"
@@ -6320,9 +6274,6 @@ msgstr "Không thể tạo workspace từ PR"
 msgid "Failed to delete"
 msgstr "Không thể xóa"
 
-msgid "Failed to delete {name}"
-msgstr "Không thể xóa {name}"
-
 #. placeholder {0}: "message" in e ? e.message : String(e.kind)
 msgid "Failed to delete {workspaceName}: {0}"
 msgstr "Không thể xóa {workspaceName}: {0}"
@@ -6338,9 +6289,6 @@ msgstr "Không thể xóa tổ chức"
 
 msgid "Failed to delete team"
 msgstr "Không thể xóa nhóm"
-
-msgid "Failed to discard the new item"
-msgstr "Không thể bỏ mục mới"
 
 msgid "Failed to enable relay access"
 msgstr "Không thể bật truy cập relay"
@@ -6479,9 +6427,6 @@ msgstr "Không thể gỡ liên kết PR: {0}"
 msgid "Failed to remove terminal"
 msgstr "Không thể gỡ terminal"
 
-msgid "Failed to rename"
-msgstr "Không thể đổi tên"
-
 msgid "Failed to rename branch"
 msgstr "Không thể đổi tên nhánh"
 
@@ -6490,12 +6435,6 @@ msgstr "Đổi tên phiên thất bại"
 
 msgid "Failed to reorder"
 msgstr "Không thể sắp xếp lại"
-
-msgid "Failed to replace {replaceFailed} files"
-msgstr "Không thể thay thế {replaceFailed} tệp"
-
-msgid "Failed to replace 1 file"
-msgstr "Không thể thay thế 1 tệp"
 
 msgid "Failed to reset"
 msgstr "Không thể đặt lại"
@@ -8222,12 +8161,6 @@ msgstr "Tiếp tục chờ"
 msgid "Keep working"
 msgstr "Tiếp tục làm"
 
-msgid "Kept the new file — it changed after it was created"
-msgstr "Đã giữ tệp mới — nó đã thay đổi sau khi được tạo"
-
-msgid "Kept the new folder — it is no longer empty"
-msgstr "Đã giữ thư mục mới — nó không còn rỗng"
-
 msgid "Key name"
 msgstr "Tên khóa"
 
@@ -8669,9 +8602,6 @@ msgstr "Đang tải cuộc trò chuyện..."
 
 msgid "Loading diff…"
 msgstr "Đang tải diff…"
-
-msgid "Loading files..."
-msgstr "Đang tải tệp..."
 
 msgid "Loading fonts..."
 msgstr "Đang tải font..."
@@ -9168,6 +9098,9 @@ msgstr "Mô hình đã dùng"
 msgid "Moderate reasoning effort"
 msgstr "Mức suy luận vừa phải"
 
+msgid "Modified"
+msgstr "Đã sửa đổi"
+
 msgid "Monitor agents from your phone."
 msgstr "Theo dõi agent ngay trên điện thoại."
 
@@ -9445,18 +9378,6 @@ msgstr "Workspace cloud mới"
 
 msgid "New environment"
 msgstr "Environment mới"
-
-msgid "New File"
-msgstr "Tệp mới"
-
-msgid "New File..."
-msgstr "Tệp mới..."
-
-msgid "New Folder"
-msgstr "Thư mục mới"
-
-msgid "New Folder..."
-msgstr "Thư mục mới..."
 
 msgid "New group"
 msgstr "Nhóm mới"
@@ -10589,14 +10510,17 @@ msgstr "Mở tệp"
 msgid "Open File"
 msgstr "Mở tệp"
 
-msgid "Open File in New Tab"
-msgstr "Mở tệp ở tab mới"
-
 msgid "Open from folder"
 msgstr "Mở từ thư mục"
 
+msgid "Open full IDE panes in worktrees. Turning this off preserves open sessions."
+msgstr "Mở các khung IDE đầy đủ tính năng trong cây làm việc. Tắt tính năng này vẫn giữ các phiên đang mở."
+
 msgid "Open full screen"
 msgstr "Mở toàn màn hình"
+
+msgid "Open IDE"
+msgstr "Mở IDE"
 
 msgid "Open importer"
 msgstr "Mở trình nhập"
@@ -10668,9 +10592,6 @@ msgstr "Mở trong trình duyệt ngoài"
 msgid "Open in File pane"
 msgstr "Mở trong khung Tệp"
 
-msgid "Open in file viewer"
-msgstr "Mở trong trình xem tệp"
-
 msgid "Open in Finder"
 msgstr "Mở trong Finder"
 
@@ -10684,9 +10605,6 @@ msgid "Open in Linear"
 msgstr "Mở trong Linear"
 
 msgid "Open in new tab"
-msgstr "Mở ở tab mới"
-
-msgid "Open in New Tab"
 msgstr "Mở ở tab mới"
 
 msgid "Open in PostHog"
@@ -11570,6 +11488,9 @@ msgstr "Tiền tố"
 msgid "Preparing"
 msgstr "Đang chuẩn bị"
 
+msgid "Preparing IDE. First use downloads the editor runtime."
+msgstr "Đang chuẩn bị IDE. Lần sử dụng đầu tiên sẽ tải môi trường chạy của trình soạn thảo."
+
 msgid "Preserve commit history"
 msgstr "Giữ nguyên lịch sử commit"
 
@@ -11617,9 +11538,6 @@ msgstr "Nhánh trước"
 
 msgid "Previous comment"
 msgstr "Bình luận trước"
-
-msgid "Previous copies"
-msgstr "Các bản sao trước"
 
 msgid "Previous file"
 msgstr "Tệp trước"
@@ -12404,8 +12322,8 @@ msgstr "đổi tên nhánh"
 msgid "Rename workspace"
 msgstr "Đổi tên workspace"
 
-msgid "Rename..."
-msgstr "Đổi tên..."
+msgid "Renamed"
+msgstr "Đã đổi tên"
 
 msgid "Renaming branch to {newName}..."
 msgstr "Đang đổi tên nhánh thành {newName}..."
@@ -12448,23 +12366,11 @@ msgstr "Mở lại luồng"
 msgid "reorder agents"
 msgstr "sắp xếp lại agent"
 
-msgid "Replace"
-msgstr "Thay thế"
-
-msgid "Replace All"
-msgstr "Thay thế tất cả"
-
 msgid "Replace custom audio"
 msgstr "Thay âm thanh riêng"
 
 msgid "Replace this agent's launch settings with the current bundled configuration."
 msgstr "Thay cài đặt khởi chạy của agent này bằng cấu hình đi kèm hiện tại."
-
-msgid "Replaced {replaced} files in {where}"
-msgstr "Đã thay thế {replaced} tệp trong {where}"
-
-msgid "Replaced 1 file in {where}"
-msgstr "Đã thay thế 1 tệp trong {where}"
 
 msgid "Reply"
 msgstr "Trả lời"
@@ -13100,6 +13006,12 @@ msgstr "lưu lệnh của agent"
 msgid "Save to get URL"
 msgstr "Lưu để lấy URL"
 
+msgid "Save your files before closing the IDE."
+msgstr "Lưu các tệp trước khi đóng IDE."
+
+msgid "Save your files first. This ends IDE terminals and debugging sessions in this worktree."
+msgstr "Hãy lưu các tệp trước. Thao tác này kết thúc các terminal IDE và phiên gỡ lỗi trong cây làm việc này."
+
 msgid "Saved"
 msgstr "Đã lưu"
 
@@ -13432,9 +13344,6 @@ msgstr "Xem 30 ngày qua của bạn đứng ở đâu trên bảng xếp hạng
 
 msgid "Select"
 msgstr "Select"
-
-msgid "Select a file to open"
-msgstr "Chọn tệp để mở"
 
 msgid "Select a project"
 msgstr "Chọn một dự án"
@@ -14610,6 +14519,12 @@ msgstr "Dừng tác tử và các tác tử con"
 msgid "Stop dictation"
 msgstr "Dừng đọc chính tả"
 
+msgid "Stop IDE"
+msgstr "Dừng IDE"
+
+msgid "Stop IDE?"
+msgstr "Dừng IDE?"
+
 #. placeholder {0}: owner.processName
 msgid "Stop local {0}"
 msgstr "Dừng {0} cục bộ"
@@ -15282,9 +15197,6 @@ msgstr "Liên kết đó không dẫn tới đâu trong ứng dụng."
 msgid "That machine is no longer available"
 msgstr "Máy đó không còn khả dụng"
 
-msgid "That name isn't allowed."
-msgstr "Tên đó không được phép."
-
 msgid "The 2026 bet"
 msgstr "Canh bạc 2026"
 
@@ -15632,9 +15544,6 @@ msgstr "Tài khoản {plugin} này đã được {owner} kết nối. Hãy đề
 
 msgid "This {plugin} account is already connected by another Superset organization."
 msgstr "Tài khoản {plugin} này đã được một tổ chức Superset khác kết nối."
-
-msgid "This action is irreversible."
-msgstr "Không thể hoàn tác thao tác này."
 
 msgid "This agent no longer exists on the selected device (its agents may have been reset). Runs will fail until you pick a new one."
 msgstr "Agent này không còn tồn tại trên thiết bị đã chọn (agent trên đó có thể đã bị đặt lại). Các lần chạy sẽ thất bại cho đến khi bạn chọn agent khác."
@@ -16077,9 +15986,6 @@ msgstr "Quá nhiều yêu cầu. Vui lòng thử lại sau."
 msgid "Too many support reports. Try again later."
 msgstr "Quá nhiều báo cáo hỗ trợ. Hãy thử lại sau."
 
-msgid "Too many untitled items here already."
-msgstr "Đã có quá nhiều mục chưa đặt tên ở đây."
-
 msgid "Too old for this app to talk to. Update the Superset app on that device to reconnect."
 msgstr "Quá cũ để ứng dụng này giao tiếp. Hãy cập nhật ứng dụng Superset trên thiết bị đó để kết nối lại."
 
@@ -16270,6 +16176,9 @@ msgstr "Kiểu chữ dùng trong trình soạn thảo và khung diff V2."
 msgid "Unable to check for updates. Please check your internet connection."
 msgstr "Không thể kiểm tra cập nhật. Vui lòng kiểm tra kết nối internet."
 
+msgid "Unable to load branch changes. Check the Superset Branch Changes output."
+msgstr "Không thể tải thay đổi của nhánh. Kiểm tra đầu ra Superset Branch Changes."
+
 msgid "Unable to load diff"
 msgstr "Không thể tải diff"
 
@@ -16284,6 +16193,9 @@ msgstr "Không thể tải trạng thái review"
 
 msgid "Unable to load user info"
 msgstr "Không thể tải thông tin người dùng"
+
+msgid "Unable to open changes. Refresh the branch changes list and try again."
+msgstr "Không thể mở thay đổi. Làm mới danh sách thay đổi của nhánh rồi thử lại."
 
 msgid "Unable to read file"
 msgstr "Không thể đọc tệp"
@@ -17294,9 +17206,6 @@ msgstr "Đường dẫn không gian làm việc chưa sẵn sàng"
 msgid "Workspace pinning & bulk actions"
 msgstr "Ghim workspace & hành động hàng loạt"
 
-msgid "workspace root"
-msgstr "thư mục gốc workspace"
-
 msgid "Workspace Run"
 msgstr "Lệnh chạy của workspace"
 
@@ -17308,9 +17217,6 @@ msgstr "Lệnh chạy của workspace: {workspaceRunState}"
 
 msgid "Workspace settings"
 msgstr "Cài đặt workspace"
-
-msgid "Workspace worktree not available"
-msgstr "Worktree của workspace không khả dụng"
 
 msgid "workspaces"
 msgstr "workspace"

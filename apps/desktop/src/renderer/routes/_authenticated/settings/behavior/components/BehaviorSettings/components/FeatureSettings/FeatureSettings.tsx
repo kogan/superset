@@ -58,6 +58,17 @@ export function FeatureSettings({
 			setEnabled: setAgentsEnabled,
 		},
 		{
+			id: SETTING_ITEM_ID.BEHAVIOR_FEATURE_IDE,
+			label: t({ message: "Embedded IDE" }),
+			description: t({
+				message:
+					"Open full IDE panes in worktrees. Turning this off preserves open sessions.",
+			}),
+			enabled: preferences.embeddedIde,
+			setEnabled: (enabled: boolean) =>
+				preferences.setEnabled("embeddedIde", enabled),
+		},
+		{
 			id: SETTING_ITEM_ID.BEHAVIOR_FEATURE_CONTENT_SEARCH,
 			label: t({ message: "Search file contents" }),
 			enabled: preferences.fileContentSearch,
@@ -83,9 +94,16 @@ export function FeatureSettings({
 			</div>
 			{items.map((item) => (
 				<div key={item.id} className="flex items-center justify-between gap-6">
-					<Label htmlFor={item.id} className="text-sm font-medium">
-						<HighlightText text={item.label} query={searchQuery} />
-					</Label>
+					<div className="space-y-1">
+						<Label htmlFor={item.id} className="text-sm font-medium">
+							<HighlightText text={item.label} query={searchQuery} />
+						</Label>
+						{item.description && (
+							<p className="text-xs text-muted-foreground">
+								<HighlightText text={item.description} query={searchQuery} />
+							</p>
+						)}
+					</div>
 					<Switch
 						id={item.id}
 						checked={item.enabled}

@@ -3,7 +3,7 @@ import { Workspace } from "@superset/panes";
 import { FEATURE_FLAGS } from "@superset/shared/constants";
 import { workspaceTrpc } from "@superset/workspace-client";
 import { createFileRoute } from "@tanstack/react-router";
-import { FolderTree } from "lucide-react";
+import { CodeXml } from "lucide-react";
 import { useFeatureFlagEnabled } from "posthog-js/react";
 import { useCallback, useMemo, useState } from "react";
 import { createPortal } from "react-dom";
@@ -26,6 +26,7 @@ import {
 } from "renderer/routes/_authenticated/_dashboard/utils/workspace-navigation";
 import { CommandPalette } from "renderer/screens/main/components/CommandPalette";
 import { ResizablePanel } from "renderer/screens/main/components/ResizablePanel";
+import { useFeaturePreferences } from "renderer/stores/feature-preferences";
 import { getV2NotificationSourcesForTab } from "renderer/stores/v2-notifications";
 import {
 	COLLAPSED_WORKSPACE_SIDEBAR_WIDTH,
@@ -189,25 +190,7 @@ function V2WorkspaceContent() {
 	const showPresetsBar = v2UserPreferences.showPresetsBar;
 	const sidebarOpen = v2UserPreferences.rightSidebarOpen;
 	const { store, isLayoutReady } = useV2WorkspacePaneLayout();
-	const openFiles = useCallback(() => {
-		const state = store.getState();
-		const existing = state.tabs.find((tab) =>
-			Object.values(tab.panes).some((pane) => pane.kind === "file-explorer"),
-		);
-		if (existing) state.setActiveTab(existing.id);
-		else
-			state.addTab({
-				titleOverride: t({ message: "Files" }),
-				panes: [
-					{
-						kind: "file-explorer",
-						pinned: true,
-						data: { kind: "file-explorer" },
-					},
-				],
-			});
-		setRightSidebarOpen(false);
-	}, [store, setRightSidebarOpen, t]);
+	const ideEnabled = useFeaturePreferences((state) => state.embeddedIde);
 	useClearActivePaneAttention({ store });
 	const launcher = useV2TerminalLauncher();
 	const {
@@ -265,24 +248,17 @@ function V2WorkspaceContent() {
 		consumeSearch,
 	});
 
-	const {
-		openFilePane,
-		openFilePaneFromTreeClick,
-		revealPath,
-		selectedFilePath,
-		pendingReveal,
-		recentFiles,
-		openFilePaths,
-	} = useWorkspaceFileNavigation({
-		store,
-		setRightSidebarOpen,
-	});
+	const { openFilePane, revealPath, recentFiles, openFilePaths } =
+		useWorkspaceFileNavigation({
+			store,
+		});
 
 	const {
 		openDiffPane,
 		addTerminalTab,
 		addChatV3Tab,
 		addBrowserTab,
+		openIde,
 		openChangesPane,
 		toggleChangesPane,
 		openCommentPane,
@@ -299,7 +275,7 @@ function V2WorkspaceContent() {
 	const paneRegistry = usePaneRegistry({
 		onOpenDiff: openDiffPane,
 		onOpenComment: openCommentPane,
-		onOpenFile: openFilePaneFromTreeClick,
+		onOpenFile: openFilePane,
 		onRevealPath: revealPath,
 		launcher,
 		store,
@@ -359,16 +335,9 @@ function V2WorkspaceContent() {
 	);
 	const handleQuickOpenSelectFile = useCallback(
 		(filePath: string, location?: { line: number; column: number }) => {
-			const state = store.getState();
-			const activeTab = state.tabs.find((tab) => tab.id === state.activeTabId);
-			const hasExplorer = Object.values(activeTab?.panes ?? {}).some(
-				(pane) => pane.kind === "file-explorer",
-			);
-			if (!hasExplorer) setRightSidebarOpen(true);
-			if (location) openFilePane(filePath, false, location);
-			else openFilePaneFromTreeClick(filePath);
+			openFilePane(filePath, false, location);
 		},
-		[openFilePane, openFilePaneFromTreeClick, setRightSidebarOpen, store],
+		[openFilePane],
 	);
 	const defaultPaneActions = useDefaultPaneActions({ launcher });
 	const onBeforeCloseTab = useTabCloseGuard(store);
@@ -462,7 +431,6 @@ function V2WorkspaceContent() {
 							renderBelowTabBar={() =>
 								showPresetsBar ? (
 									<V2PresetsBar
-										onOpenFiles={openFiles}
 										matchedPresets={matchedPresets}
 										executePreset={executePreset}
 										showPresetsBar={showPresetsBar}
@@ -475,7 +443,7 @@ function V2WorkspaceContent() {
 									onAddTerminal={addTerminalTab}
 									onAddChatV3={isChatV3Enabled ? addChatV3Tab : undefined}
 									onAddBrowser={addBrowserTab}
-									onAddFiles={openFiles}
+									onOpenIde={openIde}
 									onAddChanges={openChangesPane}
 									onAddDesktop={isSandbox ? addDesktopTab : undefined}
 									showPresetsBar={showPresetsBar}
@@ -512,16 +480,18 @@ function V2WorkspaceContent() {
 							}
 							renderTabBarTrailing={() => (
 								<div className="flex items-center gap-1">
-									<button
-										type="button"
-										onClick={openFiles}
-										aria-label={t({ message: "Browse files" })}
-										title={t({ message: "Browse files" })}
-										className="no-drag flex h-7 shrink-0 items-center gap-1.5 rounded-md border border-border/60 bg-muted/30 px-2 text-xs text-muted-foreground outline-none transition-colors hover:bg-accent/60 hover:text-foreground focus-visible:bg-accent/60 focus-visible:text-foreground"
-									>
-										<FolderTree className="size-3.5" aria-hidden="true" />
-										<Trans>Files</Trans>
-									</button>
+									{ideEnabled && (
+										<button
+											type="button"
+											onClick={openIde}
+											aria-label={t({ message: "Open IDE" })}
+											title={t({ message: "Open IDE" })}
+											className="no-drag flex h-7 shrink-0 items-center gap-1.5 rounded-md border border-border/60 bg-muted/30 px-2 text-xs text-muted-foreground outline-none transition-colors hover:bg-accent/60 hover:text-foreground focus-visible:bg-accent/60 focus-visible:text-foreground"
+										>
+											<CodeXml className="size-3.5" aria-hidden="true" />
+											<Trans>IDE</Trans>
+										</button>
+									)}
 									{/* The expanded sidebar's header owns the ports pill; the
 									    tab bar only hosts it for the collapsed rail, where
 									    neither the header cluster nor the TopBar is visible. */}
@@ -554,7 +524,7 @@ function V2WorkspaceContent() {
 							)}
 							renderEmptyState={() => (
 								<WorkspaceEmptyState
-									onOpenFiles={openFiles}
+									onOpenIde={openIde}
 									onOpenBrowser={addBrowserTab}
 									onOpenChanges={openChangesPane}
 									onOpenChatV3={isChatV3Enabled ? addChatV3Tab : undefined}
@@ -585,14 +555,11 @@ function V2WorkspaceContent() {
 								workspaceId={workspaceId}
 								runButton={workspaceRunButton}
 								pagesMenu={pagesMenu}
-								onSelectFile={openFilePaneFromTreeClick}
+								onSelectFile={openFilePane}
 								onSelectDiffFile={openDiffPane}
 								onOpenComment={openCommentPane}
 								onOpenPullRequest={openPullRequestPane}
-								onSearch={handleQuickOpen}
-								selectedFilePath={selectedFilePath}
 								selectedDiffTarget={diffPaneTarget}
-								pendingReveal={pendingReveal}
 							/>
 						</ResizablePanel>,
 						sidebarSlotEl,

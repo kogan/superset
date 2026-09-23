@@ -346,10 +346,6 @@ msgstr "{0} ending in {1}"
 msgid "{0} failing"
 msgstr "{0} failing"
 
-#. placeholder {0}: collisions.length
-msgid "{0} files already exist in {where}. Do you want to replace them?"
-msgstr "{0} files already exist in {where}. Do you want to replace them?"
-
 #. placeholder {0}: displayName(variables.name)
 msgid "{0} installed"
 msgstr "{0} installed"
@@ -1233,9 +1229,6 @@ msgstr "A faster path from install to your first agent run, with a guided first 
 msgid "A faster, clearer diff experience for reviewing what your agents changed."
 msgstr "A faster, clearer diff experience for reviewing what your agents changed."
 
-msgid "A file named '{firstName}' already exists in {where}. Do you want to replace it?"
-msgstr "A file named '{firstName}' already exists in {where}. Do you want to replace it?"
-
 msgid "A focused burn-down of crashes, hangs, and reconnect failures across the app."
 msgstr "A focused burn-down of crashes, hangs, and reconnect failures across the app."
 
@@ -1542,11 +1535,8 @@ msgstr "Add to workspace"
 msgid "Add your own terminal agent to this device."
 msgstr "Add your own terminal agent to this device."
 
-msgid "Added {added} files to {where}"
-msgstr "Added {added} files to {where}"
-
-msgid "Added 1 file to {where}"
-msgstr "Added 1 file to {where}"
+msgid "Added"
+msgstr "Added"
 
 msgid "Added only when launching with a prompt — e.g. <0>--</0>, <1>--prompt</1>, <2>-i</2>."
 msgstr "Added only when launching with a prompt — e.g. <0>--</0>, <1>--prompt</1>, <2>-i</2>."
@@ -2152,12 +2142,6 @@ msgstr "Archive environment"
 msgid "Archived"
 msgstr "Archived"
 
-msgid "Are you sure you want to delete this file? This action cannot be undone."
-msgstr "Are you sure you want to delete this file? This action cannot be undone."
-
-msgid "Are you sure you want to delete this folder? This action cannot be undone."
-msgstr "Are you sure you want to delete this folder? This action cannot be undone."
-
 msgid "Are you sure you want to leave this organization? You will lose access immediately.{billingNote}"
 msgstr "Are you sure you want to leave this organization? You will lose access immediately.{billingNote}"
 
@@ -2664,6 +2648,9 @@ msgstr "Branch"
 msgid "Branch behavior for new workspaces on this device. Projects can override the prefix individually."
 msgstr "Branch behavior for new workspaces on this device. Projects can override the prefix individually."
 
+msgid "Branch Changes"
+msgstr "Branch Changes"
+
 msgid "Branch copied"
 msgstr "Branch copied"
 
@@ -2736,9 +2723,6 @@ msgstr "Bring your agents together."
 
 msgid "Browse and install skills, MCP servers, and agent configs shared by the community."
 msgstr "Browse and install skills, MCP servers, and agent configs shared by the community."
-
-msgid "Browse files"
-msgstr "Browse files"
 
 msgid "Browse for directory"
 msgstr "Browse for directory"
@@ -3591,9 +3575,6 @@ msgstr "Collapse agents"
 msgid "Collapse all"
 msgstr "Collapse all"
 
-msgid "Collapse All"
-msgstr "Collapse All"
-
 msgid "Collapse all files"
 msgstr "Collapse all files"
 
@@ -3822,6 +3803,9 @@ msgstr "Configure workspace run command"
 
 msgid "Confirm before quitting"
 msgstr "Confirm before quitting"
+
+msgid "Conflicting"
+msgstr "Conflicting"
 
 msgid "Connect"
 msgstr "Connect"
@@ -4417,9 +4401,6 @@ msgstr "Could not read Jira preferences."
 msgid "Could not read selected file"
 msgstr "Could not read selected file"
 
-msgid "Could not read the dropped files"
-msgstr "Could not read the dropped files"
-
 msgid "Could not read the Google account. Please try again."
 msgstr "Could not read the Google account. Please try again."
 
@@ -4799,14 +4780,8 @@ msgstr "Created {createdAtLabel} by {creatorLabel}"
 msgid "Created {createdDate}"
 msgstr "Created {createdDate}"
 
-msgid "Created {createdDirs} folders in {where}"
-msgstr "Created {createdDirs} folders in {where}"
-
 msgid "Created <0>· 7d</0>"
 msgstr "Created <0>· 7d</0>"
-
-msgid "Created 1 folder in {where}"
-msgstr "Created 1 folder in {where}"
 
 msgid "Created by"
 msgstr "Created by"
@@ -5087,9 +5062,6 @@ msgstr "Delete “{title}”?"
 msgid "Delete {0}?"
 msgstr "Delete {0}?"
 
-msgid "Delete {name}?"
-msgstr "Delete {name}?"
-
 msgid "Delete account"
 msgstr "Delete account"
 
@@ -5199,9 +5171,6 @@ msgstr "Deleted \"{projectName}\""
 msgid "Deleted \"{projectName}\" from {0} of {1} devices — unreachable devices keep their copy"
 msgstr "Deleted \"{projectName}\" from {0} of {1} devices — unreachable devices keep their copy"
 
-msgid "Deleted {name}"
-msgstr "Deleted {name}"
-
 msgid "deleted or unavailable — pick another"
 msgstr "deleted or unavailable — pick another"
 
@@ -5223,9 +5192,6 @@ msgstr "Deletes this host, its access, and its workspaces. Files on the machine 
 #. placeholder {1}: targets.length
 msgid "Deleting {0} of {1}…"
 msgstr "Deleting {0} of {1}…"
-
-msgid "Deleting {name}..."
-msgstr "Deleting {name}..."
 
 msgid "Deleting automation..."
 msgstr "Deleting automation..."
@@ -5667,9 +5633,6 @@ msgstr "Drive workspaces, agents, and sessions programmatically from scripts, CI
 msgid "Drop files to attach"
 msgstr "Drop files to attach"
 
-msgid "Drop into {label}"
-msgstr "Drop into {label}"
-
 msgid "Drop to attach"
 msgstr "Drop to attach"
 
@@ -5862,6 +5825,9 @@ msgstr "Email Support"
 msgid "Embedded browser improvements"
 msgstr "Embedded browser improvements"
 
+msgid "Embedded IDE"
+msgstr "Embedded IDE"
+
 msgid "Empty"
 msgstr "Empty"
 
@@ -5883,6 +5849,9 @@ msgstr "Enable attention inbox"
 
 msgid "Enable auto-merge"
 msgstr "Enable auto-merge"
+
+msgid "Enable Embedded IDE in Settings > General > Features."
+msgstr "Enable Embedded IDE in Settings > General > Features."
 
 msgid "Enable relay access…"
 msgstr "Enable relay access…"
@@ -6200,12 +6169,6 @@ msgstr "Failed checks"
 msgid "Failed to accept invitation"
 msgstr "Failed to accept invitation"
 
-msgid "Failed to add {failed} files"
-msgstr "Failed to add {failed} files"
-
-msgid "Failed to add 1 file"
-msgstr "Failed to add 1 file"
-
 msgid "Failed to add agent"
 msgstr "Failed to add agent"
 
@@ -6277,17 +6240,8 @@ msgstr "Failed to copy to clipboard"
 msgid "Failed to copy workspace ID: {0}"
 msgstr "Failed to copy workspace ID: {0}"
 
-msgid "Failed to create {failedDirs} folders"
-msgstr "Failed to create {failedDirs} folders"
-
-msgid "Failed to create 1 folder"
-msgstr "Failed to create 1 folder"
-
 msgid "Failed to create automation"
 msgstr "Failed to create automation"
-
-msgid "Failed to create item"
-msgstr "Failed to create item"
 
 msgid "Failed to create organization"
 msgstr "Failed to create organization"
@@ -6320,9 +6274,6 @@ msgstr "Failed to create workspace from PR"
 msgid "Failed to delete"
 msgstr "Failed to delete"
 
-msgid "Failed to delete {name}"
-msgstr "Failed to delete {name}"
-
 #. placeholder {0}: "message" in e ? e.message : String(e.kind)
 msgid "Failed to delete {workspaceName}: {0}"
 msgstr "Failed to delete {workspaceName}: {0}"
@@ -6338,9 +6289,6 @@ msgstr "Failed to delete organization"
 
 msgid "Failed to delete team"
 msgstr "Failed to delete team"
-
-msgid "Failed to discard the new item"
-msgstr "Failed to discard the new item"
 
 msgid "Failed to enable relay access"
 msgstr "Failed to enable relay access"
@@ -6479,9 +6427,6 @@ msgstr "Failed to remove PR link: {0}"
 msgid "Failed to remove terminal"
 msgstr "Failed to remove terminal"
 
-msgid "Failed to rename"
-msgstr "Failed to rename"
-
 msgid "Failed to rename branch"
 msgstr "Failed to rename branch"
 
@@ -6490,12 +6435,6 @@ msgstr "Failed to rename session"
 
 msgid "Failed to reorder"
 msgstr "Failed to reorder"
-
-msgid "Failed to replace {replaceFailed} files"
-msgstr "Failed to replace {replaceFailed} files"
-
-msgid "Failed to replace 1 file"
-msgstr "Failed to replace 1 file"
 
 msgid "Failed to reset"
 msgstr "Failed to reset"
@@ -8222,12 +8161,6 @@ msgstr "Keep waiting"
 msgid "Keep working"
 msgstr "Keep working"
 
-msgid "Kept the new file — it changed after it was created"
-msgstr "Kept the new file — it changed after it was created"
-
-msgid "Kept the new folder — it is no longer empty"
-msgstr "Kept the new folder — it is no longer empty"
-
 msgid "Key name"
 msgstr "Key name"
 
@@ -8669,9 +8602,6 @@ msgstr "Loading conversation..."
 
 msgid "Loading diff…"
 msgstr "Loading diff…"
-
-msgid "Loading files..."
-msgstr "Loading files..."
 
 msgid "Loading fonts..."
 msgstr "Loading fonts..."
@@ -9168,6 +9098,9 @@ msgstr "Models used"
 msgid "Moderate reasoning effort"
 msgstr "Moderate reasoning effort"
 
+msgid "Modified"
+msgstr "Modified"
+
 msgid "Monitor agents from your phone."
 msgstr "Monitor agents from your phone."
 
@@ -9445,18 +9378,6 @@ msgstr "New cloud workspace"
 
 msgid "New environment"
 msgstr "New environment"
-
-msgid "New File"
-msgstr "New File"
-
-msgid "New File..."
-msgstr "New File..."
-
-msgid "New Folder"
-msgstr "New Folder"
-
-msgid "New Folder..."
-msgstr "New Folder..."
 
 msgid "New group"
 msgstr "New group"
@@ -10589,14 +10510,17 @@ msgstr "Open file"
 msgid "Open File"
 msgstr "Open File"
 
-msgid "Open File in New Tab"
-msgstr "Open File in New Tab"
-
 msgid "Open from folder"
 msgstr "Open from folder"
 
+msgid "Open full IDE panes in worktrees. Turning this off preserves open sessions."
+msgstr "Open full IDE panes in worktrees. Turning this off preserves open sessions."
+
 msgid "Open full screen"
 msgstr "Open full screen"
+
+msgid "Open IDE"
+msgstr "Open IDE"
 
 msgid "Open importer"
 msgstr "Open importer"
@@ -10668,9 +10592,6 @@ msgstr "Open in external browser"
 msgid "Open in File pane"
 msgstr "Open in File pane"
 
-msgid "Open in file viewer"
-msgstr "Open in file viewer"
-
 msgid "Open in Finder"
 msgstr "Open in Finder"
 
@@ -10685,9 +10606,6 @@ msgstr "Open in Linear"
 
 msgid "Open in new tab"
 msgstr "Open in new tab"
-
-msgid "Open in New Tab"
-msgstr "Open in New Tab"
 
 msgid "Open in PostHog"
 msgstr "Open in PostHog"
@@ -11570,6 +11488,9 @@ msgstr "Prefix"
 msgid "Preparing"
 msgstr "Preparing"
 
+msgid "Preparing IDE. First use downloads the editor runtime."
+msgstr "Preparing IDE. First use downloads the editor runtime."
+
 msgid "Preserve commit history"
 msgstr "Preserve commit history"
 
@@ -11617,9 +11538,6 @@ msgstr "Previous branch"
 
 msgid "Previous comment"
 msgstr "Previous comment"
-
-msgid "Previous copies"
-msgstr "Previous copies"
 
 msgid "Previous file"
 msgstr "Previous file"
@@ -12404,8 +12322,8 @@ msgstr "rename the branch"
 msgid "Rename workspace"
 msgstr "Rename workspace"
 
-msgid "Rename..."
-msgstr "Rename..."
+msgid "Renamed"
+msgstr "Renamed"
 
 msgid "Renaming branch to {newName}..."
 msgstr "Renaming branch to {newName}..."
@@ -12448,23 +12366,11 @@ msgstr "Reopen thread"
 msgid "reorder agents"
 msgstr "reorder agents"
 
-msgid "Replace"
-msgstr "Replace"
-
-msgid "Replace All"
-msgstr "Replace All"
-
 msgid "Replace custom audio"
 msgstr "Replace custom audio"
 
 msgid "Replace this agent's launch settings with the current bundled configuration."
 msgstr "Replace this agent's launch settings with the current bundled configuration."
-
-msgid "Replaced {replaced} files in {where}"
-msgstr "Replaced {replaced} files in {where}"
-
-msgid "Replaced 1 file in {where}"
-msgstr "Replaced 1 file in {where}"
 
 msgid "Reply"
 msgstr "Reply"
@@ -13100,6 +13006,12 @@ msgstr "save the agent command"
 msgid "Save to get URL"
 msgstr "Save to get URL"
 
+msgid "Save your files before closing the IDE."
+msgstr "Save your files before closing the IDE."
+
+msgid "Save your files first. This ends IDE terminals and debugging sessions in this worktree."
+msgstr "Save your files first. This ends IDE terminals and debugging sessions in this worktree."
+
 msgid "Saved"
 msgstr "Saved"
 
@@ -13432,9 +13344,6 @@ msgstr "See where your last 30 days land on the public leaderboard. Token counts
 
 msgid "Select"
 msgstr "Select"
-
-msgid "Select a file to open"
-msgstr "Select a file to open"
 
 msgid "Select a project"
 msgstr "Select a project"
@@ -14610,6 +14519,12 @@ msgstr "Stop agent and subagents"
 msgid "Stop dictation"
 msgstr "Stop dictation"
 
+msgid "Stop IDE"
+msgstr "Stop IDE"
+
+msgid "Stop IDE?"
+msgstr "Stop IDE?"
+
 #. placeholder {0}: owner.processName
 msgid "Stop local {0}"
 msgstr "Stop local {0}"
@@ -15282,9 +15197,6 @@ msgstr "That link doesn't lead anywhere in the app."
 msgid "That machine is no longer available"
 msgstr "That machine is no longer available"
 
-msgid "That name isn't allowed."
-msgstr "That name isn't allowed."
-
 msgid "The 2026 bet"
 msgstr "The 2026 bet"
 
@@ -15632,9 +15544,6 @@ msgstr "This {plugin} account is already connected by {owner}. Ask them to disco
 
 msgid "This {plugin} account is already connected by another Superset organization."
 msgstr "This {plugin} account is already connected by another Superset organization."
-
-msgid "This action is irreversible."
-msgstr "This action is irreversible."
 
 msgid "This agent no longer exists on the selected device (its agents may have been reset). Runs will fail until you pick a new one."
 msgstr "This agent no longer exists on the selected device (its agents may have been reset). Runs will fail until you pick a new one."
@@ -16077,9 +15986,6 @@ msgstr "Too many requests. Please try again later."
 msgid "Too many support reports. Try again later."
 msgstr "Too many support reports. Try again later."
 
-msgid "Too many untitled items here already."
-msgstr "Too many untitled items here already."
-
 msgid "Too old for this app to talk to. Update the Superset app on that device to reconnect."
 msgstr "Too old for this app to talk to. Update the Superset app on that device to reconnect."
 
@@ -16270,6 +16176,9 @@ msgstr "Typography used in V2 editors and diff views."
 msgid "Unable to check for updates. Please check your internet connection."
 msgstr "Unable to check for updates. Please check your internet connection."
 
+msgid "Unable to load branch changes. Check the Superset Branch Changes output."
+msgstr "Unable to load branch changes. Check the Superset Branch Changes output."
+
 msgid "Unable to load diff"
 msgstr "Unable to load diff"
 
@@ -16284,6 +16193,9 @@ msgstr "Unable to load review status"
 
 msgid "Unable to load user info"
 msgstr "Unable to load user info"
+
+msgid "Unable to open changes. Refresh the branch changes list and try again."
+msgstr "Unable to open changes. Refresh the branch changes list and try again."
 
 msgid "Unable to read file"
 msgstr "Unable to read file"
@@ -17294,9 +17206,6 @@ msgstr "Workspace path is not available yet"
 msgid "Workspace pinning & bulk actions"
 msgstr "Workspace pinning & bulk actions"
 
-msgid "workspace root"
-msgstr "workspace root"
-
 msgid "Workspace Run"
 msgstr "Workspace Run"
 
@@ -17308,9 +17217,6 @@ msgstr "Workspace run: {workspaceRunState}"
 
 msgid "Workspace settings"
 msgstr "Workspace settings"
-
-msgid "Workspace worktree not available"
-msgstr "Workspace worktree not available"
 
 msgid "workspaces"
 msgstr "workspaces"

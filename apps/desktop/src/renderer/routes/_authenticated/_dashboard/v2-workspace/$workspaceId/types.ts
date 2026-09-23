@@ -3,6 +3,11 @@ export interface FileExplorerPaneData {
 	kind: "file-explorer";
 }
 
+export interface IdePaneData {
+	kind: "ide";
+	workspaceId: string;
+}
+
 export interface FilePosition {
 	line: number;
 	column?: number;
@@ -124,6 +129,7 @@ export type ConsumeSearch = (keys: WorkspaceSearchKey[]) => void;
 
 export type PaneViewerData =
 	| FileExplorerPaneData
+	| IdePaneData
 	| FilePaneData
 	| TerminalPaneData
 	| ChatV3PaneData

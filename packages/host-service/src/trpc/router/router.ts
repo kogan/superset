@@ -9,6 +9,7 @@ import { gitRouter } from "./git";
 import { githubRouter } from "./github";
 import { healthRouter } from "./health";
 import { hostRouter } from "./host";
+import { ideRouter } from "./ide/ide";
 import { issuesRouter } from "./issues";
 import { notificationsRouter } from "./notifications";
 import { pageWatchRouter } from "./page-watch";
@@ -34,6 +35,7 @@ export const appRouter = router({
 	browser: browserRouter,
 	health: healthRouter,
 	host: hostRouter,
+	ide: ideRouter,
 	config: configRouter,
 	filesystem: filesystemRouter,
 	git: gitRouter,

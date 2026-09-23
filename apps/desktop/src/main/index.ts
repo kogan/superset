@@ -39,6 +39,7 @@ import { installDevRunnerExit } from "./lib/dev-runner-exit";
 import { setWorkspaceDockIcon } from "./lib/dock-icon";
 import { loadWebviewBrowserExtension } from "./lib/extensions";
 import { getHostServiceCoordinator } from "./lib/host-service-coordinator";
+import { allowIdeClose } from "./lib/ide/close-guard";
 import { resolveAppLocale } from "./lib/language";
 import { localDb } from "./lib/local-db";
 import { requestLocalNetworkAccess } from "./lib/local-network-permission";
@@ -220,10 +221,7 @@ app.on("open-url", async (event, url) => {
 
 let isQuitting = false;
 let skipQuitConfirmation = false;
-// A second quit request while the confirmation is open would open a second
-// dialog on top of the first — the overlay close button on Linux makes that
-// easy to trigger.
-let quitConfirmationOpen = false;
+let quitAttemptPending = false;
 let forceFullCleanup = false;
 
 export function setSkipQuitConfirmation(): void {
@@ -276,18 +274,14 @@ app.on("window-all-closed", () => {
 });
 
 app.on("before-quit", async (event) => {
-	const appName = app.name;
 	if (isQuitting) return;
-	// The local database must finish its asynchronous flush before Electron exits.
-	if (process.env.SUPERESTSET_LOCAL === "1") event.preventDefault();
-
+	event.preventDefault();
+	if (quitAttemptPending) return;
+	quitAttemptPending = true;
+	const appName = app.name;
 	const isDev = process.env.NODE_ENV === "development";
-	if (!skipQuitConfirmation && !isDev && getConfirmOnQuitSetting()) {
-		event.preventDefault();
-		if (quitConfirmationOpen) return;
-		quitConfirmationOpen = true;
-
-		try {
+	try {
+		if (!skipQuitConfirmation && !isDev && getConfirmOnQuitSetting()) {
 			const { response } = await dialog.showMessageBox({
 				type: "question",
 				buttons: [
@@ -297,47 +291,42 @@ app.on("before-quit", async (event) => {
 				defaultId: 0,
 				cancelId: 1,
 				title: i18n._(msg({ message: `Quit ${appName}` })),
-				message: i18n._(
-					msg({
-						message: "Are you sure you want to quit?",
-					}),
-				),
+				message: i18n._(msg({ message: "Are you sure you want to quit?" })),
 			});
-
-			quitConfirmationOpen = false;
-			if (response === 1) {
-				return;
-			}
-		} catch (error) {
-			console.error("[main] Quit confirmation dialog failed:", error);
+			if (response === 1) return;
 		}
-		quitConfirmationOpen = false;
+		if (!(await allowIdeClose())) return;
+		isQuitting = true;
+		portForwardManager.stopAll();
+		markAppQuitting();
+		persistOpenWindows();
+		const isUpdateInstalling = isUpdateReadyToInstall();
+		await runQuitCleanup({
+			isDev,
+			forceFullCleanup,
+			isUpdateInstalling,
+			stopHostServices: () => getHostServiceCoordinator().stopAll(),
+			teardownTerminalHost,
+			disposeTerminalHostClient,
+			shutdownPersistence: shutdownTanstackDbPersistence,
+			disposeTray,
+			forceExit: (code) => {
+				if (process.env.SUPERESTSET_LOCAL === "1")
+					void stopLocalServices().finally(() => app.exit(code));
+				else app.exit(code);
+			},
+		});
+		// Resume Electron's normal quit so the updater receives will-quit.
+		if (isUpdateInstalling) app.quit();
+	} catch (error) {
+		console.error("[main] Quit failed", error);
+	} finally {
+		quitAttemptPending = false;
+		if (!isQuitting) {
+			skipQuitConfirmation = false;
+			forceFullCleanup = false;
+		}
 	}
-
-	isQuitting = true;
-	// Local port-forward listeners hold no state worth draining; drop them so
-	// nothing keeps 127.0.0.1:<port> bound after the app is gone.
-	portForwardManager.stopAll();
-	// Snapshot all open windows (bounds + org) before they close, so relaunch
-	// restores them. markAppQuitting() stops per-window close handlers from
-	// shrinking the set as windows close one-by-one.
-	markAppQuitting();
-	persistOpenWindows();
-	await runQuitCleanup({
-		isDev,
-		forceFullCleanup,
-		isUpdateInstalling: isUpdateReadyToInstall(),
-		stopHostServices: () => getHostServiceCoordinator().stopAll(),
-		teardownTerminalHost,
-		disposeTerminalHostClient,
-		shutdownPersistence: shutdownTanstackDbPersistence,
-		disposeTray,
-		forceExit: (code) => {
-			if (process.env.SUPERESTSET_LOCAL === "1")
-				void stopLocalServices().finally(() => app.exit(code));
-			else app.exit(code);
-		},
-	});
 });
 
 /**

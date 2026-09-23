@@ -100,10 +100,6 @@ export function FilePane({ context, workspaceId }: FilePaneProps) {
 		[context.actions, data],
 	);
 
-	const handleRevealComplete = useCallback(() => {
-		const { revealPosition: _position, ...rest } = data;
-		context.actions.updateData(rest);
-	}, [data, context.actions]);
 	const handleOpenUrl = useCallback(
 		(url: string, action: LinkAction) => {
 			runUrlLinkAction({ store: context.store, isPagesEnabled }, url, action);
@@ -206,8 +202,6 @@ export function FilePane({ context, workspaceId }: FilePaneProps) {
 						workspaceId={workspaceId}
 						paneId={context.pane.id}
 						isActive={context.isActive}
-						revealPosition={data.revealPosition}
-						onRevealComplete={handleRevealComplete}
 						onChangeView={handleChangeView}
 						onForceView={handleForceView}
 						onOpenUrl={handleOpenUrl}

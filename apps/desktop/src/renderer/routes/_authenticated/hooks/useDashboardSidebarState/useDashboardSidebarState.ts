@@ -1,3 +1,5 @@
+import { useLingui } from "@lingui/react/macro";
+import { errorMessage } from "@superset/i18n/errors";
 import type { Pane } from "@superset/panes";
 import {
 	normalizeWorkspaceTag,
@@ -5,12 +7,14 @@ import {
 	SESSIONS_TAG_SCOPE,
 	tagFolderScope,
 } from "@superset/shared/workspace-tags";
+import { toast } from "@superset/ui/sonner";
 import { useCallback } from "react";
 import { useHostProjects } from "renderer/hooks/host-projects/useHostProjects";
 import { getHostServiceClientByUrl } from "renderer/lib/host-service-client";
 import { isMissingProcedureError } from "renderer/lib/isMissingProcedureError";
 import { terminalRuntimeRegistry } from "renderer/lib/terminal/terminal-runtime-registry";
 import { browserRuntimeRegistry } from "renderer/routes/_authenticated/_dashboard/v2-workspace/$workspaceId/hooks/usePaneRegistry/components/BrowserPane/browserRuntimeRegistry";
+import { ideRuntimeRegistry } from "renderer/routes/_authenticated/_dashboard/v2-workspace/$workspaceId/hooks/usePaneRegistry/components/IdePane/ideRuntimeRegistry";
 import {
 	extractPaneIds,
 	type PaneLifecycleRow,
@@ -263,7 +267,7 @@ function getTerminalRuntimeId(pane: Pane<unknown>): string | null {
 }
 
 function getBrowserRuntimeId(pane: Pane<unknown>): string | null {
-	return pane.kind === "browser" ? pane.id : null;
+	return pane.kind === "browser" || pane.kind === "ide" ? pane.id : null;
 }
 
 function cleanupWorkspacePaneRuntimes(rows: PaneLifecycleRow[]): void {
@@ -272,10 +276,17 @@ function cleanupWorkspacePaneRuntimes(rows: PaneLifecycleRow[]): void {
 	}
 	for (const browserId of extractPaneIds(rows, getBrowserRuntimeId)) {
 		browserRuntimeRegistry.destroy(browserId);
+		void ideRuntimeRegistry.close(browserId).catch((error) =>
+			console.warn("Failed to release IDE view", {
+				paneId: browserId,
+				error,
+			}),
+		);
 	}
 }
 
 export function useDashboardSidebarState() {
+	const { t } = useLingui();
 	const collections = useCollections();
 	const { workspaces: hostWorkspaces, cache: hostWorkspacesCache } =
 		useHostWorkspaces();
@@ -1058,7 +1069,24 @@ export function useDashboardSidebarState() {
 	);
 
 	const hideWorkspaceInSidebar = useCallback(
-		(workspaceId: string, projectId: string | null) => {
+		async (workspaceId: string, projectId: string | null) => {
+			const workspace = collections.v2WorkspaceLocalState.get(workspaceId);
+			if (workspace) {
+				const idePaneIds = extractPaneIds([workspace], (pane) =>
+					pane.kind === "ide" ? pane.id : null,
+				);
+				try {
+					if (!(await ideRuntimeRegistry.canCloseAll(idePaneIds))) {
+						toast.error(
+							t({ message: "Save your files before closing the IDE." }),
+						);
+						return;
+					}
+				} catch (error) {
+					toast.error(errorMessage(error));
+					return;
+				}
+			}
 			tombstoneSidebarWorkspaceRecord(
 				collections,
 				workspaceId,
@@ -1066,7 +1094,7 @@ export function useDashboardSidebarState() {
 				cleanupWorkspacePaneRuntimes,
 			);
 		},
-		[collections],
+		[collections, t],
 	);
 
 	const setProjectHidden = useCallback(

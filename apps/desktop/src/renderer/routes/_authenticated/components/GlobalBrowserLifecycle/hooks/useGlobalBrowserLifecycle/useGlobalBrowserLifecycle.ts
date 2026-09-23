@@ -1,7 +1,10 @@
+import { errorMessage } from "@superset/i18n/errors";
 import type { WorkspaceState } from "@superset/panes";
+import { toast } from "@superset/ui/sonner";
 import { useLiveQuery } from "@tanstack/react-db";
 import { useEffect, useRef } from "react";
 import { browserRuntimeRegistry } from "renderer/routes/_authenticated/_dashboard/v2-workspace/$workspaceId/hooks/usePaneRegistry/components/BrowserPane/browserRuntimeRegistry";
+import { ideRuntimeRegistry } from "renderer/routes/_authenticated/_dashboard/v2-workspace/$workspaceId/hooks/usePaneRegistry/components/IdePane/ideRuntimeRegistry";
 import { useCollections } from "renderer/routes/_authenticated/providers/CollectionsProvider";
 import {
 	extractPaneLocations,
@@ -24,7 +27,7 @@ interface PendingBrowserDestruction {
 function getBrowserPaneId(
 	pane: WorkspaceState<unknown>["tabs"][number]["panes"][string],
 ): string | null {
-	return pane.kind === "browser" ? pane.id : null;
+	return pane.kind === "browser" || pane.kind === "ide" ? pane.id : null;
 }
 
 function extractBrowserLocations(
@@ -78,6 +81,9 @@ export function useGlobalBrowserLifecycle() {
 			if (currentWorkspaceIds.has(pending.workspaceId)) {
 				pendingDestruction.current.delete(browserId);
 				browserRuntimeRegistry.destroy(browserId);
+				void ideRuntimeRegistry
+					.close(browserId)
+					.catch((error) => toast.error(errorMessage(error)));
 			}
 		}
 
@@ -105,6 +111,9 @@ export function useGlobalBrowserLifecycle() {
 				if (freshWorkspaceIds.has(workspaceId)) {
 					pendingDestruction.current.delete(browserId);
 					browserRuntimeRegistry.destroy(browserId);
+					void ideRuntimeRegistry
+						.close(browserId)
+						.catch((error) => toast.error(errorMessage(error)));
 					return;
 				}
 

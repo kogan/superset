@@ -346,10 +346,6 @@ msgstr "{0}, оканчивается на {1}"
 msgid "{0} failing"
 msgstr "{0} с ошибкой"
 
-#. placeholder {0}: collisions.length
-msgid "{0} files already exist in {where}. Do you want to replace them?"
-msgstr "В {where} уже есть {0} таких файлов. Заменить их?"
-
 #. placeholder {0}: displayName(variables.name)
 msgid "{0} installed"
 msgstr "{0} установлен"
@@ -1233,9 +1229,6 @@ msgstr "Более короткий путь от установки до пер
 msgid "A faster, clearer diff experience for reviewing what your agents changed."
 msgstr "Быстрее и понятнее смотреть diff, чтобы проверять, что изменили ваши агенты."
 
-msgid "A file named '{firstName}' already exists in {where}. Do you want to replace it?"
-msgstr "В {where} уже есть файл с именем «{firstName}». Заменить его?"
-
 msgid "A focused burn-down of crashes, hangs, and reconnect failures across the app."
 msgstr "Прицельная зачистка падений, зависаний и сбоев переподключения по всему приложению."
 
@@ -1542,11 +1535,8 @@ msgstr "Добавить в рабочую область"
 msgid "Add your own terminal agent to this device."
 msgstr "Добавьте своего терминального агента на это устройство."
 
-msgid "Added {added} files to {where}"
-msgstr "В {where} добавлено файлов: {added}"
-
-msgid "Added 1 file to {where}"
-msgstr "В {where} добавлен 1 файл"
+msgid "Added"
+msgstr "Добавлено"
 
 msgid "Added only when launching with a prompt — e.g. <0>--</0>, <1>--prompt</1>, <2>-i</2>."
 msgstr "Добавляются только при запуске с промптом — например, <0>--</0>, <1>--prompt</1>, <2>-i</2>."
@@ -2152,12 +2142,6 @@ msgstr "Архивировать окружение"
 msgid "Archived"
 msgstr "Архив"
 
-msgid "Are you sure you want to delete this file? This action cannot be undone."
-msgstr "Точно удалить этот файл? Действие нельзя отменить."
-
-msgid "Are you sure you want to delete this folder? This action cannot be undone."
-msgstr "Точно удалить эту папку? Действие нельзя отменить."
-
 msgid "Are you sure you want to leave this organization? You will lose access immediately.{billingNote}"
 msgstr "Точно покинуть эту организацию? Доступ пропадёт немедленно.{billingNote}"
 
@@ -2664,6 +2648,9 @@ msgstr "Ветка"
 msgid "Branch behavior for new workspaces on this device. Projects can override the prefix individually."
 msgstr "Поведение веток для новых рабочих областей на этом устройстве. Проекты могут переопределять префикс по отдельности."
 
+msgid "Branch Changes"
+msgstr "Изменения ветки"
+
 msgid "Branch copied"
 msgstr "Ветка скопирована"
 
@@ -2736,9 +2723,6 @@ msgstr "Соберите своих агентов вместе."
 
 msgid "Browse and install skills, MCP servers, and agent configs shared by the community."
 msgstr "Просматривайте и устанавливайте навыки, серверы MCP и конфигурации агентов, которыми делится сообщество."
-
-msgid "Browse files"
-msgstr "Просмотр файлов"
 
 msgid "Browse for directory"
 msgstr "Выбрать папку"
@@ -3591,9 +3575,6 @@ msgstr "Свернуть агентов"
 msgid "Collapse all"
 msgstr "Свернуть всё"
 
-msgid "Collapse All"
-msgstr "Свернуть всё"
-
 msgid "Collapse all files"
 msgstr "Свернуть все файлы"
 
@@ -3822,6 +3803,9 @@ msgstr "Настроить команду запуска рабочей обла
 
 msgid "Confirm before quitting"
 msgstr "Подтверждать выход"
+
+msgid "Conflicting"
+msgstr "Конфликт"
 
 msgid "Connect"
 msgstr "Подключить"
@@ -4417,9 +4401,6 @@ msgstr "Не удалось прочитать настройки Jira."
 msgid "Could not read selected file"
 msgstr "Не удалось прочитать выбранный файл"
 
-msgid "Could not read the dropped files"
-msgstr "Не удалось прочитать перетащенные файлы"
-
 msgid "Could not read the Google account. Please try again."
 msgstr "Не удалось прочитать аккаунт Google. Попробуйте ещё раз."
 
@@ -4799,14 +4780,8 @@ msgstr "Создана {createdAtLabel}, автор: {creatorLabel}"
 msgid "Created {createdDate}"
 msgstr "Создана {createdDate}"
 
-msgid "Created {createdDirs} folders in {where}"
-msgstr "В {where} создано папок: {createdDirs}"
-
 msgid "Created <0>· 7d</0>"
 msgstr "Создано <0>· 7 дн.</0>"
-
-msgid "Created 1 folder in {where}"
-msgstr "В {where} создана 1 папка"
 
 msgid "Created by"
 msgstr "Кем создано"
@@ -5087,9 +5062,6 @@ msgstr "Удалить «{title}»?"
 msgid "Delete {0}?"
 msgstr "Удалить {0}?"
 
-msgid "Delete {name}?"
-msgstr "Удалить {name}?"
-
 msgid "Delete account"
 msgstr "Удалить аккаунт"
 
@@ -5199,9 +5171,6 @@ msgstr "«{projectName}» удалён"
 msgid "Deleted \"{projectName}\" from {0} of {1} devices — unreachable devices keep their copy"
 msgstr "«{projectName}» удалён с {0} из {1} устройств — недоступные устройства сохранят свою копию"
 
-msgid "Deleted {name}"
-msgstr "{name} удалён"
-
 msgid "deleted or unavailable — pick another"
 msgstr "удалена или недоступна — выберите другую"
 
@@ -5223,9 +5192,6 @@ msgstr "Удаляет этот хост, доступ к нему и его р�
 #. placeholder {1}: targets.length
 msgid "Deleting {0} of {1}…"
 msgstr "Удаление {0} из {1}…"
-
-msgid "Deleting {name}..."
-msgstr "Удаление {name}..."
 
 msgid "Deleting automation..."
 msgstr "Удаление автоматизации..."
@@ -5667,9 +5633,6 @@ msgstr "Управляйте рабочими областями, агентам
 msgid "Drop files to attach"
 msgstr "Перетащите файлы, чтобы прикрепить"
 
-msgid "Drop into {label}"
-msgstr "Перетащите в {label}"
-
 msgid "Drop to attach"
 msgstr "Перетащите, чтобы прикрепить"
 
@@ -5862,6 +5825,9 @@ msgstr "Написать в поддержку"
 msgid "Embedded browser improvements"
 msgstr "Улучшения встроенного браузера"
 
+msgid "Embedded IDE"
+msgstr "Встроенная IDE"
+
 msgid "Empty"
 msgstr "Пусто"
 
@@ -5883,6 +5849,9 @@ msgstr "Включить входящие, требующие внимания"
 
 msgid "Enable auto-merge"
 msgstr "Включить автослияние"
+
+msgid "Enable Embedded IDE in Settings > General > Features."
+msgstr "Включите встроенную IDE в разделе Настройки > Общие > Функции."
 
 msgid "Enable relay access…"
 msgstr "Включить доступ через реле…"
@@ -6200,12 +6169,6 @@ msgstr "Неудачные проверки"
 msgid "Failed to accept invitation"
 msgstr "Не удалось принять приглашение"
 
-msgid "Failed to add {failed} files"
-msgstr "Не удалось добавить файлов: {failed}"
-
-msgid "Failed to add 1 file"
-msgstr "Не удалось добавить 1 файл"
-
 msgid "Failed to add agent"
 msgstr "Не удалось добавить агента"
 
@@ -6277,17 +6240,8 @@ msgstr "Не удалось скопировать в буфер обмена"
 msgid "Failed to copy workspace ID: {0}"
 msgstr "Не удалось скопировать ID рабочей области: {0}"
 
-msgid "Failed to create {failedDirs} folders"
-msgstr "Не удалось создать папок: {failedDirs}"
-
-msgid "Failed to create 1 folder"
-msgstr "Не удалось создать 1 папку"
-
 msgid "Failed to create automation"
 msgstr "Не удалось создать автоматизацию"
-
-msgid "Failed to create item"
-msgstr "Не удалось создать элемент"
 
 msgid "Failed to create organization"
 msgstr "Не удалось создать организацию"
@@ -6320,9 +6274,6 @@ msgstr "Не удалось создать рабочую область из PR
 msgid "Failed to delete"
 msgstr "Не удалось удалить"
 
-msgid "Failed to delete {name}"
-msgstr "Не удалось удалить {name}"
-
 #. placeholder {0}: "message" in e ? e.message : String(e.kind)
 msgid "Failed to delete {workspaceName}: {0}"
 msgstr "Не удалось удалить {workspaceName}: {0}"
@@ -6338,9 +6289,6 @@ msgstr "Не удалось удалить организацию"
 
 msgid "Failed to delete team"
 msgstr "Не удалось удалить команду"
-
-msgid "Failed to discard the new item"
-msgstr "Не удалось отменить новый элемент"
 
 msgid "Failed to enable relay access"
 msgstr "Не удалось включить доступ через реле"
@@ -6479,9 +6427,6 @@ msgstr "Не удалось отвязать PR: {0}"
 msgid "Failed to remove terminal"
 msgstr "Не удалось удалить терминал"
 
-msgid "Failed to rename"
-msgstr "Не удалось переименовать"
-
 msgid "Failed to rename branch"
 msgstr "Не удалось переименовать ветку"
 
@@ -6490,12 +6435,6 @@ msgstr "Ошибка переименования сессии"
 
 msgid "Failed to reorder"
 msgstr "Не удалось изменить порядок"
-
-msgid "Failed to replace {replaceFailed} files"
-msgstr "Не удалось заменить файлов: {replaceFailed}"
-
-msgid "Failed to replace 1 file"
-msgstr "Не удалось заменить 1 файл"
 
 msgid "Failed to reset"
 msgstr "Не удалось сбросить"
@@ -8222,12 +8161,6 @@ msgstr "Продолжить ждать"
 msgid "Keep working"
 msgstr "Продолжить работу"
 
-msgid "Kept the new file — it changed after it was created"
-msgstr "Новый файл сохранён — он изменился после создания"
-
-msgid "Kept the new folder — it is no longer empty"
-msgstr "Новая папка сохранена — она больше не пуста"
-
 msgid "Key name"
 msgstr "Название ключа"
 
@@ -8669,9 +8602,6 @@ msgstr "Загрузка диалога..."
 
 msgid "Loading diff…"
 msgstr "Загрузка diff…"
-
-msgid "Loading files..."
-msgstr "Загрузка файлов..."
 
 msgid "Loading fonts..."
 msgstr "Загрузка шрифтов..."
@@ -9168,6 +9098,9 @@ msgstr "Использованные модели"
 msgid "Moderate reasoning effort"
 msgstr "Умеренные рассуждения"
 
+msgid "Modified"
+msgstr "Изменено"
+
 msgid "Monitor agents from your phone."
 msgstr "Следите за агентами с телефона."
 
@@ -9445,18 +9378,6 @@ msgstr "Новая облачная рабочая область"
 
 msgid "New environment"
 msgstr "Новое окружение"
-
-msgid "New File"
-msgstr "Новый файл"
-
-msgid "New File..."
-msgstr "Новый файл..."
-
-msgid "New Folder"
-msgstr "Новая папка"
-
-msgid "New Folder..."
-msgstr "Новая папка..."
 
 msgid "New group"
 msgstr "Новая группа"
@@ -10589,14 +10510,17 @@ msgstr "Открыть файл"
 msgid "Open File"
 msgstr "Открыть файл"
 
-msgid "Open File in New Tab"
-msgstr "Открыть файл в новой вкладке"
-
 msgid "Open from folder"
 msgstr "Открыть из папки"
 
+msgid "Open full IDE panes in worktrees. Turning this off preserves open sessions."
+msgstr "Открывайте полноценные панели IDE в рабочих деревьях. Отключение сохраняет открытые сеансы."
+
 msgid "Open full screen"
 msgstr "Открыть во весь экран"
+
+msgid "Open IDE"
+msgstr "Открыть IDE"
 
 msgid "Open importer"
 msgstr "Открыть импортёр"
@@ -10668,9 +10592,6 @@ msgstr "Открыть во внешнем браузере"
 msgid "Open in File pane"
 msgstr "Открыть в панели файла"
 
-msgid "Open in file viewer"
-msgstr "Открыть в просмотрщике файлов"
-
 msgid "Open in Finder"
 msgstr "Открыть в Finder"
 
@@ -10684,9 +10605,6 @@ msgid "Open in Linear"
 msgstr "Открыть в Linear"
 
 msgid "Open in new tab"
-msgstr "Открыть в новой вкладке"
-
-msgid "Open in New Tab"
 msgstr "Открыть в новой вкладке"
 
 msgid "Open in PostHog"
@@ -11570,6 +11488,9 @@ msgstr "Префикс"
 msgid "Preparing"
 msgstr "Подготовка"
 
+msgid "Preparing IDE. First use downloads the editor runtime."
+msgstr "Подготовка IDE. При первом использовании загружается среда выполнения редактора."
+
 msgid "Preserve commit history"
 msgstr "Сохранить историю коммитов"
 
@@ -11617,9 +11538,6 @@ msgstr "Предыдущая ветка"
 
 msgid "Previous comment"
 msgstr "Предыдущий комментарий"
-
-msgid "Previous copies"
-msgstr "Предыдущие копии"
 
 msgid "Previous file"
 msgstr "Предыдущий файл"
@@ -12404,8 +12322,8 @@ msgstr "переименовать ветку"
 msgid "Rename workspace"
 msgstr "Переименовать рабочую область"
 
-msgid "Rename..."
-msgstr "Переименовать..."
+msgid "Renamed"
+msgstr "Переименовано"
 
 msgid "Renaming branch to {newName}..."
 msgstr "Переименование ветки в {newName}..."
@@ -12448,23 +12366,11 @@ msgstr "Снова открыть ветку"
 msgid "reorder agents"
 msgstr "изменить порядок агентов"
 
-msgid "Replace"
-msgstr "Заменить"
-
-msgid "Replace All"
-msgstr "Заменить все"
-
 msgid "Replace custom audio"
 msgstr "Заменить свой звук"
 
 msgid "Replace this agent's launch settings with the current bundled configuration."
 msgstr "Заменить настройки запуска этого агента текущей встроенной конфигурацией."
-
-msgid "Replaced {replaced} files in {where}"
-msgstr "В {where} заменено файлов: {replaced}"
-
-msgid "Replaced 1 file in {where}"
-msgstr "В {where} заменён 1 файл"
 
 msgid "Reply"
 msgstr "Ответить"
@@ -13100,6 +13006,12 @@ msgstr "сохранить команду агента"
 msgid "Save to get URL"
 msgstr "Сохраните, чтобы получить URL"
 
+msgid "Save your files before closing the IDE."
+msgstr "Сохраните файлы перед закрытием IDE."
+
+msgid "Save your files first. This ends IDE terminals and debugging sessions in this worktree."
+msgstr "Сначала сохраните файлы. Это завершит работу терминалов IDE и сеансы отладки в этом рабочем дереве."
+
 msgid "Saved"
 msgstr "Сохранено"
 
@@ -13432,9 +13344,6 @@ msgstr "Посмотрите, какое место ваши последние 
 
 msgid "Select"
 msgstr "Селект"
-
-msgid "Select a file to open"
-msgstr "Выберите файл для открытия"
 
 msgid "Select a project"
 msgstr "Выберите проект"
@@ -14610,6 +14519,12 @@ msgstr "Остановить агента и субагентов"
 msgid "Stop dictation"
 msgstr "Остановить диктовку"
 
+msgid "Stop IDE"
+msgstr "Остановить IDE"
+
+msgid "Stop IDE?"
+msgstr "Остановить IDE?"
+
 #. placeholder {0}: owner.processName
 msgid "Stop local {0}"
 msgstr "Остановить локальный {0}"
@@ -15282,9 +15197,6 @@ msgstr "Эта ссылка никуда не ведёт в приложении
 msgid "That machine is no longer available"
 msgstr "Эта машина больше недоступна"
 
-msgid "That name isn't allowed."
-msgstr "Такое имя недопустимо."
-
 msgid "The 2026 bet"
 msgstr "Ставка на 2026"
 
@@ -15632,9 +15544,6 @@ msgstr "Аккаунт {plugin} уже подключил(а) {owner}. Попр�
 
 msgid "This {plugin} account is already connected by another Superset organization."
 msgstr "Этот аккаунт {plugin} уже подключён другой организацией Superset."
-
-msgid "This action is irreversible."
-msgstr "Это действие необратимо."
 
 msgid "This agent no longer exists on the selected device (its agents may have been reset). Runs will fail until you pick a new one."
 msgstr "Этого агента больше нет на выбранном устройстве (возможно, его агенты были сброшены). Запуски будут падать, пока не выберете нового."
@@ -16077,9 +15986,6 @@ msgstr "Слишком много запросов. Попробуйте поз�
 msgid "Too many support reports. Try again later."
 msgstr "Слишком много обращений в поддержку. Попробуйте позже."
 
-msgid "Too many untitled items here already."
-msgstr "Здесь уже слишком много безымянных элементов."
-
 msgid "Too old for this app to talk to. Update the Superset app on that device to reconnect."
 msgstr "Слишком старая версия для этого приложения. Обновите приложение Superset на том устройстве, чтобы переподключиться."
 
@@ -16270,6 +16176,9 @@ msgstr "Типографика в редакторах V2 и просмотре 
 msgid "Unable to check for updates. Please check your internet connection."
 msgstr "Не удалось проверить обновления. Проверьте подключение к интернету."
 
+msgid "Unable to load branch changes. Check the Superset Branch Changes output."
+msgstr "Не удалось загрузить изменения ветки. Проверьте вывод Superset Branch Changes."
+
 msgid "Unable to load diff"
 msgstr "Не удалось загрузить diff"
 
@@ -16284,6 +16193,9 @@ msgstr "Не удалось загрузить статус ревью"
 
 msgid "Unable to load user info"
 msgstr "Не удалось загрузить данные пользователя"
+
+msgid "Unable to open changes. Refresh the branch changes list and try again."
+msgstr "Не удалось открыть изменения. Обновите список изменений ветки и повторите попытку."
 
 msgid "Unable to read file"
 msgstr "Не удалось прочитать файл"
@@ -17294,9 +17206,6 @@ msgstr "Путь рабочего пространства пока недост
 msgid "Workspace pinning & bulk actions"
 msgstr "Закрепление рабочих областей и массовые действия"
 
-msgid "workspace root"
-msgstr "корень рабочей области"
-
 msgid "Workspace Run"
 msgstr "Запуск рабочей области"
 
@@ -17308,9 +17217,6 @@ msgstr "Запуск рабочей области: {workspaceRunState}"
 
 msgid "Workspace settings"
 msgstr "Настройки рабочей области"
-
-msgid "Workspace worktree not available"
-msgstr "Worktree рабочей области недоступен"
 
 msgid "workspaces"
 msgstr "рабочие области"

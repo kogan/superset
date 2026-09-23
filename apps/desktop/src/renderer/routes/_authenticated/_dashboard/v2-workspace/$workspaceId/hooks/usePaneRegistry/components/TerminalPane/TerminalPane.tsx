@@ -1,4 +1,6 @@
+import { msg } from "@lingui/core/macro";
 import { useLingui } from "@lingui/react/macro";
+import { i18n } from "@superset/i18n";
 import type { RendererContext } from "@superset/panes";
 import { toast } from "@superset/ui/sonner";
 import { cn } from "@superset/ui/utils";
@@ -96,9 +98,6 @@ export function TerminalPane({
 	const { hint, showHint } = useLinkClickHint();
 	const openInExternalEditor = useOpenInExternalEditor(workspaceId);
 	const revealInFinder = useRevealInFinder(workspaceId);
-	// The "reveal" intent falls back to Finder for folders outside the
-	// worktree (revealPath's containment check); the hover label needs the
-	// same knowledge so it doesn't promise a sidebar reveal it can't do.
 	const workspaceQuery = workspaceTrpc.workspace.get.useQuery({
 		id: workspaceId,
 	});
@@ -711,8 +710,6 @@ function resolveHoverLabel(
 	}
 	if (hovered.info.isDirectory) {
 		const intent = folderPolicy.getIntent(event);
-		// A folder outside the worktree can't be revealed in the sidebar —
-		// clicking falls back to Finder (revealPath), so say that instead.
 		if (
 			intent === "reveal" &&
 			worktreePath &&
@@ -721,8 +718,13 @@ function resolveHoverLabel(
 		) {
 			return folderIntentLabel("finder");
 		}
-		return folderIntentLabel(intent);
+		return intent === "reveal"
+			? i18n._(msg({ message: "Open IDE" }))
+			: folderIntentLabel(intent);
 	}
 	const action = filePolicy.getAction(event);
-	return action ? actionLabel(action, "file") : null;
+	if (!action) return null;
+	return action === "external"
+		? actionLabel(action, "file")
+		: i18n._(msg({ message: "Open IDE" }));
 }

@@ -7,7 +7,14 @@ import {
 	useSensors,
 } from "@dnd-kit/core";
 import { useLingui } from "@lingui/react/macro";
+import { errorMessage } from "@superset/i18n/errors";
+import { toast } from "@superset/ui/sonner";
+import { useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
+import { useHostProjects } from "renderer/hooks/host-projects/useHostProjects";
+import { getPullRequestTarget } from "renderer/lib/getPullRequestTarget";
+import { electronTrpcClient } from "renderer/lib/trpc-client";
+import { usePullRequestsSplitViewStore } from "renderer/routes/_authenticated/_dashboard/pull-requests/stores/pullRequestsSplitViewStore";
 import { JiraKanbanCard } from "./components/JiraKanbanCard";
 import { JiraKanbanColumn } from "./components/JiraKanbanColumn";
 import type { JiraIssue, StatusColumn } from "./utils/groupIssuesByStatus";
@@ -29,6 +36,23 @@ export function JiraKanban({
 	onMove: (issue: JiraIssue, statuses?: string[]) => void;
 }) {
 	const { t } = useLingui();
+	const navigate = useNavigate();
+	const { projects } = useHostProjects();
+	const openPullRequest = (url: string) => {
+		const target = getPullRequestTarget(url, projects);
+		if (target) {
+			usePullRequestsSplitViewStore.getState().expandDetail();
+			void navigate({
+				to: "/pull-requests/$prNumber",
+				params: { prNumber: target.prNumber },
+				search: { project: target.projectId },
+			});
+			return;
+		}
+		void electronTrpcClient.external.openUrl
+			.mutate(url)
+			.catch((error: unknown) => toast.error(errorMessage(error)));
+	};
 	const [dragged, setDragged] = useState<JiraIssue | null>(null);
 	const issues = columns.flatMap((column) => column.issues);
 	const sensors = useSensors(
@@ -91,6 +115,7 @@ export function JiraKanban({
 								prUnavailable={prUnavailable}
 								moveBusy={moveBusy}
 								onMove={onMove}
+								onOpenPullRequest={openPullRequest}
 							/>
 						))}
 					</JiraKanbanColumn>
