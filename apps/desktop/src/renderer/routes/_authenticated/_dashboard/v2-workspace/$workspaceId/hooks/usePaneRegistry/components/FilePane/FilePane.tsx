@@ -1,10 +1,9 @@
 import type { RendererContext } from "@superset/panes";
-import { FEATURE_FLAGS } from "@superset/shared/constants";
 import { useWorkspaceClient, workspaceTrpc } from "@superset/workspace-client";
-import { useFeatureFlagEnabled } from "posthog-js/react";
 import { useCallback, useEffect } from "react";
 import { FileSaveConflictDialog } from "renderer/components/FileSaveConflictDialog";
 import { MarkdownResourceProvider } from "renderer/components/MarkdownRenderer/providers/MarkdownResourceProvider";
+import { usePagesEnabled } from "renderer/hooks/usePagesEnabled";
 import type { LinkAction } from "renderer/lib/clickPolicy";
 import { getPathDirectory } from "shared/absolute-paths";
 import { useStore } from "zustand";
@@ -27,7 +26,7 @@ interface FilePaneProps {
 }
 
 export function FilePane({ context, workspaceId }: FilePaneProps) {
-	const isPagesEnabled = useFeatureFlagEnabled(FEATURE_FLAGS.PAGES) ?? false;
+	const isPagesEnabled = usePagesEnabled();
 	const data = context.pane.data as FilePaneData;
 	const { filePath } = data;
 	const isActiveTab = useStore(

@@ -44,7 +44,7 @@ fi
 
 # Claude Code and Codex set agent_id only when the hook fires inside a
 # subagent (Task tool / spawn_agent). Subagent activity must not drive
-# terminal-level agent status, notifications, or the session id binding —
+# terminal-level agent status or the session id binding —
 # only the main loop counts. It is forwarded separately so the host can keep
 # a per-terminal roster of live subagents (see notifications.hook).
 # Snake_case is the Claude schema shared by Codex and most forks; camelCase
@@ -187,14 +187,33 @@ dispatch_to_host() {
   return 0
 }
 
-# Subagent events go to the host-service roster only: no v1 fallback, no
+PREVIEW_FIELD=""
+PREVIEW_KEYS="last_assistant_message last-assistant-message message"
+case "$EVENT_TYPE" in
+  StopFailure|stop_failure|Failed|failed) PREVIEW_KEYS="error_details error_message message last_assistant_message last-assistant-message" ;;
+  PermissionRequest|Elicitation|Notification|notification|PreToolUse|preToolUse|pre_tool_use|exec_approval_request|apply_patch_approval_request|request_user_input) PREVIEW_KEYS="question title message last_assistant_message last-assistant-message" ;;
+esac
+case "$EVENT_TYPE" in
+  Stop|stop|Interrupt|AfterAgent|agent-turn-complete|task_complete|post_agent|post_agent_turn|StopFailure|stop_failure|Failed|failed|PermissionRequest|Elicitation|Notification|notification|PreToolUse|preToolUse|pre_tool_use|exec_approval_request|apply_patch_approval_request|request_user_input)
+    for PREVIEW_KEY in $PREVIEW_KEYS; do
+      PREVIEW_VALUE=$(printf '%s' "$INPUT" | grep -oE "\"$PREVIEW_KEY\"[[:space:]]*:[[:space:]]*\"(\\\\.|[^\"\\\\])*\"" | head -n 1 | sed -E 's/^[^:]*:[[:space:]]*//')
+      if [ -n "$PREVIEW_VALUE" ] && [ "$PREVIEW_VALUE" != '""' ]; then
+        PREVIEW_FIELD=",\"preview\":$PREVIEW_VALUE"
+        break
+      fi
+    done
+    ;;
+esac
+
+
+# Subagent events carry their own status and input alerts: no v1 fallback, no
 # session id (a Codex child's session_id is its own thread, never the
 # terminal's resumable session), and the raw event name so the host can tell
 # a start from a stop.
 if [ -n "$SUBAGENT_ID" ]; then
   debug_log "subagent event=$EVENT_TYPE terminalId=$SUPERSET_TERMINAL_ID agentId=$AGENT_ID subagentId=$SUBAGENT_ID subagentType=$SUBAGENT_TYPE"
   [ -n "$SUPERSET_TERMINAL_ID" ] || exit 0
-  dispatch_to_host "{\"json\":{\"terminalId\":\"$(json_escape "$SUPERSET_TERMINAL_ID")\",\"eventType\":\"$(json_escape "$EVENT_TYPE")\",\"subagent\":{\"id\":\"$(json_escape "$SUBAGENT_ID")\",\"type\":\"$(json_escape "$SUBAGENT_TYPE")\",\"sessionId\":\"$(json_escape "$HOOK_SESSION_ID")\",\"transcriptPath\":\"$(json_escape "$TRANSCRIPT_PATH")\",\"agentTranscriptPath\":\"$(json_escape "$AGENT_TRANSCRIPT_PATH")\"}}}"
+  dispatch_to_host "{\"json\":{\"terminalId\":\"$(json_escape "$SUPERSET_TERMINAL_ID")\",\"eventType\":\"$(json_escape "$EVENT_TYPE")\",\"subagent\":{\"id\":\"$(json_escape "$SUBAGENT_ID")\",\"type\":\"$(json_escape "$SUBAGENT_TYPE")\",\"sessionId\":\"$(json_escape "$HOOK_SESSION_ID")\",\"transcriptPath\":\"$(json_escape "$TRANSCRIPT_PATH")\",\"agentTranscriptPath\":\"$(json_escape "$AGENT_TRANSCRIPT_PATH")\"}$PREVIEW_FIELD}}"
   exit 0
 fi
 
@@ -210,23 +229,6 @@ case "$V1_EVENT_TYPE" in
     ;;
 esac
 
-PREVIEW_FIELD=""
-PREVIEW_KEYS="last_assistant_message last-assistant-message message"
-case "$EVENT_TYPE" in
-  StopFailure|stop_failure|Failed|failed) PREVIEW_KEYS="error_details error_message message last_assistant_message last-assistant-message" ;;
-  PermissionRequest|Notification|notification|PreToolUse|preToolUse|pre_tool_use|exec_approval_request|apply_patch_approval_request|request_user_input) PREVIEW_KEYS="message last_assistant_message last-assistant-message" ;;
-esac
-case "$EVENT_TYPE" in
-  Stop|stop|Interrupt|AfterAgent|agent-turn-complete|task_complete|post_agent|post_agent_turn|StopFailure|stop_failure|Failed|failed|PermissionRequest|Notification|notification|PreToolUse|preToolUse|pre_tool_use|exec_approval_request|apply_patch_approval_request|request_user_input)
-    for PREVIEW_KEY in $PREVIEW_KEYS; do
-      PREVIEW_VALUE=$(printf '%s' "$INPUT" | grep -oE "\"$PREVIEW_KEY\"[[:space:]]*:[[:space:]]*\"(\\\\.|[^\"\\\\])*\"" | head -n 1 | sed -E 's/^[^:]*:[[:space:]]*//')
-      if [ -n "$PREVIEW_VALUE" ] && [ "$PREVIEW_VALUE" != '""' ]; then
-        PREVIEW_FIELD=",\"preview\":$PREVIEW_VALUE"
-        break
-      fi
-    done
-    ;;
-esac
 
 ATTRIBUTION_FIELD=""
 [ -n "$SUPERSET_ACCOUNT_ATTRIBUTION_TOKEN" ] && ATTRIBUTION_FIELD=",\"attributionToken\":\"$(json_escape "$SUPERSET_ACCOUNT_ATTRIBUTION_TOKEN")\""

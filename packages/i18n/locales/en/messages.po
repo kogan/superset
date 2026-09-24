@@ -218,6 +218,10 @@ msgstr "{0, plural, one {# workspace} other {# workspaces}}"
 msgid "{0, plural, one {A running agent still uses the previous account — the switch only reaches new launches.} other {# running agents still use the previous account — the switch only reaches new launches.}}"
 msgstr "{0, plural, one {A running agent still uses the previous account — the switch only reaches new launches.} other {# running agents still use the previous account — the switch only reaches new launches.}}"
 
+#. placeholder {0}: Math.max(watchers.length, 1)
+msgid "{0, plural, one {Comments go to this agent} other {Comments go to these agents}}"
+msgstr "{0, plural, one {Comments go to this agent} other {Comments go to these agents}}"
+
 #. placeholder {0}: failures.length
 #. placeholder {0}: nextFailures.length
 msgid "{0, plural, one {Couldn’t delete # workspace} other {Couldn’t delete # workspaces}}"
@@ -1363,6 +1367,9 @@ msgstr "Acquisition, content, conversion, retention, and distribution in one pla
 msgid "Action"
 msgstr "Action"
 
+msgid "Action type"
+msgstr "Action type"
+
 msgid "Actions"
 msgstr "Actions"
 
@@ -1378,10 +1385,6 @@ msgstr "Activation, how much people use it once they are in, and whether they co
 
 msgid "Active"
 msgstr "Active"
-
-#. placeholder {0}: formatDistanceToNowStrict(binding.lastEventAt, { addSuffix: true, })
-msgid "active {0}"
-msgstr "active {0}"
 
 msgid "Active agent sessions."
 msgstr "Active agent sessions."
@@ -1601,9 +1604,6 @@ msgstr "Agent finished"
 msgid "Agent Independence"
 msgstr "Agent Independence"
 
-msgid "Agent input, failed checks on your PRs, and reviews requested from you."
-msgstr "Agent input, failed checks on your PRs, and reviews requested from you."
-
 msgid "Agent launch configuration"
 msgstr "Agent launch configuration"
 
@@ -1654,6 +1654,12 @@ msgstr "Agents load their own preview, drive the UI, and attach screenshot proof
 
 msgid "Agents running at once"
 msgstr "Agents running at once"
+
+msgid "Agents waiting for your input."
+msgstr "Agents waiting for your input."
+
+msgid "Agents watching this page for comments"
+msgstr "Agents watching this page for comments"
 
 msgid "Aggregate agent usage across every developer on the Superset leaderboard — tokens, cost, cache behaviour and which models people actually reach for."
 msgstr "Aggregate agent usage across every developer on the Superset leaderboard — tokens, cost, cache behaviour and which models people actually reach for."
@@ -1909,6 +1915,10 @@ msgstr "Also: @superset/ui/spinner"
 
 msgid "Always know which agent needs you, with notifications that deep-link straight to the blocked agent."
 msgstr "Always know which agent needs you, with notifications that deep-link straight to the blocked agent."
+
+msgctxt "page watcher with no known name"
+msgid "An agent"
+msgstr "An agent"
 
 msgid "An agent completes multi-file changes end to end."
 msgstr "An agent completes multi-file changes end to end."
@@ -2261,9 +2271,6 @@ msgstr "Attempt before checks pass"
 
 msgid "Attention"
 msgstr "Attention"
-
-msgid "Attention filters"
-msgstr "Attention filters"
 
 msgid "Attention inbox"
 msgstr "Attention inbox"
@@ -3172,9 +3179,6 @@ msgstr "Choose agent"
 msgid "Choose an existing repo folder"
 msgstr "Choose an existing repo folder"
 
-msgid "Choose another filter or refresh to check again."
-msgstr "Choose another filter or refresh to check again."
-
 msgid "Choose app"
 msgstr "Choose app"
 
@@ -3198,9 +3202,6 @@ msgstr "Choose what to clear from the in-app browser."
 
 msgid "Choose when Superset pings you."
 msgstr "Choose when Superset pings you."
-
-msgid "Choose which agent watches this page for comments"
-msgstr "Choose which agent watches this page for comments"
 
 msgid "Choose which columns appear and use the arrows to set their left-to-right order."
 msgstr "Choose which columns appear and use the arrows to set their left-to-right order."
@@ -3686,9 +3687,6 @@ msgstr "Comments"
 msgid "Comments could not be loaded"
 msgstr "Comments could not be loaded"
 
-msgid "Comments go to this agent"
-msgstr "Comments go to this agent"
-
 msgid "Commit"
 msgstr "Commit"
 
@@ -3902,9 +3900,6 @@ msgstr "Connected {label}"
 
 msgid "Connected as"
 msgstr "Connected as"
-
-msgid "Connected projects only. Refreshes every minute while this page is open."
-msgstr "Connected projects only. Refreshes every minute while this page is open."
 
 msgid "Connected to"
 msgstr "Connected to"
@@ -4467,9 +4462,6 @@ msgstr "Could not start session"
 msgid "Could not stop it"
 msgstr "Could not stop it"
 
-msgid "Could not stop watching"
-msgstr "Could not stop watching"
-
 msgid "Could not submit prompt. Try again."
 msgstr "Could not submit prompt. Try again."
 
@@ -4488,9 +4480,6 @@ msgstr "Could not update the branch"
 #. js-lingui-explicit-id
 msgid "serverError.plugins.credentialUnverified"
 msgstr "Could not verify the credential: {reason}"
-
-msgid "Could not watch this page"
-msgstr "Could not watch this page"
 
 msgid "Couldn't confirm star status — check that the GitHub CLI (`gh`) is installed, signed in, and that you have a network connection"
 msgstr "Couldn't confirm star status — check that the GitHub CLI (`gh`) is installed, signed in, and that you have a network connection"
@@ -6024,8 +6013,8 @@ msgstr "Everything is scriptable. Spawn workspaces and agents from the CLI, wire
 msgid "Everything we built on top of the primitives — Superset originals, the"
 msgstr "Everything we built on top of the primitives — Superset originals, the"
 
-msgid "Everything you've published is deleted, not hidden. You can rejoin later and it will rebuild from the transcripts still on this machine — only your past ranking is lost."
-msgstr "Everything you've published is deleted, not hidden. You can rejoin later and it will rebuild from the transcripts still on this machine — only your past ranking is lost."
+msgid "Everything you've published is deleted, not hidden. You can rejoin later and it will rebuild from the transcripts still on this machine."
+msgstr "Everything you've published is deleted, not hidden. You can rejoin later and it will rebuild from the transcripts still on this machine."
 
 msgid "Existing repo path"
 msgstr "Existing repo path"
@@ -6162,9 +6151,6 @@ msgstr "Failed"
 
 msgid "Failed <0>· 7d</0>"
 msgstr "Failed <0>· 7d</0>"
-
-msgid "Failed checks"
-msgstr "Failed checks"
 
 msgid "Failed to accept invitation"
 msgstr "Failed to accept invitation"
@@ -6714,6 +6700,9 @@ msgstr "Filter by reviews"
 
 msgid "Filter by state"
 msgstr "Filter by state"
+
+msgid "Filter by workspace: {label}"
+msgstr "Filter by workspace: {label}"
 
 msgid "Filter hosts"
 msgstr "Filter hosts"
@@ -8050,8 +8039,8 @@ msgstr "Italic"
 msgid "Item"
 msgstr "Item"
 
-msgid "Items appear here when an agent needs input, your PR checks fail, or someone requests your review."
-msgstr "Items appear here when an agent needs input, your PR checks fail, or someone requests your review."
+msgid "Items appear here when an agent needs your input."
+msgstr "Items appear here when an agent needs your input."
 
 msgid "Its own branch and copy of the files"
 msgstr "Its own branch and copy of the files"
@@ -8563,9 +8552,6 @@ msgstr "Load earlier messages"
 
 msgid "Load more"
 msgstr "Load more"
-
-msgid "Load more results, reconnect unavailable hosts, or check your GitHub connection, then refresh."
-msgstr "Load more results, reconnect unavailable hosts, or check your GitHub connection, then refresh."
 
 msgid "Loaded issues: {shownCount}"
 msgstr "Loaded issues: {shownCount}"
@@ -9559,9 +9545,6 @@ msgstr "No agents configured on this machine"
 msgid "No agents match \"{q}\"."
 msgstr "No agents match \"{q}\"."
 
-msgid "No agents running here"
-msgstr "No agents running here"
-
 msgid "No agents yet"
 msgstr "No agents yet"
 
@@ -9763,9 +9746,6 @@ msgstr "No linked PR"
 msgid "No live sessions"
 msgstr "No live sessions"
 
-msgid "No loaded items match this filter"
-msgstr "No loaded items match this filter"
-
 msgid "no logins"
 msgstr "no logins"
 
@@ -9949,6 +9929,9 @@ msgstr "No shortcuts found matching \"{searchQuery}\""
 
 msgid "No sites are signed in"
 msgstr "No sites are signed in"
+
+msgid "No skills found"
+msgstr "No skills found"
 
 msgid "No stack frames"
 msgstr "No stack frames"
@@ -10179,9 +10162,6 @@ msgstr "Nothing installed yet."
 msgid "Nothing is running. Remove it and create a new one."
 msgstr "Nothing is running. Remove it and create a new one."
 
-msgid "Nothing is watching this page"
-msgstr "Nothing is watching this page"
-
 msgid "Nothing lives at {pathname}."
 msgstr "Nothing lives at {pathname}."
 
@@ -10276,6 +10256,9 @@ msgstr "Older"
 msgid "on {offScopeHostName} — won't run here"
 msgstr "on {offScopeHostName} — won't run here"
 
+msgid "On a host you can't reach"
+msgstr "On a host you can't reach"
+
 msgid "On click"
 msgstr "On click"
 
@@ -10290,6 +10273,9 @@ msgstr "On this pace"
 
 msgid "On this page"
 msgstr "On this page"
+
+msgid "On worktree deletion"
+msgstr "On worktree deletion"
 
 msgid "On your machine. Repos, worktrees, terminal output, and agent sessions stay local by default; cloud sync covers account and organization metadata only. Superset doesn't proxy any API calls."
 msgstr "On your machine. Repos, worktrees, terminal output, and agent sessions stay local by default; cloud sync covers account and organization metadata only. Superset doesn't proxy any API calls."
@@ -11121,9 +11107,6 @@ msgstr "Part record, part bet. The first two entries are already happening. The 
 msgid "Partial"
 msgstr "Partial"
 
-msgid "Partial results"
-msgstr "Partial results"
-
 msgid "Partner, Transpose Platform"
 msgstr "Partner, Transpose Platform"
 
@@ -11822,9 +11805,6 @@ msgstr "Pull requests"
 msgid "Pull Requests"
 msgstr "Pull Requests"
 
-msgid "Pull requests are turned off. Only agent input is shown."
-msgstr "Pull requests are turned off. Only agent input is shown."
-
 msgid "Purple"
 msgstr "Purple"
 
@@ -12058,6 +12038,9 @@ msgstr "Reconnect Linear"
 
 msgid "Reconnect required"
 msgstr "Reconnect required"
+
+msgid "Reconnect unavailable hosts, then refresh."
+msgstr "Reconnect unavailable hosts, then refresh."
 
 msgid "Reconnecting"
 msgstr "Reconnecting"
@@ -12744,9 +12727,6 @@ msgstr "Review pull requests inside Superset: diff pane, agent-assisted review, 
 msgid "Review requested"
 msgstr "Review requested"
 
-msgid "Review requests"
-msgstr "Review requests"
-
 msgid "Review required"
 msgstr "Review required"
 
@@ -12850,6 +12830,9 @@ msgstr "Run 10+ parallel coding agents on your machine"
 msgid "Run 10+ parallel coding agents on your machine."
 msgstr "Run 10+ parallel coding agents on your machine."
 
+msgid "Run action before deleting a worktree"
+msgstr "Run action before deleting a worktree"
+
 msgid "Run automations on data source and comment activity."
 msgstr "Run automations on data source and comment activity."
 
@@ -12942,6 +12925,9 @@ msgstr "Running terminal processes continue, but older output may no longer be a
 
 msgid "Runs a local command on your machine"
 msgstr "Runs a local command on your machine"
+
+msgid "Runs before deletion using a copy of the latest session for this agent, when available. Skills have up to 10 minutes to finish."
+msgstr "Runs before deletion using a copy of the latest session for this agent, when available. Skills have up to 10 minutes to finish."
 
 msgid "Runs failed earlier this week, but nothing is failing right now"
 msgstr "Runs failed earlier this week, but nothing is failing right now"
@@ -13360,6 +13346,9 @@ msgstr "Select a project to see pull requests."
 msgid "Select a pull request to preview it here."
 msgstr "Select a pull request to preview it here."
 
+msgid "Select a skill"
+msgstr "Select a skill"
+
 msgid "Select a team"
 msgstr "Select a team"
 
@@ -13694,8 +13683,8 @@ msgstr "Share designs and reports. Let your agent handle the feedback."
 msgid "Share page"
 msgstr "Share page"
 
-msgid "Share settings"
-msgstr "Share settings"
+msgid "Share page (public)"
+msgstr "Share page (public)"
 
 msgid "Share this page"
 msgstr "Share this page"
@@ -14532,11 +14521,14 @@ msgstr "Stop local {0}"
 msgid "Stop response"
 msgstr "Stop response"
 
+msgid "Stop subagent"
+msgstr "Stop subagent"
+
 msgid "Stop Superset here to delete from another device."
 msgstr "Stop Superset here to delete from another device."
 
-msgid "Stop watching"
-msgstr "Stop watching"
+msgid "Stop this subagent using the agent's own controls."
+msgstr "Stop this subagent using the agent's own controls."
 
 msgid "Stop workspace run command"
 msgstr "Stop workspace run command"
@@ -14984,9 +14976,6 @@ msgstr "targetHostId does not match the workspace's host"
 msgid "Task"
 msgstr "Task"
 
-msgid "Task {shortId}"
-msgstr "Task {shortId}"
-
 msgid "Task Launch"
 msgstr "Task Launch"
 
@@ -15220,9 +15209,6 @@ msgstr "The associated device isn't reachable right now"
 
 msgid "The best agent will change.<0/>Your workflow shouldn't."
 msgstr "The best agent will change.<0/>Your workflow shouldn't."
-
-msgid "The Codex sign-in"
-msgstr "The Codex sign-in"
 
 msgid "The config repository must be one of the environment's repositories"
 msgstr "The config repository must be one of the environment's repositories"
@@ -15582,6 +15568,9 @@ msgstr "This closes the workspace and its terminals. Files and branches stay on 
 msgid "This closes the workspace and its terminals. The project's files, branches and other workspaces stay as they are."
 msgstr "This closes the workspace and its terminals. The project's files, branches and other workspaces stay as they are."
 
+msgid "This cloud workspace is waking up, which can take up to 30 seconds after it has been idle."
+msgstr "This cloud workspace is waking up, which can take up to 30 seconds after it has been idle."
+
 msgid "This deletes the saved scrollback used for reboot/crash recovery."
 msgstr "This deletes the saved scrollback used for reboot/crash recovery."
 
@@ -15692,10 +15681,6 @@ msgstr "This page is being published from somewhere else — retry"
 
 msgid "This page is in another organization"
 msgstr "This page is in another organization"
-
-#. placeholder {0}: url.replace(/^https?:\/\//, "")
-msgid "This page is live at <0>{0}</0>"
-msgstr "This page is live at <0>{0}</0>"
 
 msgid "This page isn't here"
 msgstr "This page isn't here"
@@ -16322,6 +16307,9 @@ msgstr "Unknown variables: {unknownVariables}"
 
 msgid "Unknown Welder"
 msgstr "Unknown Welder"
+
+msgid "Unknown workspace"
+msgstr "Unknown workspace"
 
 msgid "Unlimited"
 msgstr "Unlimited"

@@ -96,6 +96,8 @@ export function SubagentPane({ data, onOpenParent }: SubagentPaneProps) {
 				>
 					{query.data === null ? (
 						<Trans>Unavailable</Trans>
+					) : query.data?.subagent.needsInput ? (
+						<Trans>Needs input</Trans>
 					) : running ? (
 						<Trans>Running</Trans>
 					) : (

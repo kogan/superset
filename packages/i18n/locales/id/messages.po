@@ -218,6 +218,10 @@ msgstr "{0, plural, one {# workspace} other {# workspace}}"
 msgid "{0, plural, one {A running agent still uses the previous account — the switch only reaches new launches.} other {# running agents still use the previous account — the switch only reaches new launches.}}"
 msgstr "{0, plural, one {# agen yang sedang berjalan masih memakai akun sebelumnya — pergantian hanya berlaku untuk peluncuran baru.} other {# agen yang sedang berjalan masih memakai akun sebelumnya — pergantian hanya berlaku untuk peluncuran baru.}}"
 
+#. placeholder {0}: Math.max(watchers.length, 1)
+msgid "{0, plural, one {Comments go to this agent} other {Comments go to these agents}}"
+msgstr "{0, plural, one {Komentar masuk ke agen ini} other {Komentar masuk ke agen-agen ini}}"
+
 #. placeholder {0}: failures.length
 #. placeholder {0}: nextFailures.length
 msgid "{0, plural, one {Couldn’t delete # workspace} other {Couldn’t delete # workspaces}}"
@@ -1363,6 +1367,9 @@ msgstr "Akuisisi, konten, konversi, retensi, dan distribusi di satu tempat. Graf
 msgid "Action"
 msgstr "Aksi"
 
+msgid "Action type"
+msgstr "Jenis tindakan"
+
 msgid "Actions"
 msgstr "Aksi"
 
@@ -1378,10 +1385,6 @@ msgstr "Aktivasi, seberapa banyak dipakai setelah masuk, dan apakah mereka kemba
 
 msgid "Active"
 msgstr "Aktif"
-
-#. placeholder {0}: formatDistanceToNowStrict(binding.lastEventAt, { addSuffix: true, })
-msgid "active {0}"
-msgstr "aktif {0}"
 
 msgid "Active agent sessions."
 msgstr "Sesi agen yang aktif."
@@ -1601,9 +1604,6 @@ msgstr "Agen selesai"
 msgid "Agent Independence"
 msgstr "Independensi Agen"
 
-msgid "Agent input, failed checks on your PRs, and reviews requested from you."
-msgstr "Permintaan masukan dari agen, pemeriksaan yang gagal pada PR Anda, dan permintaan tinjauan kepada Anda."
-
 msgid "Agent launch configuration"
 msgstr "Konfigurasi peluncuran agen"
 
@@ -1654,6 +1654,12 @@ msgstr "Agen memuat pratinjaunya sendiri, mengendalikan UI, dan melampirkan bukt
 
 msgid "Agents running at once"
 msgstr "Agen yang berjalan sekaligus"
+
+msgid "Agents waiting for your input."
+msgstr "Agen yang menunggu masukan Anda."
+
+msgid "Agents watching this page for comments"
+msgstr "Agen yang memantau halaman ini untuk komentar"
 
 msgid "Aggregate agent usage across every developer on the Superset leaderboard — tokens, cost, cache behaviour and which models people actually reach for."
 msgstr "Agregat penggunaan agen dari seluruh developer di papan peringkat Superset — token, biaya, perilaku cache, dan model yang benar-benar dipakai orang."
@@ -1909,6 +1915,10 @@ msgstr "Juga: @superset/ui/spinner"
 
 msgid "Always know which agent needs you, with notifications that deep-link straight to the blocked agent."
 msgstr "Selalu tahu agen mana yang membutuhkan Anda, dengan notifikasi yang langsung menuju agen yang terhambat."
+
+msgctxt "page watcher with no known name"
+msgid "An agent"
+msgstr "Agen"
 
 msgid "An agent completes multi-file changes end to end."
 msgstr "Agen menyelesaikan perubahan lintas file dari awal sampai akhir."
@@ -2261,9 +2271,6 @@ msgstr "Coba sebelum check lulus"
 
 msgid "Attention"
 msgstr "Perhatian"
-
-msgid "Attention filters"
-msgstr "Filter perhatian"
 
 msgid "Attention inbox"
 msgstr "Kotak masuk yang perlu perhatian"
@@ -3172,9 +3179,6 @@ msgstr "Pilih agen"
 msgid "Choose an existing repo folder"
 msgstr "Pilih folder repo yang sudah ada"
 
-msgid "Choose another filter or refresh to check again."
-msgstr "Pilih filter lain atau muat ulang untuk memeriksa lagi."
-
 msgid "Choose app"
 msgstr "Pilih aplikasi"
 
@@ -3198,9 +3202,6 @@ msgstr "Pilih apa yang ingin dibersihkan dari browser dalam aplikasi."
 
 msgid "Choose when Superset pings you."
 msgstr "Pilih kapan Superset memberi tahu Anda."
-
-msgid "Choose which agent watches this page for comments"
-msgstr "Pilih agen yang memantau komentar di halaman ini"
 
 msgid "Choose which columns appear and use the arrows to set their left-to-right order."
 msgstr "Pilih kolom yang ditampilkan dan gunakan panah untuk mengatur urutannya dari kiri ke kanan."
@@ -3686,9 +3687,6 @@ msgstr "Komentar"
 msgid "Comments could not be loaded"
 msgstr "Komentar tidak bisa dimuat"
 
-msgid "Comments go to this agent"
-msgstr "Komentar masuk ke agen ini"
-
 msgid "Commit"
 msgstr "Commit"
 
@@ -3902,9 +3900,6 @@ msgstr "{label} terhubung"
 
 msgid "Connected as"
 msgstr "Terhubung sebagai"
-
-msgid "Connected projects only. Refreshes every minute while this page is open."
-msgstr "Hanya proyek yang terhubung. Dimuat ulang setiap menit selama halaman ini terbuka."
 
 msgid "Connected to"
 msgstr "Terhubung ke"
@@ -4467,9 +4462,6 @@ msgstr "Tidak bisa memulai sesi"
 msgid "Could not stop it"
 msgstr "Tidak bisa dihentikan"
 
-msgid "Could not stop watching"
-msgstr "Tidak bisa berhenti memantau"
-
 msgid "Could not submit prompt. Try again."
 msgstr "Tidak bisa mengirim prompt. Coba lagi."
 
@@ -4488,9 +4480,6 @@ msgstr "Tidak bisa memperbarui branch"
 #. js-lingui-explicit-id
 msgid "serverError.plugins.credentialUnverified"
 msgstr "Tidak dapat memverifikasi kredensial: {reason}"
-
-msgid "Could not watch this page"
-msgstr "Tidak bisa memantau halaman ini"
 
 msgid "Couldn't confirm star status — check that the GitHub CLI (`gh`) is installed, signed in, and that you have a network connection"
 msgstr "Tidak bisa memastikan status star — pastikan GitHub CLI (`gh`) terpasang, sudah masuk, dan Anda punya koneksi jaringan"
@@ -6024,8 +6013,8 @@ msgstr "Semuanya bisa diskrip. Buat workspace dan agen dari CLI, sambungkan Supe
 msgid "Everything we built on top of the primitives — Superset originals, the"
 msgstr "Semua yang kami bangun di atas primitif — orisinal Superset, suite"
 
-msgid "Everything you've published is deleted, not hidden. You can rejoin later and it will rebuild from the transcripts still on this machine — only your past ranking is lost."
-msgstr "Semua yang Anda publikasikan dihapus, bukan disembunyikan. Anda bisa bergabung lagi nanti dan datanya akan dibangun ulang dari transkrip yang masih ada di mesin ini — hanya peringkat lama Anda yang hilang."
+msgid "Everything you've published is deleted, not hidden. You can rejoin later and it will rebuild from the transcripts still on this machine."
+msgstr "Semua yang Anda publikasikan dihapus, bukan disembunyikan. Anda bisa bergabung lagi nanti dan datanya akan dibangun ulang dari transkrip yang masih ada di mesin ini."
 
 msgid "Existing repo path"
 msgstr "Path repo yang sudah ada"
@@ -6162,9 +6151,6 @@ msgstr "Gagal"
 
 msgid "Failed <0>· 7d</0>"
 msgstr "Gagal <0>· 7h</0>"
-
-msgid "Failed checks"
-msgstr "Pemeriksaan gagal"
 
 msgid "Failed to accept invitation"
 msgstr "Gagal menerima undangan"
@@ -6714,6 +6700,9 @@ msgstr "Filter menurut review"
 
 msgid "Filter by state"
 msgstr "Filter menurut status"
+
+msgid "Filter by workspace: {label}"
+msgstr "Filter menurut workspace: {label}"
 
 msgid "Filter hosts"
 msgstr "Filter host"
@@ -8050,8 +8039,8 @@ msgstr "Miring"
 msgid "Item"
 msgstr "Item"
 
-msgid "Items appear here when an agent needs input, your PR checks fail, or someone requests your review."
-msgstr "Item muncul di sini saat agen memerlukan masukan, pemeriksaan PR Anda gagal, atau seseorang meminta tinjauan Anda."
+msgid "Items appear here when an agent needs your input."
+msgstr "Item muncul di sini saat agen membutuhkan masukan Anda."
 
 msgid "Its own branch and copy of the files"
 msgstr "Branch dan salinan file tersendiri"
@@ -8563,9 +8552,6 @@ msgstr "Muat pesan sebelumnya"
 
 msgid "Load more"
 msgstr "Muat lagi"
-
-msgid "Load more results, reconnect unavailable hosts, or check your GitHub connection, then refresh."
-msgstr "Muat hasil lainnya, hubungkan kembali host yang tidak tersedia, atau periksa koneksi GitHub Anda, lalu muat ulang."
 
 msgid "Loaded issues: {shownCount}"
 msgstr "Tiket dimuat: {shownCount}"
@@ -9559,9 +9545,6 @@ msgstr "Tidak ada agen yang dikonfigurasi di mesin ini"
 msgid "No agents match \"{q}\"."
 msgstr "Tidak ada agen yang cocok dengan \"{q}\"."
 
-msgid "No agents running here"
-msgstr "Tidak ada agen yang berjalan di sini"
-
 msgid "No agents yet"
 msgstr "Belum ada agen"
 
@@ -9763,9 +9746,6 @@ msgstr "Tidak ada PR tertaut"
 msgid "No live sessions"
 msgstr "Tidak ada sesi aktif"
 
-msgid "No loaded items match this filter"
-msgstr "Tidak ada item yang dimuat yang cocok dengan filter ini"
-
 msgid "no logins"
 msgstr "tanpa login"
 
@@ -9949,6 +9929,9 @@ msgstr "Tidak ada pintasan yang cocok dengan \"{searchQuery}\""
 
 msgid "No sites are signed in"
 msgstr "Tidak ada situs yang sedang masuk"
+
+msgid "No skills found"
+msgstr "Tidak ada keterampilan yang ditemukan"
 
 msgid "No stack frames"
 msgstr "Tidak ada stack frame"
@@ -10179,9 +10162,6 @@ msgstr "Belum ada yang terpasang."
 msgid "Nothing is running. Remove it and create a new one."
 msgstr "Tidak ada yang berjalan. Hapus dan buat yang baru."
 
-msgid "Nothing is watching this page"
-msgstr "Tidak ada yang memantau halaman ini"
-
 msgid "Nothing lives at {pathname}."
 msgstr "Tidak ada apa pun di {pathname}."
 
@@ -10276,6 +10256,9 @@ msgstr "Lebih lama"
 msgid "on {offScopeHostName} — won't run here"
 msgstr "di {offScopeHostName} — tidak akan berjalan di sini"
 
+msgid "On a host you can't reach"
+msgstr "Di host yang tidak bisa kamu jangkau"
+
 msgid "On click"
 msgstr "Saat diklik"
 
@@ -10290,6 +10273,9 @@ msgstr "Dengan laju ini"
 
 msgid "On this page"
 msgstr "Di halaman ini"
+
+msgid "On worktree deletion"
+msgstr "Saat menghapus pohon kerja"
 
 msgid "On your machine. Repos, worktrees, terminal output, and agent sessions stay local by default; cloud sync covers account and organization metadata only. Superset doesn't proxy any API calls."
 msgstr "Di mesin Anda. Repo, worktree, output terminal, dan sesi agen tetap lokal secara bawaan; sinkronisasi cloud hanya mencakup metadata akun dan organisasi. Superset tidak mem-proxy panggilan API apa pun."
@@ -11121,9 +11107,6 @@ msgstr "Sebagian catatan, sebagian taruhan. Dua entri pertama sudah terjadi. Sis
 msgid "Partial"
 msgstr "Sebagian"
 
-msgid "Partial results"
-msgstr "Hasil sebagian"
-
 msgid "Partner, Transpose Platform"
 msgstr "Mitra, Transpose Platform"
 
@@ -11822,9 +11805,6 @@ msgstr "Pull request"
 msgid "Pull Requests"
 msgstr "Pull Request"
 
-msgid "Pull requests are turned off. Only agent input is shown."
-msgstr "Pull request dinonaktifkan. Hanya permintaan masukan dari agen yang ditampilkan."
-
 msgid "Purple"
 msgstr "Ungu"
 
@@ -12058,6 +12038,9 @@ msgstr "Hubungkan ulang Linear"
 
 msgid "Reconnect required"
 msgstr "Perlu dihubungkan ulang"
+
+msgid "Reconnect unavailable hosts, then refresh."
+msgstr "Hubungkan kembali host yang tidak tersedia, lalu muat ulang."
 
 msgid "Reconnecting"
 msgstr "Menyambungkan ulang"
@@ -12744,9 +12727,6 @@ msgstr "Review pull request di dalam Superset: panel diff, review dibantu agen, 
 msgid "Review requested"
 msgstr "Review diminta"
 
-msgid "Review requests"
-msgstr "Permintaan tinjauan"
-
 msgid "Review required"
 msgstr "Review diperlukan"
 
@@ -12850,6 +12830,9 @@ msgstr "Jalankan lebih dari 10 agen pemrograman secara paralel di perangkat Anda
 msgid "Run 10+ parallel coding agents on your machine."
 msgstr "Jalankan 10+ agen coding paralel di mesin Anda."
 
+msgid "Run action before deleting a worktree"
+msgstr "Jalankan tindakan sebelum menghapus pohon kerja"
+
 msgid "Run automations on data source and comment activity."
 msgstr "Jalankan otomatisasi pada aktivitas sumber data dan komentar."
 
@@ -12942,6 +12925,9 @@ msgstr "Proses terminal yang berjalan tetap lanjut, tapi output lama mungkin tid
 
 msgid "Runs a local command on your machine"
 msgstr "Menjalankan perintah lokal di mesin Anda"
+
+msgid "Runs before deletion using a copy of the latest session for this agent, when available. Skills have up to 10 minutes to finish."
+msgstr "Dijalankan sebelum penghapusan menggunakan salinan sesi terbaru agen ini, jika tersedia. Keterampilan memiliki waktu hingga 10 menit untuk selesai."
 
 msgid "Runs failed earlier this week, but nothing is failing right now"
 msgstr "Ada run yang gagal awal minggu ini, tapi sekarang tidak ada yang gagal"
@@ -13360,6 +13346,9 @@ msgstr "Pilih proyek untuk melihat pull request."
 msgid "Select a pull request to preview it here."
 msgstr "Pilih pull request untuk melihat pratinjaunya di sini."
 
+msgid "Select a skill"
+msgstr "Pilih keterampilan"
+
 msgid "Select a team"
 msgstr "Pilih sebuah tim"
 
@@ -13694,8 +13683,8 @@ msgstr "Bagikan desain dan laporan. Biarkan agen Anda menangani masukan."
 msgid "Share page"
 msgstr "Bagikan halaman"
 
-msgid "Share settings"
-msgstr "Pengaturan berbagi"
+msgid "Share page (public)"
+msgstr "Bagikan halaman (publik)"
 
 msgid "Share this page"
 msgstr "Bagikan halaman ini"
@@ -14532,11 +14521,14 @@ msgstr "Hentikan {0} lokal"
 msgid "Stop response"
 msgstr "Hentikan respons"
 
+msgid "Stop subagent"
+msgstr "Hentikan subagen"
+
 msgid "Stop Superset here to delete from another device."
 msgstr "Hentikan Superset di sini untuk menghapus dari perangkat lain."
 
-msgid "Stop watching"
-msgstr "Berhenti memantau"
+msgid "Stop this subagent using the agent's own controls."
+msgstr "Hentikan subagen ini menggunakan kontrol agen itu sendiri."
 
 msgid "Stop workspace run command"
 msgstr "Hentikan perintah run workspace"
@@ -14984,9 +14976,6 @@ msgstr "targetHostId tidak cocok dengan host workspace"
 msgid "Task"
 msgstr "Tugas"
 
-msgid "Task {shortId}"
-msgstr "Tugas {shortId}"
-
 msgid "Task Launch"
 msgstr "Peluncuran Tugas"
 
@@ -15220,9 +15209,6 @@ msgstr "Perangkat terkait tidak bisa dijangkau saat ini"
 
 msgid "The best agent will change.<0/>Your workflow shouldn't."
 msgstr "Agen terbaik akan berganti.<0/>Alur kerja Anda tidak perlu."
-
-msgid "The Codex sign-in"
-msgstr "Sesi masuk Codex"
 
 msgid "The config repository must be one of the environment's repositories"
 msgstr "Repositori konfigurasi harus salah satu repositori environment"
@@ -15582,6 +15568,9 @@ msgstr "Ini menutup ruang kerja dan terminalnya. File dan branch tetap tersimpan
 msgid "This closes the workspace and its terminals. The project's files, branches and other workspaces stay as they are."
 msgstr "Ini menutup workspace beserta terminalnya. File, branch, dan workspace lain dari proyek tetap seperti semula."
 
+msgid "This cloud workspace is waking up, which can take up to 30 seconds after it has been idle."
+msgstr "Workspace cloud ini sedang dibangunkan, yang bisa memakan waktu hingga 30 detik setelah tidak aktif."
+
 msgid "This deletes the saved scrollback used for reboot/crash recovery."
 msgstr "Ini menghapus scrollback tersimpan yang dipakai untuk pemulihan setelah reboot/crash."
 
@@ -15692,10 +15681,6 @@ msgstr "Halaman ini sedang dipublikasikan dari tempat lain — coba lagi"
 
 msgid "This page is in another organization"
 msgstr "Halaman ini ada di organisasi lain"
-
-#. placeholder {0}: url.replace(/^https?:\/\//, "")
-msgid "This page is live at <0>{0}</0>"
-msgstr "Halaman ini aktif di <0>{0}</0>"
 
 msgid "This page isn't here"
 msgstr "Halaman ini tidak ada di sini"
@@ -16322,6 +16307,9 @@ msgstr "Variabel tidak dikenal: {unknownVariables}"
 
 msgid "Unknown Welder"
 msgstr "Tukang Las Tak Dikenal"
+
+msgid "Unknown workspace"
+msgstr "Workspace tidak dikenal"
 
 msgid "Unlimited"
 msgstr "Tanpa batas"

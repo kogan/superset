@@ -249,10 +249,8 @@ async function runDestroy(
 
 	// `getWorkspaceCleanupState` already loads workspace + project rows from
 	// sqlite; thread them through to avoid duplicate sync queries downstream.
-	const { local, project, preservesFiles } = await getWorkspaceCleanupState(
-		ctx,
-		input.workspaceId,
-	);
+	const { local, project, preservesFiles, isWorktree } =
+		await getWorkspaceCleanupState(ctx, input.workspaceId);
 
 	// ─── Step 0: Archive (the commit point) ────────────────────────
 	// FIRST, before any slow work (git preflight, teardown script): the
@@ -318,40 +316,44 @@ async function runDestroy(
 			}
 		}
 
-		// ─── Step 2: Teardown ──────────────────────────────────────
-		// Script is the user's last chance to stop services / flush state
-		// before the workspace goes away. Runs after the archive so the
-		// (potentially slow) script never delays the row leaving the UI; a
-		// blocking failure throws, the catch below un-archives, and the
-		// globally-mounted dialog re-opens with a force-retry.
-		// A teardown script on the shared checkout would stop services every
-		// other local workspace on it is using.
-		if (input.teardownMode !== "skip" && !preservesFiles && local && project) {
-			const teardown: TeardownResult = await runTeardown({
-				db: ctx.db,
-				workspaceId: input.workspaceId,
-				worktreePath: local.worktreePath,
-				repoPath: project.repoPath,
-				projectId: project.id,
-			});
-			if (teardown.status === "failed") {
-				if (input.teardownMode === "blocking") {
-					const cause: TeardownFailureCause = {
-						kind: "TEARDOWN_FAILED",
-						exitCode: teardown.exitCode,
-						signal: teardown.signal,
-						timedOut: teardown.timedOut,
-						outputTail: teardown.outputTail,
-					};
-					// Recoverable via force-retry — an expected user-script failure, not a
-					// service bug; must not be reported as a 500.
-					throw new TRPCError({
-						code: "PRECONDITION_FAILED",
-						message: "Teardown script failed",
-						cause,
-					});
+		const cleanupScripts: ("close" | "teardown")[] = [];
+		if (isWorktree && !preservesFiles) cleanupScripts.push("close");
+		if (!preservesFiles) cleanupScripts.push("teardown");
+		if (input.teardownMode !== "skip" && local && project) {
+			for (const script of cleanupScripts) {
+				const teardown: TeardownResult = await runTeardown({
+					script,
+					db: ctx.db,
+					workspaceId: input.workspaceId,
+					worktreePath: local.worktreePath,
+					repoPath: project.repoPath,
+					projectId: project.id,
+				});
+				if (teardown.status === "failed") {
+					if (input.teardownMode === "blocking") {
+						const cause: TeardownFailureCause = {
+							kind: "TEARDOWN_FAILED",
+							exitCode: teardown.exitCode,
+							signal: teardown.signal,
+							timedOut: teardown.timedOut,
+							outputTail:
+								script === "close"
+									? `Worktree deletion action failed:\n${teardown.outputTail}`
+									: teardown.outputTail,
+						};
+						// Recoverable via force-retry — an expected user-script failure, not a
+						// service bug; must not be reported as a 500.
+						throw new TRPCError({
+							code: "PRECONDITION_FAILED",
+							message:
+								script === "close"
+									? "Worktree deletion action failed"
+									: "Teardown script failed",
+							cause,
+						});
+					}
+					warnings.push(formatTeardownWarning(teardown, script));
 				}
-				warnings.push(formatTeardownWarning(teardown));
 			}
 		}
 
@@ -706,6 +708,7 @@ function sharesProfileWithLiveWorkspace(
 
 function formatTeardownWarning(
 	teardown: Extract<TeardownResult, { status: "failed" }>,
+	script: "close" | "teardown",
 ): string {
 	const detail = teardown.timedOut
 		? "timed out"
@@ -717,7 +720,9 @@ function formatTeardownWarning(
 	// Tail is raw PTY bytes; strip control sequences for the plain-text
 	// warnings channel (CLI/SDK/MCP).
 	const tail = sanitizePromptForPty(teardown.outputTail).trim();
-	return tail
-		? `Teardown script failed (${detail}): ${tail}`
-		: `Teardown script failed (${detail})`;
+	const label =
+		script === "close"
+			? "Worktree deletion action failed"
+			: "Teardown script failed";
+	return tail ? `${label} (${detail}): ${tail}` : `${label} (${detail})`;
 }

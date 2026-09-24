@@ -651,6 +651,7 @@ export function useAccessibleV2Workspaces(
 			for (const binding of query.data ?? []) {
 				const status = deriveTerminalAgentStatus({
 					lastEventType: binding.lastEventType,
+					subagents: binding.subagents,
 					lastEventAt: binding.lastEventAt,
 					lastSeenAt: terminalSeenAt[binding.terminalId],
 				});

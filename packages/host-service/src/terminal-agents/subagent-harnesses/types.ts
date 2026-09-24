@@ -17,6 +17,8 @@ export interface ParsedSubagentTranscript {
 	entries: SubagentTranscriptEntry[];
 	/** Harness-provided title for the child, when the transcript carries one. */
 	description?: string;
+	/** Forked histories can contain user prompts belonging to the parent. */
+	allowPromptFallback?: boolean;
 }
 
 /**

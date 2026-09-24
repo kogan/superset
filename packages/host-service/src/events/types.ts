@@ -33,6 +33,7 @@ export interface AgentLifecycleMessage {
 	// or third-party hook configs that bypass our wrappers).
 	agent?: AgentIdentity;
 	preview?: string;
+	subagent?: { id: string; name?: string };
 	occurredAt: number;
 }
 

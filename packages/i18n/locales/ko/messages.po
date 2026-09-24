@@ -218,6 +218,10 @@ msgstr "{0, plural, one {워크스페이스 #개} other {워크스페이스 #개
 msgid "{0, plural, one {A running agent still uses the previous account — the switch only reaches new launches.} other {# running agents still use the previous account — the switch only reaches new launches.}}"
 msgstr "{0, plural, one {실행 중인 에이전트 #개가 아직 이전 계정을 사용하고 있습니다. 전환은 새 실행에만 적용됩니다.} other {실행 중인 에이전트 #개가 아직 이전 계정을 사용하고 있습니다. 전환은 새 실행에만 적용됩니다.}}"
 
+#. placeholder {0}: Math.max(watchers.length, 1)
+msgid "{0, plural, one {Comments go to this agent} other {Comments go to these agents}}"
+msgstr "{0, plural, one {댓글은 이 에이전트에게 전달됩니다} other {댓글은 이 에이전트들에게 전달됩니다}}"
+
 #. placeholder {0}: failures.length
 #. placeholder {0}: nextFailures.length
 msgid "{0, plural, one {Couldn’t delete # workspace} other {Couldn’t delete # workspaces}}"
@@ -1363,6 +1367,9 @@ msgstr "획득, 콘텐츠, 전환, 유지, 배포를 한곳에. 주간 차트는
 msgid "Action"
 msgstr "동작"
 
+msgid "Action type"
+msgstr "작업 유형"
+
 msgid "Actions"
 msgstr "동작"
 
@@ -1378,10 +1385,6 @@ msgstr "활성화, 들어온 뒤 얼마나 쓰는지, 그리고 다시 돌아오
 
 msgid "Active"
 msgstr "활성"
-
-#. placeholder {0}: formatDistanceToNowStrict(binding.lastEventAt, { addSuffix: true, })
-msgid "active {0}"
-msgstr "활성 {0}"
 
 msgid "Active agent sessions."
 msgstr "활성 에이전트 세션입니다."
@@ -1601,9 +1604,6 @@ msgstr "에이전트 완료"
 msgid "Agent Independence"
 msgstr "에이전트 독립성"
 
-msgid "Agent input, failed checks on your PRs, and reviews requested from you."
-msgstr "입력을 기다리는 에이전트, 내 PR에서 실패한 검사, 나에게 요청된 리뷰입니다."
-
 msgid "Agent launch configuration"
 msgstr "에이전트 실행 구성"
 
@@ -1654,6 +1654,12 @@ msgstr "에이전트가 직접 미리 보기를 띄우고, UI를 조작하고, �
 
 msgid "Agents running at once"
 msgstr "동시에 실행 중인 에이전트"
+
+msgid "Agents waiting for your input."
+msgstr "입력을 기다리는 에이전트입니다."
+
+msgid "Agents watching this page for comments"
+msgstr "이 페이지의 댓글을 감시 중인 에이전트"
 
 msgid "Aggregate agent usage across every developer on the Superset leaderboard — tokens, cost, cache behaviour and which models people actually reach for."
 msgstr "Superset 리더보드에 참여한 모든 개발자의 에이전트 사용량 집계 — 토큰, 비용, 캐시 동작, 그리고 실제로 많이 쓰이는 모델입니다."
@@ -1909,6 +1915,10 @@ msgstr "참고: @superset/ui/spinner"
 
 msgid "Always know which agent needs you, with notifications that deep-link straight to the blocked agent."
 msgstr "어떤 에이전트가 나를 필요로 하는지 항상 알 수 있습니다. 알림을 누르면 막힌 에이전트로 바로 이동합니다."
+
+msgctxt "page watcher with no known name"
+msgid "An agent"
+msgstr "에이전트"
 
 msgid "An agent completes multi-file changes end to end."
 msgstr "에이전트가 여러 파일에 걸친 변경을 처음부터 끝까지 완료합니다."
@@ -2261,9 +2271,6 @@ msgstr "검사 통과 전에 시도"
 
 msgid "Attention"
 msgstr "확인 필요"
-
-msgid "Attention filters"
-msgstr "확인할 항목 필터"
 
 msgid "Attention inbox"
 msgstr "확인할 항목함"
@@ -3172,9 +3179,6 @@ msgstr "에이전트 선택"
 msgid "Choose an existing repo folder"
 msgstr "기존 리포지토리 폴더 선택"
 
-msgid "Choose another filter or refresh to check again."
-msgstr "다른 필터를 선택하거나 새로 고침하여 다시 확인하세요."
-
 msgid "Choose app"
 msgstr "앱 선택"
 
@@ -3198,9 +3202,6 @@ msgstr "인앱 브라우저에서 삭제할 항목을 선택하세요."
 
 msgid "Choose when Superset pings you."
 msgstr "Superset이 언제 알릴지 선택하세요."
-
-msgid "Choose which agent watches this page for comments"
-msgstr "이 페이지의 댓글을 감시할 에이전트 선택"
 
 msgid "Choose which columns appear and use the arrows to set their left-to-right order."
 msgstr "표시할 열을 선택하고 화살표로 왼쪽에서 오른쪽 순서를 설정하세요."
@@ -3686,9 +3687,6 @@ msgstr "댓글"
 msgid "Comments could not be loaded"
 msgstr "댓글을 불러올 수 없습니다"
 
-msgid "Comments go to this agent"
-msgstr "댓글은 이 에이전트에게 전달됩니다"
-
 msgid "Commit"
 msgstr "커밋"
 
@@ -3902,9 +3900,6 @@ msgstr "{label} 연결됨"
 
 msgid "Connected as"
 msgstr "연결 계정"
-
-msgid "Connected projects only. Refreshes every minute while this page is open."
-msgstr "연결된 프로젝트만 포함합니다. 이 페이지가 열려 있는 동안 1분마다 새로 고칩니다."
 
 msgid "Connected to"
 msgstr "연결 대상"
@@ -4467,9 +4462,6 @@ msgstr "세션을 시작할 수 없습니다"
 msgid "Could not stop it"
 msgstr "중지할 수 없습니다"
 
-msgid "Could not stop watching"
-msgstr "감시를 중지할 수 없습니다"
-
 msgid "Could not submit prompt. Try again."
 msgstr "프롬프트를 제출할 수 없습니다. 다시 시도하세요."
 
@@ -4488,9 +4480,6 @@ msgstr "브랜치를 업데이트할 수 없습니다"
 #. js-lingui-explicit-id
 msgid "serverError.plugins.credentialUnverified"
 msgstr "자격 증명을 확인하지 못했습니다: {reason}"
-
-msgid "Could not watch this page"
-msgstr "이 페이지를 감시할 수 없습니다"
 
 msgid "Couldn't confirm star status — check that the GitHub CLI (`gh`) is installed, signed in, and that you have a network connection"
 msgstr "스타 상태를 확인하지 못했습니다 — GitHub CLI(`gh`)가 설치되어 로그인되어 있는지, 네트워크에 연결되어 있는지 확인하세요"
@@ -6024,8 +6013,8 @@ msgstr "모든 것이 스크립트로 가능합니다. CLI에서 워크스페이
 msgid "Everything we built on top of the primitives — Superset originals, the"
 msgstr "프리미티브 위에 우리가 만든 모든 것 — Superset 오리지널, 에이전트 UI용"
 
-msgid "Everything you've published is deleted, not hidden. You can rejoin later and it will rebuild from the transcripts still on this machine — only your past ranking is lost."
-msgstr "게시한 모든 내용이 숨겨지는 것이 아니라 삭제됩니다. 나중에 다시 참여하면 이 컴퓨터에 남아 있는 기록에서 다시 만들어지며, 지난 순위만 사라집니다."
+msgid "Everything you've published is deleted, not hidden. You can rejoin later and it will rebuild from the transcripts still on this machine."
+msgstr "게시한 모든 내용이 숨겨지는 것이 아니라 삭제됩니다. 나중에 다시 참여하면 이 컴퓨터에 남아 있는 기록에서 다시 만들어집니다."
 
 msgid "Existing repo path"
 msgstr "기존 리포지토리 경로"
@@ -6162,9 +6151,6 @@ msgstr "실패"
 
 msgid "Failed <0>· 7d</0>"
 msgstr "실패 <0>· 7일</0>"
-
-msgid "Failed checks"
-msgstr "실패한 검사"
 
 msgid "Failed to accept invitation"
 msgstr "초대를 수락하지 못했습니다"
@@ -6714,6 +6700,9 @@ msgstr "리뷰로 필터링"
 
 msgid "Filter by state"
 msgstr "상태로 필터링"
+
+msgid "Filter by workspace: {label}"
+msgstr "워크스페이스별 필터: {label}"
 
 msgid "Filter hosts"
 msgstr "호스트 필터"
@@ -8050,8 +8039,8 @@ msgstr "기울임꼴"
 msgid "Item"
 msgstr "항목"
 
-msgid "Items appear here when an agent needs input, your PR checks fail, or someone requests your review."
-msgstr "에이전트가 입력을 필요로 하거나, 내 PR 검사가 실패하거나, 누군가 나에게 리뷰를 요청하면 여기에 항목이 표시됩니다."
+msgid "Items appear here when an agent needs your input."
+msgstr "에이전트가 입력을 요청하면 여기에 항목이 표시됩니다."
 
 msgid "Its own branch and copy of the files"
 msgstr "독립된 브랜치와 파일 사본"
@@ -8563,9 +8552,6 @@ msgstr "이전 메시지 불러오기"
 
 msgid "Load more"
 msgstr "더 보기"
-
-msgid "Load more results, reconnect unavailable hosts, or check your GitHub connection, then refresh."
-msgstr "결과를 더 불러오거나, 사용할 수 없는 호스트에 다시 연결하거나, GitHub 연결을 확인한 후 새로 고침하세요."
 
 msgid "Loaded issues: {shownCount}"
 msgstr "불러온 이슈: {shownCount}"
@@ -9559,9 +9545,6 @@ msgstr "이 컴퓨터에 구성된 에이전트가 없습니다"
 msgid "No agents match \"{q}\"."
 msgstr "\"{q}\"과(와) 일치하는 에이전트가 없습니다."
 
-msgid "No agents running here"
-msgstr "여기에서 실행 중인 에이전트가 없습니다"
-
 msgid "No agents yet"
 msgstr "아직 에이전트가 없습니다"
 
@@ -9763,9 +9746,6 @@ msgstr "연결된 PR 없음"
 msgid "No live sessions"
 msgstr "활성 세션 없음"
 
-msgid "No loaded items match this filter"
-msgstr "불러온 항목 중 이 필터와 일치하는 항목이 없습니다"
-
 msgid "no logins"
 msgstr "로그인 없음"
 
@@ -9949,6 +9929,9 @@ msgstr "\"{searchQuery}\"과(와) 일치하는 단축키가 없습니다"
 
 msgid "No sites are signed in"
 msgstr "로그인한 사이트가 없습니다"
+
+msgid "No skills found"
+msgstr "스킬을 찾을 수 없음"
 
 msgid "No stack frames"
 msgstr "스택 프레임 없음"
@@ -10179,9 +10162,6 @@ msgstr "아직 설치된 항목이 없습니다."
 msgid "Nothing is running. Remove it and create a new one."
 msgstr "실행 중인 것이 없습니다. 제거하고 새로 만드세요."
 
-msgid "Nothing is watching this page"
-msgstr "이 페이지를 감시하는 에이전트가 없습니다"
-
 msgid "Nothing lives at {pathname}."
 msgstr "{pathname}에는 아무것도 없습니다."
 
@@ -10276,6 +10256,9 @@ msgstr "이전"
 msgid "on {offScopeHostName} — won't run here"
 msgstr "{offScopeHostName}에 있음 — 여기서는 실행되지 않습니다"
 
+msgid "On a host you can't reach"
+msgstr "접근할 수 없는 호스트에 있음"
+
 msgid "On click"
 msgstr "클릭 시"
 
@@ -10290,6 +10273,9 @@ msgstr "이 속도라면"
 
 msgid "On this page"
 msgstr "이 페이지에서"
+
+msgid "On worktree deletion"
+msgstr "작업 트리 삭제 시"
 
 msgid "On your machine. Repos, worktrees, terminal output, and agent sessions stay local by default; cloud sync covers account and organization metadata only. Superset doesn't proxy any API calls."
 msgstr "본인의 머신에서 실행됩니다. 리포지토리, worktree, 터미널 출력, 에이전트 세션은 기본적으로 로컬에 머물고, 클라우드 동기화는 계정과 조직 메타데이터만 다룹니다. Superset은 어떤 API 호출도 중계하지 않습니다."
@@ -11121,9 +11107,6 @@ msgstr "일부는 기록이고 일부는 베팅입니다. 앞의 두 항목은 �
 msgid "Partial"
 msgstr "부분"
 
-msgid "Partial results"
-msgstr "일부 결과"
-
 msgid "Partner, Transpose Platform"
 msgstr "파트너, Transpose Platform"
 
@@ -11822,9 +11805,6 @@ msgstr "풀 리퀘스트"
 msgid "Pull Requests"
 msgstr "풀 리퀘스트"
 
-msgid "Pull requests are turned off. Only agent input is shown."
-msgstr "풀 리퀘스트가 꺼져 있습니다. 입력을 기다리는 에이전트만 표시합니다."
-
 msgid "Purple"
 msgstr "보라"
 
@@ -12058,6 +12038,9 @@ msgstr "Linear 다시 연결"
 
 msgid "Reconnect required"
 msgstr "다시 연결 필요"
+
+msgid "Reconnect unavailable hosts, then refresh."
+msgstr "사용할 수 없는 호스트에 다시 연결한 후 새로 고침하세요."
 
 msgid "Reconnecting"
 msgstr "다시 연결하는 중"
@@ -12744,9 +12727,6 @@ msgstr "Superset 안에서 풀 리퀘스트를 리뷰하세요. 차이 창, 에�
 msgid "Review requested"
 msgstr "리뷰 요청됨"
 
-msgid "Review requests"
-msgstr "리뷰 요청"
-
 msgid "Review required"
 msgstr "리뷰 필요"
 
@@ -12850,6 +12830,9 @@ msgstr "기기에서 10개 이상의 코딩 에이전트를 병렬로 실행"
 msgid "Run 10+ parallel coding agents on your machine."
 msgstr "내 머신에서 10개 이상의 코딩 에이전트를 병렬로 실행합니다."
 
+msgid "Run action before deleting a worktree"
+msgstr "워크트리를 삭제하기 전에 작업 실행"
+
 msgid "Run automations on data source and comment activity."
 msgstr "데이터 소스와 댓글 활동에 따라 자동화를 실행합니다."
 
@@ -12942,6 +12925,9 @@ msgstr "실행 중인 터미널 프로세스는 계속되지만, 앱을 다시 �
 
 msgid "Runs a local command on your machine"
 msgstr "내 컴퓨터에서 로컬 명령을 실행합니다"
+
+msgid "Runs before deletion using a copy of the latest session for this agent, when available. Skills have up to 10 minutes to finish."
+msgstr "이 에이전트의 최근 세션이 있으면 해당 세션의 사본을 사용하여 삭제 전에 실행합니다. 스킬은 최대 10분 동안 실행할 수 있습니다."
 
 msgid "Runs failed earlier this week, but nothing is failing right now"
 msgstr "이번 주 초에 실행이 실패했지만 지금은 실패 중인 항목이 없습니다"
@@ -13360,6 +13346,9 @@ msgstr "풀 리퀘스트를 보려면 프로젝트를 선택하세요."
 msgid "Select a pull request to preview it here."
 msgstr "풀 리퀘스트를 선택하면 여기에서 미리 볼 수 있습니다."
 
+msgid "Select a skill"
+msgstr "스킬 선택"
+
 msgid "Select a team"
 msgstr "팀 선택"
 
@@ -13694,8 +13683,8 @@ msgstr "디자인과 보고서를 공유하세요. 피드백 처리는 에이전
 msgid "Share page"
 msgstr "페이지 공유"
 
-msgid "Share settings"
-msgstr "공유 설정"
+msgid "Share page (public)"
+msgstr "페이지 공유(공개)"
 
 msgid "Share this page"
 msgstr "이 페이지 공유"
@@ -14532,11 +14521,14 @@ msgstr "로컬 {0} 중지"
 msgid "Stop response"
 msgstr "응답 중지"
 
+msgid "Stop subagent"
+msgstr "하위 에이전트 중지"
+
 msgid "Stop Superset here to delete from another device."
 msgstr "다른 기기에서 삭제하려면 여기에서 Superset을 종료하세요."
 
-msgid "Stop watching"
-msgstr "감시 중지"
+msgid "Stop this subagent using the agent's own controls."
+msgstr "에이전트 자체 제어 기능을 사용하여 이 하위 에이전트를 중지하세요."
 
 msgid "Stop workspace run command"
 msgstr "워크스페이스 실행 명령 중지"
@@ -14984,9 +14976,6 @@ msgstr "targetHostId가 워크스페이스의 호스트와 일치하지 않습�
 msgid "Task"
 msgstr "작업"
 
-msgid "Task {shortId}"
-msgstr "작업 {shortId}"
-
 msgid "Task Launch"
 msgstr "작업 실행"
 
@@ -15220,9 +15209,6 @@ msgstr "연결된 기기에 지금 접근할 수 없습니다"
 
 msgid "The best agent will change.<0/>Your workflow shouldn't."
 msgstr "최고의 에이전트는 바뀝니다.<0/>워크플로는 그럴 필요 없습니다."
-
-msgid "The Codex sign-in"
-msgstr "Codex 로그인"
 
 msgid "The config repository must be one of the environment's repositories"
 msgstr "구성 리포지토리는 환경의 리포지토리 중 하나여야 합니다"
@@ -15582,6 +15568,9 @@ msgstr "워크스페이스와 해당 터미널을 닫습니다. 파일과 브랜
 msgid "This closes the workspace and its terminals. The project's files, branches and other workspaces stay as they are."
 msgstr "워크스페이스와 해당 터미널을 닫습니다. 프로젝트의 파일, 브랜치, 다른 워크스페이스는 그대로 유지됩니다."
 
+msgid "This cloud workspace is waking up, which can take up to 30 seconds after it has been idle."
+msgstr "이 클라우드 워크스페이스를 깨우는 중입니다. 한동안 사용하지 않았다면 최대 30초가 걸릴 수 있습니다."
+
 msgid "This deletes the saved scrollback used for reboot/crash recovery."
 msgstr "재부팅/충돌 복구에 사용하는 저장된 스크롤백을 삭제합니다."
 
@@ -15692,10 +15681,6 @@ msgstr "다른 곳에서 이 페이지를 게시하는 중입니다 — 다시 �
 
 msgid "This page is in another organization"
 msgstr "이 페이지는 다른 조직에 있습니다"
-
-#. placeholder {0}: url.replace(/^https?:\/\//, "")
-msgid "This page is live at <0>{0}</0>"
-msgstr "이 페이지는 <0>{0}</0>에서 공개 중입니다"
 
 msgid "This page isn't here"
 msgstr "이 페이지는 여기에 없습니다"
@@ -16322,6 +16307,9 @@ msgstr "알 수 없는 변수: {unknownVariables}"
 
 msgid "Unknown Welder"
 msgstr "미지의 용접공"
+
+msgid "Unknown workspace"
+msgstr "알 수 없는 워크스페이스"
 
 msgid "Unlimited"
 msgstr "무제한"

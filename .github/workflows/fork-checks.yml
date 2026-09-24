@@ -45,6 +45,7 @@ jobs:
       - run: bun test packages/port-scanner/src/
       - run: bun test packages/workspace-fs/src/search.test.ts packages/workspace-fs/src/search-content.test.ts
       - run: bun test packages/db/src/runtime.test.ts packages/auth/src/local-bootstrap.test.ts
+      - run: bun test packages/trpc/src/router/page/watch-ownership.local.test.ts
       - run: bun test packages/trpc/src/lib/local-runtime/cache.test.ts packages/trpc/src/lib/local-objects/local-objects.test.ts apps/usercontent/scripts/standalone.test.ts
       - run: bun test src/lib/trpc/routers/jira/jira.test.ts src/lib/trpc/routers/jira/jira-transitions.test.ts src/renderer/routes/_authenticated/_dashboard/jira/components/JiraView/components/JiraIssueList/utils/columnLayout src/renderer/routes/_authenticated/_dashboard/jira/components/JiraView/components/JiraIssueList/components/JiraColumnsDialog src/renderer/routes/_authenticated/_dashboard/jira/components/JiraView/components/JiraIssueList/components/JiraKanban/utils/groupIssuesByStatus.test.ts src/renderer/routes/_authenticated/_dashboard/jira/components/JiraView/components/JiraIssueList/hooks/useJiraMovement/movement.test.ts src/renderer/routes/_authenticated/_dashboard/attention/hooks/useAttentionInbox/attention-items.test.ts src/renderer/routes/_authenticated/_dashboard/attention/hooks/useAttentionInbox/attention-projects.test.ts
         working-directory: apps/desktop
@@ -55,6 +56,8 @@ jobs:
       - run: bun test test/integration/workspace-creation-github.integration.test.ts test/integration/external-workspaces.integration.test.ts test/integration/sidebar-agents.integration.test.ts test/workspace-cleanup.test.ts src/trpc/router/workspace-creation/shared/worktree-paths.test.ts src/trpc/router/workspace-creation/shared/default-worktree-location.test.ts src/trpc/router/workspace-creation/shared/session-paths.test.ts
         working-directory: packages/host-service
       - run: bun test src/terminal-agents/
+        working-directory: packages/host-service
+      - run: bun test src/trpc/router/notifications
         working-directory: packages/host-service
       - run: bun test src/renderer/stores/sidebar-agent-expansion.test.ts
         working-directory: apps/desktop

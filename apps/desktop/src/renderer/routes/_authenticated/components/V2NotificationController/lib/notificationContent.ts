@@ -26,10 +26,13 @@ export function getV2NativeNotificationContent({
 	subtitle: string;
 	body: string;
 } {
-	const agentLabel = getAgentLabel(payload.agent);
+	const agentLabel = payload.subagent
+		? (cleanLabel(payload.subagent.name) ??
+			i18n._(msg({ message: "Subagent" })))
+		: getAgentLabel(payload.agent);
 	const action =
 		payload.eventType === "PermissionRequest"
-			? i18n._(msg({ message: "Needs attention" }))
+			? i18n._(msg({ message: "Needs input" }))
 			: payload.eventType === "Failed"
 				? i18n._(msg({ message: "Failed" }))
 				: i18n._(msg({ message: "Finished" }));

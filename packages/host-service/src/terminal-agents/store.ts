@@ -1,5 +1,6 @@
 import { EventEmitter } from "node:events";
 import type { AgentDefinitionId } from "@superset/shared/agent-catalog";
+import { mapEventType } from "../events/map-event-type";
 import { readSubagentDescription } from "./subagent-description";
 import {
 	getSubagentHarness,
@@ -28,6 +29,7 @@ interface RecordEventInput {
 }
 
 interface RecordSubagentEventInput {
+	sessionId?: string;
 	terminalId: string;
 	workspaceId: string;
 	/** Raw hook event name (`SubagentStart`, `PostToolUse`, `SubagentStop`, …). */
@@ -172,24 +174,22 @@ export class TerminalAgentStore extends EventEmitter {
 			return;
 		}
 
-		const existing = this.byTerminal.get(terminalId);
+		const ended = this.persistence?.getEnded?.(terminalId);
+		const existing = ended ? undefined : this.byTerminal.get(terminalId);
 		if (!agentId && !existing) return;
 
 		// A late event for a dead terminal must not resurrect its ended row
 		// (the upsert would clear the resume state). Revive only on a fresh
 		// session start, a different agent session id, or an event well past
 		// the end (an agent without SessionStart hooks launched later).
-		if (!existing && this.persistence?.getEnded) {
-			const ended = this.persistence.getEnded(terminalId);
-			if (
-				ended !== undefined &&
-				eventType !== "Attached" &&
-				(agentSessionId === undefined ||
-					agentSessionId === ended.agentSessionId) &&
-				occurredAt - ended.endedAt <= END_STRAGGLER_WINDOW_MS
-			) {
-				return;
-			}
+		if (
+			ended !== undefined &&
+			eventType !== "Attached" &&
+			(agentSessionId === undefined ||
+				agentSessionId === ended.agentSessionId) &&
+			occurredAt - ended.endedAt <= END_STRAGGLER_WINDOW_MS
+		) {
+			return;
 		}
 
 		const nextAgentId = agentId ?? existing?.agentId;
@@ -278,6 +278,7 @@ export class TerminalAgentStore extends EventEmitter {
 				...(transcriptPath ? { transcriptPath } : {}),
 				lastEventAt: occurredAt,
 				endedAt: occurredAt,
+				needsInput: undefined,
 			});
 			this.emit("change", workspaceId);
 			return;
@@ -289,8 +290,13 @@ export class TerminalAgentStore extends EventEmitter {
 
 		const nextType = agentType ?? existing?.agentType;
 		const nextPath = transcriptPath ?? existing?.transcriptPath;
+		const lifecycle = mapEventType(eventType);
+		const needsInput =
+			lifecycle === "PermissionRequest" || (!lifecycle && existing?.needsInput);
 		const next: TerminalSubagent = {
 			id: subagentId,
+			sessionId: input.sessionId ?? existing?.sessionId,
+			...(needsInput ? { needsInput: true } : {}),
 			description: existing?.description,
 			customName: existing?.customName,
 			...(nextType ? { agentType: nextType } : {}),
@@ -324,6 +330,7 @@ export class TerminalAgentStore extends EventEmitter {
 	 */
 	recordSubagentHook(input: RecordSubagentHookInput): boolean {
 		const parent = this.byTerminal.get(input.terminalId);
+		if (!parent || parent.workspaceId !== input.workspaceId) return false;
 		const harness = getSubagentHarness(parent?.agentId);
 		if (
 			parent?.agentSessionId &&
@@ -341,6 +348,7 @@ export class TerminalAgentStore extends EventEmitter {
 			workspaceId: input.workspaceId,
 			eventType: input.eventType,
 			subagentId: input.subagentId,
+			sessionId: input.hint.sessionId,
 			...(input.agentType ? { agentType: input.agentType } : {}),
 			...(transcriptPath ? { transcriptPath } : {}),
 			occurredAt: input.occurredAt,
@@ -466,6 +474,7 @@ export class TerminalAgentStore extends EventEmitter {
 	}
 
 	get(terminalId: string): TerminalAgentBinding | undefined {
+		if (this.persistence?.getEnded?.(terminalId)) return undefined;
 		const binding = this.byTerminal.get(terminalId);
 		return binding && this.withRuntimeState(binding);
 	}
@@ -542,7 +551,8 @@ export class TerminalAgentStore extends EventEmitter {
 		for (const [id, subagent] of roster) {
 			const expired =
 				subagent.endedAt === undefined
-					? subagent.lastEventAt < now - SUBAGENT_STALE_MS
+					? !subagent.needsInput &&
+						subagent.lastEventAt < now - SUBAGENT_STALE_MS
 					: subagent.endedAt < now - SUBAGENT_ENDED_RETENTION_MS;
 			if (expired) roster.delete(id);
 		}

@@ -218,6 +218,10 @@ msgstr "{0, plural, one {#個工作區} other {#個工作區}}"
 msgid "{0, plural, one {A running agent still uses the previous account — the switch only reaches new launches.} other {# running agents still use the previous account — the switch only reaches new launches.}}"
 msgstr "{0, plural, one {#個執行中的代理程式仍在使用先前的帳戶。切換只對新啟動生效。} other {#個執行中的代理程式仍在使用先前的帳戶。切換只對新啟動生效。}}"
 
+#. placeholder {0}: Math.max(watchers.length, 1)
+msgid "{0, plural, one {Comments go to this agent} other {Comments go to these agents}}"
+msgstr "{0, plural, one {評論將傳送給此代理程式} other {評論將傳送給這些代理程式}}"
+
 #. placeholder {0}: failures.length
 #. placeholder {0}: nextFailures.length
 msgid "{0, plural, one {Couldn’t delete # workspace} other {Couldn’t delete # workspaces}}"
@@ -1363,6 +1367,9 @@ msgstr "獲客、內容、轉換、留存與發佈集中在一處。週圖表涵
 msgid "Action"
 msgstr "操作"
 
+msgid "Action type"
+msgstr "動作類型"
+
 msgid "Actions"
 msgstr "操作"
 
@@ -1378,10 +1385,6 @@ msgstr "啟用情況、進來之後的使用量，以及他們是否會回來。
 
 msgid "Active"
 msgstr "啟用中"
-
-#. placeholder {0}: formatDistanceToNowStrict(binding.lastEventAt, { addSuffix: true, })
-msgid "active {0}"
-msgstr "活躍{0}"
 
 msgid "Active agent sessions."
 msgstr "活躍的代理程式會話。"
@@ -1601,9 +1604,6 @@ msgstr "代理程式已完成"
 msgid "Agent Independence"
 msgstr "代理程式無關"
 
-msgid "Agent input, failed checks on your PRs, and reviews requested from you."
-msgstr "等待輸入的代理程式、你的 PR 中失敗的檢查，以及向你提出的審查請求。"
-
 msgid "Agent launch configuration"
 msgstr "代理程式啟動配置"
 
@@ -1654,6 +1654,12 @@ msgstr "代理程式自己載入預覽、操作介面，並在標記為待審查
 
 msgid "Agents running at once"
 msgstr "同時執行的代理程式數"
+
+msgid "Agents waiting for your input."
+msgstr "正在等待你輸入的代理。"
+
+msgid "Agents watching this page for comments"
+msgstr "正在關注此頁面評論的代理程式"
 
 msgid "Aggregate agent usage across every developer on the Superset leaderboard — tokens, cost, cache behaviour and which models people actually reach for."
 msgstr "Superset 排行榜上所有開發者的彙總代理使用量 — tokens、成本、快取行為，以及大家實際選用的模型。"
@@ -1909,6 +1915,10 @@ msgstr "另有：@superset/ui/spinner"
 
 msgid "Always know which agent needs you, with notifications that deep-link straight to the blocked agent."
 msgstr "隨時知道哪個代理程式需要你，通知可直接跳轉到被阻塞的代理程式。"
+
+msgctxt "page watcher with no known name"
+msgid "An agent"
+msgstr "代理程式"
 
 msgid "An agent completes multi-file changes end to end."
 msgstr "代理程式能端到端完成跨檔案改動。"
@@ -2261,9 +2271,6 @@ msgstr "在檢查通過前就嘗試"
 
 msgid "Attention"
 msgstr "待處理"
-
-msgid "Attention filters"
-msgstr "待處理事項篩選"
 
 msgid "Attention inbox"
 msgstr "待處理收件匣"
@@ -3172,9 +3179,6 @@ msgstr "選擇代理程式"
 msgid "Choose an existing repo folder"
 msgstr "選擇已有的儲存庫資料夾"
 
-msgid "Choose another filter or refresh to check again."
-msgstr "請選擇其他篩選條件，或重新整理後再檢查一次。"
-
 msgid "Choose app"
 msgstr "選擇應用"
 
@@ -3198,9 +3202,6 @@ msgstr "選擇要從應用程式內瀏覽器清除的內容。"
 
 msgid "Choose when Superset pings you."
 msgstr "選擇Superset在什麼時候通知你。"
-
-msgid "Choose which agent watches this page for comments"
-msgstr "選擇由哪個代理程式關注此頁面的評論"
 
 msgid "Choose which columns appear and use the arrows to set their left-to-right order."
 msgstr "選擇要顯示的欄，並使用箭頭設定由左至右的順序。"
@@ -3686,9 +3687,6 @@ msgstr "評論"
 msgid "Comments could not be loaded"
 msgstr "無法載入留言"
 
-msgid "Comments go to this agent"
-msgstr "評論將傳送給此代理程式"
-
 msgid "Commit"
 msgstr "提交"
 
@@ -3902,9 +3900,6 @@ msgstr "已連線 {label}"
 
 msgid "Connected as"
 msgstr "已連線為"
-
-msgid "Connected projects only. Refreshes every minute while this page is open."
-msgstr "僅限已連線的專案。此頁面開啟期間每分鐘重新整理一次。"
 
 msgid "Connected to"
 msgstr "已連線到"
@@ -4467,9 +4462,6 @@ msgstr "無法啟動會話"
 msgid "Could not stop it"
 msgstr "無法停止"
 
-msgid "Could not stop watching"
-msgstr "無法停止關注"
-
 msgid "Could not submit prompt. Try again."
 msgstr "無法提交提示詞。請重試。"
 
@@ -4488,9 +4480,6 @@ msgstr "無法更新分支"
 #. js-lingui-explicit-id
 msgid "serverError.plugins.credentialUnverified"
 msgstr "無法驗證憑證：{reason}"
-
-msgid "Could not watch this page"
-msgstr "無法關注此頁面"
 
 msgid "Couldn't confirm star status — check that the GitHub CLI (`gh`) is installed, signed in, and that you have a network connection"
 msgstr "無法確認加星狀態，請檢查是否已安裝並登入GitHub CLI（`gh`），以及網路是否連通"
@@ -6024,8 +6013,8 @@ msgstr "一切都能指令碼化。用CLI建立工作區和代理程式，用SDK
 msgid "Everything we built on top of the primitives — Superset originals, the"
 msgstr "我們在基礎元件之上構建的一切——Superset原創元件、面向代理程式介面的"
 
-msgid "Everything you've published is deleted, not hidden. You can rejoin later and it will rebuild from the transcripts still on this machine — only your past ranking is lost."
-msgstr "你釋出過的所有內容都會被刪除，而不是隱藏。你之後可以重新加入，屆時會根據此機器上仍保留的記錄重新生成，只有過往排名會丟失。"
+msgid "Everything you've published is deleted, not hidden. You can rejoin later and it will rebuild from the transcripts still on this machine."
+msgstr "你釋出過的所有內容都會被刪除，而不是隱藏。你之後可以重新加入，屆時會根據此機器上仍保留的記錄重新生成。"
 
 msgid "Existing repo path"
 msgstr "已有儲存庫路徑"
@@ -6162,9 +6151,6 @@ msgstr "失敗"
 
 msgid "Failed <0>· 7d</0>"
 msgstr "失敗 <0>· 7天</0>"
-
-msgid "Failed checks"
-msgstr "失敗的檢查"
 
 msgid "Failed to accept invitation"
 msgstr "接受邀請失敗"
@@ -6714,6 +6700,9 @@ msgstr "按審查篩選"
 
 msgid "Filter by state"
 msgstr "按狀態篩選"
+
+msgid "Filter by workspace: {label}"
+msgstr "依工作區篩選：{label}"
 
 msgid "Filter hosts"
 msgstr "篩選主機"
@@ -8050,8 +8039,8 @@ msgstr "斜體"
 msgid "Item"
 msgstr "條目"
 
-msgid "Items appear here when an agent needs input, your PR checks fail, or someone requests your review."
-msgstr "當代理程式需要輸入、你的 PR 檢查失敗，或有人請求你審查時，相關事項會顯示在這裡。"
+msgid "Items appear here when an agent needs your input."
+msgstr "代理需要你輸入時，相關項目會顯示在這裡。"
 
 msgid "Its own branch and copy of the files"
 msgstr "獨立的分支和檔案副本"
@@ -8563,9 +8552,6 @@ msgstr "載入更早的訊息"
 
 msgid "Load more"
 msgstr "載入更多"
-
-msgid "Load more results, reconnect unavailable hosts, or check your GitHub connection, then refresh."
-msgstr "請載入更多結果、重新連線至無法使用的主機，或檢查 GitHub 連線，然後重新整理。"
 
 msgid "Loaded issues: {shownCount}"
 msgstr "已載入議題：{shownCount}"
@@ -9559,9 +9545,6 @@ msgstr "這臺機器上沒有配置代理程式"
 msgid "No agents match \"{q}\"."
 msgstr "沒有匹配「{q}」的代理程式。"
 
-msgid "No agents running here"
-msgstr "這裡沒有執行中的代理程式"
-
 msgid "No agents yet"
 msgstr "暫無代理程式"
 
@@ -9763,9 +9746,6 @@ msgstr "沒有連結的 PR"
 msgid "No live sessions"
 msgstr "沒有活動會話"
 
-msgid "No loaded items match this filter"
-msgstr "已載入的事項中沒有符合此篩選條件的結果"
-
 msgid "no logins"
 msgstr "無登入資訊"
 
@@ -9949,6 +9929,9 @@ msgstr "沒有找到與「{searchQuery}」匹配的快速鍵"
 
 msgid "No sites are signed in"
 msgstr "沒有已登入的站點"
+
+msgid "No skills found"
+msgstr "找不到技能"
 
 msgid "No stack frames"
 msgstr "沒有堆疊框架"
@@ -10179,9 +10162,6 @@ msgstr "還沒有安裝任何外掛。"
 msgid "Nothing is running. Remove it and create a new one."
 msgstr "沒有任何東西在執行。移除它，再建一個。"
 
-msgid "Nothing is watching this page"
-msgstr "沒有代理程式在關注此頁面"
-
 msgid "Nothing lives at {pathname}."
 msgstr "{pathname}下沒有任何內容。"
 
@@ -10276,6 +10256,9 @@ msgstr "更早"
 msgid "on {offScopeHostName} — won't run here"
 msgstr "在{offScopeHostName}上，不會在這裡執行"
 
+msgid "On a host you can't reach"
+msgstr "在你無法連線的主機上"
+
 msgid "On click"
 msgstr "點選時"
 
@@ -10290,6 +10273,9 @@ msgstr "按此速度"
 
 msgid "On this page"
 msgstr "本頁內容"
+
+msgid "On worktree deletion"
+msgstr "刪除工作樹時"
 
 msgid "On your machine. Repos, worktrees, terminal output, and agent sessions stay local by default; cloud sync covers account and organization metadata only. Superset doesn't proxy any API calls."
 msgstr "在你自己的機器上。儲存庫、worktree、終端輸出和代理程式會話預設都留在本地；雲端同步只涉及帳戶和組織的後設資料。Superset不代理任何API呼叫。"
@@ -11121,9 +11107,6 @@ msgstr "一半是記錄，一半是下注。前兩條已經在發生。其餘的
 msgid "Partial"
 msgstr "部分開啟"
 
-msgid "Partial results"
-msgstr "部分結果"
-
 msgid "Partner, Transpose Platform"
 msgstr "合夥人，Transpose Platform"
 
@@ -11822,9 +11805,6 @@ msgstr "拉取請求"
 msgid "Pull Requests"
 msgstr "拉取請求"
 
-msgid "Pull requests are turned off. Only agent input is shown."
-msgstr "拉取請求已關閉。僅顯示等待輸入的代理程式。"
-
 msgid "Purple"
 msgstr "紫色"
 
@@ -12058,6 +12038,9 @@ msgstr "重新連線Linear"
 
 msgid "Reconnect required"
 msgstr "需要重新連線"
+
+msgid "Reconnect unavailable hosts, then refresh."
+msgstr "重新連接無法使用的主機，然後重新整理。"
 
 msgid "Reconnecting"
 msgstr "正在重新連線"
@@ -12744,9 +12727,6 @@ msgstr "在Superset裡審查拉取請求：差異面板、代理程式輔助審�
 msgid "Review requested"
 msgstr "已請求審查"
 
-msgid "Review requests"
-msgstr "審查請求"
-
 msgid "Review required"
 msgstr "需要審查"
 
@@ -12850,6 +12830,9 @@ msgstr "在您的設備上並行運行 10 多個編程代理"
 msgid "Run 10+ parallel coding agents on your machine."
 msgstr "在你的機器上並行執行10個以上的編碼代理程式。"
 
+msgid "Run action before deleting a worktree"
+msgstr "刪除工作樹前執行動作"
+
 msgid "Run automations on data source and comment activity."
 msgstr "在資料來源和評論活動上執行自動化。"
 
@@ -12942,6 +12925,9 @@ msgstr "執行中的終端處理程序會繼續，但重啟應用後可能無法
 
 msgid "Runs a local command on your machine"
 msgstr "在你的機器上執行本地命令"
+
+msgid "Runs before deletion using a copy of the latest session for this agent, when available. Skills have up to 10 minutes to finish."
+msgstr "刪除前執行；若此代理有最近的工作階段，則使用該工作階段的副本。技能最多可執行 10 分鐘。"
 
 msgid "Runs failed earlier this week, but nothing is failing right now"
 msgstr "本週早些時候有執行失敗，但現在沒有失敗的"
@@ -13360,6 +13346,9 @@ msgstr "選擇一個專案來檢視拉取請求。"
 msgid "Select a pull request to preview it here."
 msgstr "選擇一個拉取請求，在這裡預覽。"
 
+msgid "Select a skill"
+msgstr "選擇技能"
+
 msgid "Select a team"
 msgstr "選擇團隊"
 
@@ -13694,8 +13683,8 @@ msgstr "分享設計和報告，讓你的代理程式處理回饋。"
 msgid "Share page"
 msgstr "分享頁面"
 
-msgid "Share settings"
-msgstr "分享設定"
+msgid "Share page (public)"
+msgstr "分享頁面（公開）"
 
 msgid "Share this page"
 msgstr "分享此頁面"
@@ -14532,11 +14521,14 @@ msgstr "停止本地 {0}"
 msgid "Stop response"
 msgstr "停止回覆"
 
+msgid "Stop subagent"
+msgstr "停止子代理"
+
 msgid "Stop Superset here to delete from another device."
 msgstr "在此停止Superset，然後從其他裝置刪除。"
 
-msgid "Stop watching"
-msgstr "停止關注"
+msgid "Stop this subagent using the agent's own controls."
+msgstr "請使用代理本身的控制功能停止此子代理。"
 
 msgid "Stop workspace run command"
 msgstr "停止工作區執行命令"
@@ -14984,9 +14976,6 @@ msgstr "targetHostId與該工作區的主機不匹配"
 msgid "Task"
 msgstr "任務"
 
-msgid "Task {shortId}"
-msgstr "任務 {shortId}"
-
 msgid "Task Launch"
 msgstr "任務啟動"
 
@@ -15220,9 +15209,6 @@ msgstr "關聯的裝置現在連不上"
 
 msgid "The best agent will change.<0/>Your workflow shouldn't."
 msgstr "最好的代理程式會變。<0/>你的工作流不該變。"
-
-msgid "The Codex sign-in"
-msgstr "Codex登入"
 
 msgid "The config repository must be one of the environment's repositories"
 msgstr "設定儲存庫必須是該環境的儲存庫之一"
@@ -15582,6 +15568,9 @@ msgstr "這會關閉工作區及其終端機。檔案與分支會保留在磁碟
 msgid "This closes the workspace and its terminals. The project's files, branches and other workspaces stay as they are."
 msgstr "這將關閉該工作區及其終端機。專案的檔案、分支和其他工作區保持不變。"
 
+msgid "This cloud workspace is waking up, which can take up to 30 seconds after it has been idle."
+msgstr "正在喚醒此雲端工作區。如果它已閒置一段時間，可能需要最多 30 秒。"
+
 msgid "This deletes the saved scrollback used for reboot/crash recovery."
 msgstr "這將刪除用於重啟/崩潰恢復的已儲存回滾緩衝。"
 
@@ -15692,10 +15681,6 @@ msgstr "此頁面正在別處釋出，請重試"
 
 msgid "This page is in another organization"
 msgstr "這個頁面屬於另一個組織"
-
-#. placeholder {0}: url.replace(/^https?:\/\//, "")
-msgid "This page is live at <0>{0}</0>"
-msgstr "此頁面已發布在 <0>{0}</0>"
 
 msgid "This page isn't here"
 msgstr "找不到這個頁面"
@@ -16322,6 +16307,9 @@ msgstr "未知變數：{unknownVariables}"
 
 msgid "Unknown Welder"
 msgstr "未知焊接工"
+
+msgid "Unknown workspace"
+msgstr "未知工作區"
 
 msgid "Unlimited"
 msgstr "無限"

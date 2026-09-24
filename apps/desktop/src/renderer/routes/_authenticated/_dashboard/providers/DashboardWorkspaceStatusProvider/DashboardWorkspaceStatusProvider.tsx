@@ -339,6 +339,7 @@ export function DashboardWorkspaceStatusProvider({
 					binding.terminalId,
 					deriveTerminalAgentStatus({
 						lastEventType: binding.lastEventType,
+						subagents: binding.subagents,
 						lastEventAt: binding.lastEventAt,
 						lastSeenAt: terminalSeenAt[binding.terminalId],
 					}),

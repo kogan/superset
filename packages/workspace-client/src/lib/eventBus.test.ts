@@ -1,5 +1,9 @@
 import { afterEach, describe, expect, it } from "bun:test";
-import { getEventBus, reconnectEventBusIfDown } from "./eventBus";
+import {
+	type AgentLifecyclePayload,
+	getEventBus,
+	reconnectEventBusIfDown,
+} from "./eventBus";
 
 // Real WS server standing in for a host-service event bus. Records upgrades
 // and client commands; `push` broadcasts a server event to connected clients.
@@ -62,6 +66,29 @@ afterEach(() => {
 });
 
 describe("eventBus", () => {
+	it("preserves the child identity and question across the host websocket", async () => {
+		const host = makeHostServer();
+		const bus = getEventBus(host.hostUrl, () => "tok");
+		const received: AgentLifecyclePayload[] = [];
+		cleanups.push(
+			bus.on("agent:lifecycle", "ws-1", (_workspaceId, payload) =>
+				received.push(payload),
+			),
+		);
+		cleanups.push(() => host.server.stop(true));
+		await waitFor(() => host.clientCount() === 1);
+		const payload: AgentLifecyclePayload = {
+			eventType: "PermissionRequest",
+			terminalId: "parent-terminal",
+			subagent: { id: "child", name: "Review checkout" },
+			preview: "Which branch?",
+			occurredAt: 123,
+		};
+		host.push({ type: "agent:lifecycle", workspaceId: "ws-1", ...payload });
+		await waitFor(() => received.length === 1);
+		expect(received).toEqual([payload]);
+	});
+
 	it("routes events to listeners by type and workspaceId (exact and wildcard)", async () => {
 		const host = makeHostServer();
 		const bus = getEventBus(host.hostUrl, () => "tok");

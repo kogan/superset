@@ -596,10 +596,7 @@ export function createJiraClient({
 			if (status === "unfinished") clauses.push("statusCategory != Done");
 			if (status === "in-progress")
 				clauses.push('statusCategory = "In Progress"');
-			url.searchParams.set(
-				"jql",
-				`${clauses.join(" AND ")} ORDER BY updated DESC`,
-			);
+			url.searchParams.set("jql", `${clauses.join(" AND ")} ORDER BY Rank ASC`);
 			url.searchParams.set(
 				"fields",
 				"summary,status,project,priority,updated,assignee,description",

@@ -218,6 +218,10 @@ msgstr "{0, plural, one {# espace de travail} other {# espaces de travail}}"
 msgid "{0, plural, one {A running agent still uses the previous account — the switch only reaches new launches.} other {# running agents still use the previous account — the switch only reaches new launches.}}"
 msgstr "{0, plural, one {Un agent en cours utilise encore le compte précédent — le changement ne s'applique qu'aux nouveaux lancements.} other {# agents en cours utilisent encore le compte précédent — le changement ne s'applique qu'aux nouveaux lancements.}}"
 
+#. placeholder {0}: Math.max(watchers.length, 1)
+msgid "{0, plural, one {Comments go to this agent} other {Comments go to these agents}}"
+msgstr "{0, plural, one {Les commentaires sont envoyés à cet agent} other {Les commentaires sont envoyés à ces agents}}"
+
 #. placeholder {0}: failures.length
 #. placeholder {0}: nextFailures.length
 msgid "{0, plural, one {Couldn’t delete # workspace} other {Couldn’t delete # workspaces}}"
@@ -1363,6 +1367,9 @@ msgstr "Acquisition, contenu, conversion, rétention et distribution au même en
 msgid "Action"
 msgstr "Action"
 
+msgid "Action type"
+msgstr "Type d’action"
+
 msgid "Actions"
 msgstr "Actions"
 
@@ -1378,10 +1385,6 @@ msgstr "L'activation, l'usage une fois les gens entrés, et s'ils reviennent."
 
 msgid "Active"
 msgstr "Actives"
-
-#. placeholder {0}: formatDistanceToNowStrict(binding.lastEventAt, { addSuffix: true, })
-msgid "active {0}"
-msgstr "actif {0}"
 
 msgid "Active agent sessions."
 msgstr "Sessions d'agent actives."
@@ -1601,9 +1604,6 @@ msgstr "Agent terminé"
 msgid "Agent Independence"
 msgstr "Indépendance des agents"
 
-msgid "Agent input, failed checks on your PRs, and reviews requested from you."
-msgstr "Saisies requises par les agents, vérifications échouées sur vos PR et demandes de revue qui vous sont adressées."
-
 msgid "Agent launch configuration"
 msgstr "Configuration de lancement de l'agent"
 
@@ -1654,6 +1654,12 @@ msgstr "Les agents chargent leur propre aperçu, pilotent l'interface et joignen
 
 msgid "Agents running at once"
 msgstr "Agents lancés en parallèle"
+
+msgid "Agents waiting for your input."
+msgstr "Agents en attente de votre réponse."
+
+msgid "Agents watching this page for comments"
+msgstr "Agents qui surveillent les commentaires de cette page"
 
 msgid "Aggregate agent usage across every developer on the Superset leaderboard — tokens, cost, cache behaviour and which models people actually reach for."
 msgstr "L'usage agrégé des agents sur l'ensemble des développeurs du classement Superset — tokens, coût, comportement du cache et modèles réellement utilisés."
@@ -1909,6 +1915,10 @@ msgstr "Également : @superset/ui/spinner"
 
 msgid "Always know which agent needs you, with notifications that deep-link straight to the blocked agent."
 msgstr "Sachez toujours quel agent a besoin de vous, grâce à des notifications qui mènent directement à l'agent bloqué."
+
+msgctxt "page watcher with no known name"
+msgid "An agent"
+msgstr "Un agent"
 
 msgid "An agent completes multi-file changes end to end."
 msgstr "Un agent mène des changements multi-fichiers de bout en bout."
@@ -2261,9 +2271,6 @@ msgstr "Tenter avant la réussite des vérifications"
 
 msgid "Attention"
 msgstr "À traiter"
-
-msgid "Attention filters"
-msgstr "Filtres des éléments à traiter"
 
 msgid "Attention inbox"
 msgstr "Éléments à traiter"
@@ -3172,9 +3179,6 @@ msgstr "Choisir un agent"
 msgid "Choose an existing repo folder"
 msgstr "Choisir un dossier de dépôt existant"
 
-msgid "Choose another filter or refresh to check again."
-msgstr "Choisissez un autre filtre ou actualisez pour vérifier à nouveau."
-
 msgid "Choose app"
 msgstr "Choisir une application"
 
@@ -3198,9 +3202,6 @@ msgstr "Choisissez ce qu'il faut effacer du navigateur intégré."
 
 msgid "Choose when Superset pings you."
 msgstr "Choisissez quand Superset vous notifie."
-
-msgid "Choose which agent watches this page for comments"
-msgstr "Choisir l'agent qui surveille les commentaires de cette page"
 
 msgid "Choose which columns appear and use the arrows to set their left-to-right order."
 msgstr "Choisissez les colonnes à afficher et utilisez les flèches pour définir leur ordre de gauche à droite."
@@ -3686,9 +3687,6 @@ msgstr "Commentaires"
 msgid "Comments could not be loaded"
 msgstr "Les commentaires n'ont pas pu être chargés"
 
-msgid "Comments go to this agent"
-msgstr "Les commentaires sont envoyés à cet agent"
-
 msgid "Commit"
 msgstr "Commiter"
 
@@ -3902,9 +3900,6 @@ msgstr "{label} connecté"
 
 msgid "Connected as"
 msgstr "Connecté en tant que"
-
-msgid "Connected projects only. Refreshes every minute while this page is open."
-msgstr "Projets connectés uniquement. Actualisation chaque minute tant que cette page est ouverte."
 
 msgid "Connected to"
 msgstr "Connecté à"
@@ -4467,9 +4462,6 @@ msgstr "Impossible de démarrer la session"
 msgid "Could not stop it"
 msgstr "Impossible de l'arrêter"
 
-msgid "Could not stop watching"
-msgstr "Impossible d'arrêter la surveillance"
-
 msgid "Could not submit prompt. Try again."
 msgstr "Impossible de soumettre le prompt. Réessayez."
 
@@ -4488,9 +4480,6 @@ msgstr "Impossible de mettre à jour la branche"
 #. js-lingui-explicit-id
 msgid "serverError.plugins.credentialUnverified"
 msgstr "Impossible de vérifier les identifiants : {reason}"
-
-msgid "Could not watch this page"
-msgstr "Impossible de surveiller cette page"
 
 msgid "Couldn't confirm star status — check that the GitHub CLI (`gh`) is installed, signed in, and that you have a network connection"
 msgstr "Impossible de confirmer l'état de l'étoile — vérifiez que la CLI GitHub (`gh`) est installée, que vous y êtes connecté et que vous disposez d'une connexion réseau"
@@ -6024,8 +6013,8 @@ msgstr "Tout est scriptable. Créez des espaces de travail et des agents depuis 
 msgid "Everything we built on top of the primitives — Superset originals, the"
 msgstr "Tout ce que nous avons construit par-dessus les primitives — les originaux Superset, la"
 
-msgid "Everything you've published is deleted, not hidden. You can rejoin later and it will rebuild from the transcripts still on this machine — only your past ranking is lost."
-msgstr "Tout ce que vous avez publié est supprimé, pas masqué. Vous pourrez revenir plus tard et tout sera reconstruit à partir des transcriptions encore présentes sur cette machine — seul votre classement passé est perdu."
+msgid "Everything you've published is deleted, not hidden. You can rejoin later and it will rebuild from the transcripts still on this machine."
+msgstr "Tout ce que vous avez publié est supprimé, pas masqué. Vous pourrez revenir plus tard et tout sera reconstruit à partir des transcriptions encore présentes sur cette machine."
 
 msgid "Existing repo path"
 msgstr "Chemin du dépôt existant"
@@ -6162,9 +6151,6 @@ msgstr "Échec"
 
 msgid "Failed <0>· 7d</0>"
 msgstr "Échecs <0>· 7 j</0>"
-
-msgid "Failed checks"
-msgstr "Vérifications échouées"
 
 msgid "Failed to accept invitation"
 msgstr "Échec de l'acceptation de l'invitation"
@@ -6714,6 +6700,9 @@ msgstr "Filtrer par revues"
 
 msgid "Filter by state"
 msgstr "Filtrer par état"
+
+msgid "Filter by workspace: {label}"
+msgstr "Filtrer par espace de travail : {label}"
 
 msgid "Filter hosts"
 msgstr "Filtrer les hôtes"
@@ -8050,8 +8039,8 @@ msgstr "Italique"
 msgid "Item"
 msgstr "Élément"
 
-msgid "Items appear here when an agent needs input, your PR checks fail, or someone requests your review."
-msgstr "Les éléments apparaissent ici lorsqu'un agent attend une saisie, que les vérifications de vos PR échouent ou qu'une revue vous est demandée."
+msgid "Items appear here when an agent needs your input."
+msgstr "Les éléments apparaissent ici lorsqu’un agent attend votre réponse."
 
 msgid "Its own branch and copy of the files"
 msgstr "Sa propre branche et sa propre copie des fichiers"
@@ -8563,9 +8552,6 @@ msgstr "Charger les messages précédents"
 
 msgid "Load more"
 msgstr "Charger plus"
-
-msgid "Load more results, reconnect unavailable hosts, or check your GitHub connection, then refresh."
-msgstr "Chargez plus de résultats, reconnectez les hôtes indisponibles ou vérifiez votre connexion à GitHub, puis actualisez."
 
 msgid "Loaded issues: {shownCount}"
 msgstr "Tickets chargés : {shownCount}"
@@ -9559,9 +9545,6 @@ msgstr "Aucun agent configuré sur cette machine"
 msgid "No agents match \"{q}\"."
 msgstr "Aucun agent ne correspond à « {q} »."
 
-msgid "No agents running here"
-msgstr "Aucun agent en cours d'exécution ici"
-
 msgid "No agents yet"
 msgstr "Aucun agent pour l'instant"
 
@@ -9763,9 +9746,6 @@ msgstr "Aucune PR liée"
 msgid "No live sessions"
 msgstr "Aucune session active"
 
-msgid "No loaded items match this filter"
-msgstr "Aucun élément chargé ne correspond à ce filtre"
-
 msgid "no logins"
 msgstr "aucun identifiant"
 
@@ -9949,6 +9929,9 @@ msgstr "Aucun raccourci ne correspond à « {searchQuery} »"
 
 msgid "No sites are signed in"
 msgstr "Aucun site connecté"
+
+msgid "No skills found"
+msgstr "Aucune compétence trouvée"
 
 msgid "No stack frames"
 msgstr "Aucune frame de pile"
@@ -10179,9 +10162,6 @@ msgstr "Rien d'installé pour le moment."
 msgid "Nothing is running. Remove it and create a new one."
 msgstr "Rien ne tourne. Supprimez-le et créez-en un nouveau."
 
-msgid "Nothing is watching this page"
-msgstr "Rien ne surveille cette page"
-
 msgid "Nothing lives at {pathname}."
 msgstr "Il n'y a rien à l'emplacement {pathname}."
 
@@ -10276,6 +10256,9 @@ msgstr "Plus ancien"
 msgid "on {offScopeHostName} — won't run here"
 msgstr "sur {offScopeHostName} — ne s'exécutera pas ici"
 
+msgid "On a host you can't reach"
+msgstr "Sur un hôte que vous ne pouvez pas joindre"
+
 msgid "On click"
 msgstr "Au clic"
 
@@ -10290,6 +10273,9 @@ msgstr "À ce rythme"
 
 msgid "On this page"
 msgstr "Sur cette page"
+
+msgid "On worktree deletion"
+msgstr "Lors de la suppression de l’arbre de travail"
 
 msgid "On your machine. Repos, worktrees, terminal output, and agent sessions stay local by default; cloud sync covers account and organization metadata only. Superset doesn't proxy any API calls."
 msgstr "Sur votre machine. Les dépôts, les worktrees, la sortie du terminal et les sessions d'agents restent locaux par défaut ; la synchronisation cloud ne couvre que les métadonnées de compte et d'organisation. Superset ne relaie aucun appel d'API."
@@ -11121,9 +11107,6 @@ msgstr "Mi-constat, mi-pari. Les deux premières entrées se produisent déjà. 
 msgid "Partial"
 msgstr "Partielle"
 
-msgid "Partial results"
-msgstr "Résultats partiels"
-
 msgid "Partner, Transpose Platform"
 msgstr "Associé, Transpose Platform"
 
@@ -11822,9 +11805,6 @@ msgstr "Pull requests"
 msgid "Pull Requests"
 msgstr "Pull requests"
 
-msgid "Pull requests are turned off. Only agent input is shown."
-msgstr "Les pull requests sont désactivées. Seules les saisies requises par les agents sont affichées."
-
 msgid "Purple"
 msgstr "Violet"
 
@@ -12058,6 +12038,9 @@ msgstr "Reconnecter Linear"
 
 msgid "Reconnect required"
 msgstr "Reconnexion requise"
+
+msgid "Reconnect unavailable hosts, then refresh."
+msgstr "Reconnectez les hôtes indisponibles, puis actualisez."
 
 msgid "Reconnecting"
 msgstr "Reconnexion"
@@ -12744,9 +12727,6 @@ msgstr "Passez vos pull requests en revue dans Superset : volet de diff, revue a
 msgid "Review requested"
 msgstr "Revue demandée"
 
-msgid "Review requests"
-msgstr "Demandes de revue"
-
 msgid "Review required"
 msgstr "Revue requise"
 
@@ -12850,6 +12830,9 @@ msgstr "Exécutez plus de 10 agents de programmation en parallèle sur votre mac
 msgid "Run 10+ parallel coding agents on your machine."
 msgstr "Exécutez plus de 10 agents de code en parallèle sur votre machine."
 
+msgid "Run action before deleting a worktree"
+msgstr "Exécuter l’action avant de supprimer un arbre de travail"
+
 msgid "Run automations on data source and comment activity."
 msgstr "Exécutez des automatisations sur l'activité des sources de données et des commentaires."
 
@@ -12942,6 +12925,9 @@ msgstr "Les processus de terminal en cours continuent, mais les sorties plus anc
 
 msgid "Runs a local command on your machine"
 msgstr "Exécute une commande locale sur votre machine"
+
+msgid "Runs before deletion using a copy of the latest session for this agent, when available. Skills have up to 10 minutes to finish."
+msgstr "S’exécute avant la suppression en utilisant une copie de la dernière session de cet agent, si elle existe. Les compétences disposent de 10 minutes maximum pour terminer."
 
 msgid "Runs failed earlier this week, but nothing is failing right now"
 msgstr "Des exécutions ont échoué plus tôt cette semaine, mais rien n'échoue actuellement"
@@ -13360,6 +13346,9 @@ msgstr "Sélectionnez un projet pour voir les pull requests."
 msgid "Select a pull request to preview it here."
 msgstr "Sélectionnez une pull request pour la prévisualiser ici."
 
+msgid "Select a skill"
+msgstr "Sélectionner une compétence"
+
 msgid "Select a team"
 msgstr "Sélectionner une équipe"
 
@@ -13694,8 +13683,8 @@ msgstr "Partagez des maquettes et des rapports. Laissez votre agent traiter les 
 msgid "Share page"
 msgstr "Partager la page"
 
-msgid "Share settings"
-msgstr "Paramètres de partage"
+msgid "Share page (public)"
+msgstr "Partager la page (publique)"
 
 msgid "Share this page"
 msgstr "Partager cette page"
@@ -14532,11 +14521,14 @@ msgstr "Arrêter le {0} local"
 msgid "Stop response"
 msgstr "Arrêter la réponse"
 
+msgid "Stop subagent"
+msgstr "Arrêter le sous-agent"
+
 msgid "Stop Superset here to delete from another device."
 msgstr "Arrêtez Superset ici pour le supprimer depuis un autre appareil."
 
-msgid "Stop watching"
-msgstr "Arrêter la surveillance"
+msgid "Stop this subagent using the agent's own controls."
+msgstr "Arrêtez ce sous-agent avec les commandes de l’agent."
 
 msgid "Stop workspace run command"
 msgstr "Arrêter la commande d'exécution de l'espace de travail"
@@ -14984,9 +14976,6 @@ msgstr "targetHostId ne correspond pas à l'hôte de l'espace de travail"
 msgid "Task"
 msgstr "Tâche"
 
-msgid "Task {shortId}"
-msgstr "Tâche {shortId}"
-
 msgid "Task Launch"
 msgstr "Lancement de tâche"
 
@@ -15220,9 +15209,6 @@ msgstr "L'appareil associé n'est pas joignable pour le moment"
 
 msgid "The best agent will change.<0/>Your workflow shouldn't."
 msgstr "Le meilleur agent changera.<0/>Pas votre façon de travailler."
-
-msgid "The Codex sign-in"
-msgstr "La connexion Codex"
 
 msgid "The config repository must be one of the environment's repositories"
 msgstr "Le dépôt de configuration doit être l'un des dépôts de l'environnement"
@@ -15582,6 +15568,9 @@ msgstr "Cela ferme l’espace de travail et ses terminaux. Les fichiers et les b
 msgid "This closes the workspace and its terminals. The project's files, branches and other workspaces stay as they are."
 msgstr "Cela ferme l'espace de travail et ses terminaux. Les fichiers, les branches et les autres espaces de travail du projet restent tels quels."
 
+msgid "This cloud workspace is waking up, which can take up to 30 seconds after it has been idle."
+msgstr "Cet espace de travail cloud est en train de se réveiller, ce qui peut prendre jusqu’à 30 secondes après une période d’inactivité."
+
 msgid "This deletes the saved scrollback used for reboot/crash recovery."
 msgstr "Cette action supprime l'historique de défilement enregistré, utilisé pour la reprise après redémarrage ou plantage."
 
@@ -15692,10 +15681,6 @@ msgstr "Cette page est en cours de publication ailleurs — réessayez"
 
 msgid "This page is in another organization"
 msgstr "Cette page appartient à une autre organisation"
-
-#. placeholder {0}: url.replace(/^https?:\/\//, "")
-msgid "This page is live at <0>{0}</0>"
-msgstr "Cette page est en ligne sur <0>{0}</0>"
 
 msgid "This page isn't here"
 msgstr "Cette page n'est pas ici"
@@ -16322,6 +16307,9 @@ msgstr "Variables inconnues : {unknownVariables}"
 
 msgid "Unknown Welder"
 msgstr "Soudeur inconnu"
+
+msgid "Unknown workspace"
+msgstr "Espace de travail inconnu"
 
 msgid "Unlimited"
 msgstr "Illimité"

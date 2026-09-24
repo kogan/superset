@@ -61,7 +61,11 @@ export function handleV2AgentLifecycleEvent({
 	) {
 		return;
 	}
-	if (shouldSuppress(target, localPaneLayout)) return;
+	if (
+		payload.eventType !== "PermissionRequest" &&
+		shouldSuppress(target, localPaneLayout)
+	)
+		return;
 
 	const ringtoneId = useRingtoneStore.getState().selectedRingtoneId;
 	void playRingtone({ ringtoneId, volume, muted });

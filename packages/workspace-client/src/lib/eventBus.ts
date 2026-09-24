@@ -1,5 +1,4 @@
 import type {
-	AgentLifecycleEventType,
 	ClientMessage,
 	DistributiveOmit,
 	ServerMessage,
@@ -38,14 +37,10 @@ export interface GitChangedPayload {
 	paths?: string[];
 }
 
-export interface AgentLifecyclePayload {
-	eventType: AgentLifecycleEventType;
-	terminalId: string;
-	// Absent when the hook ran without `SUPERSET_AGENT_ID` set.
-	agent?: AgentIdentity;
-	preview?: string;
-	occurredAt: number;
-}
+export type AgentLifecyclePayload = Omit<
+	Extract<ServerMessage, { type: "agent:lifecycle" }>,
+	"type" | "workspaceId"
+>;
 
 export interface AgentBindingsChangedPayload {
 	occurredAt: number;
@@ -321,6 +316,7 @@ function handleMessage(state: ConnectionState, data: unknown): void {
 					terminalId: message.terminalId,
 					...(message.agent ? { agent: message.agent } : {}),
 					...(message.preview ? { preview: message.preview } : {}),
+					...(message.subagent ? { subagent: message.subagent } : {}),
 					occurredAt: message.occurredAt,
 				},
 			);

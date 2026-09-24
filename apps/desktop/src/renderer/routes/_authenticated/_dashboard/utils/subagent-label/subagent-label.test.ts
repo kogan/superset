@@ -22,7 +22,7 @@ test("custom names override task descriptions, then useful roles", () => {
 	);
 });
 
-test("generic roles get distinct task labels, including UUIDs with the same timestamp", () => {
+test("unnamed subagents never display random identifier fragments", () => {
 	for (const agentType of [
 		undefined,
 		"default",
@@ -35,9 +35,9 @@ test("generic roles get distinct task labels, including UUIDs with the same time
 				id: "01a0bef7-7643-7363-8d0a-2ecfe716b372",
 				agentType,
 			}),
-		).toBe("Task e716b372");
+		).toBe("Subagent");
 	}
 	expect(getSubagentLabel({ id: "01a0bef7-7643-7363-8d0a-2ecfabcd1234" })).toBe(
-		"Task abcd1234",
+		"Subagent",
 	);
 });

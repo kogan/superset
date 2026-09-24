@@ -105,8 +105,31 @@ function writeHookManifest(home: string, orgId: string, endpoint: string) {
 }
 
 describe("getNotifyScriptContent", () => {
+	it.each([
+		undefined,
+		"child-thread",
+	])("includes a question preview for parent and child hooks: %s", async (childId) => {
+		const host = fakeHostService(false);
+		try {
+			const result = await runNotifyHookAsync(
+				{
+					hook_event_name: "PreToolUse",
+					agent_id: childId,
+					tool_input: { questions: [{ question: 'Which "database"?' }] },
+				},
+				{ SUPERSET_HOST_AGENT_HOOK_URL: `${host.url}/trpc/notifications.hook` },
+			);
+			expect(result.exitCode).toBe(0);
+			expect(host.requests[0]?.json.preview).toBe('Which "database"?');
+		} finally {
+			host.stop();
+		}
+	});
+
 	it("bumps the notify hook marker when hook semantics change", () => {
-		expect(NOTIFY_SCRIPT_MARKER).toBe("# SuperestSet agent notification hook v19");
+		expect(NOTIFY_SCRIPT_MARKER).toBe(
+			"# SuperestSet agent notification hook v20",
+		);
 	});
 
 	it("forwards hooks fired inside a subagent (agent_id present) to the host roster only", async () => {

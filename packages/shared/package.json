@@ -4,6 +4,10 @@
 	"private": true,
 	"type": "module",
 	"exports": {
+		"./worktree-deletion": {
+			"types": "./src/worktree-deletion.ts",
+			"default": "./src/worktree-deletion.ts"
+		},
 		"./connectors": {
 			"types": "./src/connectors/index.ts",
 			"default": "./src/connectors/index.ts"

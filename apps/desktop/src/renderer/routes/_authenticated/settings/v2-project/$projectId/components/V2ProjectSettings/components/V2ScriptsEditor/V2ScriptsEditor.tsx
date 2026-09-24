@@ -1,11 +1,18 @@
 import { Trans } from "@lingui/react/macro";
+import {
+	type WorktreeDeletionAction,
+	worktreeDeletionActionSchema,
+} from "@superset/shared/worktree-deletion";
+import { Label } from "@superset/ui/label";
 import { Skeleton } from "@superset/ui/skeleton";
+import { Switch } from "@superset/ui/switch";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@superset/ui/tabs";
 import { cn } from "@superset/ui/utils";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { HiCheckCircle } from "react-icons/hi2";
 import { getHostServiceClientByUrl } from "renderer/lib/host-service-client";
+import { DeletionActionField } from "./components/DeletionActionField";
 import { ScriptField } from "./components/ScriptField";
 
 interface V2ScriptsEditorProps {
@@ -17,19 +24,36 @@ interface V2ScriptsEditorProps {
 interface ParsedConfig {
 	setup: string;
 	teardown: string;
+	close: string;
+	closeEnabled: boolean;
+	closeAction: WorktreeDeletionAction;
 	run: string;
 }
 
-type ScriptFieldName = keyof ParsedConfig;
+type ScriptFieldName = Exclude<
+	keyof ParsedConfig,
+	"closeEnabled" | "closeAction"
+>;
 
 interface ScriptPayload {
 	setup: string[];
 	teardown: string[];
+	close: string[];
+	closeEnabled: boolean;
+	closeAction: WorktreeDeletionAction;
 	run: string[];
 }
 
 function parseConfigContent(content: string | null): ParsedConfig {
-	if (!content) return { setup: "", teardown: "", run: "" };
+	if (!content)
+		return {
+			setup: "",
+			teardown: "",
+			close: "",
+			closeEnabled: true,
+			closeAction: { type: "command" },
+			run: "",
+		};
 	try {
 		const parsed = JSON.parse(content);
 		const setup = Array.isArray(parsed?.setup)
@@ -40,16 +64,30 @@ function parseConfigContent(content: string | null): ParsedConfig {
 					(s: unknown): s is string => typeof s === "string",
 				)
 			: [];
+		const close = Array.isArray(parsed?.close)
+			? parsed.close.filter((s: unknown): s is string => typeof s === "string")
+			: [];
 		const run = Array.isArray(parsed?.run)
 			? parsed.run.filter((s: unknown): s is string => typeof s === "string")
 			: [];
 		return {
 			setup: setup.join("\n"),
 			teardown: teardown.join("\n"),
+			close: close.join("\n"),
+			closeEnabled: parsed.closeEnabled !== false,
+			closeAction: worktreeDeletionActionSchema.safeParse(parsed.closeAction)
+				.data ?? { type: "command" },
 			run: run.join("\n"),
 		};
 	} catch {
-		return { setup: "", teardown: "", run: "" };
+		return {
+			setup: "",
+			teardown: "",
+			close: "",
+			closeEnabled: true,
+			closeAction: { type: "command" },
+			run: "",
+		};
 	}
 }
 
@@ -68,6 +106,9 @@ function buildPayload(values: ParsedConfig): ScriptPayload {
 	return {
 		setup: toCommandsArray(values.setup),
 		teardown: toCommandsArray(values.teardown),
+		close: toCommandsArray(values.close),
+		closeEnabled: values.closeEnabled,
+		closeAction: values.closeAction,
 		run: toCommandsArray(values.run),
 	};
 }
@@ -76,6 +117,9 @@ function payloadsEqual(a: ScriptPayload, b: ScriptPayload): boolean {
 	return (
 		arraysEqual(a.setup, b.setup) &&
 		arraysEqual(a.teardown, b.teardown) &&
+		arraysEqual(a.close, b.close) &&
+		a.closeEnabled === b.closeEnabled &&
+		JSON.stringify(a.closeAction) === JSON.stringify(b.closeAction) &&
 		arraysEqual(a.run, b.run)
 	);
 }
@@ -114,17 +158,28 @@ export function V2ScriptsEditor({
 
 	const [setupValue, setSetupValue] = useState("");
 	const [teardownValue, setTeardownValue] = useState("");
+	const [closeValue, setCloseValue] = useState("");
+	const [closeEnabled, setCloseEnabled] = useState(true);
+	const [closeAction, setCloseAction] = useState<WorktreeDeletionAction>({
+		type: "command",
+	});
 	const [runValue, setRunValue] = useState("");
 	const [saveStatus, setSaveStatus] = useState<SaveStatus>("idle");
 	const focusedRef = useRef<ScriptFieldName | null>(null);
 	const latestValuesRef = useRef<ParsedConfig>({
 		setup: "",
 		teardown: "",
+		close: "",
+		closeEnabled: true,
+		closeAction: { type: "command" },
 		run: "",
 	});
 	const lastSavedRef = useRef<ScriptPayload>({
 		setup: [],
 		teardown: [],
+		close: [],
+		closeEnabled: true,
+		closeAction: { type: "command" },
 		run: [],
 	});
 	const debounceTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -145,6 +200,9 @@ export function V2ScriptsEditor({
 		const parsed = parseConfigContent(configData?.content ?? null);
 		setSetupValue(parsed.setup);
 		setTeardownValue(parsed.teardown);
+		setCloseValue(parsed.close);
+		setCloseEnabled(parsed.closeEnabled);
+		setCloseAction(parsed.closeAction);
 		setRunValue(parsed.run);
 		latestValuesRef.current = parsed;
 		lastSavedRef.current = buildPayload(parsed);
@@ -158,12 +216,8 @@ export function V2ScriptsEditor({
 	}, []);
 
 	const updateMutation = useMutation({
-		mutationFn: (input: {
-			projectId: string;
-			setup: string[];
-			teardown: string[];
-			run: string[];
-		}) => getHostServiceClientByUrl(hostUrl).config.updateConfig.mutate(input),
+		mutationFn: (input: ScriptPayload & { projectId: string }) =>
+			getHostServiceClientByUrl(hostUrl).config.updateConfig.mutate(input),
 		onSuccess: () => {
 			void queryClient.invalidateQueries({ queryKey: configQueryKey });
 		},
@@ -171,12 +225,12 @@ export function V2ScriptsEditor({
 
 	const flushSave = useCallback(
 		async (next: ScriptPayload = buildPayload(latestValuesRef.current)) => {
-			if (payloadsEqual(next, lastSavedRef.current)) {
+			if (saveInFlightRef.current) {
+				queuedPayloadRef.current = next;
 				return;
 			}
 
-			if (saveInFlightRef.current) {
-				queuedPayloadRef.current = next;
+			if (payloadsEqual(next, lastSavedRef.current)) {
 				return;
 			}
 
@@ -246,6 +300,7 @@ export function V2ScriptsEditor({
 
 			if (field === "setup") setSetupValue(value);
 			if (field === "teardown") setTeardownValue(value);
+			if (field === "close") setCloseValue(value);
 			if (field === "run") setRunValue(value);
 
 			scheduleSave(nextValues);
@@ -264,6 +319,9 @@ export function V2ScriptsEditor({
 		const trimmedValues = {
 			setup: trimScriptValue(latestValuesRef.current.setup),
 			teardown: trimScriptValue(latestValuesRef.current.teardown),
+			close: trimScriptValue(latestValuesRef.current.close),
+			closeEnabled: latestValuesRef.current.closeEnabled,
+			closeAction: latestValuesRef.current.closeAction,
 			run: trimScriptValue(latestValuesRef.current.run),
 		};
 		latestValuesRef.current = trimmedValues;
@@ -272,10 +330,11 @@ export function V2ScriptsEditor({
 		if (trimmedValues.teardown !== teardownValue) {
 			setTeardownValue(trimmedValues.teardown);
 		}
+		if (trimmedValues.close !== closeValue) setCloseValue(trimmedValues.close);
 		if (trimmedValues.run !== runValue) setRunValue(trimmedValues.run);
 
 		await flushSave(buildPayload(trimmedValues));
-	}, [flushSave, runValue, setupValue, teardownValue]);
+	}, [closeValue, flushSave, runValue, setupValue, teardownValue]);
 
 	if (isLoading) {
 		return (
@@ -306,6 +365,12 @@ export function V2ScriptsEditor({
 							className="relative h-8 rounded-none border-0 bg-transparent px-3 text-sm font-medium text-muted-foreground shadow-none transition-colors hover:text-foreground data-[state=active]:bg-transparent data-[state=active]:text-foreground data-[state=active]:shadow-none after:absolute after:inset-x-0 after:-bottom-px after:h-px after:bg-transparent data-[state=active]:after:bg-foreground"
 						>
 							<Trans>Teardown</Trans>
+						</TabsTrigger>
+						<TabsTrigger
+							value="close"
+							className="relative h-8 rounded-none border-0 bg-transparent px-3 text-sm font-medium text-muted-foreground shadow-none transition-colors hover:text-foreground data-[state=active]:bg-transparent data-[state=active]:text-foreground data-[state=active]:shadow-none after:absolute after:inset-x-0 after:-bottom-px after:h-px after:bg-transparent data-[state=active]:after:bg-foreground"
+						>
+							<Trans>On worktree deletion</Trans>
 						</TabsTrigger>
 						<TabsTrigger
 							value="run"
@@ -349,6 +414,56 @@ export function V2ScriptsEditor({
 						}}
 						onBlur={() => handleBlur()}
 					/>
+				</TabsContent>
+				<TabsContent value="close">
+					<div className="mb-3 flex items-center justify-between gap-4">
+						<Label htmlFor="worktree-deletion-enabled">
+							<Trans>Run action before deleting a worktree</Trans>
+						</Label>
+						<Switch
+							id="worktree-deletion-enabled"
+							checked={closeEnabled}
+							onCheckedChange={(enabled) => {
+								setCloseEnabled(enabled);
+								latestValuesRef.current = {
+									...latestValuesRef.current,
+									closeEnabled: enabled,
+								};
+								if (debounceTimerRef.current) {
+									clearTimeout(debounceTimerRef.current);
+									debounceTimerRef.current = null;
+								}
+								void flushSave();
+							}}
+						/>
+					</div>
+					<DeletionActionField
+						hostUrl={hostUrl}
+						projectId={projectId}
+						action={closeAction}
+						onChange={(action) => {
+							setCloseAction(action);
+							latestValuesRef.current = {
+								...latestValuesRef.current,
+								closeAction: action,
+							};
+							if (debounceTimerRef.current) {
+								clearTimeout(debounceTimerRef.current);
+								debounceTimerRef.current = null;
+							}
+							void flushSave();
+						}}
+					>
+						<ScriptField
+							placeholder="docker compose down"
+							value={closeValue}
+							onChange={(value) => handleChange("close", value)}
+							onFocus={() => {
+								focusedRef.current = "close";
+							}}
+							onBlur={() => handleBlur()}
+						/>
+					</DeletionActionField>
 				</TabsContent>
 				<TabsContent value="run">
 					<ScriptField

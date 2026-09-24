@@ -36,6 +36,7 @@ export const SETTING_ITEM_ID = {
 	USAGE_RESOURCES: "usage-resources",
 
 	KEYBOARD_SHORTCUTS: "keyboard-shortcuts",
+	BEHAVIOR_FEATURE_WORKSPACES: "behavior-feature-workspaces",
 	BEHAVIOR_FEATURE_ATTENTION: "behavior-feature-attention",
 	BEHAVIOR_FEATURE_JIRA: "behavior-feature-jira",
 	BEHAVIOR_FEATURE_PULL_REQUESTS: "behavior-feature-pull-requests",
@@ -194,6 +195,7 @@ export const SETTING_ITEM_VARIANT: Record<SettingItemId, SettingVariant> = {
 
 	[SETTING_ITEM_ID.KEYBOARD_SHORTCUTS]: "shared",
 
+	[SETTING_ITEM_ID.BEHAVIOR_FEATURE_WORKSPACES]: "v2",
 	[SETTING_ITEM_ID.BEHAVIOR_FEATURE_ATTENTION]: "v2",
 	[SETTING_ITEM_ID.BEHAVIOR_FEATURE_JIRA]: "v2",
 	[SETTING_ITEM_ID.BEHAVIOR_FEATURE_PULL_REQUESTS]: "v2",
@@ -772,6 +774,21 @@ export const SETTINGS_ITEMS: SettingsItem[] = [
 		],
 	},
 	{
+		id: SETTING_ITEM_ID.BEHAVIOR_FEATURE_WORKSPACES,
+		section: "behavior",
+		title: "Workspaces",
+		description: "Show or hide the Workspaces view in the sidebar",
+		keywords: [
+			"features",
+			"toggle",
+			"enable",
+			"disable",
+			"sidebar",
+			"board",
+			"list",
+		],
+	},
+	{
 		id: SETTING_ITEM_ID.BEHAVIOR_FEATURE_ATTENTION,
 		section: "behavior",
 		title: "Attention inbox",
@@ -782,8 +799,8 @@ export const SETTINGS_ITEMS: SettingsItem[] = [
 			"enable",
 			"disable",
 			"agents",
-			"reviews",
-			"checks",
+			"questions",
+			"input",
 			"inbox",
 		],
 	},
@@ -1646,12 +1663,18 @@ export const SETTINGS_ITEMS: SettingsItem[] = [
 		id: SETTING_ITEM_ID.PROJECT_SCRIPTS,
 		section: "project",
 		title: "Project Lifecycle Scripts",
-		description: "Setup, teardown, and run lifecycle scripts for workspaces",
+		description:
+			"Setup, worktree deletion, and run lifecycle scripts for workspaces",
 		keywords: [
 			"project",
 			"scripts",
 			"setup",
 			"teardown",
+			"worktree close",
+			"worktree deletion",
+			"enable",
+			"disable",
+			"close actions",
 			"run",
 			"bash",
 			"shell",

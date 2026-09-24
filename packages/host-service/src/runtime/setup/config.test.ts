@@ -453,7 +453,7 @@ describe("resolveScript", () => {
 		sandbox.cleanup();
 	});
 
-	function resolve(key: "setup" | "teardown" | "run") {
+	function resolve(key: "setup" | "teardown" | "close" | "run") {
 		return resolveScript(key, {
 			repoPath: sandbox.repoPath,
 			projectId: PROJECT_ID,
@@ -468,6 +468,31 @@ describe("resolveScript", () => {
 		writeFileSync(scriptPath, "#!/usr/bin/env bash\n", "utf-8");
 		return scriptPath;
 	}
+
+	it("project switch disables commands and fallback scripts despite worktree overrides", () => {
+		writeRepoConfig(sandbox.repoPath, {
+			closeEnabled: false,
+			close: ["from-repo"],
+		});
+		const worktreePath = join(sandbox.repoPath, ".worktrees", "feature");
+		writeRepoConfig(worktreePath, {
+			closeEnabled: true,
+			close: ["from-worktree"],
+		});
+		const args = {
+			repoPath: sandbox.repoPath,
+			projectId: PROJECT_ID,
+			homeDir: sandbox.homeDir,
+			worktreePath,
+		};
+		expect(resolveScript("close", args)).toBeNull();
+		writeRepoConfig(sandbox.repoPath, { closeEnabled: false });
+		writeRepoConfig(worktreePath, {});
+		writeFallbackScript("close");
+		expect(resolveScript("close", args)).toBeNull();
+		writeRepoConfig(sandbox.repoPath, { closeEnabled: true });
+		expect(resolveScript("close", args)?.kind).toBe("script");
+	});
 
 	it("returns null when no config and no fallback script exist", () => {
 		expect(resolve("setup")).toBeNull();

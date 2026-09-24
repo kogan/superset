@@ -7,7 +7,7 @@ import {
 	type Node,
 	type ParseError,
 	parseTree,
-} from "jsonc-parser/lib/esm/main.js";
+} from "jsonc-parser";
 
 export type IdeTheme = "dark" | "light";
 

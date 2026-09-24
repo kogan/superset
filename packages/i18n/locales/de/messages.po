@@ -218,6 +218,10 @@ msgstr "{0, plural, one {# Arbeitsbereich} other {# Arbeitsbereiche}}"
 msgid "{0, plural, one {A running agent still uses the previous account — the switch only reaches new launches.} other {# running agents still use the previous account — the switch only reaches new launches.}}"
 msgstr "{0, plural, one {Ein laufender Agent nutzt noch das vorherige Konto — der Wechsel gilt nur für neue Starts.} other {# laufende Agenten nutzen noch das vorherige Konto — der Wechsel gilt nur für neue Starts.}}"
 
+#. placeholder {0}: Math.max(watchers.length, 1)
+msgid "{0, plural, one {Comments go to this agent} other {Comments go to these agents}}"
+msgstr "{0, plural, one {Kommentare gehen an diesen Agenten} other {Kommentare gehen an diese Agenten}}"
+
 #. placeholder {0}: failures.length
 #. placeholder {0}: nextFailures.length
 msgid "{0, plural, one {Couldn’t delete # workspace} other {Couldn’t delete # workspaces}}"
@@ -1363,6 +1367,9 @@ msgstr "Akquise, Inhalte, Konversion, Bindung und Verbreitung an einem Ort. Woch
 msgid "Action"
 msgstr "Aktion"
 
+msgid "Action type"
+msgstr "Aktionstyp"
+
 msgid "Actions"
 msgstr "Aktionen"
 
@@ -1378,10 +1385,6 @@ msgstr "Aktivierung, wie viel Menschen es nutzen, sobald sie drin sind, und ob s
 
 msgid "Active"
 msgstr "Aktiv"
-
-#. placeholder {0}: formatDistanceToNowStrict(binding.lastEventAt, { addSuffix: true, })
-msgid "active {0}"
-msgstr "aktiv {0}"
 
 msgid "Active agent sessions."
 msgstr "Aktive Agenten-Sitzungen."
@@ -1601,9 +1604,6 @@ msgstr "Agent fertig"
 msgid "Agent Independence"
 msgstr "Agenten-Unabhängigkeit"
 
-msgid "Agent input, failed checks on your PRs, and reviews requested from you."
-msgstr "Eingabeanfragen von Agenten, fehlgeschlagene Prüfungen deiner PRs und an dich gerichtete Review-Anfragen."
-
 msgid "Agent launch configuration"
 msgstr "Startkonfiguration des Agenten"
 
@@ -1654,6 +1654,12 @@ msgstr "Agenten laden ihre eigene Vorschau, bedienen die Oberfläche und hängen
 
 msgid "Agents running at once"
 msgstr "Gleichzeitig laufende Agenten"
+
+msgid "Agents waiting for your input."
+msgstr "Agenten, die auf deine Eingabe warten."
+
+msgid "Agents watching this page for comments"
+msgstr "Agenten, die diese Seite auf Kommentare beobachten"
 
 msgid "Aggregate agent usage across every developer on the Superset leaderboard — tokens, cost, cache behaviour and which models people actually reach for."
 msgstr "Aggregierte Agent-Nutzung über alle Entwickler im Superset-Leaderboard — Tokens, Kosten, Cache-Verhalten und welche Modelle tatsächlich genutzt werden."
@@ -1909,6 +1915,10 @@ msgstr "Außerdem: @superset/ui/spinner"
 
 msgid "Always know which agent needs you, with notifications that deep-link straight to the blocked agent."
 msgstr "Du weißt immer, welcher Agent dich braucht — mit Benachrichtigungen, die direkt zum blockierten Agenten führen."
+
+msgctxt "page watcher with no known name"
+msgid "An agent"
+msgstr "Ein Agent"
 
 msgid "An agent completes multi-file changes end to end."
 msgstr "Ein Agent führt Änderungen über mehrere Dateien vollständig durch."
@@ -2261,9 +2271,6 @@ msgstr "Versuchen, bevor die Prüfungen bestanden sind"
 
 msgid "Attention"
 msgstr "Handlungsbedarf"
-
-msgid "Attention filters"
-msgstr "Filter für Handlungsbedarf"
 
 msgid "Attention inbox"
 msgstr "Aktionsübersicht"
@@ -3172,9 +3179,6 @@ msgstr "Agent wählen"
 msgid "Choose an existing repo folder"
 msgstr "Vorhandenen Repo-Ordner wählen"
 
-msgid "Choose another filter or refresh to check again."
-msgstr "Wähle einen anderen Filter oder aktualisiere, um erneut zu prüfen."
-
 msgid "Choose app"
 msgstr "App wählen"
 
@@ -3198,9 +3202,6 @@ msgstr "Wähle, was aus dem In-App-Browser gelöscht werden soll."
 
 msgid "Choose when Superset pings you."
 msgstr "Wähle, wann Superset dich anstupst."
-
-msgid "Choose which agent watches this page for comments"
-msgstr "Wähle, welcher Agent diese Seite auf Kommentare beobachtet"
 
 msgid "Choose which columns appear and use the arrows to set their left-to-right order."
 msgstr "Wählen Sie die sichtbaren Spalten und legen Sie mit den Pfeilen ihre Reihenfolge von links nach rechts fest."
@@ -3686,9 +3687,6 @@ msgstr "Kommentare"
 msgid "Comments could not be loaded"
 msgstr "Kommentare konnten nicht geladen werden"
 
-msgid "Comments go to this agent"
-msgstr "Kommentare gehen an diesen Agent"
-
 msgid "Commit"
 msgstr "Committen"
 
@@ -3902,9 +3900,6 @@ msgstr "{label} verbunden"
 
 msgid "Connected as"
 msgstr "Verbunden als"
-
-msgid "Connected projects only. Refreshes every minute while this page is open."
-msgstr "Nur verbundene Projekte. Wird jede Minute aktualisiert, solange diese Seite geöffnet ist."
 
 msgid "Connected to"
 msgstr "Verbunden mit"
@@ -4467,9 +4462,6 @@ msgstr "Sitzung konnte nicht gestartet werden"
 msgid "Could not stop it"
 msgstr "Konnte nicht beendet werden"
 
-msgid "Could not stop watching"
-msgstr "Beobachten ließ sich nicht beenden"
-
 msgid "Could not submit prompt. Try again."
 msgstr "Prompt konnte nicht eingereicht werden. Versuche es erneut."
 
@@ -4488,9 +4480,6 @@ msgstr "Branch konnte nicht aktualisiert werden"
 #. js-lingui-explicit-id
 msgid "serverError.plugins.credentialUnverified"
 msgstr "Die Zugangsdaten konnten nicht überprüft werden: {reason}"
-
-msgid "Could not watch this page"
-msgstr "Seite ließ sich nicht beobachten"
 
 msgid "Couldn't confirm star status — check that the GitHub CLI (`gh`) is installed, signed in, and that you have a network connection"
 msgstr "Der Star-Status ließ sich nicht bestätigen — prüfe, ob die GitHub-CLI (`gh`) installiert und angemeldet ist und ob du eine Netzwerkverbindung hast"
@@ -6024,8 +6013,8 @@ msgstr "Alles ist skriptbar. Starte Arbeitsbereiche und Agenten über die CLI, b
 msgid "Everything we built on top of the primitives — Superset originals, the"
 msgstr "Alles, was wir auf den Primitives aufgebaut haben — Superset-Originale, die"
 
-msgid "Everything you've published is deleted, not hidden. You can rejoin later and it will rebuild from the transcripts still on this machine — only your past ranking is lost."
-msgstr "Alles, was du veröffentlicht hast, wird gelöscht, nicht ausgeblendet. Du kannst später wieder beitreten, dann wird es aus den Transkripten auf diesem Rechner neu aufgebaut — nur dein bisheriges Ranking geht verloren."
+msgid "Everything you've published is deleted, not hidden. You can rejoin later and it will rebuild from the transcripts still on this machine."
+msgstr "Alles, was du veröffentlicht hast, wird gelöscht, nicht ausgeblendet. Du kannst später wieder beitreten, dann wird es aus den Transkripten auf diesem Rechner neu aufgebaut."
 
 msgid "Existing repo path"
 msgstr "Pfad zum vorhandenen Repo"
@@ -6162,9 +6151,6 @@ msgstr "Fehlgeschlagen"
 
 msgid "Failed <0>· 7d</0>"
 msgstr "Fehlgeschlagen <0>· 7 T.</0>"
-
-msgid "Failed checks"
-msgstr "Fehlgeschlagene Prüfungen"
 
 msgid "Failed to accept invitation"
 msgstr "Einladung konnte nicht angenommen werden"
@@ -6714,6 +6700,9 @@ msgstr "Nach Reviews filtern"
 
 msgid "Filter by state"
 msgstr "Nach Status filtern"
+
+msgid "Filter by workspace: {label}"
+msgstr "Nach Arbeitsbereich filtern: {label}"
 
 msgid "Filter hosts"
 msgstr "Hosts filtern"
@@ -8050,8 +8039,8 @@ msgstr "Kursiv"
 msgid "Item"
 msgstr "Eintrag"
 
-msgid "Items appear here when an agent needs input, your PR checks fail, or someone requests your review."
-msgstr "Hier erscheinen Elemente, wenn ein Agent eine Eingabe benötigt, die Prüfungen deiner PRs fehlschlagen oder jemand ein Review von dir anfordert."
+msgid "Items appear here when an agent needs your input."
+msgstr "Hier erscheinen Einträge, wenn ein Agent deine Eingabe benötigt."
 
 msgid "Its own branch and copy of the files"
 msgstr "Eigener Branch und eigene Kopie der Dateien"
@@ -8563,9 +8552,6 @@ msgstr "Frühere Nachrichten laden"
 
 msgid "Load more"
 msgstr "Mehr laden"
-
-msgid "Load more results, reconnect unavailable hosts, or check your GitHub connection, then refresh."
-msgstr "Lade weitere Ergebnisse, verbinde nicht verfügbare Hosts erneut oder prüfe deine GitHub-Verbindung und aktualisiere anschließend."
 
 msgid "Loaded issues: {shownCount}"
 msgstr "Geladene Vorgänge: {shownCount}"
@@ -9559,9 +9545,6 @@ msgstr "Auf diesem Rechner sind keine Agenten konfiguriert"
 msgid "No agents match \"{q}\"."
 msgstr "Keine Agenten passen zu \"{q}\"."
 
-msgid "No agents running here"
-msgstr "Hier laufen keine Agents"
-
 msgid "No agents yet"
 msgstr "Noch keine Agenten"
 
@@ -9763,9 +9746,6 @@ msgstr "Keine verknüpfte PR"
 msgid "No live sessions"
 msgstr "Keine aktiven Sitzungen"
 
-msgid "No loaded items match this filter"
-msgstr "Keine geladenen Elemente entsprechen diesem Filter"
-
 msgid "no logins"
 msgstr "keine Logins"
 
@@ -9949,6 +9929,9 @@ msgstr "Keine Kürzel gefunden für \"{searchQuery}\""
 
 msgid "No sites are signed in"
 msgstr "Auf keiner Website angemeldet"
+
+msgid "No skills found"
+msgstr "Keine Fähigkeiten gefunden"
 
 msgid "No stack frames"
 msgstr "Keine Stack-Frames"
@@ -10179,9 +10162,6 @@ msgstr "Noch nichts installiert."
 msgid "Nothing is running. Remove it and create a new one."
 msgstr "Es läuft nichts. Entferne ihn und erstelle einen neuen."
 
-msgid "Nothing is watching this page"
-msgstr "Nichts beobachtet diese Seite"
-
 msgid "Nothing lives at {pathname}."
 msgstr "Unter {pathname} liegt nichts."
 
@@ -10276,6 +10256,9 @@ msgstr "Älter"
 msgid "on {offScopeHostName} — won't run here"
 msgstr "auf {offScopeHostName} — läuft hier nicht"
 
+msgid "On a host you can't reach"
+msgstr "Auf einem Host, den du nicht erreichst"
+
 msgid "On click"
 msgstr "Beim Klick"
 
@@ -10290,6 +10273,9 @@ msgstr "In diesem Tempo"
 
 msgid "On this page"
 msgstr "Auf dieser Seite"
+
+msgid "On worktree deletion"
+msgstr "Beim Löschen eines Arbeitsbaums"
 
 msgid "On your machine. Repos, worktrees, terminal output, and agent sessions stay local by default; cloud sync covers account and organization metadata only. Superset doesn't proxy any API calls."
 msgstr "Auf deinem Rechner. Repos, Worktrees, Terminal-Ausgaben und Agenten-Sitzungen bleiben standardmäßig lokal; die Cloud-Synchronisierung umfasst nur Konto- und Organisations-Metadaten. Superset leitet keine API-Aufrufe weiter."
@@ -11121,9 +11107,6 @@ msgstr "Teils Protokoll, teils Wette. Die ersten beiden Einträge passieren bere
 msgid "Partial"
 msgstr "Teilweise"
 
-msgid "Partial results"
-msgstr "Unvollständige Ergebnisse"
-
 msgid "Partner, Transpose Platform"
 msgstr "Partner, Transpose Platform"
 
@@ -11822,9 +11805,6 @@ msgstr "Pull Requests"
 msgid "Pull Requests"
 msgstr "Pull Requests"
 
-msgid "Pull requests are turned off. Only agent input is shown."
-msgstr "Pull Requests sind deaktiviert. Es werden nur Eingabeanfragen von Agenten angezeigt."
-
 msgid "Purple"
 msgstr "Lila"
 
@@ -12058,6 +12038,9 @@ msgstr "Linear neu verbinden"
 
 msgid "Reconnect required"
 msgstr "Neu verbinden erforderlich"
+
+msgid "Reconnect unavailable hosts, then refresh."
+msgstr "Verbinde nicht verfügbare Hosts erneut und aktualisiere dann."
 
 msgid "Reconnecting"
 msgstr "Verbindet neu"
@@ -12744,9 +12727,6 @@ msgstr "Pull Requests direkt in Superset reviewen: Diff-Bereich, agentenunterst�
 msgid "Review requested"
 msgstr "Review angefordert"
 
-msgid "Review requests"
-msgstr "Review-Anfragen"
-
 msgid "Review required"
 msgstr "Review erforderlich"
 
@@ -12850,6 +12830,9 @@ msgstr "Führe mehr als 10 Coding-Agenten parallel auf deinem Rechner aus"
 msgid "Run 10+ parallel coding agents on your machine."
 msgstr "Betreibe 10+ parallele Coding-Agenten auf deinem Rechner."
 
+msgid "Run action before deleting a worktree"
+msgstr "Aktion vor dem Löschen eines Arbeitsbaums ausführen"
+
 msgid "Run automations on data source and comment activity."
 msgstr "Automatisierungen bei Aktivität an Datenquellen und Kommentaren ausführen."
 
@@ -12942,6 +12925,9 @@ msgstr "Laufende Terminal-Prozesse laufen weiter, ältere Ausgaben sind nach ein
 
 msgid "Runs a local command on your machine"
 msgstr "Führt einen lokalen Befehl auf deinem Rechner aus"
+
+msgid "Runs before deletion using a copy of the latest session for this agent, when available. Skills have up to 10 minutes to finish."
+msgstr "Wird vor dem Löschen mit einer Kopie der letzten Sitzung dieses Agenten ausgeführt, sofern verfügbar. Fähigkeiten haben bis zu 10 Minuten Zeit zum Abschluss."
 
 msgid "Runs failed earlier this week, but nothing is failing right now"
 msgstr "Früher diese Woche sind Läufe fehlgeschlagen, aktuell schlägt aber nichts fehl"
@@ -13360,6 +13346,9 @@ msgstr "Wähle ein Projekt, um Pull Requests zu sehen."
 msgid "Select a pull request to preview it here."
 msgstr "Wähle einen Pull Request, um ihn hier in der Vorschau zu sehen."
 
+msgid "Select a skill"
+msgstr "Fähigkeit auswählen"
+
 msgid "Select a team"
 msgstr "Team auswählen"
 
@@ -13694,8 +13683,8 @@ msgstr "Teile Entwürfe und Berichte. Lass deinen Agenten das Feedback bearbeite
 msgid "Share page"
 msgstr "Seite teilen"
 
-msgid "Share settings"
-msgstr "Freigabeeinstellungen"
+msgid "Share page (public)"
+msgstr "Seite teilen (öffentlich)"
 
 msgid "Share this page"
 msgstr "Diese Seite teilen"
@@ -14532,11 +14521,14 @@ msgstr "Lokalen {0} beenden"
 msgid "Stop response"
 msgstr "Antwort stoppen"
 
+msgid "Stop subagent"
+msgstr "Unteragent stoppen"
+
 msgid "Stop Superset here to delete from another device."
 msgstr "Beende Superset hier, um von einem anderen Gerät aus zu löschen."
 
-msgid "Stop watching"
-msgstr "Nicht mehr beobachten"
+msgid "Stop this subagent using the agent's own controls."
+msgstr "Stoppe diesen Unteragenten über die Steuerung des Agenten."
 
 msgid "Stop workspace run command"
 msgstr "Run-Befehl des Arbeitsbereichs stoppen"
@@ -14984,9 +14976,6 @@ msgstr "targetHostId passt nicht zum Host des Arbeitsbereichs"
 msgid "Task"
 msgstr "Aufgabe"
 
-msgid "Task {shortId}"
-msgstr "Aufgabe {shortId}"
-
 msgid "Task Launch"
 msgstr "Aufgaben-Start"
 
@@ -15220,9 +15209,6 @@ msgstr "Das zugehörige Gerät ist gerade nicht erreichbar"
 
 msgid "The best agent will change.<0/>Your workflow shouldn't."
 msgstr "Der beste Agent wird wechseln.<0/>Dein Workflow nicht."
-
-msgid "The Codex sign-in"
-msgstr "Die Codex-Anmeldung"
 
 msgid "The config repository must be one of the environment's repositories"
 msgstr "Das Konfigurations-Repository muss eines der Repositories der Umgebung sein"
@@ -15582,6 +15568,9 @@ msgstr "Dies schließt den Arbeitsbereich und seine Terminals. Dateien und Branc
 msgid "This closes the workspace and its terminals. The project's files, branches and other workspaces stay as they are."
 msgstr "Dadurch werden der Arbeitsbereich und seine Terminals geschlossen. Die Dateien, Branches und anderen Arbeitsbereiche des Projekts bleiben unverändert."
 
+msgid "This cloud workspace is waking up, which can take up to 30 seconds after it has been idle."
+msgstr "Dieser Cloud-Workspace wird gerade aufgeweckt. Nach Inaktivität kann das bis zu 30 Sekunden dauern."
+
 msgid "This deletes the saved scrollback used for reboot/crash recovery."
 msgstr "Damit wird der gespeicherte Scrollback gelöscht, der für Neustart- und Absturzwiederherstellung genutzt wird."
 
@@ -15692,10 +15681,6 @@ msgstr "Diese Seite wird gerade von anderer Stelle veröffentlicht — erneut ve
 
 msgid "This page is in another organization"
 msgstr "Diese Seite gehört zu einer anderen Organisation"
-
-#. placeholder {0}: url.replace(/^https?:\/\//, "")
-msgid "This page is live at <0>{0}</0>"
-msgstr "Diese Seite ist live unter <0>{0}</0>"
 
 msgid "This page isn't here"
 msgstr "Diese Seite gibt es hier nicht"
@@ -16322,6 +16307,9 @@ msgstr "Unbekannte Variablen: {unknownVariables}"
 
 msgid "Unknown Welder"
 msgstr "Unbekannter Schweißer"
+
+msgid "Unknown workspace"
+msgstr "Unbekannter Arbeitsbereich"
 
 msgid "Unlimited"
 msgstr "Unbegrenzt"

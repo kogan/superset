@@ -268,7 +268,7 @@ describe("Jira requests through the Electron router", () => {
 			),
 		).toBe(true);
 		expect(requests[1]?.url.searchParams.get("jql")).toBe(
-			'assignee = currentUser() AND issuetype != "Epic" AND statusCategory != Done ORDER BY updated DESC',
+			'assignee = currentUser() AND issuetype != "Epic" AND statusCategory != Done ORDER BY Rank ASC',
 		);
 		expect(requests[1]?.url.searchParams.get("fields")).toBe(
 			"summary,status,project,priority,updated,assignee,description",
@@ -433,6 +433,60 @@ describe("Jira HTTP failure boundaries", () => {
 		await expect(
 			client.testConnection({ kind: "pat", baseUrl, token: "never-in-errors" }),
 		).rejects.toMatchObject({ code: "TIMEOUT", cause: undefined });
+	});
+});
+
+describe("Jira rank order", () => {
+	test.each([
+		"pat",
+		"cloud-api-token",
+	] as const)("%s preserves Jira rank across pages for My work and team boards", async (kind) => {
+		const ranked = [issue("TEAM-30"), issue("TEAM-2"), issue("TEAM-11")];
+		const baseUrl = serve((request) => {
+			const url = new URL(request.url);
+			if (url.pathname.endsWith("/board/99/configuration"))
+				return Response.json({
+					id: 99,
+					name: "Team board",
+					filter: { id: "54321" },
+				});
+			const ordered = url.searchParams.get("jql")?.endsWith("ORDER BY Rank ASC")
+				? ranked
+				: [...ranked].reverse();
+			const startAt = Number(
+				url.searchParams.get(kind === "pat" ? "startAt" : "nextPageToken") ?? 0,
+			);
+			const issues = ordered.slice(startAt, startAt + 2);
+			return Response.json(
+				kind === "pat"
+					? { startAt, total: ranked.length, issues }
+					: {
+							issues,
+							isLast: startAt > 0,
+							nextPageToken: startAt === 0 ? "2" : null,
+						},
+			);
+		});
+		const credentials: JiraCredentials =
+			kind === "pat"
+				? { kind, baseUrl, token: "fixture" }
+				: { kind, baseUrl, token: "fixture", email: "local@example.com" };
+		const client = createJiraClient({ request: fetch });
+		for (const scope of [
+			{ kind: "mine" },
+			{ kind: "board", boardId: 99, assignee: { kind: "all" } },
+		] as const) {
+			const input = { credentials, scope, status: "all" } as const;
+			const first = await client.listIssues(input);
+			const second = await client.listIssues({
+				...input,
+				cursor: first.nextCursor ?? undefined,
+			});
+			expect(
+				[...first.issues, ...second.issues].map((ticket) => ticket.key),
+			).toEqual(["TEAM-30", "TEAM-2", "TEAM-11"]);
+			expect(second.nextCursor).toBeNull();
+		}
 	});
 });
 
@@ -825,7 +879,7 @@ describe("Jira team board", () => {
 			status: "all",
 		});
 		expect(searches[0]?.searchParams.get("jql")).toBe(
-			'filter = 54321 AND issuetype != "Epic" ORDER BY updated DESC',
+			'filter = 54321 AND issuetype != "Epic" ORDER BY Rank ASC',
 		);
 		expect(all.issues[0]?.assignee).toEqual({
 			id: "account:other",
@@ -841,7 +895,7 @@ describe("Jira team board", () => {
 			status: "unfinished",
 		});
 		expect(searches[1]?.searchParams.get("jql")).toBe(
-			`filter = 54321 AND assignee = ${JSON.stringify('name" OR project = "other')} AND issuetype != "Epic" AND statusCategory != Done ORDER BY updated DESC`,
+			`filter = 54321 AND assignee = ${JSON.stringify('name" OR project = "other')} AND issuetype != "Epic" AND statusCategory != Done ORDER BY Rank ASC`,
 		);
 		await caller.listIssues({
 			scope: { kind: "board", boardId: 99, assignee: { kind: "unassigned" } },
@@ -849,7 +903,7 @@ describe("Jira team board", () => {
 			status: "all",
 		});
 		expect(searches[2]?.searchParams.get("jql")).toBe(
-			'filter = 54321 AND assignee IS EMPTY AND issuetype != "Epic" ORDER BY updated DESC',
+			'filter = 54321 AND assignee IS EMPTY AND issuetype != "Epic" ORDER BY Rank ASC',
 		);
 		await caller.listIssues({
 			scope: { kind: "board", boardId: 99, assignee: { kind: "all" } },
@@ -857,7 +911,7 @@ describe("Jira team board", () => {
 			status: "all",
 		});
 		expect(searches[3]?.searchParams.get("jql")).toBe(
-			'filter = 54321 AND status IN ("HPQ", "Needs QA", "Being QA\'d") AND issuetype != "Epic" ORDER BY updated DESC',
+			'filter = 54321 AND status IN ("HPQ", "Needs QA", "Being QA\'d") AND issuetype != "Epic" ORDER BY Rank ASC',
 		);
 		await caller.listIssues({
 			scope: { kind: "board", boardId: 99, assignee: { kind: "all" } },
@@ -865,7 +919,7 @@ describe("Jira team board", () => {
 			status: "all",
 		});
 		expect(searches[4]?.searchParams.get("jql")).toBe(
-			'filter = 54321 AND status IN ("In Development", "Needs QA", "Monitoring") AND issuetype != "Epic" ORDER BY updated DESC',
+			'filter = 54321 AND status IN ("In Development", "Needs QA", "Monitoring") AND issuetype != "Epic" ORDER BY Rank ASC',
 		);
 		expect(await caller.searchMembers({ search: "Teammate" })).toEqual([
 			{ id: "account:other", displayName: "Teammate" },

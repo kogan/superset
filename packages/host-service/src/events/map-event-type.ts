@@ -50,6 +50,7 @@ export function mapEventType(
 		eventType === "PostToolUse" ||
 		eventType === "PostToolUseFailure" ||
 		eventType === "PermissionResult" ||
+		eventType === "ElicitationResult" ||
 		eventType === "BeforeAgent" ||
 		eventType === "AfterTool" ||
 		eventType === "userPromptSubmitted" ||
@@ -65,6 +66,7 @@ export function mapEventType(
 	}
 	if (
 		eventType === "PermissionRequest" ||
+		eventType === "Elicitation" ||
 		eventType === "Notification" ||
 		eventType === "PreToolUse" ||
 		eventType === "preToolUse" ||
