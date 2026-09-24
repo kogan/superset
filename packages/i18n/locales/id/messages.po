@@ -218,6 +218,10 @@ msgstr "{0, plural, one {# workspace} other {# workspace}}"
 msgid "{0, plural, one {A running agent still uses the previous account — the switch only reaches new launches.} other {# running agents still use the previous account — the switch only reaches new launches.}}"
 msgstr "{0, plural, one {# agen yang sedang berjalan masih memakai akun sebelumnya — pergantian hanya berlaku untuk peluncuran baru.} other {# agen yang sedang berjalan masih memakai akun sebelumnya — pergantian hanya berlaku untuk peluncuran baru.}}"
 
+#. placeholder {0}: Math.max(watchers.length, 1)
+msgid "{0, plural, one {Comments go to this agent} other {Comments go to these agents}}"
+msgstr "{0, plural, one {Komentar masuk ke agen ini} other {Komentar masuk ke agen-agen ini}}"
+
 #. placeholder {0}: failures.length
 #. placeholder {0}: nextFailures.length
 msgid "{0, plural, one {Couldn’t delete # workspace} other {Couldn’t delete # workspaces}}"
@@ -1382,10 +1386,6 @@ msgstr "Aktivasi, seberapa banyak dipakai setelah masuk, dan apakah mereka kemba
 msgid "Active"
 msgstr "Aktif"
 
-#. placeholder {0}: formatDistanceToNowStrict(binding.lastEventAt, { addSuffix: true, })
-msgid "active {0}"
-msgstr "aktif {0}"
-
 msgid "Active agent sessions."
 msgstr "Sesi agen yang aktif."
 
@@ -1658,6 +1658,9 @@ msgstr "Agen yang berjalan sekaligus"
 msgid "Agents waiting for your input."
 msgstr "Agen yang menunggu masukan Anda."
 
+msgid "Agents watching this page for comments"
+msgstr "Agen yang memantau halaman ini untuk komentar"
+
 msgid "Aggregate agent usage across every developer on the Superset leaderboard — tokens, cost, cache behaviour and which models people actually reach for."
 msgstr "Agregat penggunaan agen dari seluruh developer di papan peringkat Superset — token, biaya, perilaku cache, dan model yang benar-benar dipakai orang."
 
@@ -1912,6 +1915,10 @@ msgstr "Juga: @superset/ui/spinner"
 
 msgid "Always know which agent needs you, with notifications that deep-link straight to the blocked agent."
 msgstr "Selalu tahu agen mana yang membutuhkan Anda, dengan notifikasi yang langsung menuju agen yang terhambat."
+
+msgctxt "page watcher with no known name"
+msgid "An agent"
+msgstr "Agen"
 
 msgid "An agent completes multi-file changes end to end."
 msgstr "Agen menyelesaikan perubahan lintas file dari awal sampai akhir."
@@ -3196,9 +3203,6 @@ msgstr "Pilih apa yang ingin dibersihkan dari browser dalam aplikasi."
 msgid "Choose when Superset pings you."
 msgstr "Pilih kapan Superset memberi tahu Anda."
 
-msgid "Choose which agent watches this page for comments"
-msgstr "Pilih agen yang memantau komentar di halaman ini"
-
 msgid "Choose which columns appear and use the arrows to set their left-to-right order."
 msgstr "Pilih kolom yang ditampilkan dan gunakan panah untuk mengatur urutannya dari kiri ke kanan."
 
@@ -3682,9 +3686,6 @@ msgstr "Komentar"
 
 msgid "Comments could not be loaded"
 msgstr "Komentar tidak bisa dimuat"
-
-msgid "Comments go to this agent"
-msgstr "Komentar masuk ke agen ini"
 
 msgid "Commit"
 msgstr "Commit"
@@ -4461,9 +4462,6 @@ msgstr "Tidak bisa memulai sesi"
 msgid "Could not stop it"
 msgstr "Tidak bisa dihentikan"
 
-msgid "Could not stop watching"
-msgstr "Tidak bisa berhenti memantau"
-
 msgid "Could not submit prompt. Try again."
 msgstr "Tidak bisa mengirim prompt. Coba lagi."
 
@@ -4482,9 +4480,6 @@ msgstr "Tidak bisa memperbarui branch"
 #. js-lingui-explicit-id
 msgid "serverError.plugins.credentialUnverified"
 msgstr "Tidak dapat memverifikasi kredensial: {reason}"
-
-msgid "Could not watch this page"
-msgstr "Tidak bisa memantau halaman ini"
 
 msgid "Couldn't confirm star status — check that the GitHub CLI (`gh`) is installed, signed in, and that you have a network connection"
 msgstr "Tidak bisa memastikan status star — pastikan GitHub CLI (`gh`) terpasang, sudah masuk, dan Anda punya koneksi jaringan"
@@ -6018,8 +6013,8 @@ msgstr "Semuanya bisa diskrip. Buat workspace dan agen dari CLI, sambungkan Supe
 msgid "Everything we built on top of the primitives — Superset originals, the"
 msgstr "Semua yang kami bangun di atas primitif — orisinal Superset, suite"
 
-msgid "Everything you've published is deleted, not hidden. You can rejoin later and it will rebuild from the transcripts still on this machine — only your past ranking is lost."
-msgstr "Semua yang Anda publikasikan dihapus, bukan disembunyikan. Anda bisa bergabung lagi nanti dan datanya akan dibangun ulang dari transkrip yang masih ada di mesin ini — hanya peringkat lama Anda yang hilang."
+msgid "Everything you've published is deleted, not hidden. You can rejoin later and it will rebuild from the transcripts still on this machine."
+msgstr "Semua yang Anda publikasikan dihapus, bukan disembunyikan. Anda bisa bergabung lagi nanti dan datanya akan dibangun ulang dari transkrip yang masih ada di mesin ini."
 
 msgid "Existing repo path"
 msgstr "Path repo yang sudah ada"
@@ -6705,6 +6700,9 @@ msgstr "Filter menurut review"
 
 msgid "Filter by state"
 msgstr "Filter menurut status"
+
+msgid "Filter by workspace: {label}"
+msgstr "Filter menurut workspace: {label}"
 
 msgid "Filter hosts"
 msgstr "Filter host"
@@ -9547,9 +9545,6 @@ msgstr "Tidak ada agen yang dikonfigurasi di mesin ini"
 msgid "No agents match \"{q}\"."
 msgstr "Tidak ada agen yang cocok dengan \"{q}\"."
 
-msgid "No agents running here"
-msgstr "Tidak ada agen yang berjalan di sini"
-
 msgid "No agents yet"
 msgstr "Belum ada agen"
 
@@ -10167,9 +10162,6 @@ msgstr "Belum ada yang terpasang."
 msgid "Nothing is running. Remove it and create a new one."
 msgstr "Tidak ada yang berjalan. Hapus dan buat yang baru."
 
-msgid "Nothing is watching this page"
-msgstr "Tidak ada yang memantau halaman ini"
-
 msgid "Nothing lives at {pathname}."
 msgstr "Tidak ada apa pun di {pathname}."
 
@@ -10263,6 +10255,9 @@ msgstr "Lebih lama"
 
 msgid "on {offScopeHostName} — won't run here"
 msgstr "di {offScopeHostName} — tidak akan berjalan di sini"
+
+msgid "On a host you can't reach"
+msgstr "Di host yang tidak bisa kamu jangkau"
 
 msgid "On click"
 msgstr "Saat diklik"
@@ -13688,8 +13683,8 @@ msgstr "Bagikan desain dan laporan. Biarkan agen Anda menangani masukan."
 msgid "Share page"
 msgstr "Bagikan halaman"
 
-msgid "Share settings"
-msgstr "Pengaturan berbagi"
+msgid "Share page (public)"
+msgstr "Bagikan halaman (publik)"
 
 msgid "Share this page"
 msgstr "Bagikan halaman ini"
@@ -14535,9 +14530,6 @@ msgstr "Hentikan Superset di sini untuk menghapus dari perangkat lain."
 msgid "Stop this subagent using the agent's own controls."
 msgstr "Hentikan subagen ini menggunakan kontrol agen itu sendiri."
 
-msgid "Stop watching"
-msgstr "Berhenti memantau"
-
 msgid "Stop workspace run command"
 msgstr "Hentikan perintah run workspace"
 
@@ -15218,9 +15210,6 @@ msgstr "Perangkat terkait tidak bisa dijangkau saat ini"
 msgid "The best agent will change.<0/>Your workflow shouldn't."
 msgstr "Agen terbaik akan berganti.<0/>Alur kerja Anda tidak perlu."
 
-msgid "The Codex sign-in"
-msgstr "Sesi masuk Codex"
-
 msgid "The config repository must be one of the environment's repositories"
 msgstr "Repositori konfigurasi harus salah satu repositori environment"
 
@@ -15579,6 +15568,9 @@ msgstr "Ini menutup ruang kerja dan terminalnya. File dan branch tetap tersimpan
 msgid "This closes the workspace and its terminals. The project's files, branches and other workspaces stay as they are."
 msgstr "Ini menutup workspace beserta terminalnya. File, branch, dan workspace lain dari proyek tetap seperti semula."
 
+msgid "This cloud workspace is waking up, which can take up to 30 seconds after it has been idle."
+msgstr "Workspace cloud ini sedang dibangunkan, yang bisa memakan waktu hingga 30 detik setelah tidak aktif."
+
 msgid "This deletes the saved scrollback used for reboot/crash recovery."
 msgstr "Ini menghapus scrollback tersimpan yang dipakai untuk pemulihan setelah reboot/crash."
 
@@ -15689,10 +15681,6 @@ msgstr "Halaman ini sedang dipublikasikan dari tempat lain — coba lagi"
 
 msgid "This page is in another organization"
 msgstr "Halaman ini ada di organisasi lain"
-
-#. placeholder {0}: url.replace(/^https?:\/\//, "")
-msgid "This page is live at <0>{0}</0>"
-msgstr "Halaman ini aktif di <0>{0}</0>"
 
 msgid "This page isn't here"
 msgstr "Halaman ini tidak ada di sini"
@@ -16319,6 +16307,9 @@ msgstr "Variabel tidak dikenal: {unknownVariables}"
 
 msgid "Unknown Welder"
 msgstr "Tukang Las Tak Dikenal"
+
+msgid "Unknown workspace"
+msgstr "Workspace tidak dikenal"
 
 msgid "Unlimited"
 msgstr "Tanpa batas"

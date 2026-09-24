@@ -218,6 +218,10 @@ msgstr "{0, plural, one {# çalışma alanı} other {# çalışma alanı}}"
 msgid "{0, plural, one {A running agent still uses the previous account — the switch only reaches new launches.} other {# running agents still use the previous account — the switch only reaches new launches.}}"
 msgstr "{0, plural, one {Çalışan bir ajan hâlâ önceki hesabı kullanıyor — geçiş yalnızca yeni başlatmalar için geçerli.} other {Çalışan # ajan hâlâ önceki hesabı kullanıyor — geçiş yalnızca yeni başlatmalar için geçerli.}}"
 
+#. placeholder {0}: Math.max(watchers.length, 1)
+msgid "{0, plural, one {Comments go to this agent} other {Comments go to these agents}}"
+msgstr "{0, plural, one {Yorumlar bu ajana gider} other {Yorumlar bu ajanlara gider}}"
+
 #. placeholder {0}: failures.length
 #. placeholder {0}: nextFailures.length
 msgid "{0, plural, one {Couldn’t delete # workspace} other {Couldn’t delete # workspaces}}"
@@ -1382,10 +1386,6 @@ msgstr "Aktivasyon, içeri girdikten sonra ne kadar kullandıkları ve geri dön
 msgid "Active"
 msgstr "Etkin"
 
-#. placeholder {0}: formatDistanceToNowStrict(binding.lastEventAt, { addSuffix: true, })
-msgid "active {0}"
-msgstr "etkin {0}"
-
 msgid "Active agent sessions."
 msgstr "Etkin ajan oturumları."
 
@@ -1658,6 +1658,9 @@ msgstr "Aynı anda çalışan ajanlar"
 msgid "Agents waiting for your input."
 msgstr "Girdinizi bekleyen ajanlar."
 
+msgid "Agents watching this page for comments"
+msgstr "Bu sayfayı yorumlar için izleyen ajanlar"
+
 msgid "Aggregate agent usage across every developer on the Superset leaderboard — tokens, cost, cache behaviour and which models people actually reach for."
 msgstr "Superset liderlik tablosundaki her geliştiricinin toplam ajan kullanımı — token, maliyet, önbellek davranışı ve insanların gerçekte tercih ettiği modeller."
 
@@ -1912,6 +1915,10 @@ msgstr "Ayrıca: @superset/ui/spinner"
 
 msgid "Always know which agent needs you, with notifications that deep-link straight to the blocked agent."
 msgstr "Doğrudan engellenen ajana bağlanan bildirimlerle, hangi ajanın size ihtiyacı olduğunu her zaman bilin."
+
+msgctxt "page watcher with no known name"
+msgid "An agent"
+msgstr "Bir ajan"
 
 msgid "An agent completes multi-file changes end to end."
 msgstr "Bir ajan, çok dosyalı değişiklikleri baştan sona tamamlar."
@@ -3196,9 +3203,6 @@ msgstr "Uygulama içi tarayıcıdan neyin temizleneceğini seçin."
 msgid "Choose when Superset pings you."
 msgstr "Superset'in sizi ne zaman uyaracağını seçin."
 
-msgid "Choose which agent watches this page for comments"
-msgstr "Bu sayfanın yorumlarını hangi ajanın izleyeceğini seç"
-
 msgid "Choose which columns appear and use the arrows to set their left-to-right order."
 msgstr "Gösterilecek sütunları seçin ve oklarla soldan sağa sıralarını ayarlayın."
 
@@ -3682,9 +3686,6 @@ msgstr "Yorumlar"
 
 msgid "Comments could not be loaded"
 msgstr "Yorumlar yüklenemedi"
-
-msgid "Comments go to this agent"
-msgstr "Yorumlar bu ajana gider"
 
 msgid "Commit"
 msgstr "Commit et"
@@ -4461,9 +4462,6 @@ msgstr "Oturum başlatılamadı"
 msgid "Could not stop it"
 msgstr "Durdurulamadı"
 
-msgid "Could not stop watching"
-msgstr "İzleme durdurulamadı"
-
 msgid "Could not submit prompt. Try again."
 msgstr "İstem gönderilemedi. Yeniden deneyin."
 
@@ -4482,9 +4480,6 @@ msgstr "Dal güncellenemedi"
 #. js-lingui-explicit-id
 msgid "serverError.plugins.credentialUnverified"
 msgstr "Kimlik bilgisi doğrulanamadı: {reason}"
-
-msgid "Could not watch this page"
-msgstr "Bu sayfa izlenemedi"
 
 msgid "Couldn't confirm star status — check that the GitHub CLI (`gh`) is installed, signed in, and that you have a network connection"
 msgstr "Yıldız durumu doğrulanamadı — GitHub CLI'nin (`gh`) kurulu ve oturum açmış olduğunu ve ağ bağlantınızın bulunduğunu kontrol edin"
@@ -6018,8 +6013,8 @@ msgstr "Her şey betiklenebilir. CLI'den çalışma alanı ve ajan başlatın, S
 msgid "Everything we built on top of the primitives — Superset originals, the"
 msgstr "İlkellerin üzerine kurduğumuz her şey — Superset özgünleri, ajan arayüzleri için"
 
-msgid "Everything you've published is deleted, not hidden. You can rejoin later and it will rebuild from the transcripts still on this machine — only your past ranking is lost."
-msgstr "Yayımladığınız her şey gizlenmez, silinir. Daha sonra yeniden katılabilirsiniz ve bu makinede duran kayıtlardan yeniden oluşturulur — yalnızca geçmiş sıralamanız kaybolur."
+msgid "Everything you've published is deleted, not hidden. You can rejoin later and it will rebuild from the transcripts still on this machine."
+msgstr "Yayımladığınız her şey gizlenmez, silinir. Daha sonra yeniden katılabilirsiniz ve bu makinede duran kayıtlardan yeniden oluşturulur."
 
 msgid "Existing repo path"
 msgstr "Mevcut depo yolu"
@@ -6705,6 +6700,9 @@ msgstr "İncelemeye göre filtrele"
 
 msgid "Filter by state"
 msgstr "Duruma göre filtrele"
+
+msgid "Filter by workspace: {label}"
+msgstr "Çalışma alanına göre filtrele: {label}"
 
 msgid "Filter hosts"
 msgstr "Host'ları filtrele"
@@ -9547,9 +9545,6 @@ msgstr "Bu makinede yapılandırılmış ajan yok"
 msgid "No agents match \"{q}\"."
 msgstr "\"{q}\" ile eşleşen ajan yok."
 
-msgid "No agents running here"
-msgstr "Burada çalışan ajan yok"
-
 msgid "No agents yet"
 msgstr "Henüz ajan yok"
 
@@ -10167,9 +10162,6 @@ msgstr "Henüz kurulu bir şey yok."
 msgid "Nothing is running. Remove it and create a new one."
 msgstr "Hiçbir şey çalışmıyor. Bunu kaldırıp yeni bir tane oluşturun."
 
-msgid "Nothing is watching this page"
-msgstr "Bu sayfayı hiçbir şey izlemiyor"
-
 msgid "Nothing lives at {pathname}."
 msgstr "{pathname} yolunda bir şey yok."
 
@@ -10263,6 +10255,9 @@ msgstr "Daha eski"
 
 msgid "on {offScopeHostName} — won't run here"
 msgstr "{offScopeHostName} üzerinde — burada çalışmaz"
+
+msgid "On a host you can't reach"
+msgstr "Erişemediğin bir ana makinede"
 
 msgid "On click"
 msgstr "Tıklandığında"
@@ -13688,8 +13683,8 @@ msgstr "Tasarımları ve raporları paylaşın. Geri bildirimleri ajanınız ele
 msgid "Share page"
 msgstr "Sayfayı paylaş"
 
-msgid "Share settings"
-msgstr "Paylaşım ayarları"
+msgid "Share page (public)"
+msgstr "Sayfayı paylaş (herkese açık)"
 
 msgid "Share this page"
 msgstr "Bu sayfayı paylaş"
@@ -14535,9 +14530,6 @@ msgstr "Başka bir cihazdan silmek için Superset'i burada durdurun."
 msgid "Stop this subagent using the agent's own controls."
 msgstr "Bu alt aracıyı aracının kendi kontrollerini kullanarak durdurun."
 
-msgid "Stop watching"
-msgstr "İzlemeyi durdur"
-
 msgid "Stop workspace run command"
 msgstr "Çalışma alanı çalıştırma komutunu durdur"
 
@@ -15218,9 +15210,6 @@ msgstr "İlgili cihaza şu anda erişilemiyor"
 msgid "The best agent will change.<0/>Your workflow shouldn't."
 msgstr "En iyi ajan değişecek.<0/>İş akışınız değişmemeli."
 
-msgid "The Codex sign-in"
-msgstr "Codex oturumu"
-
 msgid "The config repository must be one of the environment's repositories"
 msgstr "Yapılandırma deposu, ortamın depolarından biri olmalıdır"
 
@@ -15579,6 +15568,9 @@ msgstr "Bu işlem çalışma alanını ve terminallerini kapatır. Dosyalar ve d
 msgid "This closes the workspace and its terminals. The project's files, branches and other workspaces stay as they are."
 msgstr "Bu, çalışma alanını ve terminallerini kapatır. Projenin dosyaları, dalları ve diğer çalışma alanları olduğu gibi kalır."
 
+msgid "This cloud workspace is waking up, which can take up to 30 seconds after it has been idle."
+msgstr "Bu bulut çalışma alanı uyandırılıyor; bir süre kullanılmadıysa bu işlem 30 saniyeye kadar sürebilir."
+
 msgid "This deletes the saved scrollback used for reboot/crash recovery."
 msgstr "Bu işlem, yeniden başlatma/çökme kurtarma için saklanan kaydırma geçmişini siler."
 
@@ -15689,10 +15681,6 @@ msgstr "Bu sayfa başka bir yerden yayımlanıyor — yeniden deneyin"
 
 msgid "This page is in another organization"
 msgstr "Bu sayfa başka bir kuruluşta"
-
-#. placeholder {0}: url.replace(/^https?:\/\//, "")
-msgid "This page is live at <0>{0}</0>"
-msgstr "Bu sayfa <0>{0}</0> adresinde yayında"
 
 msgid "This page isn't here"
 msgstr "Bu sayfa burada değil"
@@ -16319,6 +16307,9 @@ msgstr "Bilinmeyen değişkenler: {unknownVariables}"
 
 msgid "Unknown Welder"
 msgstr "Bilinmeyen Kaynakçı"
+
+msgid "Unknown workspace"
+msgstr "Bilinmeyen çalışma alanı"
 
 msgid "Unlimited"
 msgstr "Sınırsız"

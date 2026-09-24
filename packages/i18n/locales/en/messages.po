@@ -218,6 +218,10 @@ msgstr "{0, plural, one {# workspace} other {# workspaces}}"
 msgid "{0, plural, one {A running agent still uses the previous account — the switch only reaches new launches.} other {# running agents still use the previous account — the switch only reaches new launches.}}"
 msgstr "{0, plural, one {A running agent still uses the previous account — the switch only reaches new launches.} other {# running agents still use the previous account — the switch only reaches new launches.}}"
 
+#. placeholder {0}: Math.max(watchers.length, 1)
+msgid "{0, plural, one {Comments go to this agent} other {Comments go to these agents}}"
+msgstr "{0, plural, one {Comments go to this agent} other {Comments go to these agents}}"
+
 #. placeholder {0}: failures.length
 #. placeholder {0}: nextFailures.length
 msgid "{0, plural, one {Couldn’t delete # workspace} other {Couldn’t delete # workspaces}}"
@@ -1382,10 +1386,6 @@ msgstr "Activation, how much people use it once they are in, and whether they co
 msgid "Active"
 msgstr "Active"
 
-#. placeholder {0}: formatDistanceToNowStrict(binding.lastEventAt, { addSuffix: true, })
-msgid "active {0}"
-msgstr "active {0}"
-
 msgid "Active agent sessions."
 msgstr "Active agent sessions."
 
@@ -1658,6 +1658,9 @@ msgstr "Agents running at once"
 msgid "Agents waiting for your input."
 msgstr "Agents waiting for your input."
 
+msgid "Agents watching this page for comments"
+msgstr "Agents watching this page for comments"
+
 msgid "Aggregate agent usage across every developer on the Superset leaderboard — tokens, cost, cache behaviour and which models people actually reach for."
 msgstr "Aggregate agent usage across every developer on the Superset leaderboard — tokens, cost, cache behaviour and which models people actually reach for."
 
@@ -1912,6 +1915,10 @@ msgstr "Also: @superset/ui/spinner"
 
 msgid "Always know which agent needs you, with notifications that deep-link straight to the blocked agent."
 msgstr "Always know which agent needs you, with notifications that deep-link straight to the blocked agent."
+
+msgctxt "page watcher with no known name"
+msgid "An agent"
+msgstr "An agent"
 
 msgid "An agent completes multi-file changes end to end."
 msgstr "An agent completes multi-file changes end to end."
@@ -3196,9 +3203,6 @@ msgstr "Choose what to clear from the in-app browser."
 msgid "Choose when Superset pings you."
 msgstr "Choose when Superset pings you."
 
-msgid "Choose which agent watches this page for comments"
-msgstr "Choose which agent watches this page for comments"
-
 msgid "Choose which columns appear and use the arrows to set their left-to-right order."
 msgstr "Choose which columns appear and use the arrows to set their left-to-right order."
 
@@ -3682,9 +3686,6 @@ msgstr "Comments"
 
 msgid "Comments could not be loaded"
 msgstr "Comments could not be loaded"
-
-msgid "Comments go to this agent"
-msgstr "Comments go to this agent"
 
 msgid "Commit"
 msgstr "Commit"
@@ -4461,9 +4462,6 @@ msgstr "Could not start session"
 msgid "Could not stop it"
 msgstr "Could not stop it"
 
-msgid "Could not stop watching"
-msgstr "Could not stop watching"
-
 msgid "Could not submit prompt. Try again."
 msgstr "Could not submit prompt. Try again."
 
@@ -4482,9 +4480,6 @@ msgstr "Could not update the branch"
 #. js-lingui-explicit-id
 msgid "serverError.plugins.credentialUnverified"
 msgstr "Could not verify the credential: {reason}"
-
-msgid "Could not watch this page"
-msgstr "Could not watch this page"
 
 msgid "Couldn't confirm star status — check that the GitHub CLI (`gh`) is installed, signed in, and that you have a network connection"
 msgstr "Couldn't confirm star status — check that the GitHub CLI (`gh`) is installed, signed in, and that you have a network connection"
@@ -6018,8 +6013,8 @@ msgstr "Everything is scriptable. Spawn workspaces and agents from the CLI, wire
 msgid "Everything we built on top of the primitives — Superset originals, the"
 msgstr "Everything we built on top of the primitives — Superset originals, the"
 
-msgid "Everything you've published is deleted, not hidden. You can rejoin later and it will rebuild from the transcripts still on this machine — only your past ranking is lost."
-msgstr "Everything you've published is deleted, not hidden. You can rejoin later and it will rebuild from the transcripts still on this machine — only your past ranking is lost."
+msgid "Everything you've published is deleted, not hidden. You can rejoin later and it will rebuild from the transcripts still on this machine."
+msgstr "Everything you've published is deleted, not hidden. You can rejoin later and it will rebuild from the transcripts still on this machine."
 
 msgid "Existing repo path"
 msgstr "Existing repo path"
@@ -6705,6 +6700,9 @@ msgstr "Filter by reviews"
 
 msgid "Filter by state"
 msgstr "Filter by state"
+
+msgid "Filter by workspace: {label}"
+msgstr "Filter by workspace: {label}"
 
 msgid "Filter hosts"
 msgstr "Filter hosts"
@@ -9547,9 +9545,6 @@ msgstr "No agents configured on this machine"
 msgid "No agents match \"{q}\"."
 msgstr "No agents match \"{q}\"."
 
-msgid "No agents running here"
-msgstr "No agents running here"
-
 msgid "No agents yet"
 msgstr "No agents yet"
 
@@ -10167,9 +10162,6 @@ msgstr "Nothing installed yet."
 msgid "Nothing is running. Remove it and create a new one."
 msgstr "Nothing is running. Remove it and create a new one."
 
-msgid "Nothing is watching this page"
-msgstr "Nothing is watching this page"
-
 msgid "Nothing lives at {pathname}."
 msgstr "Nothing lives at {pathname}."
 
@@ -10263,6 +10255,9 @@ msgstr "Older"
 
 msgid "on {offScopeHostName} — won't run here"
 msgstr "on {offScopeHostName} — won't run here"
+
+msgid "On a host you can't reach"
+msgstr "On a host you can't reach"
 
 msgid "On click"
 msgstr "On click"
@@ -13688,8 +13683,8 @@ msgstr "Share designs and reports. Let your agent handle the feedback."
 msgid "Share page"
 msgstr "Share page"
 
-msgid "Share settings"
-msgstr "Share settings"
+msgid "Share page (public)"
+msgstr "Share page (public)"
 
 msgid "Share this page"
 msgstr "Share this page"
@@ -14535,9 +14530,6 @@ msgstr "Stop Superset here to delete from another device."
 msgid "Stop this subagent using the agent's own controls."
 msgstr "Stop this subagent using the agent's own controls."
 
-msgid "Stop watching"
-msgstr "Stop watching"
-
 msgid "Stop workspace run command"
 msgstr "Stop workspace run command"
 
@@ -15218,9 +15210,6 @@ msgstr "The associated device isn't reachable right now"
 msgid "The best agent will change.<0/>Your workflow shouldn't."
 msgstr "The best agent will change.<0/>Your workflow shouldn't."
 
-msgid "The Codex sign-in"
-msgstr "The Codex sign-in"
-
 msgid "The config repository must be one of the environment's repositories"
 msgstr "The config repository must be one of the environment's repositories"
 
@@ -15579,6 +15568,9 @@ msgstr "This closes the workspace and its terminals. Files and branches stay on 
 msgid "This closes the workspace and its terminals. The project's files, branches and other workspaces stay as they are."
 msgstr "This closes the workspace and its terminals. The project's files, branches and other workspaces stay as they are."
 
+msgid "This cloud workspace is waking up, which can take up to 30 seconds after it has been idle."
+msgstr "This cloud workspace is waking up, which can take up to 30 seconds after it has been idle."
+
 msgid "This deletes the saved scrollback used for reboot/crash recovery."
 msgstr "This deletes the saved scrollback used for reboot/crash recovery."
 
@@ -15689,10 +15681,6 @@ msgstr "This page is being published from somewhere else — retry"
 
 msgid "This page is in another organization"
 msgstr "This page is in another organization"
-
-#. placeholder {0}: url.replace(/^https?:\/\//, "")
-msgid "This page is live at <0>{0}</0>"
-msgstr "This page is live at <0>{0}</0>"
 
 msgid "This page isn't here"
 msgstr "This page isn't here"
@@ -16319,6 +16307,9 @@ msgstr "Unknown variables: {unknownVariables}"
 
 msgid "Unknown Welder"
 msgstr "Unknown Welder"
+
+msgid "Unknown workspace"
+msgstr "Unknown workspace"
 
 msgid "Unlimited"
 msgstr "Unlimited"

@@ -218,6 +218,10 @@ msgstr "{0, plural, one {#件のワークスペース} other {#件のワーク�
 msgid "{0, plural, one {A running agent still uses the previous account — the switch only reaches new launches.} other {# running agents still use the previous account — the switch only reaches new launches.}}"
 msgstr "{0, plural, one {実行中の#件のエージェントはまだ以前のアカウントを使用しています。切り替えが適用されるのは新規起動のみです。} other {実行中の#件のエージェントはまだ以前のアカウントを使用しています。切り替えが適用されるのは新規起動のみです。}}"
 
+#. placeholder {0}: Math.max(watchers.length, 1)
+msgid "{0, plural, one {Comments go to this agent} other {Comments go to these agents}}"
+msgstr "{0, plural, one {コメントはこのエージェントに送られます} other {コメントはこれらのエージェントに送られます}}"
+
 #. placeholder {0}: failures.length
 #. placeholder {0}: nextFailures.length
 msgid "{0, plural, one {Couldn’t delete # workspace} other {Couldn’t delete # workspaces}}"
@@ -1382,10 +1386,6 @@ msgstr "アクティベーション、使い始めてからの利用量、そし
 msgid "Active"
 msgstr "有効"
 
-#. placeholder {0}: formatDistanceToNowStrict(binding.lastEventAt, { addSuffix: true, })
-msgid "active {0}"
-msgstr "アクティブ {0}"
-
 msgid "Active agent sessions."
 msgstr "実行中のエージェントセッション。"
 
@@ -1658,6 +1658,9 @@ msgstr "同時に動かしているエージェント数"
 msgid "Agents waiting for your input."
 msgstr "入力を待っているエージェント。"
 
+msgid "Agents watching this page for comments"
+msgstr "このページのコメントを監視しているエージェント"
+
 msgid "Aggregate agent usage across every developer on the Superset leaderboard — tokens, cost, cache behaviour and which models people actually reach for."
 msgstr "Supersetリーダーボード上の全開発者を横断したエージェント利用の集計 — トークン、コスト、キャッシュの挙動、実際に選ばれているモデル。"
 
@@ -1912,6 +1915,10 @@ msgstr "その他: @superset/ui/spinner"
 
 msgid "Always know which agent needs you, with notifications that deep-link straight to the blocked agent."
 msgstr "どのエージェントがあなたを必要としているかが常に分かります。通知からブロック中のエージェントへ直接ジャンプできます。"
+
+msgctxt "page watcher with no known name"
+msgid "An agent"
+msgstr "エージェント"
 
 msgid "An agent completes multi-file changes end to end."
 msgstr "エージェントが複数ファイルにまたがる変更を最後までやり切る。"
@@ -3196,9 +3203,6 @@ msgstr "アプリ内ブラウザから消去する項目を選択してくださ
 msgid "Choose when Superset pings you."
 msgstr "Supersetから通知するタイミングを選びます。"
 
-msgid "Choose which agent watches this page for comments"
-msgstr "このページのコメントを監視するエージェントを選択"
-
 msgid "Choose which columns appear and use the arrows to set their left-to-right order."
 msgstr "表示する列を選び、矢印で左から右への順序を設定します。"
 
@@ -3682,9 +3686,6 @@ msgstr "コメント"
 
 msgid "Comments could not be loaded"
 msgstr "コメントを読み込めませんでした"
-
-msgid "Comments go to this agent"
-msgstr "コメントはこのエージェントに送られます"
 
 msgid "Commit"
 msgstr "コミット"
@@ -4461,9 +4462,6 @@ msgstr "セッションを開始できませんでした"
 msgid "Could not stop it"
 msgstr "停止できませんでした"
 
-msgid "Could not stop watching"
-msgstr "監視を停止できませんでした"
-
 msgid "Could not submit prompt. Try again."
 msgstr "プロンプトを送信できませんでした。もう一度お試しください。"
 
@@ -4482,9 +4480,6 @@ msgstr "ブランチを更新できませんでした"
 #. js-lingui-explicit-id
 msgid "serverError.plugins.credentialUnverified"
 msgstr "認証情報を確認できませんでした: {reason}"
-
-msgid "Could not watch this page"
-msgstr "このページを監視できませんでした"
 
 msgid "Couldn't confirm star status — check that the GitHub CLI (`gh`) is installed, signed in, and that you have a network connection"
 msgstr "スター状態を確認できませんでした — GitHub CLI (`gh`) がインストール・サインイン済みで、ネットワーク接続があることを確認してください"
@@ -6018,8 +6013,8 @@ msgstr "すべてスクリプトから操作できます。CLIでワークスペ
 msgid "Everything we built on top of the primitives — Superset originals, the"
 msgstr "プリミティブの上に作ったもの一式 — Superset独自のコンポーネント、エージェントUI向けの"
 
-msgid "Everything you've published is deleted, not hidden. You can rejoin later and it will rebuild from the transcripts still on this machine — only your past ranking is lost."
-msgstr "公開したものはすべて削除され、非表示になるわけではありません。後で再参加すれば、このマシンに残っているトランスクリプトから再構築されます — 失われるのは過去のランキングのみです。"
+msgid "Everything you've published is deleted, not hidden. You can rejoin later and it will rebuild from the transcripts still on this machine."
+msgstr "公開したものはすべて削除され、非表示になるわけではありません。後で再参加すれば、このマシンに残っているトランスクリプトから再構築されます。"
 
 msgid "Existing repo path"
 msgstr "既存リポジトリのパス"
@@ -6705,6 +6700,9 @@ msgstr "レビューで絞り込む"
 
 msgid "Filter by state"
 msgstr "状態で絞り込む"
+
+msgid "Filter by workspace: {label}"
+msgstr "ワークスペースで絞り込み: {label}"
 
 msgid "Filter hosts"
 msgstr "ホストを絞り込み"
@@ -9547,9 +9545,6 @@ msgstr "このマシンにはエージェントが設定されていません"
 msgid "No agents match \"{q}\"."
 msgstr "「{q}」に一致するエージェントはありません。"
 
-msgid "No agents running here"
-msgstr "ここで実行中のエージェントはありません"
-
 msgid "No agents yet"
 msgstr "エージェントはまだありません"
 
@@ -10167,9 +10162,6 @@ msgstr "まだ何もインストールされていません。"
 msgid "Nothing is running. Remove it and create a new one."
 msgstr "何も実行されていません。削除して新しく作成してください。"
 
-msgid "Nothing is watching this page"
-msgstr "このページを監視しているものはありません"
-
 msgid "Nothing lives at {pathname}."
 msgstr "{pathname}には何もありません。"
 
@@ -10263,6 +10255,9 @@ msgstr "それ以前"
 
 msgid "on {offScopeHostName} — won't run here"
 msgstr "{offScopeHostName}上 — ここでは実行されません"
+
+msgid "On a host you can't reach"
+msgstr "接続できないホスト上"
 
 msgid "On click"
 msgstr "クリック時"
@@ -13688,8 +13683,8 @@ msgstr "デザインやレポートを共有しましょう。フィードバッ
 msgid "Share page"
 msgstr "ページを共有"
 
-msgid "Share settings"
-msgstr "共有設定"
+msgid "Share page (public)"
+msgstr "ページを共有（公開）"
 
 msgid "Share this page"
 msgstr "このページを共有"
@@ -14535,9 +14530,6 @@ msgstr "別のデバイスから削除するには、ここでSupersetを停止�
 msgid "Stop this subagent using the agent's own controls."
 msgstr "このサブエージェントは、エージェント自体の操作機能で停止してください。"
 
-msgid "Stop watching"
-msgstr "監視を停止"
-
 msgid "Stop workspace run command"
 msgstr "ワークスペースの実行コマンドを停止"
 
@@ -15218,9 +15210,6 @@ msgstr "関連デバイスに現在接続できません"
 msgid "The best agent will change.<0/>Your workflow shouldn't."
 msgstr "最良のエージェントは変わります。<0/>ワークフローは変わるべきではありません。"
 
-msgid "The Codex sign-in"
-msgstr "Codexのサインイン"
-
 msgid "The config repository must be one of the environment's repositories"
 msgstr "設定リポジトリは環境のリポジトリのいずれかである必要があります"
 
@@ -15579,6 +15568,9 @@ msgstr "ワークスペースとそのターミナルを閉じます。ファイ
 msgid "This closes the workspace and its terminals. The project's files, branches and other workspaces stay as they are."
 msgstr "ワークスペースとそのターミナルを閉じます。プロジェクトのファイル、ブランチ、他のワークスペースはそのまま残ります。"
 
+msgid "This cloud workspace is waking up, which can take up to 30 seconds after it has been idle."
+msgstr "このクラウドワークスペースを起動しています。しばらく使われていなかった場合は、最大30秒かかることがあります。"
+
 msgid "This deletes the saved scrollback used for reboot/crash recovery."
 msgstr "再起動やクラッシュからの復旧に使う保存済みスクロールバックを削除します。"
 
@@ -15689,10 +15681,6 @@ msgstr "このページは別の場所から公開処理中です — 再試行�
 
 msgid "This page is in another organization"
 msgstr "このページは別の組織にあります"
-
-#. placeholder {0}: url.replace(/^https?:\/\//, "")
-msgid "This page is live at <0>{0}</0>"
-msgstr "このページは <0>{0}</0> で公開中です"
 
 msgid "This page isn't here"
 msgstr "このページはありません"
@@ -16319,6 +16307,9 @@ msgstr "不明な変数: {unknownVariables}"
 
 msgid "Unknown Welder"
 msgstr "正体不明の溶接工"
+
+msgid "Unknown workspace"
+msgstr "不明なワークスペース"
 
 msgid "Unlimited"
 msgstr "無制限"

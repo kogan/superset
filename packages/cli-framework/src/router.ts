@@ -1,4 +1,4 @@
-import type { CommandConfig } from "./command";
+import type { Audience, CommandConfig } from "./command";
 import { CLIError, suggestSimilar } from "./errors";
 import type { CommandNode } from "./help";
 
@@ -6,12 +6,37 @@ export type CliGroup = {
 	path: string[];
 	description: string;
 	aliases?: string[];
+	audience?: Audience;
 };
 
 export type CliCommand = {
 	path: string[];
 	command: CommandConfig;
 };
+
+function isPrefix(prefix: string[], path: string[]): boolean {
+	return prefix.every((segment, i) => path[i] === segment);
+}
+
+export function filterByAudience(
+	groups: CliGroup[],
+	commands: CliCommand[],
+	audiences: Audience[],
+): { groups: CliGroup[]; commands: CliCommand[] } {
+	const hiddenPaths = [
+		...groups.map((g) => ({ path: g.path, audience: g.audience })),
+		...commands.map((c) => ({ path: c.path, audience: c.command.audience })),
+	]
+		.filter((node) => !audiences.includes(node.audience ?? "public"))
+		.map((node) => node.path);
+	const visibleCommands = commands.filter(
+		(c) => !hiddenPaths.some((hidden) => isPrefix(hidden, c.path)),
+	);
+	const visibleGroups = groups.filter((g) =>
+		visibleCommands.some((c) => isPrefix(g.path, c.path)),
+	);
+	return { groups: visibleGroups, commands: visibleCommands };
+}
 
 export function buildTree(
 	groups: CliGroup[],

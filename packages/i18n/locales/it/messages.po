@@ -218,6 +218,10 @@ msgstr "{0, plural, one {# workspace} other {# workspace}}"
 msgid "{0, plural, one {A running agent still uses the previous account — the switch only reaches new launches.} other {# running agents still use the previous account — the switch only reaches new launches.}}"
 msgstr "{0, plural, one {Un agente in esecuzione usa ancora l'account precedente: il cambio vale solo per i nuovi avvii.} other {# agenti in esecuzione usano ancora l'account precedente: il cambio vale solo per i nuovi avvii.}}"
 
+#. placeholder {0}: Math.max(watchers.length, 1)
+msgid "{0, plural, one {Comments go to this agent} other {Comments go to these agents}}"
+msgstr "{0, plural, one {I commenti vanno a questo agente} other {I commenti vanno a questi agenti}}"
+
 #. placeholder {0}: failures.length
 #. placeholder {0}: nextFailures.length
 msgid "{0, plural, one {Couldn’t delete # workspace} other {Couldn’t delete # workspaces}}"
@@ -1382,10 +1386,6 @@ msgstr "L'attivazione, quanto lo usano una volta entrati e se tornano."
 msgid "Active"
 msgstr "Attiva"
 
-#. placeholder {0}: formatDistanceToNowStrict(binding.lastEventAt, { addSuffix: true, })
-msgid "active {0}"
-msgstr "attivo {0}"
-
 msgid "Active agent sessions."
 msgstr "Sessioni degli agenti attive."
 
@@ -1658,6 +1658,9 @@ msgstr "Agenti in esecuzione in parallelo"
 msgid "Agents waiting for your input."
 msgstr "Agenti in attesa della tua risposta."
 
+msgid "Agents watching this page for comments"
+msgstr "Agenti che osservano questa pagina per i commenti"
+
 msgid "Aggregate agent usage across every developer on the Superset leaderboard — tokens, cost, cache behaviour and which models people actually reach for."
 msgstr "Utilizzo aggregato degli agenti di tutti gli sviluppatori nella classifica di Superset — token, costi, comportamento della cache e quali modelli vengono davvero usati."
 
@@ -1912,6 +1915,10 @@ msgstr "Anche: @superset/ui/spinner"
 
 msgid "Always know which agent needs you, with notifications that deep-link straight to the blocked agent."
 msgstr "Sai sempre quale agente ha bisogno di te, con notifiche che portano dritte all'agente bloccato."
+
+msgctxt "page watcher with no known name"
+msgid "An agent"
+msgstr "Un agente"
 
 msgid "An agent completes multi-file changes end to end."
 msgstr "Un agente completa modifiche su più file dall'inizio alla fine."
@@ -3196,9 +3203,6 @@ msgstr "Scegli cosa cancellare dal browser interno."
 msgid "Choose when Superset pings you."
 msgstr "Scegli quando Superset ti avvisa."
 
-msgid "Choose which agent watches this page for comments"
-msgstr "Scegli quale agente osserva i commenti di questa pagina"
-
 msgid "Choose which columns appear and use the arrows to set their left-to-right order."
 msgstr "Scegli quali colonne mostrare e usa le frecce per ordinarle da sinistra a destra."
 
@@ -3682,9 +3686,6 @@ msgstr "Commenti"
 
 msgid "Comments could not be loaded"
 msgstr "Impossibile caricare i commenti"
-
-msgid "Comments go to this agent"
-msgstr "I commenti vanno a questo agente"
 
 msgid "Commit"
 msgstr "Commit"
@@ -4461,9 +4462,6 @@ msgstr "Impossibile avviare la sessione"
 msgid "Could not stop it"
 msgstr "Impossibile arrestarlo"
 
-msgid "Could not stop watching"
-msgstr "Impossibile smettere di osservare"
-
 msgid "Could not submit prompt. Try again."
 msgstr "Impossibile inviare il prompt. Riprova."
 
@@ -4482,9 +4480,6 @@ msgstr "Impossibile aggiornare il branch"
 #. js-lingui-explicit-id
 msgid "serverError.plugins.credentialUnverified"
 msgstr "Impossibile verificare la credenziale: {reason}"
-
-msgid "Could not watch this page"
-msgstr "Impossibile osservare questa pagina"
 
 msgid "Couldn't confirm star status — check that the GitHub CLI (`gh`) is installed, signed in, and that you have a network connection"
 msgstr "Impossibile confermare lo stato della star — controlla che la CLI di GitHub (`gh`) sia installata, che tu abbia effettuato l'accesso e che ci sia connessione di rete"
@@ -6018,8 +6013,8 @@ msgstr "Tutto è scriptabile. Crea workspace e agenti dalla CLI, collega Superse
 msgid "Everything we built on top of the primitives — Superset originals, the"
 msgstr "Tutto ciò che abbiamo costruito sopra i primitivi — gli originali Superset, la suite"
 
-msgid "Everything you've published is deleted, not hidden. You can rejoin later and it will rebuild from the transcripts still on this machine — only your past ranking is lost."
-msgstr "Tutto ciò che hai pubblicato viene eliminato, non nascosto. Puoi rientrare più tardi e verrà ricostruito dalle trascrizioni ancora presenti su questa macchina — perdi solo la tua posizione passata."
+msgid "Everything you've published is deleted, not hidden. You can rejoin later and it will rebuild from the transcripts still on this machine."
+msgstr "Tutto ciò che hai pubblicato viene eliminato, non nascosto. Puoi rientrare più tardi e verrà ricostruito dalle trascrizioni ancora presenti su questa macchina."
 
 msgid "Existing repo path"
 msgstr "Percorso del repo esistente"
@@ -6705,6 +6700,9 @@ msgstr "Filtra per revisioni"
 
 msgid "Filter by state"
 msgstr "Filtra per stato"
+
+msgid "Filter by workspace: {label}"
+msgstr "Filtra per workspace: {label}"
 
 msgid "Filter hosts"
 msgstr "Filtra gli host"
@@ -9547,9 +9545,6 @@ msgstr "Nessun agente configurato su questa macchina"
 msgid "No agents match \"{q}\"."
 msgstr "Nessun agente corrisponde a \"{q}\"."
 
-msgid "No agents running here"
-msgstr "Nessun agente in esecuzione qui"
-
 msgid "No agents yet"
 msgstr "Ancora nessun agente"
 
@@ -10167,9 +10162,6 @@ msgstr "Ancora nulla di installato."
 msgid "Nothing is running. Remove it and create a new one."
 msgstr "Non è in esecuzione nulla. Rimuovilo e creane uno nuovo."
 
-msgid "Nothing is watching this page"
-msgstr "Niente sta osservando questa pagina"
-
 msgid "Nothing lives at {pathname}."
 msgstr "Non c'è niente in {pathname}."
 
@@ -10263,6 +10255,9 @@ msgstr "Più vecchi"
 
 msgid "on {offScopeHostName} — won't run here"
 msgstr "su {offScopeHostName} — non verrà eseguita qui"
+
+msgid "On a host you can't reach"
+msgstr "Su un host che non puoi raggiungere"
 
 msgid "On click"
 msgstr "Al clic"
@@ -13688,8 +13683,8 @@ msgstr "Condividi design e report. Lascia che il tuo agente gestisca il feedback
 msgid "Share page"
 msgstr "Condividi la pagina"
 
-msgid "Share settings"
-msgstr "Impostazioni di condivisione"
+msgid "Share page (public)"
+msgstr "Condividi la pagina (pubblica)"
 
 msgid "Share this page"
 msgstr "Condividi questa pagina"
@@ -14535,9 +14530,6 @@ msgstr "Chiudi Superset qui per eliminarlo da un altro dispositivo."
 msgid "Stop this subagent using the agent's own controls."
 msgstr "Interrompi questo sottoagente usando i controlli dell’agente."
 
-msgid "Stop watching"
-msgstr "Smetti di osservare"
-
 msgid "Stop workspace run command"
 msgstr "Arresta il comando di esecuzione del workspace"
 
@@ -15218,9 +15210,6 @@ msgstr "Il dispositivo associato non è raggiungibile al momento"
 msgid "The best agent will change.<0/>Your workflow shouldn't."
 msgstr "Il miglior agente cambierà.<0/>Il tuo flusso di lavoro no."
 
-msgid "The Codex sign-in"
-msgstr "L'accesso Codex"
-
 msgid "The config repository must be one of the environment's repositories"
 msgstr "Il repository di configurazione deve essere uno dei repository dell'ambiente"
 
@@ -15579,6 +15568,9 @@ msgstr "Questo chiude lo spazio di lavoro e i suoi terminali. I file e i branch 
 msgid "This closes the workspace and its terminals. The project's files, branches and other workspaces stay as they are."
 msgstr "Questo chiude il workspace e i suoi terminali. I file, i branch e gli altri workspace del progetto restano invariati."
 
+msgid "This cloud workspace is waking up, which can take up to 30 seconds after it has been idle."
+msgstr "Questo workspace cloud si sta riattivando: dopo un periodo di inattività possono volerci fino a 30 secondi."
+
 msgid "This deletes the saved scrollback used for reboot/crash recovery."
 msgstr "Questo elimina lo scrollback salvato usato per il ripristino dopo riavvio o crash."
 
@@ -15689,10 +15681,6 @@ msgstr "Questa pagina è in fase di pubblicazione da un'altra parte — riprova"
 
 msgid "This page is in another organization"
 msgstr "Questa pagina è in un'altra organizzazione"
-
-#. placeholder {0}: url.replace(/^https?:\/\//, "")
-msgid "This page is live at <0>{0}</0>"
-msgstr "Questa pagina è online su <0>{0}</0>"
 
 msgid "This page isn't here"
 msgstr "Questa pagina non c'è"
@@ -16319,6 +16307,9 @@ msgstr "Variabili sconosciute: {unknownVariables}"
 
 msgid "Unknown Welder"
 msgstr "Saldatore Sconosciuto"
+
+msgid "Unknown workspace"
+msgstr "Workspace sconosciuto"
 
 msgid "Unlimited"
 msgstr "Illimitati"

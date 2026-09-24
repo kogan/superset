@@ -185,19 +185,6 @@ export const notificationsRouter = router({
 		const preview = trimOrUndefined(input.preview);
 
 		const prior = ctx.terminalAgentStore.get(input.terminalId);
-		if (
-			eventType !== "PermissionRequest" ||
-			prior?.lastEventType !== "PermissionRequest"
-		) {
-			ctx.eventBus.broadcastAgentLifecycle({
-				workspaceId: terminalSession.originWorkspaceId,
-				eventType,
-				terminalId: input.terminalId,
-				...(agent ? { agent } : {}),
-				...(preview ? { preview } : {}),
-				occurredAt,
-			});
-		}
 		const account =
 			verifyAttributionToken(input.terminalId, input.attributionToken) &&
 			eventType === "Attached" &&
@@ -225,6 +212,20 @@ export const notificationsRouter = router({
 			...(agent?.definitionId ? { definitionId: agent.definitionId } : {}),
 			occurredAt,
 		});
+
+		if (
+			eventType !== "PermissionRequest" ||
+			prior?.lastEventType !== "PermissionRequest"
+		) {
+			ctx.eventBus.broadcastAgentLifecycle({
+				workspaceId: terminalSession.originWorkspaceId,
+				eventType,
+				terminalId: input.terminalId,
+				...(agent ? { agent } : {}),
+				...(preview ? { preview } : {}),
+				occurredAt,
+			});
+		}
 
 		// Every lifecycle event is activity for the sidebar's "Last active"
 		// ranking. Best-effort: a failed write must not fail the hook, which
