@@ -1601,9 +1601,6 @@ msgstr "Ajan bitirdi"
 msgid "Agent Independence"
 msgstr "Ajan bağımsızlığı"
 
-msgid "Agent input, failed checks on your PRs, and reviews requested from you."
-msgstr "Ajanların girdi istekleri, PR'larınızdaki başarısız kontroller ve sizden istenen incelemeler."
-
 msgid "Agent launch configuration"
 msgstr "Ajan başlatma yapılandırması"
 
@@ -1654,6 +1651,9 @@ msgstr "Ajanlar kendi önizlemelerini yükler, arayüzü kullanır ve işi incel
 
 msgid "Agents running at once"
 msgstr "Aynı anda çalışan ajanlar"
+
+msgid "Agents waiting for your input."
+msgstr "Girdinizi bekleyen ajanlar."
 
 msgid "Aggregate agent usage across every developer on the Superset leaderboard — tokens, cost, cache behaviour and which models people actually reach for."
 msgstr "Superset liderlik tablosundaki her geliştiricinin toplam ajan kullanımı — token, maliyet, önbellek davranışı ve insanların gerçekte tercih ettiği modeller."
@@ -2261,9 +2261,6 @@ msgstr "Kontroller geçmeden dene"
 
 msgid "Attention"
 msgstr "Dikkat"
-
-msgid "Attention filters"
-msgstr "Dikkat filtreleri"
 
 msgid "Attention inbox"
 msgstr "İlgi bekleyenler kutusu"
@@ -3172,9 +3169,6 @@ msgstr "Ajan seçin"
 msgid "Choose an existing repo folder"
 msgstr "Mevcut bir depo klasörü seçin"
 
-msgid "Choose another filter or refresh to check again."
-msgstr "Başka bir filtre seçin veya tekrar kontrol etmek için yenileyin."
-
 msgid "Choose app"
 msgstr "Uygulama seç"
 
@@ -3902,9 +3896,6 @@ msgstr "{label} bağlandı"
 
 msgid "Connected as"
 msgstr "Şu hesapla bağlı"
-
-msgid "Connected projects only. Refreshes every minute while this page is open."
-msgstr "Yalnızca bağlı projeler. Bu sayfa açıkken her dakika yenilenir."
 
 msgid "Connected to"
 msgstr "Şuna bağlı"
@@ -6163,9 +6154,6 @@ msgstr "Başarısız"
 msgid "Failed <0>· 7d</0>"
 msgstr "Başarısız <0>· 7g</0>"
 
-msgid "Failed checks"
-msgstr "Başarısız kontroller"
-
 msgid "Failed to accept invitation"
 msgstr "Davet kabul edilemedi"
 
@@ -8050,8 +8038,8 @@ msgstr "İtalik"
 msgid "Item"
 msgstr "Öğe"
 
-msgid "Items appear here when an agent needs input, your PR checks fail, or someone requests your review."
-msgstr "Bir ajan girdinize ihtiyaç duyduğunda, PR kontrolleriniz başarısız olduğunda veya biri incelemenizi istediğinde öğeler burada görünür."
+msgid "Items appear here when an agent needs your input."
+msgstr "Bir ajan girdinize ihtiyaç duyduğunda öğeler burada görünür."
 
 msgid "Its own branch and copy of the files"
 msgstr "Kendi dalı ve dosyaların kendi kopyası"
@@ -8563,9 +8551,6 @@ msgstr "Daha eski mesajları yükle"
 
 msgid "Load more"
 msgstr "Daha fazla yükle"
-
-msgid "Load more results, reconnect unavailable hosts, or check your GitHub connection, then refresh."
-msgstr "Daha fazla sonuç yükleyin, kullanılamayan ana makinelere yeniden bağlanın veya GitHub bağlantınızı kontrol edin, ardından yenileyin."
 
 msgid "Loaded issues: {shownCount}"
 msgstr "Yüklenen işler: {shownCount}"
@@ -9763,9 +9748,6 @@ msgstr "Bağlı PR yok"
 msgid "No live sessions"
 msgstr "Canlı oturum yok"
 
-msgid "No loaded items match this filter"
-msgstr "Yüklenen öğeler arasında bu filtreyle eşleşen yok"
-
 msgid "no logins"
 msgstr "oturum bilgisi yok"
 
@@ -10290,6 +10272,9 @@ msgstr "Bu hızla"
 
 msgid "On this page"
 msgstr "Bu sayfada"
+
+msgid "On worktree close"
+msgstr "Worktree kapatıldığında"
 
 msgid "On your machine. Repos, worktrees, terminal output, and agent sessions stay local by default; cloud sync covers account and organization metadata only. Superset doesn't proxy any API calls."
 msgstr "Sizin makinenizde. Depolar, worktree'ler, terminal çıktısı ve ajan oturumları varsayılan olarak yerelde kalır; bulut eşitlemesi yalnızca hesap ve kuruluş meta verilerini kapsar. Superset hiçbir API çağrısını vekil olarak iletmez."
@@ -11121,9 +11106,6 @@ msgstr "Bir kısmı kayıt, bir kısmı bahis. İlk iki madde zaten gerçekleşi
 msgid "Partial"
 msgstr "Kısmi"
 
-msgid "Partial results"
-msgstr "Kısmi sonuçlar"
-
 msgid "Partner, Transpose Platform"
 msgstr "Ortak, Transpose Platform"
 
@@ -11822,9 +11804,6 @@ msgstr "Pull request'ler"
 msgid "Pull Requests"
 msgstr "Pull request'ler"
 
-msgid "Pull requests are turned off. Only agent input is shown."
-msgstr "Pull request'ler kapalı. Yalnızca ajanların girdi istekleri gösteriliyor."
-
 msgid "Purple"
 msgstr "Mor"
 
@@ -12058,6 +12037,9 @@ msgstr "Linear'a yeniden bağlan"
 
 msgid "Reconnect required"
 msgstr "Yeniden bağlanmak gerekiyor"
+
+msgid "Reconnect unavailable hosts, then refresh."
+msgstr "Kullanılamayan ana makinelere yeniden bağlanın, ardından yenileyin."
 
 msgid "Reconnecting"
 msgstr "Yeniden bağlanılıyor"
@@ -12744,9 +12726,6 @@ msgstr "Pull request'leri Superset içinde inceleyin: fark bölmesi, ajan destek
 msgid "Review requested"
 msgstr "İnceleme istendi"
 
-msgid "Review requests"
-msgstr "İnceleme istekleri"
-
 msgid "Review required"
 msgstr "İnceleme gerekli"
 
@@ -12897,6 +12876,9 @@ msgstr "Terminal komutları çalıştırın ve diğer uygulamalarla etkileşin."
 
 msgid "Run the agent in the Workspace Setup terminal once setup finishes instead of starting a second terminal alongside it"
 msgstr "Yanında ikinci bir terminal başlatmak yerine, kurulum bittikten sonra ajanı Çalışma Alanı Kurulumu terminalinde çalıştır"
+
+msgid "Run these commands when closing a worktree, even when its files are kept."
+msgstr "Worktree kapatılırken dosyaları korunsa bile bu komutları çalıştırır."
 
 msgid "Run workspace command"
 msgstr "Çalışma alanı komutunu çalıştır"

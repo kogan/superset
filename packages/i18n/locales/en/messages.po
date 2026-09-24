@@ -1601,9 +1601,6 @@ msgstr "Agent finished"
 msgid "Agent Independence"
 msgstr "Agent Independence"
 
-msgid "Agent input, failed checks on your PRs, and reviews requested from you."
-msgstr "Agent input, failed checks on your PRs, and reviews requested from you."
-
 msgid "Agent launch configuration"
 msgstr "Agent launch configuration"
 
@@ -1654,6 +1651,9 @@ msgstr "Agents load their own preview, drive the UI, and attach screenshot proof
 
 msgid "Agents running at once"
 msgstr "Agents running at once"
+
+msgid "Agents waiting for your input."
+msgstr "Agents waiting for your input."
 
 msgid "Aggregate agent usage across every developer on the Superset leaderboard — tokens, cost, cache behaviour and which models people actually reach for."
 msgstr "Aggregate agent usage across every developer on the Superset leaderboard — tokens, cost, cache behaviour and which models people actually reach for."
@@ -2261,9 +2261,6 @@ msgstr "Attempt before checks pass"
 
 msgid "Attention"
 msgstr "Attention"
-
-msgid "Attention filters"
-msgstr "Attention filters"
 
 msgid "Attention inbox"
 msgstr "Attention inbox"
@@ -3172,9 +3169,6 @@ msgstr "Choose agent"
 msgid "Choose an existing repo folder"
 msgstr "Choose an existing repo folder"
 
-msgid "Choose another filter or refresh to check again."
-msgstr "Choose another filter or refresh to check again."
-
 msgid "Choose app"
 msgstr "Choose app"
 
@@ -3902,9 +3896,6 @@ msgstr "Connected {label}"
 
 msgid "Connected as"
 msgstr "Connected as"
-
-msgid "Connected projects only. Refreshes every minute while this page is open."
-msgstr "Connected projects only. Refreshes every minute while this page is open."
 
 msgid "Connected to"
 msgstr "Connected to"
@@ -6163,9 +6154,6 @@ msgstr "Failed"
 msgid "Failed <0>· 7d</0>"
 msgstr "Failed <0>· 7d</0>"
 
-msgid "Failed checks"
-msgstr "Failed checks"
-
 msgid "Failed to accept invitation"
 msgstr "Failed to accept invitation"
 
@@ -8050,8 +8038,8 @@ msgstr "Italic"
 msgid "Item"
 msgstr "Item"
 
-msgid "Items appear here when an agent needs input, your PR checks fail, or someone requests your review."
-msgstr "Items appear here when an agent needs input, your PR checks fail, or someone requests your review."
+msgid "Items appear here when an agent needs your input."
+msgstr "Items appear here when an agent needs your input."
 
 msgid "Its own branch and copy of the files"
 msgstr "Its own branch and copy of the files"
@@ -8563,9 +8551,6 @@ msgstr "Load earlier messages"
 
 msgid "Load more"
 msgstr "Load more"
-
-msgid "Load more results, reconnect unavailable hosts, or check your GitHub connection, then refresh."
-msgstr "Load more results, reconnect unavailable hosts, or check your GitHub connection, then refresh."
 
 msgid "Loaded issues: {shownCount}"
 msgstr "Loaded issues: {shownCount}"
@@ -9763,9 +9748,6 @@ msgstr "No linked PR"
 msgid "No live sessions"
 msgstr "No live sessions"
 
-msgid "No loaded items match this filter"
-msgstr "No loaded items match this filter"
-
 msgid "no logins"
 msgstr "no logins"
 
@@ -10290,6 +10272,9 @@ msgstr "On this pace"
 
 msgid "On this page"
 msgstr "On this page"
+
+msgid "On worktree close"
+msgstr "On worktree close"
 
 msgid "On your machine. Repos, worktrees, terminal output, and agent sessions stay local by default; cloud sync covers account and organization metadata only. Superset doesn't proxy any API calls."
 msgstr "On your machine. Repos, worktrees, terminal output, and agent sessions stay local by default; cloud sync covers account and organization metadata only. Superset doesn't proxy any API calls."
@@ -11121,9 +11106,6 @@ msgstr "Part record, part bet. The first two entries are already happening. The 
 msgid "Partial"
 msgstr "Partial"
 
-msgid "Partial results"
-msgstr "Partial results"
-
 msgid "Partner, Transpose Platform"
 msgstr "Partner, Transpose Platform"
 
@@ -11822,9 +11804,6 @@ msgstr "Pull requests"
 msgid "Pull Requests"
 msgstr "Pull Requests"
 
-msgid "Pull requests are turned off. Only agent input is shown."
-msgstr "Pull requests are turned off. Only agent input is shown."
-
 msgid "Purple"
 msgstr "Purple"
 
@@ -12058,6 +12037,9 @@ msgstr "Reconnect Linear"
 
 msgid "Reconnect required"
 msgstr "Reconnect required"
+
+msgid "Reconnect unavailable hosts, then refresh."
+msgstr "Reconnect unavailable hosts, then refresh."
 
 msgid "Reconnecting"
 msgstr "Reconnecting"
@@ -12744,9 +12726,6 @@ msgstr "Review pull requests inside Superset: diff pane, agent-assisted review, 
 msgid "Review requested"
 msgstr "Review requested"
 
-msgid "Review requests"
-msgstr "Review requests"
-
 msgid "Review required"
 msgstr "Review required"
 
@@ -12897,6 +12876,9 @@ msgstr "Run terminal commands and interact with other applications."
 
 msgid "Run the agent in the Workspace Setup terminal once setup finishes instead of starting a second terminal alongside it"
 msgstr "Run the agent in the Workspace Setup terminal once setup finishes instead of starting a second terminal alongside it"
+
+msgid "Run these commands when closing a worktree, even when its files are kept."
+msgstr "Run these commands when closing a worktree, even when its files are kept."
 
 msgid "Run workspace command"
 msgstr "Run workspace command"

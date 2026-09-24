@@ -1601,9 +1601,6 @@ msgstr "Agente terminato"
 msgid "Agent Independence"
 msgstr "Indipendenza dagli agenti"
 
-msgid "Agent input, failed checks on your PRs, and reviews requested from you."
-msgstr "Richieste di input degli agenti, controlli non riusciti sulle tue PR e richieste di revisione rivolte a te."
-
 msgid "Agent launch configuration"
 msgstr "Configurazione di avvio dell'agente"
 
@@ -1654,6 +1651,9 @@ msgstr "Gli agenti caricano la propria anteprima, guidano l'interfaccia e allega
 
 msgid "Agents running at once"
 msgstr "Agenti in esecuzione in parallelo"
+
+msgid "Agents waiting for your input."
+msgstr "Agenti in attesa della tua risposta."
 
 msgid "Aggregate agent usage across every developer on the Superset leaderboard — tokens, cost, cache behaviour and which models people actually reach for."
 msgstr "Utilizzo aggregato degli agenti di tutti gli sviluppatori nella classifica di Superset — token, costi, comportamento della cache e quali modelli vengono davvero usati."
@@ -2261,9 +2261,6 @@ msgstr "Prova prima che i controlli passino"
 
 msgid "Attention"
 msgstr "Da gestire"
-
-msgid "Attention filters"
-msgstr "Filtri degli elementi da gestire"
 
 msgid "Attention inbox"
 msgstr "Elementi da gestire"
@@ -3172,9 +3169,6 @@ msgstr "Scegli l'agente"
 msgid "Choose an existing repo folder"
 msgstr "Scegli una cartella di repo esistente"
 
-msgid "Choose another filter or refresh to check again."
-msgstr "Scegli un altro filtro o aggiorna per controllare di nuovo."
-
 msgid "Choose app"
 msgstr "Scegli l'app"
 
@@ -3902,9 +3896,6 @@ msgstr "{label} connesso"
 
 msgid "Connected as"
 msgstr "Collegato come"
-
-msgid "Connected projects only. Refreshes every minute while this page is open."
-msgstr "Solo progetti connessi. Si aggiorna ogni minuto mentre questa pagina è aperta."
 
 msgid "Connected to"
 msgstr "Collegato a"
@@ -6163,9 +6154,6 @@ msgstr "Non riuscito"
 msgid "Failed <0>· 7d</0>"
 msgstr "Falliti <0>· 7g</0>"
 
-msgid "Failed checks"
-msgstr "Controlli non riusciti"
-
 msgid "Failed to accept invitation"
 msgstr "Accettazione dell'invito non riuscita"
 
@@ -8050,8 +8038,8 @@ msgstr "Corsivo"
 msgid "Item"
 msgstr "Item"
 
-msgid "Items appear here when an agent needs input, your PR checks fail, or someone requests your review."
-msgstr "Gli elementi compaiono qui quando un agente richiede input, i controlli delle tue PR non riescono o qualcuno richiede una tua revisione."
+msgid "Items appear here when an agent needs your input."
+msgstr "Gli elementi compaiono qui quando un agente richiede una tua risposta."
 
 msgid "Its own branch and copy of the files"
 msgstr "Un branch e una copia dei file tutti suoi"
@@ -8563,9 +8551,6 @@ msgstr "Carica i messaggi precedenti"
 
 msgid "Load more"
 msgstr "Carica altri"
-
-msgid "Load more results, reconnect unavailable hosts, or check your GitHub connection, then refresh."
-msgstr "Carica altri risultati, riconnetti gli host non disponibili o verifica la connessione a GitHub, quindi aggiorna."
 
 msgid "Loaded issues: {shownCount}"
 msgstr "Ticket caricati: {shownCount}"
@@ -9763,9 +9748,6 @@ msgstr "Nessuna PR collegata"
 msgid "No live sessions"
 msgstr "Nessuna sessione attiva"
 
-msgid "No loaded items match this filter"
-msgstr "Nessun elemento caricato corrisponde a questo filtro"
-
 msgid "no logins"
 msgstr "nessun accesso"
 
@@ -10290,6 +10272,9 @@ msgstr "Con questo ritmo"
 
 msgid "On this page"
 msgstr "In questa pagina"
+
+msgid "On worktree close"
+msgstr "Alla chiusura del worktree"
 
 msgid "On your machine. Repos, worktrees, terminal output, and agent sessions stay local by default; cloud sync covers account and organization metadata only. Superset doesn't proxy any API calls."
 msgstr "Sulla tua macchina. Repo, worktree, output del terminale e sessioni degli agenti restano locali per impostazione predefinita; la sincronizzazione cloud copre solo i metadati di account e organizzazione. Superset non fa da proxy per nessuna chiamata API."
@@ -11121,9 +11106,6 @@ msgstr "In parte cronaca, in parte scommessa. Le prime due voci stanno già acca
 msgid "Partial"
 msgstr "Parziale"
 
-msgid "Partial results"
-msgstr "Risultati parziali"
-
 msgid "Partner, Transpose Platform"
 msgstr "Partner, Transpose Platform"
 
@@ -11822,9 +11804,6 @@ msgstr "Pull request"
 msgid "Pull Requests"
 msgstr "Pull request"
 
-msgid "Pull requests are turned off. Only agent input is shown."
-msgstr "Le pull request sono disattivate. Vengono mostrate solo le richieste di input degli agenti."
-
 msgid "Purple"
 msgstr "Viola"
 
@@ -12058,6 +12037,9 @@ msgstr "Ricollega Linear"
 
 msgid "Reconnect required"
 msgstr "È necessario ricollegarsi"
+
+msgid "Reconnect unavailable hosts, then refresh."
+msgstr "Riconnetti gli host non disponibili, poi aggiorna."
 
 msgid "Reconnecting"
 msgstr "Riconnessione"
@@ -12744,9 +12726,6 @@ msgstr "Rivedi le pull request dentro Superset: pannello diff, revisione assisti
 msgid "Review requested"
 msgstr "Richiesta di revisione"
 
-msgid "Review requests"
-msgstr "Richieste di revisione"
-
 msgid "Review required"
 msgstr "Revisione richiesta"
 
@@ -12897,6 +12876,9 @@ msgstr "Eseguire comandi da terminale e interagire con altre applicazioni."
 
 msgid "Run the agent in the Workspace Setup terminal once setup finishes instead of starting a second terminal alongside it"
 msgstr "Esegui l'agente nel terminale Workspace Setup una volta terminata la configurazione, invece di avviare un secondo terminale accanto"
+
+msgid "Run these commands when closing a worktree, even when its files are kept."
+msgstr "Esegue questi comandi alla chiusura di un worktree, anche se i suoi file vengono conservati."
 
 msgid "Run workspace command"
 msgstr "Esegui il comando del workspace"

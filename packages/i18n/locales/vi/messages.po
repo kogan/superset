@@ -1601,9 +1601,6 @@ msgstr "Agent đã xong"
 msgid "Agent Independence"
 msgstr "Độc lập với agent"
 
-msgid "Agent input, failed checks on your PRs, and reviews requested from you."
-msgstr "Yêu cầu nhập liệu từ tác nhân, kiểm tra thất bại trên PR của bạn và yêu cầu bạn đánh giá."
-
 msgid "Agent launch configuration"
 msgstr "Cấu hình khởi chạy agent"
 
@@ -1654,6 +1651,9 @@ msgstr "Agent tự mở bản xem trước, thao tác giao diện và đính kè
 
 msgid "Agents running at once"
 msgstr "Số agent chạy cùng lúc"
+
+msgid "Agents waiting for your input."
+msgstr "Các tác nhân đang chờ phản hồi của bạn."
 
 msgid "Aggregate agent usage across every developer on the Superset leaderboard — tokens, cost, cache behaviour and which models people actually reach for."
 msgstr "Tổng hợp mức sử dụng agent của mọi lập trình viên trên bảng xếp hạng Superset — token, chi phí, hành vi cache và những mô hình mọi người thực sự dùng."
@@ -2261,9 +2261,6 @@ msgstr "Thử trước khi các check qua"
 
 msgid "Attention"
 msgstr "Cần chú ý"
-
-msgid "Attention filters"
-msgstr "Bộ lọc mục cần chú ý"
 
 msgid "Attention inbox"
 msgstr "Hộp thư mục cần chú ý"
@@ -3172,9 +3169,6 @@ msgstr "Chọn agent"
 msgid "Choose an existing repo folder"
 msgstr "Chọn một thư mục repo có sẵn"
 
-msgid "Choose another filter or refresh to check again."
-msgstr "Chọn bộ lọc khác hoặc làm mới để kiểm tra lại."
-
 msgid "Choose app"
 msgstr "Chọn ứng dụng"
 
@@ -3902,9 +3896,6 @@ msgstr "Đã kết nối {label}"
 
 msgid "Connected as"
 msgstr "Đã kết nối với tư cách"
-
-msgid "Connected projects only. Refreshes every minute while this page is open."
-msgstr "Chỉ các dự án đã kết nối. Làm mới mỗi phút khi trang này đang mở."
 
 msgid "Connected to"
 msgstr "Đã kết nối tới"
@@ -6163,9 +6154,6 @@ msgstr "Thất bại"
 msgid "Failed <0>· 7d</0>"
 msgstr "Thất bại <0>· 7 ngày</0>"
 
-msgid "Failed checks"
-msgstr "Kiểm tra thất bại"
-
 msgid "Failed to accept invitation"
 msgstr "Không thể chấp nhận lời mời"
 
@@ -8050,8 +8038,8 @@ msgstr "Nghiêng"
 msgid "Item"
 msgstr "Item"
 
-msgid "Items appear here when an agent needs input, your PR checks fail, or someone requests your review."
-msgstr "Các mục xuất hiện ở đây khi tác nhân cần bạn nhập liệu, kiểm tra PR của bạn thất bại hoặc ai đó yêu cầu bạn đánh giá."
+msgid "Items appear here when an agent needs your input."
+msgstr "Các mục xuất hiện ở đây khi tác nhân cần phản hồi của bạn."
 
 msgid "Its own branch and copy of the files"
 msgstr "Nhánh riêng và bản sao tệp riêng"
@@ -8563,9 +8551,6 @@ msgstr "Tải tin nhắn cũ hơn"
 
 msgid "Load more"
 msgstr "Tải thêm"
-
-msgid "Load more results, reconnect unavailable hosts, or check your GitHub connection, then refresh."
-msgstr "Tải thêm kết quả, kết nối lại các máy chủ không khả dụng hoặc kiểm tra kết nối GitHub, rồi làm mới."
 
 msgid "Loaded issues: {shownCount}"
 msgstr "Công việc đã tải: {shownCount}"
@@ -9763,9 +9748,6 @@ msgstr "Không có PR liên kết"
 msgid "No live sessions"
 msgstr "Không có phiên nào đang chạy"
 
-msgid "No loaded items match this filter"
-msgstr "Không có mục đã tải nào khớp với bộ lọc này"
-
 msgid "no logins"
 msgstr "không có đăng nhập"
 
@@ -10290,6 +10272,9 @@ msgstr "Với tốc độ này"
 
 msgid "On this page"
 msgstr "Trên trang này"
+
+msgid "On worktree close"
+msgstr "Khi đóng worktree"
 
 msgid "On your machine. Repos, worktrees, terminal output, and agent sessions stay local by default; cloud sync covers account and organization metadata only. Superset doesn't proxy any API calls."
 msgstr "Trên máy của bạn. Repo, worktree, output terminal và phiên agent mặc định vẫn ở cục bộ; đồng bộ cloud chỉ gồm metadata tài khoản và tổ chức. Superset không proxy bất kỳ lệnh gọi API nào."
@@ -11121,9 +11106,6 @@ msgstr "Một phần là ghi nhận, một phần là đặt cược. Hai mục 
 msgid "Partial"
 msgstr "Một phần"
 
-msgid "Partial results"
-msgstr "Kết quả chưa đầy đủ"
-
 msgid "Partner, Transpose Platform"
 msgstr "Đối tác, Transpose Platform"
 
@@ -11822,9 +11804,6 @@ msgstr "Pull request"
 msgid "Pull Requests"
 msgstr "Pull request"
 
-msgid "Pull requests are turned off. Only agent input is shown."
-msgstr "Yêu cầu kéo đã tắt. Chỉ hiển thị yêu cầu nhập liệu từ tác nhân."
-
 msgid "Purple"
 msgstr "Tím"
 
@@ -12058,6 +12037,9 @@ msgstr "Kết nối lại Linear"
 
 msgid "Reconnect required"
 msgstr "Cần kết nối lại"
+
+msgid "Reconnect unavailable hosts, then refresh."
+msgstr "Kết nối lại các máy chủ không khả dụng, rồi làm mới."
 
 msgid "Reconnecting"
 msgstr "Đang kết nối lại"
@@ -12744,9 +12726,6 @@ msgstr "Review pull request ngay trong Superset: khung diff, review có agent h�
 msgid "Review requested"
 msgstr "Yêu cầu review"
 
-msgid "Review requests"
-msgstr "Yêu cầu đánh giá"
-
 msgid "Review required"
 msgstr "Cần review"
 
@@ -12897,6 +12876,9 @@ msgstr "Chạy lệnh terminal và tương tác với ứng dụng khác."
 
 msgid "Run the agent in the Workspace Setup terminal once setup finishes instead of starting a second terminal alongside it"
 msgstr "Chạy agent trong terminal Workspace Setup sau khi setup xong thay vì mở thêm một terminal thứ hai bên cạnh"
+
+msgid "Run these commands when closing a worktree, even when its files are kept."
+msgstr "Chạy các lệnh này khi đóng worktree, ngay cả khi các tệp của nó được giữ lại."
 
 msgid "Run workspace command"
 msgstr "Chạy lệnh của workspace"

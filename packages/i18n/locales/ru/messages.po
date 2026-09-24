@@ -1601,9 +1601,6 @@ msgstr "Агент завершил"
 msgid "Agent Independence"
 msgstr "Независимость от агента"
 
-msgid "Agent input, failed checks on your PRs, and reviews requested from you."
-msgstr "Запросы ввода от агентов, неудачные проверки ваших PR и запросы на ваше ревью."
-
 msgid "Agent launch configuration"
 msgstr "Конфигурация запуска агента"
 
@@ -1654,6 +1651,9 @@ msgstr "Агенты сами открывают свой предпросмот
 
 msgid "Agents running at once"
 msgstr "Агентов запущено одновременно"
+
+msgid "Agents waiting for your input."
+msgstr "Агенты, ожидающие вашего ответа."
 
 msgid "Aggregate agent usage across every developer on the Superset leaderboard — tokens, cost, cache behaviour and which models people actually reach for."
 msgstr "Совокупное использование агентов всеми разработчиками в лидерборде Superset — токены, стоимость, поведение кеша и модели, к которым люди действительно обращаются."
@@ -2261,9 +2261,6 @@ msgstr "Попробовать до прохождения проверок"
 
 msgid "Attention"
 msgstr "Внимание"
-
-msgid "Attention filters"
-msgstr "Фильтры требующих внимания элементов"
 
 msgid "Attention inbox"
 msgstr "Входящие, требующие внимания"
@@ -3172,9 +3169,6 @@ msgstr "Выберите агента"
 msgid "Choose an existing repo folder"
 msgstr "Выберите папку существующего репозитория"
 
-msgid "Choose another filter or refresh to check again."
-msgstr "Выберите другой фильтр или обновите страницу, чтобы проверить снова."
-
 msgid "Choose app"
 msgstr "Выберите приложение"
 
@@ -3902,9 +3896,6 @@ msgstr "{label} подключено"
 
 msgid "Connected as"
 msgstr "Подключено как"
-
-msgid "Connected projects only. Refreshes every minute while this page is open."
-msgstr "Только подключённые проекты. Обновляется каждую минуту, пока эта страница открыта."
 
 msgid "Connected to"
 msgstr "Подключено к"
@@ -6163,9 +6154,6 @@ msgstr "Ошибка"
 msgid "Failed <0>· 7d</0>"
 msgstr "С ошибкой <0>· 7 дн.</0>"
 
-msgid "Failed checks"
-msgstr "Неудачные проверки"
-
 msgid "Failed to accept invitation"
 msgstr "Не удалось принять приглашение"
 
@@ -8050,8 +8038,8 @@ msgstr "Курсив"
 msgid "Item"
 msgstr "Элемент"
 
-msgid "Items appear here when an agent needs input, your PR checks fail, or someone requests your review."
-msgstr "Элементы появляются здесь, когда агенту нужен ваш ввод, проверки ваших PR завершаются неудачно или кто-то запрашивает ваше ревью."
+msgid "Items appear here when an agent needs your input."
+msgstr "Здесь появляются элементы, когда агенту нужен ваш ответ."
 
 msgid "Its own branch and copy of the files"
 msgstr "Собственная ветка и собственная копия файлов"
@@ -8563,9 +8551,6 @@ msgstr "Загрузить более ранние сообщения"
 
 msgid "Load more"
 msgstr "Показать ещё"
-
-msgid "Load more results, reconnect unavailable hosts, or check your GitHub connection, then refresh."
-msgstr "Загрузите больше результатов, повторно подключите недоступные хосты или проверьте подключение к GitHub, затем обновите страницу."
 
 msgid "Loaded issues: {shownCount}"
 msgstr "Загружено задач: {shownCount}"
@@ -9763,9 +9748,6 @@ msgstr "Нет связанного PR"
 msgid "No live sessions"
 msgstr "Нет активных сессий"
 
-msgid "No loaded items match this filter"
-msgstr "Среди загруженных элементов нет соответствующих этому фильтру"
-
 msgid "no logins"
 msgstr "нет логинов"
 
@@ -10290,6 +10272,9 @@ msgstr "При таком темпе"
 
 msgid "On this page"
 msgstr "На этой странице"
+
+msgid "On worktree close"
+msgstr "При закрытии worktree"
 
 msgid "On your machine. Repos, worktrees, terminal output, and agent sessions stay local by default; cloud sync covers account and organization metadata only. Superset doesn't proxy any API calls."
 msgstr "На вашей машине. Репозитории, worktree, вывод терминала и сессии агентов по умолчанию остаются локальными; облачная синхронизация покрывает только метаданные аккаунта и организации. Superset не проксирует вызовы API."
@@ -11121,9 +11106,6 @@ msgstr "Отчасти хроника, отчасти ставка. Первые
 msgid "Partial"
 msgstr "Частично"
 
-msgid "Partial results"
-msgstr "Частичные результаты"
-
 msgid "Partner, Transpose Platform"
 msgstr "Партнёр, Transpose Platform"
 
@@ -11822,9 +11804,6 @@ msgstr "Пул-реквесты"
 msgid "Pull Requests"
 msgstr "Пул-реквесты"
 
-msgid "Pull requests are turned off. Only agent input is shown."
-msgstr "Пул-реквесты отключены. Показаны только запросы ввода от агентов."
-
 msgid "Purple"
 msgstr "Фиолетовый"
 
@@ -12058,6 +12037,9 @@ msgstr "Переподключить Linear"
 
 msgid "Reconnect required"
 msgstr "Требуется переподключение"
+
+msgid "Reconnect unavailable hosts, then refresh."
+msgstr "Подключите недоступные хосты заново и обновите страницу."
 
 msgid "Reconnecting"
 msgstr "Переподключение"
@@ -12744,9 +12726,6 @@ msgstr "Проверяйте пул-реквесты внутри Superset: па
 msgid "Review requested"
 msgstr "Запрошено ревью"
 
-msgid "Review requests"
-msgstr "Запросы на ревью"
-
 msgid "Review required"
 msgstr "Требуется ревью"
 
@@ -12897,6 +12876,9 @@ msgstr "Запускать команды в терминале и взаимо�
 
 msgid "Run the agent in the Workspace Setup terminal once setup finishes instead of starting a second terminal alongside it"
 msgstr "Запускать агента в терминале настройки рабочей области после завершения установки вместо запуска второго терминала рядом"
+
+msgid "Run these commands when closing a worktree, even when its files are kept."
+msgstr "Эти команды выполняются при закрытии worktree, даже если его файлы сохраняются."
 
 msgid "Run workspace command"
 msgstr "Запустить команду рабочей области"

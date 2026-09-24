@@ -90,6 +90,7 @@ export const configRouter = router({
 				projectId: z.string().uuid(),
 				setup: stringArray.optional(),
 				teardown: stringArray.optional(),
+				close: stringArray.optional(),
 				run: stringArray.optional(),
 			}),
 		)
@@ -114,6 +115,7 @@ export const configRouter = router({
 				...existing,
 				...(input.setup !== undefined && { setup: input.setup }),
 				...(input.teardown !== undefined && { teardown: input.teardown }),
+				...(input.close !== undefined && { close: input.close }),
 				...(input.run !== undefined && { run: input.run }),
 			};
 

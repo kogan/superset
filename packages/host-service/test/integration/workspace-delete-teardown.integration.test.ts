@@ -3,12 +3,15 @@ import {
 	existsSync,
 	mkdirSync,
 	mkdtempSync,
+	readFileSync,
+	realpathSync,
 	rmSync,
 	writeFileSync,
 } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { Server } from "@superset/pty-daemon";
+import { externalWorkspacePaths } from "../../src/db/schema";
 import { disposeDaemonClient } from "../../src/terminal/daemon-client-singleton";
 import {
 	initTerminalBaseEnv,
@@ -163,5 +166,99 @@ describe("workspace delete teardown integration", () => {
 		expect(result.worktreeRemoved).toBe(true);
 		expect(existsSync(markerPath)).toBe(false);
 		expect(existsSync(scenario.worktreePath)).toBe(false);
+	});
+	test("close commands run in the worktree before teardown and removal", async () => {
+		const { scenario, markerPath } = await setup(
+			"test -f {{MARKER}} && printf teardown >> {{MARKER}}",
+		);
+		await scenario.host.trpc.config.updateConfig.mutate({
+			projectId: scenario.projectId,
+			close: [
+				`test "$PWD" = ${shellQuote(scenario.worktreePath)} && printf close > ${shellQuote(markerPath)}`,
+			],
+		});
+		const result = await scenario.host.trpc.workspaceCleanup.destroy.mutate({
+			workspaceId: scenario.featureWorkspaceId,
+			force: true,
+		});
+		expect(result.worktreeRemoved).toBe(true);
+		expect(readFileSync(markerPath, "utf8")).toBe("closeteardown");
+	});
+
+	test("closing an imported worktree runs close actions and preserves its files and teardown", async () => {
+		const { scenario, markerPath } = await setup(
+			"printf teardown > {{MARKER}}.teardown",
+		);
+		scenario.host.db
+			.insert(externalWorkspacePaths)
+			.values({ worktreePath: realpathSync(scenario.worktreePath) })
+			.run();
+		await scenario.host.trpc.config.updateConfig.mutate({
+			projectId: scenario.projectId,
+			close: [
+				`test -d ${shellQuote(scenario.worktreePath)} && printf closed > ${shellQuote(markerPath)}`,
+			],
+		});
+		const result = await scenario.host.trpc.workspaceCleanup.destroy.mutate({
+			workspaceId: scenario.featureWorkspaceId,
+			force: true,
+			deleteBranch: true,
+		});
+		expect(result).toMatchObject({
+			success: true,
+			worktreeRemoved: false,
+			branchDeleted: false,
+		});
+		expect(readFileSync(markerPath, "utf8")).toBe("closed");
+		expect(existsSync(`${markerPath}.teardown`)).toBe(false);
+		expect(existsSync(scenario.worktreePath)).toBe(true);
+	});
+
+	test("failed close actions keep the worktree open until explicitly skipped", async () => {
+		const { scenario, markerPath } = await setup(
+			"printf teardown > {{MARKER}}",
+		);
+		await scenario.host.trpc.config.updateConfig.mutate({
+			projectId: scenario.projectId,
+			close: ["exit 7"],
+		});
+		await expect(
+			scenario.host.trpc.workspaceCleanup.destroy.mutate({
+				workspaceId: scenario.featureWorkspaceId,
+				force: true,
+			}),
+		).rejects.toThrow("Worktree close action failed");
+		expect(existsSync(markerPath)).toBe(false);
+		expect(existsSync(scenario.worktreePath)).toBe(true);
+		const workspace = scenario.host.db.query.workspaces
+			.findFirst({
+				where: (row, { eq }) => eq(row.id, scenario.featureWorkspaceId),
+			})
+			.sync();
+		expect(workspace?.archivedAt).toBeNull();
+		const result = await scenario.host.trpc.workspaceCleanup.destroy.mutate({
+			workspaceId: scenario.featureWorkspaceId,
+			force: true,
+			skipTeardown: true,
+		});
+		expect(result.worktreeRemoved).toBe(true);
+		expect(existsSync(markerPath)).toBe(false);
+	});
+	test("closing a workspace on the shared project checkout does not run worktree actions", async () => {
+		const { scenario, markerPath } = await setup(
+			"printf teardown > {{MARKER}}.teardown",
+		);
+		await scenario.host.trpc.config.updateConfig.mutate({
+			projectId: scenario.projectId,
+			close: [`printf closed > ${shellQuote(markerPath)}`],
+		});
+		const result = await scenario.host.trpc.workspaceCleanup.destroy.mutate({
+			workspaceId: scenario.workspaceId,
+			force: true,
+		});
+		expect(result.worktreeRemoved).toBe(false);
+		expect(existsSync(markerPath)).toBe(false);
+		expect(existsSync(`${markerPath}.teardown`)).toBe(false);
+		expect(existsSync(scenario.repo.repoPath)).toBe(true);
 	});
 });

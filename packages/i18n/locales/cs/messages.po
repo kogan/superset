@@ -1601,9 +1601,6 @@ msgstr "Agent dokončil"
 msgid "Agent Independence"
 msgstr "Nezávislost na agentovi"
 
-msgid "Agent input, failed checks on your PRs, and reviews requested from you."
-msgstr "Požadavky agentů na vstup, neúspěšné kontroly vašich PR a žádosti o vaši revizi."
-
 msgid "Agent launch configuration"
 msgstr "Konfigurace spuštění agenta"
 
@@ -1654,6 +1651,9 @@ msgstr "Agenti si sami načtou náhled, proklikají UI a přiloží snímky jako
 
 msgid "Agents running at once"
 msgstr "Agentů běžících najednou"
+
+msgid "Agents waiting for your input."
+msgstr "Agenti čekající na váš vstup."
 
 msgid "Aggregate agent usage across every developer on the Superset leaderboard — tokens, cost, cache behaviour and which models people actually reach for."
 msgstr "Souhrnné využití agentů napříč všemi vývojáři v žebříčku Superset — tokeny, náklady, chování cache a modely, po kterých lidé skutečně sahají."
@@ -2261,9 +2261,6 @@ msgstr "Zkusit ještě před dokončením kontrol"
 
 msgid "Attention"
 msgstr "Pozornost"
-
-msgid "Attention filters"
-msgstr "Filtry položek vyžadujících pozornost"
 
 msgid "Attention inbox"
 msgstr "Přehled položek vyžadujících pozornost"
@@ -3172,9 +3169,6 @@ msgstr "Vyberte agenta"
 msgid "Choose an existing repo folder"
 msgstr "Vyberte složku s existujícím repozitářem"
 
-msgid "Choose another filter or refresh to check again."
-msgstr "Vyberte jiný filtr nebo znovu načtěte výsledky."
-
 msgid "Choose app"
 msgstr "Vyberte aplikaci"
 
@@ -3902,9 +3896,6 @@ msgstr "Připojeno {label}"
 
 msgid "Connected as"
 msgstr "Připojeno jako"
-
-msgid "Connected projects only. Refreshes every minute while this page is open."
-msgstr "Pouze připojené projekty. Dokud je tato stránka otevřená, obnovuje se každou minutu."
 
 msgid "Connected to"
 msgstr "Připojeno k"
@@ -6163,9 +6154,6 @@ msgstr "Selhalo"
 msgid "Failed <0>· 7d</0>"
 msgstr "Selhalo <0>· 7 d</0>"
 
-msgid "Failed checks"
-msgstr "Neúspěšné kontroly"
-
 msgid "Failed to accept invitation"
 msgstr "Nepodařilo se přijmout pozvánku"
 
@@ -8050,8 +8038,8 @@ msgstr "Kurzíva"
 msgid "Item"
 msgstr "Položka"
 
-msgid "Items appear here when an agent needs input, your PR checks fail, or someone requests your review."
-msgstr "Položky se zde zobrazí, když agent potřebuje váš vstup, kontroly vašich PR selžou nebo vás někdo požádá o revizi."
+msgid "Items appear here when an agent needs your input."
+msgstr "Položky se zde objeví, když agent potřebuje váš vstup."
 
 msgid "Its own branch and copy of the files"
 msgstr "Vlastní větev a vlastní kopie souborů"
@@ -8563,9 +8551,6 @@ msgstr "Načíst starší zprávy"
 
 msgid "Load more"
 msgstr "Načíst další"
-
-msgid "Load more results, reconnect unavailable hosts, or check your GitHub connection, then refresh."
-msgstr "Načtěte další výsledky, znovu připojte nedostupné hostitele nebo zkontrolujte připojení ke GitHubu a poté obnovte stránku."
 
 msgid "Loaded issues: {shownCount}"
 msgstr "Načtené úkoly: {shownCount}"
@@ -9763,9 +9748,6 @@ msgstr "Žádný propojený PR"
 msgid "No live sessions"
 msgstr "Žádné živé relace"
 
-msgid "No loaded items match this filter"
-msgstr "Tomuto filtru neodpovídají žádné načtené položky"
-
 msgid "no logins"
 msgstr "žádná přihlášení"
 
@@ -10290,6 +10272,9 @@ msgstr "Tímto tempem"
 
 msgid "On this page"
 msgstr "Na této stránce"
+
+msgid "On worktree close"
+msgstr "Při zavření worktree"
 
 msgid "On your machine. Repos, worktrees, terminal output, and agent sessions stay local by default; cloud sync covers account and organization metadata only. Superset doesn't proxy any API calls."
 msgstr "Na vašem počítači. Repozitáře, worktree, výstup terminálu i relace agentů zůstávají ve výchozím stavu lokálně; cloudová synchronizace se týká jen metadat účtu a organizace. Superset nepřeposílá žádná API volání."
@@ -11121,9 +11106,6 @@ msgstr "Zčásti záznam, zčásti sázka. První dvě položky se už dějí. Z
 msgid "Partial"
 msgstr "Částečně"
 
-msgid "Partial results"
-msgstr "Částečné výsledky"
-
 msgid "Partner, Transpose Platform"
 msgstr "Partner, Transpose Platform"
 
@@ -11822,9 +11804,6 @@ msgstr "Pull requesty"
 msgid "Pull Requests"
 msgstr "Pull requesty"
 
-msgid "Pull requests are turned off. Only agent input is shown."
-msgstr "Pull requesty jsou vypnuté. Zobrazují se pouze požadavky agentů na vstup."
-
 msgid "Purple"
 msgstr "Fialová"
 
@@ -12058,6 +12037,9 @@ msgstr "Připojit Linear znovu"
 
 msgid "Reconnect required"
 msgstr "Nutné znovu připojit"
+
+msgid "Reconnect unavailable hosts, then refresh."
+msgstr "Znovu připojte nedostupné hostitele a obnovte stránku."
 
 msgid "Reconnecting"
 msgstr "Připojuji znovu"
@@ -12744,9 +12726,6 @@ msgstr "Revidujte pull requesty přímo v Superset: panel rozdílů, revize s po
 msgid "Review requested"
 msgstr "Vyžádána revize"
 
-msgid "Review requests"
-msgstr "Žádosti o revizi"
-
 msgid "Review required"
 msgstr "Vyžadována revize"
 
@@ -12897,6 +12876,9 @@ msgstr "Spouštět příkazy v terminálu a pracovat s dalšími aplikacemi."
 
 msgid "Run the agent in the Workspace Setup terminal once setup finishes instead of starting a second terminal alongside it"
 msgstr "Spustit agenta v terminálu Workspace Setup, jakmile setup doběhne, místo spuštění druhého terminálu vedle něj"
+
+msgid "Run these commands when closing a worktree, even when its files are kept."
+msgstr "Spustí tyto příkazy při zavření worktree, i když jeho soubory zůstanou zachovány."
 
 msgid "Run workspace command"
 msgstr "Spustit příkaz pracovního prostoru"

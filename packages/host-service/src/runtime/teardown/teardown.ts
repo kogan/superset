@@ -26,6 +26,7 @@ export type TeardownResult =
 	  };
 
 interface RunTeardownOptions {
+	script?: "teardown" | "close";
 	db: HostDb;
 	workspaceId: string;
 	worktreePath: string;
@@ -52,6 +53,7 @@ interface RunTeardownOptions {
  * visible pane. The renderer only sees the output tail on failure.
  */
 export async function runTeardown({
+	script = "teardown",
 	db,
 	workspaceId,
 	worktreePath,
@@ -61,6 +63,7 @@ export async function runTeardown({
 	homeDir,
 }: RunTeardownOptions): Promise<TeardownResult> {
 	const resolved = resolveTeardownCommand({
+		script,
 		repoPath,
 		projectId,
 		worktreePath,
@@ -84,7 +87,7 @@ export async function runTeardown({
 			exitCode: null,
 			signal: null,
 			timedOut: false,
-			outputTail: `Failed to start teardown session: ${session.error}`,
+			outputTail: `Failed to start ${script} session: ${session.error}`,
 		};
 	}
 
@@ -131,7 +134,7 @@ export async function runTeardown({
 		const timer = setTimeout(() => {
 			if (settled) return;
 			timedOut = true;
-			appendTail(`\n[teardown timed out after ${timeoutMs}ms]\n`);
+			appendTail(`\n[${script} timed out after ${timeoutMs}ms]\n`);
 			try {
 				void session.pty.kill().catch(() => {});
 			} catch {
@@ -167,13 +170,14 @@ export async function runTeardown({
  * Exported for tests.
  */
 export function resolveTeardownCommand(args: {
+	script?: "teardown" | "close";
 	repoPath: string;
 	projectId: string;
 	worktreePath: string;
 	/** Override $HOME for tests. */
 	homeDir?: string;
 }): { initialCommand: string; cwd?: string } | null {
-	const resolved = resolveScript("teardown", args);
+	const resolved = resolveScript(args.script ?? "teardown", args);
 	if (!resolved) return null;
 
 	const initialCommand =

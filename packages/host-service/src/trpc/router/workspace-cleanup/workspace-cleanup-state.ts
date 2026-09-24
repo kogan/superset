@@ -15,6 +15,7 @@ export type WorkspaceCleanupState = {
 	local: WorkspaceRow | undefined;
 	project: ProjectRow | undefined;
 	preservesFiles: boolean;
+	isWorktree: boolean;
 };
 
 export async function getWorkspaceCleanupState(
@@ -39,6 +40,7 @@ export async function getWorkspaceCleanupState(
 	return {
 		local,
 		project,
+		isWorktree: local?.type === "worktree" && !samePath,
 		preservesFiles:
 			samePath ||
 			local?.type === "local" ||

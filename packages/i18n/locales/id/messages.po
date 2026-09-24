@@ -1601,9 +1601,6 @@ msgstr "Agen selesai"
 msgid "Agent Independence"
 msgstr "Independensi Agen"
 
-msgid "Agent input, failed checks on your PRs, and reviews requested from you."
-msgstr "Permintaan masukan dari agen, pemeriksaan yang gagal pada PR Anda, dan permintaan tinjauan kepada Anda."
-
 msgid "Agent launch configuration"
 msgstr "Konfigurasi peluncuran agen"
 
@@ -1654,6 +1651,9 @@ msgstr "Agen memuat pratinjaunya sendiri, mengendalikan UI, dan melampirkan bukt
 
 msgid "Agents running at once"
 msgstr "Agen yang berjalan sekaligus"
+
+msgid "Agents waiting for your input."
+msgstr "Agen yang menunggu masukan Anda."
 
 msgid "Aggregate agent usage across every developer on the Superset leaderboard — tokens, cost, cache behaviour and which models people actually reach for."
 msgstr "Agregat penggunaan agen dari seluruh developer di papan peringkat Superset — token, biaya, perilaku cache, dan model yang benar-benar dipakai orang."
@@ -2261,9 +2261,6 @@ msgstr "Coba sebelum check lulus"
 
 msgid "Attention"
 msgstr "Perhatian"
-
-msgid "Attention filters"
-msgstr "Filter perhatian"
 
 msgid "Attention inbox"
 msgstr "Kotak masuk yang perlu perhatian"
@@ -3172,9 +3169,6 @@ msgstr "Pilih agen"
 msgid "Choose an existing repo folder"
 msgstr "Pilih folder repo yang sudah ada"
 
-msgid "Choose another filter or refresh to check again."
-msgstr "Pilih filter lain atau muat ulang untuk memeriksa lagi."
-
 msgid "Choose app"
 msgstr "Pilih aplikasi"
 
@@ -3902,9 +3896,6 @@ msgstr "{label} terhubung"
 
 msgid "Connected as"
 msgstr "Terhubung sebagai"
-
-msgid "Connected projects only. Refreshes every minute while this page is open."
-msgstr "Hanya proyek yang terhubung. Dimuat ulang setiap menit selama halaman ini terbuka."
 
 msgid "Connected to"
 msgstr "Terhubung ke"
@@ -6163,9 +6154,6 @@ msgstr "Gagal"
 msgid "Failed <0>· 7d</0>"
 msgstr "Gagal <0>· 7h</0>"
 
-msgid "Failed checks"
-msgstr "Pemeriksaan gagal"
-
 msgid "Failed to accept invitation"
 msgstr "Gagal menerima undangan"
 
@@ -8050,8 +8038,8 @@ msgstr "Miring"
 msgid "Item"
 msgstr "Item"
 
-msgid "Items appear here when an agent needs input, your PR checks fail, or someone requests your review."
-msgstr "Item muncul di sini saat agen memerlukan masukan, pemeriksaan PR Anda gagal, atau seseorang meminta tinjauan Anda."
+msgid "Items appear here when an agent needs your input."
+msgstr "Item muncul di sini saat agen membutuhkan masukan Anda."
 
 msgid "Its own branch and copy of the files"
 msgstr "Branch dan salinan file tersendiri"
@@ -8563,9 +8551,6 @@ msgstr "Muat pesan sebelumnya"
 
 msgid "Load more"
 msgstr "Muat lagi"
-
-msgid "Load more results, reconnect unavailable hosts, or check your GitHub connection, then refresh."
-msgstr "Muat hasil lainnya, hubungkan kembali host yang tidak tersedia, atau periksa koneksi GitHub Anda, lalu muat ulang."
 
 msgid "Loaded issues: {shownCount}"
 msgstr "Tiket dimuat: {shownCount}"
@@ -9763,9 +9748,6 @@ msgstr "Tidak ada PR tertaut"
 msgid "No live sessions"
 msgstr "Tidak ada sesi aktif"
 
-msgid "No loaded items match this filter"
-msgstr "Tidak ada item yang dimuat yang cocok dengan filter ini"
-
 msgid "no logins"
 msgstr "tanpa login"
 
@@ -10290,6 +10272,9 @@ msgstr "Dengan laju ini"
 
 msgid "On this page"
 msgstr "Di halaman ini"
+
+msgid "On worktree close"
+msgstr "Saat worktree ditutup"
 
 msgid "On your machine. Repos, worktrees, terminal output, and agent sessions stay local by default; cloud sync covers account and organization metadata only. Superset doesn't proxy any API calls."
 msgstr "Di mesin Anda. Repo, worktree, output terminal, dan sesi agen tetap lokal secara bawaan; sinkronisasi cloud hanya mencakup metadata akun dan organisasi. Superset tidak mem-proxy panggilan API apa pun."
@@ -11121,9 +11106,6 @@ msgstr "Sebagian catatan, sebagian taruhan. Dua entri pertama sudah terjadi. Sis
 msgid "Partial"
 msgstr "Sebagian"
 
-msgid "Partial results"
-msgstr "Hasil sebagian"
-
 msgid "Partner, Transpose Platform"
 msgstr "Mitra, Transpose Platform"
 
@@ -11822,9 +11804,6 @@ msgstr "Pull request"
 msgid "Pull Requests"
 msgstr "Pull Request"
 
-msgid "Pull requests are turned off. Only agent input is shown."
-msgstr "Pull request dinonaktifkan. Hanya permintaan masukan dari agen yang ditampilkan."
-
 msgid "Purple"
 msgstr "Ungu"
 
@@ -12058,6 +12037,9 @@ msgstr "Hubungkan ulang Linear"
 
 msgid "Reconnect required"
 msgstr "Perlu dihubungkan ulang"
+
+msgid "Reconnect unavailable hosts, then refresh."
+msgstr "Hubungkan kembali host yang tidak tersedia, lalu muat ulang."
 
 msgid "Reconnecting"
 msgstr "Menyambungkan ulang"
@@ -12744,9 +12726,6 @@ msgstr "Review pull request di dalam Superset: panel diff, review dibantu agen, 
 msgid "Review requested"
 msgstr "Review diminta"
 
-msgid "Review requests"
-msgstr "Permintaan tinjauan"
-
 msgid "Review required"
 msgstr "Review diperlukan"
 
@@ -12897,6 +12876,9 @@ msgstr "Menjalankan perintah terminal dan berinteraksi dengan aplikasi lain."
 
 msgid "Run the agent in the Workspace Setup terminal once setup finishes instead of starting a second terminal alongside it"
 msgstr "Jalankan agen di terminal Workspace Setup setelah setup selesai, bukan membuka terminal kedua di sampingnya"
+
+msgid "Run these commands when closing a worktree, even when its files are kept."
+msgstr "Jalankan perintah ini saat menutup worktree, meskipun filenya tetap disimpan."
 
 msgid "Run workspace command"
 msgstr "Jalankan perintah workspace"

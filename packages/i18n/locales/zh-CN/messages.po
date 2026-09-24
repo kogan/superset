@@ -1601,9 +1601,6 @@ msgstr "智能体已完成"
 msgid "Agent Independence"
 msgstr "智能体无关"
 
-msgid "Agent input, failed checks on your PRs, and reviews requested from you."
-msgstr "等待输入的智能体、你的 PR 中失败的检查，以及发给你的审查请求。"
-
 msgid "Agent launch configuration"
 msgstr "智能体启动配置"
 
@@ -1654,6 +1651,9 @@ msgstr "智能体自己加载预览、操作界面，并在标记为待审查之
 
 msgid "Agents running at once"
 msgstr "同时运行的智能体数"
+
+msgid "Agents waiting for your input."
+msgstr "正在等待你输入的代理。"
 
 msgid "Aggregate agent usage across every developer on the Superset leaderboard — tokens, cost, cache behaviour and which models people actually reach for."
 msgstr "Superset 排行榜上所有开发者的智能体使用汇总 —— token、成本、缓存表现，以及大家实际常用的模型。"
@@ -2261,9 +2261,6 @@ msgstr "在检查通过前就尝试"
 
 msgid "Attention"
 msgstr "待处理"
-
-msgid "Attention filters"
-msgstr "待处理事项筛选"
 
 msgid "Attention inbox"
 msgstr "待处理收件箱"
@@ -3172,9 +3169,6 @@ msgstr "选择智能体"
 msgid "Choose an existing repo folder"
 msgstr "选择已有的仓库文件夹"
 
-msgid "Choose another filter or refresh to check again."
-msgstr "请选择其他筛选条件，或刷新后重新检查。"
-
 msgid "Choose app"
 msgstr "选择应用"
 
@@ -3902,9 +3896,6 @@ msgstr "已连接 {label}"
 
 msgid "Connected as"
 msgstr "已连接为"
-
-msgid "Connected projects only. Refreshes every minute while this page is open."
-msgstr "仅限已连接的项目。此页面打开期间每分钟刷新一次。"
 
 msgid "Connected to"
 msgstr "已连接到"
@@ -6163,9 +6154,6 @@ msgstr "失败"
 msgid "Failed <0>· 7d</0>"
 msgstr "失败 <0>· 7天</0>"
 
-msgid "Failed checks"
-msgstr "失败的检查"
-
 msgid "Failed to accept invitation"
 msgstr "接受邀请失败"
 
@@ -8050,8 +8038,8 @@ msgstr "斜体"
 msgid "Item"
 msgstr "条目"
 
-msgid "Items appear here when an agent needs input, your PR checks fail, or someone requests your review."
-msgstr "当智能体需要输入、你的 PR 检查失败，或有人请求你审查时，相关事项会显示在这里。"
+msgid "Items appear here when an agent needs your input."
+msgstr "代理需要你输入时，相关项目会显示在这里。"
 
 msgid "Its own branch and copy of the files"
 msgstr "独立的分支和文件副本"
@@ -8563,9 +8551,6 @@ msgstr "加载更早的消息"
 
 msgid "Load more"
 msgstr "加载更多"
-
-msgid "Load more results, reconnect unavailable hosts, or check your GitHub connection, then refresh."
-msgstr "请加载更多结果、重新连接不可用的主机，或检查 GitHub 连接，然后刷新。"
 
 msgid "Loaded issues: {shownCount}"
 msgstr "已加载工单：{shownCount}"
@@ -9763,9 +9748,6 @@ msgstr "没有关联的 PR"
 msgid "No live sessions"
 msgstr "没有活动会话"
 
-msgid "No loaded items match this filter"
-msgstr "已加载的事项中没有符合此筛选条件的结果"
-
 msgid "no logins"
 msgstr "无登录信息"
 
@@ -10290,6 +10272,9 @@ msgstr "按此速度"
 
 msgid "On this page"
 msgstr "本页内容"
+
+msgid "On worktree close"
+msgstr "关闭 worktree 时"
 
 msgid "On your machine. Repos, worktrees, terminal output, and agent sessions stay local by default; cloud sync covers account and organization metadata only. Superset doesn't proxy any API calls."
 msgstr "在你自己的机器上。仓库、worktree、终端输出和智能体会话默认都留在本地；云端同步只涉及账户和组织的元数据。Superset不代理任何API调用。"
@@ -11121,9 +11106,6 @@ msgstr "一半是记录，一半是下注。前两条已经在发生。其余的
 msgid "Partial"
 msgstr "部分开启"
 
-msgid "Partial results"
-msgstr "部分结果"
-
 msgid "Partner, Transpose Platform"
 msgstr "合伙人，Transpose Platform"
 
@@ -11822,9 +11804,6 @@ msgstr "拉取请求"
 msgid "Pull Requests"
 msgstr "拉取请求"
 
-msgid "Pull requests are turned off. Only agent input is shown."
-msgstr "拉取请求已关闭。仅显示等待输入的智能体。"
-
 msgid "Purple"
 msgstr "紫色"
 
@@ -12058,6 +12037,9 @@ msgstr "重新连接Linear"
 
 msgid "Reconnect required"
 msgstr "需要重新连接"
+
+msgid "Reconnect unavailable hosts, then refresh."
+msgstr "重新连接不可用的主机，然后刷新。"
 
 msgid "Reconnecting"
 msgstr "正在重新连接"
@@ -12744,9 +12726,6 @@ msgstr "在Superset里审查拉取请求：差异面板、智能体辅助审查�
 msgid "Review requested"
 msgstr "已请求审查"
 
-msgid "Review requests"
-msgstr "审查请求"
-
 msgid "Review required"
 msgstr "需要审查"
 
@@ -12897,6 +12876,9 @@ msgstr "运行终端命令并与其他应用程序交互。"
 
 msgid "Run the agent in the Workspace Setup terminal once setup finishes instead of starting a second terminal alongside it"
 msgstr "设置完成后在“工作区设置”终端中运行智能体，而不是另外启动第二个终端"
+
+msgid "Run these commands when closing a worktree, even when its files are kept."
+msgstr "关闭 worktree 时运行这些命令，即使其文件会被保留。"
 
 msgid "Run workspace command"
 msgstr "运行工作区命令"

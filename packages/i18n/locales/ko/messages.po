@@ -1601,9 +1601,6 @@ msgstr "에이전트 완료"
 msgid "Agent Independence"
 msgstr "에이전트 독립성"
 
-msgid "Agent input, failed checks on your PRs, and reviews requested from you."
-msgstr "입력을 기다리는 에이전트, 내 PR에서 실패한 검사, 나에게 요청된 리뷰입니다."
-
 msgid "Agent launch configuration"
 msgstr "에이전트 실행 구성"
 
@@ -1654,6 +1651,9 @@ msgstr "에이전트가 직접 미리 보기를 띄우고, UI를 조작하고, �
 
 msgid "Agents running at once"
 msgstr "동시에 실행 중인 에이전트"
+
+msgid "Agents waiting for your input."
+msgstr "입력을 기다리는 에이전트입니다."
 
 msgid "Aggregate agent usage across every developer on the Superset leaderboard — tokens, cost, cache behaviour and which models people actually reach for."
 msgstr "Superset 리더보드에 참여한 모든 개발자의 에이전트 사용량 집계 — 토큰, 비용, 캐시 동작, 그리고 실제로 많이 쓰이는 모델입니다."
@@ -2261,9 +2261,6 @@ msgstr "검사 통과 전에 시도"
 
 msgid "Attention"
 msgstr "확인 필요"
-
-msgid "Attention filters"
-msgstr "확인할 항목 필터"
 
 msgid "Attention inbox"
 msgstr "확인할 항목함"
@@ -3172,9 +3169,6 @@ msgstr "에이전트 선택"
 msgid "Choose an existing repo folder"
 msgstr "기존 리포지토리 폴더 선택"
 
-msgid "Choose another filter or refresh to check again."
-msgstr "다른 필터를 선택하거나 새로 고침하여 다시 확인하세요."
-
 msgid "Choose app"
 msgstr "앱 선택"
 
@@ -3902,9 +3896,6 @@ msgstr "{label} 연결됨"
 
 msgid "Connected as"
 msgstr "연결 계정"
-
-msgid "Connected projects only. Refreshes every minute while this page is open."
-msgstr "연결된 프로젝트만 포함합니다. 이 페이지가 열려 있는 동안 1분마다 새로 고칩니다."
 
 msgid "Connected to"
 msgstr "연결 대상"
@@ -6163,9 +6154,6 @@ msgstr "실패"
 msgid "Failed <0>· 7d</0>"
 msgstr "실패 <0>· 7일</0>"
 
-msgid "Failed checks"
-msgstr "실패한 검사"
-
 msgid "Failed to accept invitation"
 msgstr "초대를 수락하지 못했습니다"
 
@@ -8050,8 +8038,8 @@ msgstr "기울임꼴"
 msgid "Item"
 msgstr "항목"
 
-msgid "Items appear here when an agent needs input, your PR checks fail, or someone requests your review."
-msgstr "에이전트가 입력을 필요로 하거나, 내 PR 검사가 실패하거나, 누군가 나에게 리뷰를 요청하면 여기에 항목이 표시됩니다."
+msgid "Items appear here when an agent needs your input."
+msgstr "에이전트가 입력을 요청하면 여기에 항목이 표시됩니다."
 
 msgid "Its own branch and copy of the files"
 msgstr "독립된 브랜치와 파일 사본"
@@ -8563,9 +8551,6 @@ msgstr "이전 메시지 불러오기"
 
 msgid "Load more"
 msgstr "더 보기"
-
-msgid "Load more results, reconnect unavailable hosts, or check your GitHub connection, then refresh."
-msgstr "결과를 더 불러오거나, 사용할 수 없는 호스트에 다시 연결하거나, GitHub 연결을 확인한 후 새로 고침하세요."
 
 msgid "Loaded issues: {shownCount}"
 msgstr "불러온 이슈: {shownCount}"
@@ -9763,9 +9748,6 @@ msgstr "연결된 PR 없음"
 msgid "No live sessions"
 msgstr "활성 세션 없음"
 
-msgid "No loaded items match this filter"
-msgstr "불러온 항목 중 이 필터와 일치하는 항목이 없습니다"
-
 msgid "no logins"
 msgstr "로그인 없음"
 
@@ -10290,6 +10272,9 @@ msgstr "이 속도라면"
 
 msgid "On this page"
 msgstr "이 페이지에서"
+
+msgid "On worktree close"
+msgstr "worktree를 닫을 때"
 
 msgid "On your machine. Repos, worktrees, terminal output, and agent sessions stay local by default; cloud sync covers account and organization metadata only. Superset doesn't proxy any API calls."
 msgstr "본인의 머신에서 실행됩니다. 리포지토리, worktree, 터미널 출력, 에이전트 세션은 기본적으로 로컬에 머물고, 클라우드 동기화는 계정과 조직 메타데이터만 다룹니다. Superset은 어떤 API 호출도 중계하지 않습니다."
@@ -11121,9 +11106,6 @@ msgstr "일부는 기록이고 일부는 베팅입니다. 앞의 두 항목은 �
 msgid "Partial"
 msgstr "부분"
 
-msgid "Partial results"
-msgstr "일부 결과"
-
 msgid "Partner, Transpose Platform"
 msgstr "파트너, Transpose Platform"
 
@@ -11822,9 +11804,6 @@ msgstr "풀 리퀘스트"
 msgid "Pull Requests"
 msgstr "풀 리퀘스트"
 
-msgid "Pull requests are turned off. Only agent input is shown."
-msgstr "풀 리퀘스트가 꺼져 있습니다. 입력을 기다리는 에이전트만 표시합니다."
-
 msgid "Purple"
 msgstr "보라"
 
@@ -12058,6 +12037,9 @@ msgstr "Linear 다시 연결"
 
 msgid "Reconnect required"
 msgstr "다시 연결 필요"
+
+msgid "Reconnect unavailable hosts, then refresh."
+msgstr "사용할 수 없는 호스트에 다시 연결한 후 새로 고침하세요."
 
 msgid "Reconnecting"
 msgstr "다시 연결하는 중"
@@ -12744,9 +12726,6 @@ msgstr "Superset 안에서 풀 리퀘스트를 리뷰하세요. 차이 창, 에�
 msgid "Review requested"
 msgstr "리뷰 요청됨"
 
-msgid "Review requests"
-msgstr "리뷰 요청"
-
 msgid "Review required"
 msgstr "리뷰 필요"
 
@@ -12897,6 +12876,9 @@ msgstr "터미널 명령을 실행하고 다른 애플리케이션과 상호작�
 
 msgid "Run the agent in the Workspace Setup terminal once setup finishes instead of starting a second terminal alongside it"
 msgstr "터미널을 하나 더 띄우는 대신, 설정이 끝난 뒤 워크스페이스 설정 터미널에서 에이전트를 실행합니다"
+
+msgid "Run these commands when closing a worktree, even when its files are kept."
+msgstr "worktree를 닫을 때 파일이 유지되더라도 이 명령을 실행합니다."
 
 msgid "Run workspace command"
 msgstr "워크스페이스 명령 실행"

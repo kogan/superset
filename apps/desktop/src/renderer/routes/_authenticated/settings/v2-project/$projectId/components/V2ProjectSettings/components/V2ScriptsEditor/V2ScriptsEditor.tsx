@@ -17,6 +17,7 @@ interface V2ScriptsEditorProps {
 interface ParsedConfig {
 	setup: string;
 	teardown: string;
+	close: string;
 	run: string;
 }
 
@@ -25,11 +26,12 @@ type ScriptFieldName = keyof ParsedConfig;
 interface ScriptPayload {
 	setup: string[];
 	teardown: string[];
+	close: string[];
 	run: string[];
 }
 
 function parseConfigContent(content: string | null): ParsedConfig {
-	if (!content) return { setup: "", teardown: "", run: "" };
+	if (!content) return { setup: "", teardown: "", close: "", run: "" };
 	try {
 		const parsed = JSON.parse(content);
 		const setup = Array.isArray(parsed?.setup)
@@ -40,16 +42,20 @@ function parseConfigContent(content: string | null): ParsedConfig {
 					(s: unknown): s is string => typeof s === "string",
 				)
 			: [];
+		const close = Array.isArray(parsed?.close)
+			? parsed.close.filter((s: unknown): s is string => typeof s === "string")
+			: [];
 		const run = Array.isArray(parsed?.run)
 			? parsed.run.filter((s: unknown): s is string => typeof s === "string")
 			: [];
 		return {
 			setup: setup.join("\n"),
 			teardown: teardown.join("\n"),
+			close: close.join("\n"),
 			run: run.join("\n"),
 		};
 	} catch {
-		return { setup: "", teardown: "", run: "" };
+		return { setup: "", teardown: "", close: "", run: "" };
 	}
 }
 
@@ -68,6 +74,7 @@ function buildPayload(values: ParsedConfig): ScriptPayload {
 	return {
 		setup: toCommandsArray(values.setup),
 		teardown: toCommandsArray(values.teardown),
+		close: toCommandsArray(values.close),
 		run: toCommandsArray(values.run),
 	};
 }
@@ -76,6 +83,7 @@ function payloadsEqual(a: ScriptPayload, b: ScriptPayload): boolean {
 	return (
 		arraysEqual(a.setup, b.setup) &&
 		arraysEqual(a.teardown, b.teardown) &&
+		arraysEqual(a.close, b.close) &&
 		arraysEqual(a.run, b.run)
 	);
 }
@@ -114,17 +122,20 @@ export function V2ScriptsEditor({
 
 	const [setupValue, setSetupValue] = useState("");
 	const [teardownValue, setTeardownValue] = useState("");
+	const [closeValue, setCloseValue] = useState("");
 	const [runValue, setRunValue] = useState("");
 	const [saveStatus, setSaveStatus] = useState<SaveStatus>("idle");
 	const focusedRef = useRef<ScriptFieldName | null>(null);
 	const latestValuesRef = useRef<ParsedConfig>({
 		setup: "",
 		teardown: "",
+		close: "",
 		run: "",
 	});
 	const lastSavedRef = useRef<ScriptPayload>({
 		setup: [],
 		teardown: [],
+		close: [],
 		run: [],
 	});
 	const debounceTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -145,6 +156,7 @@ export function V2ScriptsEditor({
 		const parsed = parseConfigContent(configData?.content ?? null);
 		setSetupValue(parsed.setup);
 		setTeardownValue(parsed.teardown);
+		setCloseValue(parsed.close);
 		setRunValue(parsed.run);
 		latestValuesRef.current = parsed;
 		lastSavedRef.current = buildPayload(parsed);
@@ -162,6 +174,7 @@ export function V2ScriptsEditor({
 			projectId: string;
 			setup: string[];
 			teardown: string[];
+			close: string[];
 			run: string[];
 		}) => getHostServiceClientByUrl(hostUrl).config.updateConfig.mutate(input),
 		onSuccess: () => {
@@ -246,6 +259,7 @@ export function V2ScriptsEditor({
 
 			if (field === "setup") setSetupValue(value);
 			if (field === "teardown") setTeardownValue(value);
+			if (field === "close") setCloseValue(value);
 			if (field === "run") setRunValue(value);
 
 			scheduleSave(nextValues);
@@ -264,6 +278,7 @@ export function V2ScriptsEditor({
 		const trimmedValues = {
 			setup: trimScriptValue(latestValuesRef.current.setup),
 			teardown: trimScriptValue(latestValuesRef.current.teardown),
+			close: trimScriptValue(latestValuesRef.current.close),
 			run: trimScriptValue(latestValuesRef.current.run),
 		};
 		latestValuesRef.current = trimmedValues;
@@ -272,10 +287,11 @@ export function V2ScriptsEditor({
 		if (trimmedValues.teardown !== teardownValue) {
 			setTeardownValue(trimmedValues.teardown);
 		}
+		if (trimmedValues.close !== closeValue) setCloseValue(trimmedValues.close);
 		if (trimmedValues.run !== runValue) setRunValue(trimmedValues.run);
 
 		await flushSave(buildPayload(trimmedValues));
-	}, [flushSave, runValue, setupValue, teardownValue]);
+	}, [closeValue, flushSave, runValue, setupValue, teardownValue]);
 
 	if (isLoading) {
 		return (
@@ -306,6 +322,12 @@ export function V2ScriptsEditor({
 							className="relative h-8 rounded-none border-0 bg-transparent px-3 text-sm font-medium text-muted-foreground shadow-none transition-colors hover:text-foreground data-[state=active]:bg-transparent data-[state=active]:text-foreground data-[state=active]:shadow-none after:absolute after:inset-x-0 after:-bottom-px after:h-px after:bg-transparent data-[state=active]:after:bg-foreground"
 						>
 							<Trans>Teardown</Trans>
+						</TabsTrigger>
+						<TabsTrigger
+							value="close"
+							className="relative h-8 rounded-none border-0 bg-transparent px-3 text-sm font-medium text-muted-foreground shadow-none transition-colors hover:text-foreground data-[state=active]:bg-transparent data-[state=active]:text-foreground data-[state=active]:shadow-none after:absolute after:inset-x-0 after:-bottom-px after:h-px after:bg-transparent data-[state=active]:after:bg-foreground"
+						>
+							<Trans>On worktree close</Trans>
 						</TabsTrigger>
 						<TabsTrigger
 							value="run"
@@ -346,6 +368,23 @@ export function V2ScriptsEditor({
 						onChange={(value) => handleChange("teardown", value)}
 						onFocus={() => {
 							focusedRef.current = "teardown";
+						}}
+						onBlur={() => handleBlur()}
+					/>
+				</TabsContent>
+				<TabsContent value="close">
+					<p className="mb-3 text-xs text-muted-foreground">
+						<Trans>
+							Run these commands when closing a worktree, even when its files
+							are kept.
+						</Trans>
+					</p>
+					<ScriptField
+						placeholder="docker compose down"
+						value={closeValue}
+						onChange={(value) => handleChange("close", value)}
+						onFocus={() => {
+							focusedRef.current = "close";
 						}}
 						onBlur={() => handleBlur()}
 					/>

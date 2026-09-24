@@ -13,6 +13,7 @@ const PROJECTS_DIR_NAME = "projects";
 export interface SetupConfig {
 	setup?: string[];
 	teardown?: string[];
+	close?: string[];
 	run?: string[];
 	/** Services a cloud workspace needs on every boot; runs once host-service is up. */
 	start?: string[];
@@ -27,11 +28,12 @@ interface LocalScriptMerge {
 interface LocalSetupConfig {
 	setup?: string[] | LocalScriptMerge;
 	teardown?: string[] | LocalScriptMerge;
+	close?: string[] | LocalScriptMerge;
 	run?: string[] | LocalScriptMerge;
 	start?: string[] | LocalScriptMerge;
 }
 
-const SCRIPT_KEYS = ["setup", "teardown", "run", "start"] as const;
+const SCRIPT_KEYS = ["setup", "teardown", "close", "run", "start"] as const;
 export type ScriptKey = (typeof SCRIPT_KEYS)[number];
 
 function isStringArray(value: unknown): value is string[] {
@@ -142,6 +144,7 @@ function mergeBaseConfigs(
 	return {
 		setup: override.setup ?? base.setup,
 		teardown: override.teardown ?? base.teardown,
+		close: override.close ?? base.close,
 		run: override.run ?? base.run,
 		start: override.start ?? base.start,
 		cwd: override.cwd ?? base.cwd,

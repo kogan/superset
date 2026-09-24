@@ -1601,9 +1601,6 @@ msgstr "Agent klaar"
 msgid "Agent Independence"
 msgstr "Agentonafhankelijkheid"
 
-msgid "Agent input, failed checks on your PRs, and reviews requested from you."
-msgstr "Invoerverzoeken van agents, mislukte controles voor je PR’s en aan jou gerichte reviewverzoeken."
-
 msgid "Agent launch configuration"
 msgstr "Startconfiguratie van de agent"
 
@@ -1654,6 +1651,9 @@ msgstr "Agents laden hun eigen preview, bedienen de UI en voegen screenshotbewij
 
 msgid "Agents running at once"
 msgstr "Agents die tegelijk draaien"
+
+msgid "Agents waiting for your input."
+msgstr "Agents die op je invoer wachten."
 
 msgid "Aggregate agent usage across every developer on the Superset leaderboard — tokens, cost, cache behaviour and which models people actually reach for."
 msgstr "Totaal agentgebruik van alle developers op het Superset-leaderboard — tokens, kosten, cachegedrag en welke modellen mensen echt gebruiken."
@@ -2261,9 +2261,6 @@ msgstr "Proberen vóór de checks slagen"
 
 msgid "Attention"
 msgstr "Aandacht"
-
-msgid "Attention filters"
-msgstr "Aandachtsfilters"
 
 msgid "Attention inbox"
 msgstr "Inbox voor aandachtspunten"
@@ -3172,9 +3169,6 @@ msgstr "Kies agent"
 msgid "Choose an existing repo folder"
 msgstr "Kies een bestaande repo-map"
 
-msgid "Choose another filter or refresh to check again."
-msgstr "Kies een ander filter of vernieuw om opnieuw te controleren."
-
 msgid "Choose app"
 msgstr "Kies app"
 
@@ -3902,9 +3896,6 @@ msgstr "{label} verbonden"
 
 msgid "Connected as"
 msgstr "Verbonden als"
-
-msgid "Connected projects only. Refreshes every minute while this page is open."
-msgstr "Alleen verbonden projecten. Wordt elke minuut vernieuwd zolang deze pagina open is."
 
 msgid "Connected to"
 msgstr "Verbonden met"
@@ -6163,9 +6154,6 @@ msgstr "Mislukt"
 msgid "Failed <0>· 7d</0>"
 msgstr "Mislukt <0>· 7d</0>"
 
-msgid "Failed checks"
-msgstr "Mislukte controles"
-
 msgid "Failed to accept invitation"
 msgstr "Accepteren van uitnodiging mislukt"
 
@@ -8050,8 +8038,8 @@ msgstr "Cursief"
 msgid "Item"
 msgstr "Item"
 
-msgid "Items appear here when an agent needs input, your PR checks fail, or someone requests your review."
-msgstr "Items verschijnen hier als een agent invoer nodig heeft, controles voor je PR’s mislukken of iemand je om een review vraagt."
+msgid "Items appear here when an agent needs your input."
+msgstr "Items verschijnen hier wanneer een agent je invoer nodig heeft."
 
 msgid "Its own branch and copy of the files"
 msgstr "Een eigen branch en een eigen kopie van de bestanden"
@@ -8563,9 +8551,6 @@ msgstr "Eerdere berichten laden"
 
 msgid "Load more"
 msgstr "Meer laden"
-
-msgid "Load more results, reconnect unavailable hosts, or check your GitHub connection, then refresh."
-msgstr "Laad meer resultaten, verbind onbereikbare hosts opnieuw of controleer je GitHub-verbinding en vernieuw vervolgens."
 
 msgid "Loaded issues: {shownCount}"
 msgstr "Geladen issues: {shownCount}"
@@ -9763,9 +9748,6 @@ msgstr "Geen gekoppelde PR"
 msgid "No live sessions"
 msgstr "Geen actieve sessies"
 
-msgid "No loaded items match this filter"
-msgstr "Geen geladen items komen overeen met dit filter"
-
 msgid "no logins"
 msgstr "geen logins"
 
@@ -10290,6 +10272,9 @@ msgstr "In dit tempo"
 
 msgid "On this page"
 msgstr "Op deze pagina"
+
+msgid "On worktree close"
+msgstr "Bij het sluiten van de worktree"
 
 msgid "On your machine. Repos, worktrees, terminal output, and agent sessions stay local by default; cloud sync covers account and organization metadata only. Superset doesn't proxy any API calls."
 msgstr "Op jouw machine. Repo's, worktrees, terminaluitvoer en agentsessies blijven standaard lokaal; cloudsynchronisatie omvat alleen metadata van account en organisatie. Superset proxyt geen API-aanroepen."
@@ -11121,9 +11106,6 @@ msgstr "Deels verslag, deels weddenschap. De eerste twee punten gebeuren al. De 
 msgid "Partial"
 msgstr "Gedeeltelijk"
 
-msgid "Partial results"
-msgstr "Gedeeltelijke resultaten"
-
 msgid "Partner, Transpose Platform"
 msgstr "Partner, Transpose Platform"
 
@@ -11822,9 +11804,6 @@ msgstr "Pull requests"
 msgid "Pull Requests"
 msgstr "Pull requests"
 
-msgid "Pull requests are turned off. Only agent input is shown."
-msgstr "Pull requests zijn uitgeschakeld. Alleen invoerverzoeken van agents worden getoond."
-
 msgid "Purple"
 msgstr "Paars"
 
@@ -12058,6 +12037,9 @@ msgstr "Linear opnieuw verbinden"
 
 msgid "Reconnect required"
 msgstr "Opnieuw verbinden vereist"
+
+msgid "Reconnect unavailable hosts, then refresh."
+msgstr "Verbind de niet-beschikbare hosts opnieuw en vernieuw daarna."
 
 msgid "Reconnecting"
 msgstr "Opnieuw verbinden"
@@ -12744,9 +12726,6 @@ msgstr "Review pull requests in Superset: diff-paneel, review met hulp van een a
 msgid "Review requested"
 msgstr "Review gevraagd"
 
-msgid "Review requests"
-msgstr "Reviewverzoeken"
-
 msgid "Review required"
 msgstr "Review vereist"
 
@@ -12897,6 +12876,9 @@ msgstr "Terminalcommando's uitvoeren en met andere applicaties werken."
 
 msgid "Run the agent in the Workspace Setup terminal once setup finishes instead of starting a second terminal alongside it"
 msgstr "Draai de agent in de terminal van de werkruimte-setup zodra die klaar is, in plaats van er een tweede terminal naast te starten"
+
+msgid "Run these commands when closing a worktree, even when its files are kept."
+msgstr "Voer deze opdrachten uit bij het sluiten van een worktree, ook als de bestanden behouden blijven."
 
 msgid "Run workspace command"
 msgstr "Werkruimtecommando uitvoeren"

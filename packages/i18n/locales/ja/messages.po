@@ -1601,9 +1601,6 @@ msgstr "エージェントが完了しました"
 msgid "Agent Independence"
 msgstr "エージェント非依存"
 
-msgid "Agent input, failed checks on your PRs, and reviews requested from you."
-msgstr "入力を待つエージェント、自分のPRで失敗したチェック、自分へのレビュー依頼。"
-
 msgid "Agent launch configuration"
 msgstr "エージェント起動設定"
 
@@ -1654,6 +1651,9 @@ msgstr "エージェントが自らプレビューを開き、UIを操作し、�
 
 msgid "Agents running at once"
 msgstr "同時に動かしているエージェント数"
+
+msgid "Agents waiting for your input."
+msgstr "入力を待っているエージェント。"
 
 msgid "Aggregate agent usage across every developer on the Superset leaderboard — tokens, cost, cache behaviour and which models people actually reach for."
 msgstr "Supersetリーダーボード上の全開発者を横断したエージェント利用の集計 — トークン、コスト、キャッシュの挙動、実際に選ばれているモデル。"
@@ -2261,9 +2261,6 @@ msgstr "チェック通過前に実行"
 
 msgid "Attention"
 msgstr "要対応"
-
-msgid "Attention filters"
-msgstr "要対応項目のフィルター"
 
 msgid "Attention inbox"
 msgstr "要対応ボックス"
@@ -3172,9 +3169,6 @@ msgstr "エージェントを選択"
 msgid "Choose an existing repo folder"
 msgstr "既存のリポジトリフォルダを選択"
 
-msgid "Choose another filter or refresh to check again."
-msgstr "別のフィルターを選ぶか、更新してもう一度確認してください。"
-
 msgid "Choose app"
 msgstr "アプリを選択"
 
@@ -3902,9 +3896,6 @@ msgstr "{label} に接続しました"
 
 msgid "Connected as"
 msgstr "接続アカウント"
-
-msgid "Connected projects only. Refreshes every minute while this page is open."
-msgstr "接続済みプロジェクトのみが対象です。このページを開いている間は毎分更新されます。"
 
 msgid "Connected to"
 msgstr "接続先"
@@ -6163,9 +6154,6 @@ msgstr "失敗"
 msgid "Failed <0>· 7d</0>"
 msgstr "失敗 <0>· 7日</0>"
 
-msgid "Failed checks"
-msgstr "失敗したチェック"
-
 msgid "Failed to accept invitation"
 msgstr "招待を承諾できませんでした"
 
@@ -8050,8 +8038,8 @@ msgstr "斜体"
 msgid "Item"
 msgstr "Item"
 
-msgid "Items appear here when an agent needs input, your PR checks fail, or someone requests your review."
-msgstr "エージェントが入力を必要としている場合、自分のPRのチェックが失敗した場合、またはレビューを依頼された場合に、ここに項目が表示されます。"
+msgid "Items appear here when an agent needs your input."
+msgstr "エージェントが入力を必要とすると、ここに表示されます。"
 
 msgid "Its own branch and copy of the files"
 msgstr "独自のブランチとファイルのコピー"
@@ -8563,9 +8551,6 @@ msgstr "以前のメッセージを読み込む"
 
 msgid "Load more"
 msgstr "もっと見る"
-
-msgid "Load more results, reconnect unavailable hosts, or check your GitHub connection, then refresh."
-msgstr "結果をさらに読み込むか、利用できないホストに再接続するか、GitHubへの接続を確認してから更新してください。"
 
 msgid "Loaded issues: {shownCount}"
 msgstr "読み込み済みの課題: {shownCount}"
@@ -9763,9 +9748,6 @@ msgstr "リンクされたPRなし"
 msgid "No live sessions"
 msgstr "ライブセッションはありません"
 
-msgid "No loaded items match this filter"
-msgstr "読み込み済みの項目に、このフィルターに一致するものはありません"
-
 msgid "no logins"
 msgstr "ログイン情報なし"
 
@@ -10290,6 +10272,9 @@ msgstr "このペースなら"
 
 msgid "On this page"
 msgstr "このページの内容"
+
+msgid "On worktree close"
+msgstr "worktreeを閉じるとき"
 
 msgid "On your machine. Repos, worktrees, terminal output, and agent sessions stay local by default; cloud sync covers account and organization metadata only. Superset doesn't proxy any API calls."
 msgstr "お使いのマシンです。リポジトリ、ワークツリー、ターミナルの出力、エージェントのセッションは既定でローカルに留まります。クラウド同期の対象はアカウントと組織のメタデータのみです。SupersetはAPI呼び出しを一切中継しません。"
@@ -11121,9 +11106,6 @@ msgstr "半分は記録、半分は賭けです。最初の2項目はすでに�
 msgid "Partial"
 msgstr "一部通過"
 
-msgid "Partial results"
-msgstr "一部の結果"
-
 msgid "Partner, Transpose Platform"
 msgstr "パートナー、Transpose Platform"
 
@@ -11822,9 +11804,6 @@ msgstr "プルリクエスト"
 msgid "Pull Requests"
 msgstr "プルリクエスト"
 
-msgid "Pull requests are turned off. Only agent input is shown."
-msgstr "プルリクエストはオフになっています。入力を待つエージェントのみ表示しています。"
-
 msgid "Purple"
 msgstr "紫"
 
@@ -12058,6 +12037,9 @@ msgstr "Linearを再接続"
 
 msgid "Reconnect required"
 msgstr "再接続が必要です"
+
+msgid "Reconnect unavailable hosts, then refresh."
+msgstr "利用できないホストに再接続してから、更新してください。"
 
 msgid "Reconnecting"
 msgstr "再接続中"
@@ -12744,9 +12726,6 @@ msgstr "Supersetの中でプルリクエストをレビューできます。差�
 msgid "Review requested"
 msgstr "レビューリクエスト"
 
-msgid "Review requests"
-msgstr "レビュー依頼"
-
 msgid "Review required"
 msgstr "レビュー必須"
 
@@ -12897,6 +12876,9 @@ msgstr "ターミナルコマンドの実行や他のアプリケーションと
 
 msgid "Run the agent in the Workspace Setup terminal once setup finishes instead of starting a second terminal alongside it"
 msgstr "2つ目のターミナルを並行して起動する代わりに、セットアップ完了後にワークスペースセットアップのターミナルでエージェントを実行します"
+
+msgid "Run these commands when closing a worktree, even when its files are kept."
+msgstr "worktreeを閉じるときに、ファイルが保持される場合でもこれらのコマンドを実行します。"
 
 msgid "Run workspace command"
 msgstr "ワークスペースのコマンドを実行"
