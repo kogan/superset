@@ -42,6 +42,27 @@ async function waitForFile(path, accept = () => true) {
 		`Timed out waiting for fixture ${path}; last value: ${latest}`,
 	);
 }
+async function waitForBranchView(guest, accept) {
+	let state;
+	for (let i = 0; i < 100; i++) {
+		state = await guest.executeJavaScript(`(() => {
+   const header = document.querySelector('.pane-header[aria-label^="Branch Changes"]');
+   const pane = header?.parentElement;
+   const visible = element => {
+    const rect = element.getBoundingClientRect();
+    return rect.width > 0 && rect.height > 0 && rect.top >= 0 && rect.bottom <= innerHeight;
+   };
+   return {
+    expanded: header?.getAttribute('aria-expanded') === 'true',
+    files: [...(pane?.querySelectorAll('[role="treeitem"]') || [])].filter(visible).map(element => element.getAttribute('aria-label')),
+    noChanges: [...(pane?.querySelectorAll('.message') || [])].some(element => visible(element) && element.textContent === 'No changes'),
+   };
+  })()`);
+		if (accept(state)) return state;
+		await pause(100);
+	}
+	throw new Error(`Unexpected Branch Changes view: ${JSON.stringify(state)}`);
+}
 async function freePort() {
 	return new Promise((resolve) => {
 		const server = net.createServer();
@@ -243,6 +264,8 @@ exports.activate = async context => {
 		const manager = new IdeManager();
 		const owner = new BrowserWindow({
 			show: false,
+			width: 1200,
+			height: 900,
 			webPreferences: {
 				webviewTag: true,
 				nodeIntegration: false,
@@ -264,7 +287,7 @@ exports.activate = async context => {
 			},
 		};
 		const cleanFolder = join(temporary, "clean-worktree");
-		await mkdir(cleanFolder);
+		git("worktree", "add", cleanFolder, "main");
 		const cleanInput = {
 			...input,
 			paneId: randomUUID(),
@@ -279,6 +302,7 @@ exports.activate = async context => {
 		);
 		await owner.webContents.executeJavaScript(`(() => {
    const view=document.createElement("webview");
+   view.style.cssText="position:fixed;inset:0;width:100%;height:100%";
    view.setAttribute("partition",${JSON.stringify(cleanView.partition)});
    view.src=${JSON.stringify(cleanView.url)};
    document.body.append(view);
@@ -287,6 +311,14 @@ exports.activate = async context => {
 		manager.register(owner, cleanInput.paneId, cleanGuest.id);
 		const cleanLoadCount = join(temporary, "clean-load-count");
 		assert.equal(await waitForFile(cleanLoadCount), "1");
+		await waitForBranchView(
+			cleanGuest,
+			(state) => state.expanded && state.noChanges,
+		);
+		await cleanGuest.executeJavaScript(
+			`document.querySelector('.pane-header[aria-label^="Branch Changes"]').click(); void 0`,
+		);
+		await waitForBranchView(cleanGuest, (state) => !state.expanded);
 		const [view, reused] = await Promise.all([
 			manager.prepare(owner, input),
 			manager.prepare(owner, input),
@@ -312,7 +344,7 @@ exports.activate = async context => {
 			),
 		);
 		await owner.webContents.executeJavaScript(
-			`(()=>{const guest=document.createElement('webview');guest.setAttribute('partition',${JSON.stringify(view.partition)});guest.src=${JSON.stringify(view.url)};document.body.append(guest);})()`,
+			`(()=>{const guest=document.createElement('webview');guest.style.cssText="position:fixed;inset:0;width:100%;height:100%";guest.setAttribute('partition',${JSON.stringify(view.partition)});guest.src=${JSON.stringify(view.url)};document.body.append(guest);})()`,
 		);
 		const guest = await loaded;
 		manager.register(owner, input.paneId, guest.id);
@@ -423,6 +455,15 @@ exports.activate = async context => {
 		console.log(
 			"PASS managed branch changes extension, committed files, native VS Code modified/deleted diffs",
 		);
+		const branchViewState = await waitForBranchView(
+			guest,
+			(state) => state.expanded && state.files.length === 2,
+		);
+		assert.match(branchViewState.files[0], /branch-check.ts.*Modified/);
+		assert.match(branchViewState.files[1], /deleted.py.*Deleted/);
+		console.log(
+			"PASS Branch Changes opens on IDE startup with committed files; empty worktrees show No changes",
+		);
 		const themeStatePath = join(temporary, "theme-state");
 		const initialTheme = JSON.parse(await waitForFile(themeStatePath));
 		assert.equal(initialTheme.kind, 2);
@@ -463,6 +504,7 @@ exports.activate = async context => {
 		console.log(
 			"PASS live Light/Dark theme applies through VS Code configuration with unsaved text retained",
 		);
+		await waitForBranchView(cleanGuest, (state) => !state.expanded);
 		const windowCheck = manager.canCloseWindow(owner);
 		assert.equal(manager.canCloseWindow(owner), windowCheck);
 		assert.equal(await windowCheck, false);
@@ -471,6 +513,11 @@ exports.activate = async context => {
 			"2",
 		);
 		assert.equal(cleanGuest.isDestroyed(), false);
+		await waitForBranchView(
+			cleanGuest,
+			(state) => state.expanded && state.noChanges,
+		);
+		console.log("PASS saved collapsed Branch Changes reopens on IDE reload");
 		const appCheck = manager.canCloseApp();
 		assert.equal(manager.canCloseApp(), appCheck);
 		assert.equal(await appCheck, false);
