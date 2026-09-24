@@ -1,5 +1,9 @@
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname } from "node:path";
+import {
+	deletionSkillAgentSchema,
+	worktreeDeletionActionSchema,
+} from "@superset/shared/worktree-deletion";
 import { TRPCError } from "@trpc/server";
 import { eq } from "drizzle-orm";
 import { z } from "zod";
@@ -12,6 +16,7 @@ import {
 	type SetupConfig,
 	shellSingleQuote,
 } from "../../../runtime/setup/config";
+import { listDeletionSkills } from "../../../runtime/worktree-deletion/worktree-deletion";
 import type { HostServiceContext } from "../../../types";
 import { protectedProcedure, router } from "../../index";
 
@@ -36,6 +41,16 @@ function requireProject(
 }
 
 export const configRouter = router({
+	listDeletionSkills: protectedProcedure
+		.input(projectIdInput.extend({ agent: deletionSkillAgentSchema }))
+		.query(({ ctx, input }) => {
+			const project = requireProject(ctx, input.projectId);
+			return listDeletionSkills({
+				db: ctx.db,
+				repoPath: project.repoPath,
+				agent: input.agent,
+			});
+		}),
 	/**
 	 * Decide whether the v2 sidebar setup-script CTA should show for a project.
 	 * Returns true only when no source (main repo, user override, local overlay)
@@ -91,6 +106,8 @@ export const configRouter = router({
 				setup: stringArray.optional(),
 				teardown: stringArray.optional(),
 				close: stringArray.optional(),
+				closeEnabled: z.boolean().optional(),
+				closeAction: worktreeDeletionActionSchema.optional(),
 				run: stringArray.optional(),
 			}),
 		)
@@ -116,6 +133,12 @@ export const configRouter = router({
 				...(input.setup !== undefined && { setup: input.setup }),
 				...(input.teardown !== undefined && { teardown: input.teardown }),
 				...(input.close !== undefined && { close: input.close }),
+				...(input.closeAction !== undefined && {
+					closeAction: input.closeAction,
+				}),
+				...(input.closeEnabled !== undefined && {
+					closeEnabled: input.closeEnabled,
+				}),
 				...(input.run !== undefined && { run: input.run }),
 			};
 

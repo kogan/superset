@@ -1363,6 +1363,9 @@ msgstr "Acquisition, content, conversion, retention, and distribution in one pla
 msgid "Action"
 msgstr "Action"
 
+msgid "Action type"
+msgstr "Action type"
+
 msgid "Actions"
 msgstr "Actions"
 
@@ -9932,6 +9935,9 @@ msgstr "No shortcuts found matching \"{searchQuery}\""
 msgid "No sites are signed in"
 msgstr "No sites are signed in"
 
+msgid "No skills found"
+msgstr "No skills found"
+
 msgid "No stack frames"
 msgstr "No stack frames"
 
@@ -10273,8 +10279,8 @@ msgstr "On this pace"
 msgid "On this page"
 msgstr "On this page"
 
-msgid "On worktree close"
-msgstr "On worktree close"
+msgid "On worktree deletion"
+msgstr "On worktree deletion"
 
 msgid "On your machine. Repos, worktrees, terminal output, and agent sessions stay local by default; cloud sync covers account and organization metadata only. Superset doesn't proxy any API calls."
 msgstr "On your machine. Repos, worktrees, terminal output, and agent sessions stay local by default; cloud sync covers account and organization metadata only. Superset doesn't proxy any API calls."
@@ -12829,6 +12835,9 @@ msgstr "Run 10+ parallel coding agents on your machine"
 msgid "Run 10+ parallel coding agents on your machine."
 msgstr "Run 10+ parallel coding agents on your machine."
 
+msgid "Run action before deleting a worktree"
+msgstr "Run action before deleting a worktree"
+
 msgid "Run automations on data source and comment activity."
 msgstr "Run automations on data source and comment activity."
 
@@ -12877,9 +12886,6 @@ msgstr "Run terminal commands and interact with other applications."
 msgid "Run the agent in the Workspace Setup terminal once setup finishes instead of starting a second terminal alongside it"
 msgstr "Run the agent in the Workspace Setup terminal once setup finishes instead of starting a second terminal alongside it"
 
-msgid "Run these commands when closing a worktree, even when its files are kept."
-msgstr "Run these commands when closing a worktree, even when its files are kept."
-
 msgid "Run workspace command"
 msgstr "Run workspace command"
 
@@ -12924,6 +12930,9 @@ msgstr "Running terminal processes continue, but older output may no longer be a
 
 msgid "Runs a local command on your machine"
 msgstr "Runs a local command on your machine"
+
+msgid "Runs before deletion using a copy of the latest session for this agent, when available. Skills have up to 10 minutes to finish."
+msgstr "Runs before deletion using a copy of the latest session for this agent, when available. Skills have up to 10 minutes to finish."
 
 msgid "Runs failed earlier this week, but nothing is failing right now"
 msgstr "Runs failed earlier this week, but nothing is failing right now"
@@ -13341,6 +13350,9 @@ msgstr "Select a project to see pull requests."
 
 msgid "Select a pull request to preview it here."
 msgstr "Select a pull request to preview it here."
+
+msgid "Select a skill"
+msgstr "Select a skill"
 
 msgid "Select a team"
 msgstr "Select a team"

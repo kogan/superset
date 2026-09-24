@@ -1,5 +1,6 @@
 import { existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
+import type { WorktreeDeletionAction } from "@superset/shared/worktree-deletion";
 import {
 	defaultSupersetHomeDir,
 	SUPERSET_HOME_DIR_NAME,
@@ -14,6 +15,8 @@ export interface SetupConfig {
 	setup?: string[];
 	teardown?: string[];
 	close?: string[];
+	closeEnabled?: boolean;
+	closeAction?: WorktreeDeletionAction;
 	run?: string[];
 	/** Services a cloud workspace needs on every boot; runs once host-service is up. */
 	start?: string[];
@@ -71,6 +74,15 @@ function validateSetupConfig(
 			return null;
 		}
 		result.cwd = obj.cwd.trim();
+	}
+	if (obj.closeEnabled !== undefined) {
+		if (typeof obj.closeEnabled !== "boolean") {
+			console.error(
+				`Invalid setup config at ${source}: 'closeEnabled' must be a boolean`,
+			);
+			return null;
+		}
+		result.closeEnabled = obj.closeEnabled;
 	}
 	for (const key of SCRIPT_KEYS) {
 		const value = obj[key];
@@ -299,6 +311,13 @@ export function resolveScript(
 		homeDir?: string;
 	},
 ): ResolvedScript | null {
+	if (
+		key === "close" &&
+		readSetupConfigAt(getProjectConfigPath(args.repoPath))?.closeEnabled ===
+			false
+	) {
+		return null;
+	}
 	const config = loadSetupConfig(args);
 	const cwd = config?.cwd;
 	const commands = nonEmptyStrings(config?.[key]);

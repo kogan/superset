@@ -317,7 +317,7 @@ async function runDestroy(
 		}
 
 		const cleanupScripts: ("close" | "teardown")[] = [];
-		if (isWorktree) cleanupScripts.push("close");
+		if (isWorktree && !preservesFiles) cleanupScripts.push("close");
 		if (!preservesFiles) cleanupScripts.push("teardown");
 		if (input.teardownMode !== "skip" && local && project) {
 			for (const script of cleanupScripts) {
@@ -338,7 +338,7 @@ async function runDestroy(
 							timedOut: teardown.timedOut,
 							outputTail:
 								script === "close"
-									? `Worktree close action failed:\n${teardown.outputTail}`
+									? `Worktree deletion action failed:\n${teardown.outputTail}`
 									: teardown.outputTail,
 						};
 						// Recoverable via force-retry — an expected user-script failure, not a
@@ -347,7 +347,7 @@ async function runDestroy(
 							code: "PRECONDITION_FAILED",
 							message:
 								script === "close"
-									? "Worktree close action failed"
+									? "Worktree deletion action failed"
 									: "Teardown script failed",
 							cause,
 						});
@@ -722,7 +722,7 @@ function formatTeardownWarning(
 	const tail = sanitizePromptForPty(teardown.outputTail).trim();
 	const label =
 		script === "close"
-			? "Worktree close action failed"
+			? "Worktree deletion action failed"
 			: "Teardown script failed";
 	return tail ? `${label} (${detail}): ${tail}` : `${label} (${detail})`;
 }

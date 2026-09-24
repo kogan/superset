@@ -1363,6 +1363,9 @@ msgstr "Akuisisi, konten, konversi, retensi, dan distribusi di satu tempat. Graf
 msgid "Action"
 msgstr "Aksi"
 
+msgid "Action type"
+msgstr "Jenis tindakan"
+
 msgid "Actions"
 msgstr "Aksi"
 
@@ -9932,6 +9935,9 @@ msgstr "Tidak ada pintasan yang cocok dengan \"{searchQuery}\""
 msgid "No sites are signed in"
 msgstr "Tidak ada situs yang sedang masuk"
 
+msgid "No skills found"
+msgstr "Tidak ada keterampilan yang ditemukan"
+
 msgid "No stack frames"
 msgstr "Tidak ada stack frame"
 
@@ -10273,8 +10279,8 @@ msgstr "Dengan laju ini"
 msgid "On this page"
 msgstr "Di halaman ini"
 
-msgid "On worktree close"
-msgstr "Saat worktree ditutup"
+msgid "On worktree deletion"
+msgstr "Saat menghapus pohon kerja"
 
 msgid "On your machine. Repos, worktrees, terminal output, and agent sessions stay local by default; cloud sync covers account and organization metadata only. Superset doesn't proxy any API calls."
 msgstr "Di mesin Anda. Repo, worktree, output terminal, dan sesi agen tetap lokal secara bawaan; sinkronisasi cloud hanya mencakup metadata akun dan organisasi. Superset tidak mem-proxy panggilan API apa pun."
@@ -12829,6 +12835,9 @@ msgstr "Jalankan lebih dari 10 agen pemrograman secara paralel di perangkat Anda
 msgid "Run 10+ parallel coding agents on your machine."
 msgstr "Jalankan 10+ agen coding paralel di mesin Anda."
 
+msgid "Run action before deleting a worktree"
+msgstr "Jalankan tindakan sebelum menghapus pohon kerja"
+
 msgid "Run automations on data source and comment activity."
 msgstr "Jalankan otomatisasi pada aktivitas sumber data dan komentar."
 
@@ -12877,9 +12886,6 @@ msgstr "Menjalankan perintah terminal dan berinteraksi dengan aplikasi lain."
 msgid "Run the agent in the Workspace Setup terminal once setup finishes instead of starting a second terminal alongside it"
 msgstr "Jalankan agen di terminal Workspace Setup setelah setup selesai, bukan membuka terminal kedua di sampingnya"
 
-msgid "Run these commands when closing a worktree, even when its files are kept."
-msgstr "Jalankan perintah ini saat menutup worktree, meskipun filenya tetap disimpan."
-
 msgid "Run workspace command"
 msgstr "Jalankan perintah workspace"
 
@@ -12924,6 +12930,9 @@ msgstr "Proses terminal yang berjalan tetap lanjut, tapi output lama mungkin tid
 
 msgid "Runs a local command on your machine"
 msgstr "Menjalankan perintah lokal di mesin Anda"
+
+msgid "Runs before deletion using a copy of the latest session for this agent, when available. Skills have up to 10 minutes to finish."
+msgstr "Dijalankan sebelum penghapusan menggunakan salinan sesi terbaru agen ini, jika tersedia. Keterampilan memiliki waktu hingga 10 menit untuk selesai."
 
 msgid "Runs failed earlier this week, but nothing is failing right now"
 msgstr "Ada run yang gagal awal minggu ini, tapi sekarang tidak ada yang gagal"
@@ -13341,6 +13350,9 @@ msgstr "Pilih proyek untuk melihat pull request."
 
 msgid "Select a pull request to preview it here."
 msgstr "Pilih pull request untuk melihat pratinjaunya di sini."
+
+msgid "Select a skill"
+msgstr "Pilih keterampilan"
 
 msgid "Select a team"
 msgstr "Pilih sebuah tim"

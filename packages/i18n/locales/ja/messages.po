@@ -1363,6 +1363,9 @@ msgstr "獲得、コンテンツ、コンバージョン、定着、配布を一
 msgid "Action"
 msgstr "アクション"
 
+msgid "Action type"
+msgstr "アクションの種類"
+
 msgid "Actions"
 msgstr "アクション"
 
@@ -9932,6 +9935,9 @@ msgstr "「{searchQuery}」に一致するショートカットがありませ�
 msgid "No sites are signed in"
 msgstr "サインイン中のサイトはありません"
 
+msgid "No skills found"
+msgstr "スキルが見つかりません"
+
 msgid "No stack frames"
 msgstr "スタックフレームなし"
 
@@ -10273,8 +10279,8 @@ msgstr "このペースなら"
 msgid "On this page"
 msgstr "このページの内容"
 
-msgid "On worktree close"
-msgstr "worktreeを閉じるとき"
+msgid "On worktree deletion"
+msgstr "ワークツリーの削除時"
 
 msgid "On your machine. Repos, worktrees, terminal output, and agent sessions stay local by default; cloud sync covers account and organization metadata only. Superset doesn't proxy any API calls."
 msgstr "お使いのマシンです。リポジトリ、ワークツリー、ターミナルの出力、エージェントのセッションは既定でローカルに留まります。クラウド同期の対象はアカウントと組織のメタデータのみです。SupersetはAPI呼び出しを一切中継しません。"
@@ -12829,6 +12835,9 @@ msgstr "端末上で10以上のコーディングエージェントを並列実�
 msgid "Run 10+ parallel coding agents on your machine."
 msgstr "手元のマシンで10以上のコーディングエージェントを並列実行できます。"
 
+msgid "Run action before deleting a worktree"
+msgstr "ワークツリーを削除する前にアクションを実行する"
+
 msgid "Run automations on data source and comment activity."
 msgstr "データソースやコメントの動きに応じてオートメーションを実行します。"
 
@@ -12877,9 +12886,6 @@ msgstr "ターミナルコマンドの実行や他のアプリケーションと
 msgid "Run the agent in the Workspace Setup terminal once setup finishes instead of starting a second terminal alongside it"
 msgstr "2つ目のターミナルを並行して起動する代わりに、セットアップ完了後にワークスペースセットアップのターミナルでエージェントを実行します"
 
-msgid "Run these commands when closing a worktree, even when its files are kept."
-msgstr "worktreeを閉じるときに、ファイルが保持される場合でもこれらのコマンドを実行します。"
-
 msgid "Run workspace command"
 msgstr "ワークスペースのコマンドを実行"
 
@@ -12924,6 +12930,9 @@ msgstr "実行中のターミナルプロセスは継続しますが、アプリ
 
 msgid "Runs a local command on your machine"
 msgstr "マシン上でローカルコマンドを実行します"
+
+msgid "Runs before deletion using a copy of the latest session for this agent, when available. Skills have up to 10 minutes to finish."
+msgstr "このエージェントの最新セッションがある場合は、そのコピーを使用して削除前に実行します。スキルの実行時間は最大10分です。"
 
 msgid "Runs failed earlier this week, but nothing is failing right now"
 msgstr "今週これまでに失敗した実行がありますが、現在失敗しているものはありません"
@@ -13341,6 +13350,9 @@ msgstr "プロジェクトを選択するとプルリクエストが表示され
 
 msgid "Select a pull request to preview it here."
 msgstr "プルリクエストを選択するとここでプレビューできます。"
+
+msgid "Select a skill"
+msgstr "スキルを選択"
 
 msgid "Select a team"
 msgstr "チームを選択"

@@ -1363,6 +1363,9 @@ msgstr "획득, 콘텐츠, 전환, 유지, 배포를 한곳에. 주간 차트는
 msgid "Action"
 msgstr "동작"
 
+msgid "Action type"
+msgstr "작업 유형"
+
 msgid "Actions"
 msgstr "동작"
 
@@ -9932,6 +9935,9 @@ msgstr "\"{searchQuery}\"과(와) 일치하는 단축키가 없습니다"
 msgid "No sites are signed in"
 msgstr "로그인한 사이트가 없습니다"
 
+msgid "No skills found"
+msgstr "스킬을 찾을 수 없음"
+
 msgid "No stack frames"
 msgstr "스택 프레임 없음"
 
@@ -10273,8 +10279,8 @@ msgstr "이 속도라면"
 msgid "On this page"
 msgstr "이 페이지에서"
 
-msgid "On worktree close"
-msgstr "worktree를 닫을 때"
+msgid "On worktree deletion"
+msgstr "작업 트리 삭제 시"
 
 msgid "On your machine. Repos, worktrees, terminal output, and agent sessions stay local by default; cloud sync covers account and organization metadata only. Superset doesn't proxy any API calls."
 msgstr "본인의 머신에서 실행됩니다. 리포지토리, worktree, 터미널 출력, 에이전트 세션은 기본적으로 로컬에 머물고, 클라우드 동기화는 계정과 조직 메타데이터만 다룹니다. Superset은 어떤 API 호출도 중계하지 않습니다."
@@ -12829,6 +12835,9 @@ msgstr "기기에서 10개 이상의 코딩 에이전트를 병렬로 실행"
 msgid "Run 10+ parallel coding agents on your machine."
 msgstr "내 머신에서 10개 이상의 코딩 에이전트를 병렬로 실행합니다."
 
+msgid "Run action before deleting a worktree"
+msgstr "워크트리를 삭제하기 전에 작업 실행"
+
 msgid "Run automations on data source and comment activity."
 msgstr "데이터 소스와 댓글 활동에 따라 자동화를 실행합니다."
 
@@ -12877,9 +12886,6 @@ msgstr "터미널 명령을 실행하고 다른 애플리케이션과 상호작�
 msgid "Run the agent in the Workspace Setup terminal once setup finishes instead of starting a second terminal alongside it"
 msgstr "터미널을 하나 더 띄우는 대신, 설정이 끝난 뒤 워크스페이스 설정 터미널에서 에이전트를 실행합니다"
 
-msgid "Run these commands when closing a worktree, even when its files are kept."
-msgstr "worktree를 닫을 때 파일이 유지되더라도 이 명령을 실행합니다."
-
 msgid "Run workspace command"
 msgstr "워크스페이스 명령 실행"
 
@@ -12924,6 +12930,9 @@ msgstr "실행 중인 터미널 프로세스는 계속되지만, 앱을 다시 �
 
 msgid "Runs a local command on your machine"
 msgstr "내 컴퓨터에서 로컬 명령을 실행합니다"
+
+msgid "Runs before deletion using a copy of the latest session for this agent, when available. Skills have up to 10 minutes to finish."
+msgstr "이 에이전트의 최근 세션이 있으면 해당 세션의 사본을 사용하여 삭제 전에 실행합니다. 스킬은 최대 10분 동안 실행할 수 있습니다."
 
 msgid "Runs failed earlier this week, but nothing is failing right now"
 msgstr "이번 주 초에 실행이 실패했지만 지금은 실패 중인 항목이 없습니다"
@@ -13341,6 +13350,9 @@ msgstr "풀 리퀘스트를 보려면 프로젝트를 선택하세요."
 
 msgid "Select a pull request to preview it here."
 msgstr "풀 리퀘스트를 선택하면 여기에서 미리 볼 수 있습니다."
+
+msgid "Select a skill"
+msgstr "스킬 선택"
 
 msgid "Select a team"
 msgstr "팀 선택"

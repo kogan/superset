@@ -1363,6 +1363,9 @@ msgstr "获客、内容、转化、留存和分发集中于一处。周图表覆
 msgid "Action"
 msgstr "操作"
 
+msgid "Action type"
+msgstr "操作类型"
+
 msgid "Actions"
 msgstr "操作"
 
@@ -9932,6 +9935,9 @@ msgstr "没有找到与“{searchQuery}”匹配的快捷键"
 msgid "No sites are signed in"
 msgstr "没有已登录的站点"
 
+msgid "No skills found"
+msgstr "未找到技能"
+
 msgid "No stack frames"
 msgstr "没有栈帧"
 
@@ -10273,8 +10279,8 @@ msgstr "按此速度"
 msgid "On this page"
 msgstr "本页内容"
 
-msgid "On worktree close"
-msgstr "关闭 worktree 时"
+msgid "On worktree deletion"
+msgstr "删除工作树时"
 
 msgid "On your machine. Repos, worktrees, terminal output, and agent sessions stay local by default; cloud sync covers account and organization metadata only. Superset doesn't proxy any API calls."
 msgstr "在你自己的机器上。仓库、worktree、终端输出和智能体会话默认都留在本地；云端同步只涉及账户和组织的元数据。Superset不代理任何API调用。"
@@ -12829,6 +12835,9 @@ msgstr "在您的设备上并行运行 10 多个编程代理"
 msgid "Run 10+ parallel coding agents on your machine."
 msgstr "在你的机器上并行运行10个以上的编码智能体。"
 
+msgid "Run action before deleting a worktree"
+msgstr "删除工作树前运行操作"
+
 msgid "Run automations on data source and comment activity."
 msgstr "在数据源和评论活动上运行自动化。"
 
@@ -12877,9 +12886,6 @@ msgstr "运行终端命令并与其他应用程序交互。"
 msgid "Run the agent in the Workspace Setup terminal once setup finishes instead of starting a second terminal alongside it"
 msgstr "设置完成后在“工作区设置”终端中运行智能体，而不是另外启动第二个终端"
 
-msgid "Run these commands when closing a worktree, even when its files are kept."
-msgstr "关闭 worktree 时运行这些命令，即使其文件会被保留。"
-
 msgid "Run workspace command"
 msgstr "运行工作区命令"
 
@@ -12924,6 +12930,9 @@ msgstr "运行中的终端进程会继续，但重启应用后可能无法再看
 
 msgid "Runs a local command on your machine"
 msgstr "在你的机器上运行本地命令"
+
+msgid "Runs before deletion using a copy of the latest session for this agent, when available. Skills have up to 10 minutes to finish."
+msgstr "删除前运行；如果此智能体有最近的会话，则使用该会话的副本。技能最多可运行 10 分钟。"
 
 msgid "Runs failed earlier this week, but nothing is failing right now"
 msgstr "本周早些时候有运行失败，但现在没有失败的"
@@ -13341,6 +13350,9 @@ msgstr "选择一个项目来查看拉取请求。"
 
 msgid "Select a pull request to preview it here."
 msgstr "选择一个拉取请求，在这里预览。"
+
+msgid "Select a skill"
+msgstr "选择技能"
 
 msgid "Select a team"
 msgstr "选择团队"

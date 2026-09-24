@@ -1363,6 +1363,9 @@ msgstr "Thu hút, nội dung, chuyển đổi, giữ chân và phân phối ở 
 msgid "Action"
 msgstr "Hành động"
 
+msgid "Action type"
+msgstr "Loại hành động"
+
 msgid "Actions"
 msgstr "Hành động"
 
@@ -9932,6 +9935,9 @@ msgstr "Không có phím tắt nào khớp \"{searchQuery}\""
 msgid "No sites are signed in"
 msgstr "Không có trang nào đang đăng nhập"
 
+msgid "No skills found"
+msgstr "Không tìm thấy kỹ năng"
+
 msgid "No stack frames"
 msgstr "Không có stack frame"
 
@@ -10273,8 +10279,8 @@ msgstr "Với tốc độ này"
 msgid "On this page"
 msgstr "Trên trang này"
 
-msgid "On worktree close"
-msgstr "Khi đóng worktree"
+msgid "On worktree deletion"
+msgstr "Khi xóa cây làm việc"
 
 msgid "On your machine. Repos, worktrees, terminal output, and agent sessions stay local by default; cloud sync covers account and organization metadata only. Superset doesn't proxy any API calls."
 msgstr "Trên máy của bạn. Repo, worktree, output terminal và phiên agent mặc định vẫn ở cục bộ; đồng bộ cloud chỉ gồm metadata tài khoản và tổ chức. Superset không proxy bất kỳ lệnh gọi API nào."
@@ -12829,6 +12835,9 @@ msgstr "Chạy song song hơn 10 tác tử lập trình trên máy của bạn"
 msgid "Run 10+ parallel coding agents on your machine."
 msgstr "Chạy hơn 10 agent lập trình song song trên máy của bạn."
 
+msgid "Run action before deleting a worktree"
+msgstr "Chạy hành động trước khi xóa cây làm việc"
+
 msgid "Run automations on data source and comment activity."
 msgstr "Chạy tự động hóa theo hoạt động của nguồn dữ liệu và bình luận."
 
@@ -12877,9 +12886,6 @@ msgstr "Chạy lệnh terminal và tương tác với ứng dụng khác."
 msgid "Run the agent in the Workspace Setup terminal once setup finishes instead of starting a second terminal alongside it"
 msgstr "Chạy agent trong terminal Workspace Setup sau khi setup xong thay vì mở thêm một terminal thứ hai bên cạnh"
 
-msgid "Run these commands when closing a worktree, even when its files are kept."
-msgstr "Chạy các lệnh này khi đóng worktree, ngay cả khi các tệp của nó được giữ lại."
-
 msgid "Run workspace command"
 msgstr "Chạy lệnh của workspace"
 
@@ -12924,6 +12930,9 @@ msgstr "Các tiến trình terminal đang chạy vẫn tiếp tục, nhưng kế
 
 msgid "Runs a local command on your machine"
 msgstr "Chạy một lệnh cục bộ trên máy bạn"
+
+msgid "Runs before deletion using a copy of the latest session for this agent, when available. Skills have up to 10 minutes to finish."
+msgstr "Chạy trước khi xóa bằng bản sao phiên gần nhất của tác nhân này, nếu có. Kỹ năng có tối đa 10 phút để hoàn thành."
 
 msgid "Runs failed earlier this week, but nothing is failing right now"
 msgstr "Có lần chạy thất bại đầu tuần này, nhưng hiện không có gì đang lỗi"
@@ -13341,6 +13350,9 @@ msgstr "Chọn một dự án để xem pull request."
 
 msgid "Select a pull request to preview it here."
 msgstr "Chọn một pull request để xem trước ở đây."
+
+msgid "Select a skill"
+msgstr "Chọn kỹ năng"
 
 msgid "Select a team"
 msgstr "Chọn một nhóm"

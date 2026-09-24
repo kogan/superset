@@ -3,6 +3,7 @@ import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
 const preferencesSchema = z.object({
+	workspacesView: z.boolean().catch(true),
 	attentionInbox: z.boolean().catch(true),
 	jira: z.boolean().catch(true),
 	pullRequests: z.boolean().catch(true),

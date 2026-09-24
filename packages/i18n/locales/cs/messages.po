@@ -1363,6 +1363,9 @@ msgstr "Akvizice, obsah, konverze, udržení a distribuce na jednom místě. Tý
 msgid "Action"
 msgstr "Akce"
 
+msgid "Action type"
+msgstr "Typ akce"
+
 msgid "Actions"
 msgstr "Akce"
 
@@ -9932,6 +9935,9 @@ msgstr "Hledání „{searchQuery}“ neodpovídají žádné zkratky"
 msgid "No sites are signed in"
 msgstr "Nikde nejste přihlášeni"
 
+msgid "No skills found"
+msgstr "Nenalezeny žádné dovednosti"
+
 msgid "No stack frames"
 msgstr "Žádné rámce zásobníku"
 
@@ -10273,8 +10279,8 @@ msgstr "Tímto tempem"
 msgid "On this page"
 msgstr "Na této stránce"
 
-msgid "On worktree close"
-msgstr "Při zavření worktree"
+msgid "On worktree deletion"
+msgstr "Při odstranění pracovního stromu"
 
 msgid "On your machine. Repos, worktrees, terminal output, and agent sessions stay local by default; cloud sync covers account and organization metadata only. Superset doesn't proxy any API calls."
 msgstr "Na vašem počítači. Repozitáře, worktree, výstup terminálu i relace agentů zůstávají ve výchozím stavu lokálně; cloudová synchronizace se týká jen metadat účtu a organizace. Superset nepřeposílá žádná API volání."
@@ -12829,6 +12835,9 @@ msgstr "Spouštějte na svém počítači více než 10 programovacích agentů 
 msgid "Run 10+ parallel coding agents on your machine."
 msgstr "Spusťte na svém stroji 10+ paralelních programovacích agentů."
 
+msgid "Run action before deleting a worktree"
+msgstr "Spustit akci před odstraněním pracovního stromu"
+
 msgid "Run automations on data source and comment activity."
 msgstr "Spouštějte automatizace při aktivitě ve zdrojích dat a komentářích."
 
@@ -12877,9 +12886,6 @@ msgstr "Spouštět příkazy v terminálu a pracovat s dalšími aplikacemi."
 msgid "Run the agent in the Workspace Setup terminal once setup finishes instead of starting a second terminal alongside it"
 msgstr "Spustit agenta v terminálu Workspace Setup, jakmile setup doběhne, místo spuštění druhého terminálu vedle něj"
 
-msgid "Run these commands when closing a worktree, even when its files are kept."
-msgstr "Spustí tyto příkazy při zavření worktree, i když jeho soubory zůstanou zachovány."
-
 msgid "Run workspace command"
 msgstr "Spustit příkaz pracovního prostoru"
 
@@ -12924,6 +12930,9 @@ msgstr "Běžící procesy v terminálu poběží dál, ale starší výstup po 
 
 msgid "Runs a local command on your machine"
 msgstr "Spouští lokální příkaz na vašem počítači"
+
+msgid "Runs before deletion using a copy of the latest session for this agent, when available. Skills have up to 10 minutes to finish."
+msgstr "Spustí se před odstraněním s kopií poslední relace tohoto agenta, pokud je dostupná. Dovednosti mají na dokončení až 10 minut."
 
 msgid "Runs failed earlier this week, but nothing is failing right now"
 msgstr "Dříve tento týden běhy selhaly, ale teď nic neselhává"
@@ -13341,6 +13350,9 @@ msgstr "Vyberte projekt a uvidíte pull requesty."
 
 msgid "Select a pull request to preview it here."
 msgstr "Vyberte pull request a zobrazí se tady jeho náhled."
+
+msgid "Select a skill"
+msgstr "Vybrat dovednost"
 
 msgid "Select a team"
 msgstr "Vyberte tým"

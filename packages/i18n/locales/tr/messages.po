@@ -1363,6 +1363,9 @@ msgstr "Edinme, içerik, dönüşüm, elde tutma ve dağıtım tek yerde. Haftal
 msgid "Action"
 msgstr "Eylem"
 
+msgid "Action type"
+msgstr "Eylem türü"
+
 msgid "Actions"
 msgstr "Eylemler"
 
@@ -9932,6 +9935,9 @@ msgstr "\"{searchQuery}\" ile eşleşen kısayol bulunamadı"
 msgid "No sites are signed in"
 msgstr "Oturum açılmış site yok"
 
+msgid "No skills found"
+msgstr "Beceri bulunamadı"
+
 msgid "No stack frames"
 msgstr "Yığın çerçevesi yok"
 
@@ -10273,8 +10279,8 @@ msgstr "Bu hızla"
 msgid "On this page"
 msgstr "Bu sayfada"
 
-msgid "On worktree close"
-msgstr "Worktree kapatıldığında"
+msgid "On worktree deletion"
+msgstr "Çalışma ağacı silinirken"
 
 msgid "On your machine. Repos, worktrees, terminal output, and agent sessions stay local by default; cloud sync covers account and organization metadata only. Superset doesn't proxy any API calls."
 msgstr "Sizin makinenizde. Depolar, worktree'ler, terminal çıktısı ve ajan oturumları varsayılan olarak yerelde kalır; bulut eşitlemesi yalnızca hesap ve kuruluş meta verilerini kapsar. Superset hiçbir API çağrısını vekil olarak iletmez."
@@ -12829,6 +12835,9 @@ msgstr "Bilgisayarınızda 10'dan fazla kodlama ajanını paralel çalıştırı
 msgid "Run 10+ parallel coding agents on your machine."
 msgstr "Makinenizde 10+ paralel kodlama ajanı çalıştırın."
 
+msgid "Run action before deleting a worktree"
+msgstr "Çalışma ağacını silmeden önce eylemi çalıştır"
+
 msgid "Run automations on data source and comment activity."
 msgstr "Veri kaynağı ve yorum etkinliğinde otomasyon çalıştırın."
 
@@ -12877,9 +12886,6 @@ msgstr "Terminal komutları çalıştırın ve diğer uygulamalarla etkileşin."
 msgid "Run the agent in the Workspace Setup terminal once setup finishes instead of starting a second terminal alongside it"
 msgstr "Yanında ikinci bir terminal başlatmak yerine, kurulum bittikten sonra ajanı Çalışma Alanı Kurulumu terminalinde çalıştır"
 
-msgid "Run these commands when closing a worktree, even when its files are kept."
-msgstr "Worktree kapatılırken dosyaları korunsa bile bu komutları çalıştırır."
-
 msgid "Run workspace command"
 msgstr "Çalışma alanı komutunu çalıştır"
 
@@ -12924,6 +12930,9 @@ msgstr "Çalışan terminal süreçleri devam eder, ancak uygulama yeniden başl
 
 msgid "Runs a local command on your machine"
 msgstr "Makinenizde yerel bir komut çalıştırır"
+
+msgid "Runs before deletion using a copy of the latest session for this agent, when available. Skills have up to 10 minutes to finish."
+msgstr "Silme işleminden önce, varsa bu ajanın son oturumunun bir kopyasını kullanarak çalışır. Becerilerin tamamlanması için en fazla 10 dakika verilir."
 
 msgid "Runs failed earlier this week, but nothing is failing right now"
 msgstr "Bu hafta daha önce çalıştırmalar başarısız oldu, ancak şu anda başarısız olan yok"
@@ -13341,6 +13350,9 @@ msgstr "Pull request'leri görmek için bir proje seçin."
 
 msgid "Select a pull request to preview it here."
 msgstr "Burada önizlemek için bir pull request seçin."
+
+msgid "Select a skill"
+msgstr "Bir beceri seçin"
 
 msgid "Select a team"
 msgstr "Bir takım seçin"

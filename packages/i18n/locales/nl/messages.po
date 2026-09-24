@@ -1363,6 +1363,9 @@ msgstr "Acquisitie, content, conversie, retentie en distributie op één plek. W
 msgid "Action"
 msgstr "Actie"
 
+msgid "Action type"
+msgstr "Actietype"
+
 msgid "Actions"
 msgstr "Acties"
 
@@ -9932,6 +9935,9 @@ msgstr "Geen sneltoetsen gevonden voor \"{searchQuery}\""
 msgid "No sites are signed in"
 msgstr "Je bent op geen enkele site ingelogd"
 
+msgid "No skills found"
+msgstr "Geen vaardigheden gevonden"
+
 msgid "No stack frames"
 msgstr "Geen stackframes"
 
@@ -10273,8 +10279,8 @@ msgstr "In dit tempo"
 msgid "On this page"
 msgstr "Op deze pagina"
 
-msgid "On worktree close"
-msgstr "Bij het sluiten van de worktree"
+msgid "On worktree deletion"
+msgstr "Bij verwijderen van de werkboom"
 
 msgid "On your machine. Repos, worktrees, terminal output, and agent sessions stay local by default; cloud sync covers account and organization metadata only. Superset doesn't proxy any API calls."
 msgstr "Op jouw machine. Repo's, worktrees, terminaluitvoer en agentsessies blijven standaard lokaal; cloudsynchronisatie omvat alleen metadata van account en organisatie. Superset proxyt geen API-aanroepen."
@@ -12829,6 +12835,9 @@ msgstr "Voer meer dan 10 programmeeragenten parallel uit op je computer"
 msgid "Run 10+ parallel coding agents on your machine."
 msgstr "Draai 10+ parallelle coding agents op je machine."
 
+msgid "Run action before deleting a worktree"
+msgstr "Actie uitvoeren voordat een werkboom wordt verwijderd"
+
 msgid "Run automations on data source and comment activity."
 msgstr "Voer automatiseringen uit bij activiteit op databronnen en opmerkingen."
 
@@ -12877,9 +12886,6 @@ msgstr "Terminalcommando's uitvoeren en met andere applicaties werken."
 msgid "Run the agent in the Workspace Setup terminal once setup finishes instead of starting a second terminal alongside it"
 msgstr "Draai de agent in de terminal van de werkruimte-setup zodra die klaar is, in plaats van er een tweede terminal naast te starten"
 
-msgid "Run these commands when closing a worktree, even when its files are kept."
-msgstr "Voer deze opdrachten uit bij het sluiten van een worktree, ook als de bestanden behouden blijven."
-
 msgid "Run workspace command"
 msgstr "Werkruimtecommando uitvoeren"
 
@@ -12924,6 +12930,9 @@ msgstr "Draaiende terminalprocessen gaan door, maar oudere uitvoer is na het her
 
 msgid "Runs a local command on your machine"
 msgstr "Voert een lokaal commando uit op je machine"
+
+msgid "Runs before deletion using a copy of the latest session for this agent, when available. Skills have up to 10 minutes to finish."
+msgstr "Wordt vóór verwijdering uitgevoerd met een kopie van de laatste sessie van deze agent, indien beschikbaar. Vaardigheden hebben maximaal 10 minuten om te voltooien."
 
 msgid "Runs failed earlier this week, but nothing is failing right now"
 msgstr "Eerder deze week zijn runs mislukt, maar er mislukt nu niets"
@@ -13341,6 +13350,9 @@ msgstr "Kies een project om pull requests te zien."
 
 msgid "Select a pull request to preview it here."
 msgstr "Kies een pull request om hem hier te bekijken."
+
+msgid "Select a skill"
+msgstr "Selecteer een vaardigheid"
 
 msgid "Select a team"
 msgstr "Kies een team"

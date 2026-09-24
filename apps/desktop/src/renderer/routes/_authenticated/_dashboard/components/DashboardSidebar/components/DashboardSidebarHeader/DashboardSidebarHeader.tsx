@@ -63,6 +63,7 @@ import {
 import { useFeaturePreferences } from "renderer/stores/feature-preferences";
 
 import { AttentionNavigation } from "./components/AttentionNavigation";
+import { WorkspacesNavigation } from "./components/WorkspacesNavigation";
 
 interface DashboardSidebarHeaderProps {
 	isCollapsed?: boolean;
@@ -324,6 +325,7 @@ export function DashboardSidebarHeader({
 						</TooltipContent>
 					</Tooltip>
 
+					<WorkspacesNavigation collapsed />
 					<AttentionNavigation collapsed />
 					{jiraEnabled && (
 						<Tooltip delayDuration={300}>
@@ -592,6 +594,7 @@ export function DashboardSidebarHeader({
 				)}
 			</button>
 
+			<WorkspacesNavigation />
 			<AttentionNavigation />
 			{jiraEnabled && (
 				<button

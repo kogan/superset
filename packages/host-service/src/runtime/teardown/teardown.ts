@@ -1,4 +1,5 @@
 import { randomUUID } from "node:crypto";
+import { readFileSync, rmSync } from "node:fs";
 import { TEARDOWN_TIMEOUT_MS } from "@superset/shared/constants";
 import type { HostDb } from "../../db";
 import {
@@ -6,6 +7,12 @@ import {
 	disposeSession,
 } from "../../terminal/terminal";
 import { resolveScript, shellSingleQuote } from "../setup/config";
+
+import {
+	DELETION_SKILL_TIMEOUT_MS,
+	readWorktreeDeletionSettings,
+	resolveDeletionSkillCommand,
+} from "../worktree-deletion/worktree-deletion";
 
 export { TEARDOWN_TIMEOUT_MS };
 
@@ -59,16 +66,48 @@ export async function runTeardown({
 	worktreePath,
 	repoPath,
 	projectId,
-	timeoutMs = TEARDOWN_TIMEOUT_MS,
+	timeoutMs,
 	homeDir,
 }: RunTeardownOptions): Promise<TeardownResult> {
-	const resolved = resolveTeardownCommand({
-		script,
-		repoPath,
-		projectId,
-		worktreePath,
-		homeDir,
-	});
+	let completionPath: string | undefined;
+	let resolved: { initialCommand: string; cwd?: string } | null;
+	let executionTimeoutMs = timeoutMs ?? TEARDOWN_TIMEOUT_MS;
+	try {
+		const settings =
+			script === "close" ? readWorktreeDeletionSettings(repoPath) : null;
+		if (settings?.closeEnabled === false) return { status: "skipped" };
+		if (settings?.closeAction.type === "skill") {
+			const skill = await resolveDeletionSkillCommand({
+				db,
+				workspaceId,
+				repoPath,
+				worktreePath,
+				action: settings.closeAction,
+				homeDir,
+			});
+			resolved = skill
+				? { initialCommand: buildTeardownCommandFromShell(skill.command) }
+				: null;
+			completionPath = skill?.completionPath;
+			executionTimeoutMs = timeoutMs ?? DELETION_SKILL_TIMEOUT_MS;
+		} else {
+			resolved = resolveTeardownCommand({
+				script,
+				repoPath,
+				projectId,
+				worktreePath,
+				homeDir,
+			});
+		}
+	} catch (error) {
+		return {
+			status: "failed",
+			exitCode: null,
+			signal: null,
+			timedOut: false,
+			outputTail: error instanceof Error ? error.message : String(error),
+		};
+	}
 	if (resolved === null) return { status: "skipped" };
 
 	const terminalId = randomUUID();
@@ -108,6 +147,7 @@ export async function runTeardown({
 			if (settled) return;
 			settled = true;
 			clearTimeout(timer);
+			if (completionPath) rmSync(completionPath, { force: true });
 			try {
 				dataDisposer.dispose();
 			} catch {
@@ -119,8 +159,22 @@ export async function runTeardown({
 
 		session.pty.onExit(({ exitCode, signal }) => {
 			if (exitCode === 0 && !timedOut) {
-				settle({ status: "ok", output: tail || undefined });
-				return;
+				let completed = completionPath === undefined;
+				if (completionPath) {
+					try {
+						completed =
+							readFileSync(completionPath, "utf8").trim() === "completed";
+					} catch {
+						completed = false;
+					}
+				}
+				if (completed) {
+					settle({ status: "ok", output: tail || undefined });
+					return;
+				}
+				appendTail(
+					"\nThe skill did not confirm completion. Resolve any missing input or permissions, then retry.\n",
+				);
 			}
 			settle({
 				status: "failed",
@@ -134,7 +188,7 @@ export async function runTeardown({
 		const timer = setTimeout(() => {
 			if (settled) return;
 			timedOut = true;
-			appendTail(`\n[${script} timed out after ${timeoutMs}ms]\n`);
+			appendTail(`\n[${script} timed out after ${executionTimeoutMs}ms]\n`);
 			try {
 				void session.pty.kill().catch(() => {});
 			} catch {
@@ -151,7 +205,7 @@ export async function runTeardown({
 					outputTail: tail,
 				});
 			}, KILL_GRACE_MS).unref();
-		}, timeoutMs);
+		}, executionTimeoutMs);
 		timer.unref();
 	});
 }

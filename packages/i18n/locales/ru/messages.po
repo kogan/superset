@@ -1363,6 +1363,9 @@ msgstr "Привлечение, контент, конверсия, удержа
 msgid "Action"
 msgstr "Действие"
 
+msgid "Action type"
+msgstr "Тип действия"
+
 msgid "Actions"
 msgstr "Действия"
 
@@ -9932,6 +9935,9 @@ msgstr "Не найдено сочетаний по запросу «{searchQuer
 msgid "No sites are signed in"
 msgstr "Нет сайтов, где выполнен вход"
 
+msgid "No skills found"
+msgstr "Навыки не найдены"
+
 msgid "No stack frames"
 msgstr "Нет кадров стека"
 
@@ -10273,8 +10279,8 @@ msgstr "При таком темпе"
 msgid "On this page"
 msgstr "На этой странице"
 
-msgid "On worktree close"
-msgstr "При закрытии worktree"
+msgid "On worktree deletion"
+msgstr "При удалении рабочего дерева"
 
 msgid "On your machine. Repos, worktrees, terminal output, and agent sessions stay local by default; cloud sync covers account and organization metadata only. Superset doesn't proxy any API calls."
 msgstr "На вашей машине. Репозитории, worktree, вывод терминала и сессии агентов по умолчанию остаются локальными; облачная синхронизация покрывает только метаданные аккаунта и организации. Superset не проксирует вызовы API."
@@ -12829,6 +12835,9 @@ msgstr "Запускайте более 10 агентов программиро
 msgid "Run 10+ parallel coding agents on your machine."
 msgstr "Запускайте 10+ параллельных кодовых агентов на своей машине."
 
+msgid "Run action before deleting a worktree"
+msgstr "Выполнять действие перед удалением рабочего дерева"
+
 msgid "Run automations on data source and comment activity."
 msgstr "Запускайте автоматизации по активности в источниках данных и комментариях."
 
@@ -12877,9 +12886,6 @@ msgstr "Запускать команды в терминале и взаимо�
 msgid "Run the agent in the Workspace Setup terminal once setup finishes instead of starting a second terminal alongside it"
 msgstr "Запускать агента в терминале настройки рабочей области после завершения установки вместо запуска второго терминала рядом"
 
-msgid "Run these commands when closing a worktree, even when its files are kept."
-msgstr "Эти команды выполняются при закрытии worktree, даже если его файлы сохраняются."
-
 msgid "Run workspace command"
 msgstr "Запустить команду рабочей области"
 
@@ -12924,6 +12930,9 @@ msgstr "Работающие процессы терминала продолж�
 
 msgid "Runs a local command on your machine"
 msgstr "Запускает локальную команду на вашей машине"
+
+msgid "Runs before deletion using a copy of the latest session for this agent, when available. Skills have up to 10 minutes to finish."
+msgstr "Выполняется перед удалением с использованием копии последней сессии этого агента, если она доступна. На выполнение навыка отводится до 10 минут."
 
 msgid "Runs failed earlier this week, but nothing is failing right now"
 msgstr "Ранее на этой неделе запуски падали, но сейчас ничего не падает"
@@ -13341,6 +13350,9 @@ msgstr "Выберите проект, чтобы видеть пул-рекве
 
 msgid "Select a pull request to preview it here."
 msgstr "Выберите пул-реквест, чтобы посмотреть его здесь."
+
+msgid "Select a skill"
+msgstr "Выбрать навык"
 
 msgid "Select a team"
 msgstr "Выберите команду"
