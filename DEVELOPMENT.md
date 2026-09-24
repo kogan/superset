@@ -57,7 +57,7 @@ Before starting the workspace host, the app connects existing Superset workspace
 
 ## Publish a download for the team
 
-Build an Apple Silicon release from the release branch with `bun run build:mac`, then run the verification commands above. It writes `superset++-<version>-arm64.dmg`, a matching `.zip`, and `latest-mac.yml` under `apps/desktop/release`. The DMG is for first installs; the ZIP and manifest let installed apps update themselves. A `--dir` build produces an app bundle, not release artifacts.
+Build an Apple Silicon release from the release branch with `bun run build:mac`, then run the verification commands above. It writes `superset-plus-plus-<version>-arm64.dmg`, a matching `.zip`, and `latest-mac.yml` under `apps/desktop/release`. The build verifies that the manifest names the generated files and that their sizes and hashes match. Rerun that check with `bun run scripts/personal/verify-mac-release.ts`. The DMG is for first installs; the ZIP and manifest let installed apps update themselves. A `--dir` build produces an app bundle, not release artifacts.
 
 To publish the verified installer:
 
