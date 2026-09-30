@@ -40,12 +40,12 @@ jobs:
       - run: bun install --frozen-lockfile --ignore-scripts
       - run: bun run check:plugins
       - run: bun run check:versions
+      - run: bun run check:i18n
       - name: Check fork release identity and update artifacts
         run: bun test scripts/personal/mac-release.test.ts && bun x tsc -p scripts/personal/tsconfig.json
       - name: Check packaged update mode
         run: bun test src/main/lib/auto-update-mode.test.ts src/main/lib/update-error-classification.test.ts src/main/lib/update-error-redaction.test.ts
         working-directory: apps/desktop
-      - run: bun run check:i18n
       - run: sudo apt-get update && sudo apt-get install -y ripgrep
       - run: bun test packages/port-scanner/src/
       - run: bun test packages/workspace-fs/src/search.test.ts packages/workspace-fs/src/search-content.test.ts
