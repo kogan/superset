@@ -1,4 +1,5 @@
 import type { JiraColumnLayout } from "lib/trpc/routers/jira/jira-schema";
+import { groupIssuesByStatus } from "../../components/JiraKanban/utils/groupIssuesByStatus";
 
 export function applyColumnLayout<
 	Column extends { key: string; layoutKeys?: string[] },
@@ -34,4 +35,17 @@ export function mergeColumnLayout(
 ): JiraColumnLayout {
 	const keys = new Set(draft.map(({ key }) => key));
 	return [...draft, ...saved.filter(({ key }) => !keys.has(key))];
+}
+
+export function getVisibleBoardStatuses(
+	columns: Parameters<typeof groupIssuesByStatus>[1],
+	layout: JiraColumnLayout = [],
+): string[] {
+	const visibleColumns = applyColumnLayout(
+		groupIssuesByStatus([], columns),
+		layout,
+	).filter((column) => column.visible);
+	return [
+		...new Set(visibleColumns.flatMap((column) => column.statuses)),
+	].sort();
 }

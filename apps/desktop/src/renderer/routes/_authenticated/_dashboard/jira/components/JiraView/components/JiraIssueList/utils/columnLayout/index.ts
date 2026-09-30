@@ -1,1 +1,5 @@
-export { applyColumnLayout, mergeColumnLayout } from "./columnLayout";
+export {
+	applyColumnLayout,
+	getVisibleBoardStatuses,
+	mergeColumnLayout,
+} from "./columnLayout";
