@@ -3,6 +3,7 @@
 	"include": [
 		"mac-signing.ts",
 		"mac-release.test.ts",
+		"local-environment.test.ts",
 		"verify-mac-release.ts",
 		"build-mac.ts"
 	]
