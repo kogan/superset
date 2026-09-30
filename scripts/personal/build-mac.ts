@@ -10,21 +10,16 @@ import {
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { publicLocalEnvironment } from "../../packages/shared/src/standalone";
+import { macSigning } from "./mac-signing";
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "../..");
 const desktop = join(root, "apps/desktop");
 const runtime = join(desktop, "dist/local-runtime");
-const selfSignedBuild = process.argv.includes("--self-signed");
-const developerIdBuild = process.argv.includes("--signed");
-if (selfSignedBuild && developerIdBuild)
-	throw new Error("Choose either --signed or --self-signed, not both.");
-const signedBuild = selfSignedBuild || developerIdBuild;
-const fingerprint = process.env.CSC_NAME?.trim().toUpperCase();
+const signing = macSigning(process.argv, process.env.CSC_NAME);
+const selfSignedBuild = signing.mode === "self-signed";
+const signedBuild = signing.mode !== "ad-hoc";
+const fingerprint = signing.mode === "ad-hoc" ? undefined : signing.identity;
 if (signedBuild) {
-	if (selfSignedBuild && (!fingerprint || !/^[A-F0-9]{40}$/.test(fingerprint)))
-		throw new Error(
-			"Self-signed builds require CSC_NAME to contain the certificate's 40-character SHA-1 fingerprint. See DEVELOPMENT.md. No build was started.",
-		);
 	const identities = Bun.spawnSync([
 		"security",
 		"find-identity",
@@ -34,9 +29,11 @@ if (signedBuild) {
 		...(process.env.CSC_KEYCHAIN ? [process.env.CSC_KEYCHAIN] : []),
 	]);
 	const identityLines = identities.stdout.toString().split("\n");
-	const identityAvailable = selfSignedBuild
-		? identityLines.some((line) => line.trim().split(/\s+/)[1] === fingerprint)
-		: identityLines.some((line) => line.includes('"Developer ID Application:'));
+	const identityAvailable = identityLines.some(
+		(line) =>
+			line.trim().split(/\s+/)[1] === fingerprint &&
+			(selfSignedBuild || line.includes('"Developer ID Application:')),
+	);
 	if (identities.exitCode !== 0 || !identityAvailable) {
 		throw new Error(
 			selfSignedBuild
@@ -50,7 +47,7 @@ if (signedBuild) {
 		);
 } else {
 	console.warn(
-		"[build-mac] Ad-hoc build: macOS permissions may need approval again after updates. Use --signed for a stable signing identity.",
+		"[build-mac] Ad-hoc development build. Do not publish these artifacts to the update feed; they cannot update installed releases.",
 	);
 }
 if (process.argv.includes("--main-only")) {
@@ -103,7 +100,7 @@ const buildEnv: NodeJS.ProcessEnv = {
 	USERCONTENT_TOKEN_SECRET: "build-only-not-a-runtime-secret-000000000000000",
 	SECRETS_ENCRYPTION_KEY: Buffer.alloc(32).toString("base64"),
 	CSC_IDENTITY_AUTO_DISCOVERY: signedBuild ? "true" : "false",
-	CSC_NAME: selfSignedBuild ? fingerprint : process.env.CSC_NAME,
+	CSC_NAME: fingerprint,
 	SUPERESTSET_BUILD_MAIN_ONLY: process.argv.includes("--main-only") ? "1" : "0",
 };
 // Do not inherit upstream telemetry/deploy credentials from the invoking shell.
@@ -206,5 +203,10 @@ await run(
 	desktop,
 );
 if (!process.argv.includes("--dir")) {
-	await run(["bun", "run", "scripts/personal/verify-mac-release.ts"]);
+	await run([
+		"bun",
+		"run",
+		"scripts/personal/verify-mac-release.ts",
+		...(signedBuild ? [] : ["--ad-hoc"]),
+	]);
 }

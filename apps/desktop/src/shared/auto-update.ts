@@ -1,3 +1,5 @@
+import { FORK } from "@superset/shared/standalone";
+
 export const AUTO_UPDATE_STATUS = {
 	IDLE: "idle",
 	CHECKING: "checking",
@@ -24,4 +26,8 @@ export interface AutoUpdateStatusEvent {
 	progress?: AutoUpdateProgress;
 }
 
-export const RELEASES_URL = "https://github.com/superset-sh/superset/releases";
+export const RELEASES_URL = FORK.releases;
+
+export function updateFeedUrl(isPrerelease: boolean): string {
+	return `${RELEASES_URL}/${isPrerelease ? "download/desktop-canary" : "latest/download"}`;
+}

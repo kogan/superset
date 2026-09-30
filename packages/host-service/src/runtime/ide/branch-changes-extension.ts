@@ -84,6 +84,7 @@ exports.activate = context => {
   const provider = {
     onDidChangeTreeData: treeEvents.event,
     getChildren: element => element ? [] : (snapshot?.files || []),
+    getParent: () => undefined,
     getTreeItem: file => {
       const uri = uriFor(file.path);
       const item = new vscode.TreeItem(path.basename(file.path));
@@ -174,6 +175,9 @@ exports.activate = context => {
   );
   const timer = setInterval(() => { if (vscode.window.state.focused) void refresh(); }, 5000);
   context.subscriptions.push({ dispose: () => { disposed = true; clearInterval(timer); } });
+  void view.reveal(undefined, { select: false, focus: false }).catch(error => {
+    if (!disposed) output.appendLine(String(error));
+  });
   void refresh();
   return { refresh, getSnapshot: () => snapshot, openDiff };
 };

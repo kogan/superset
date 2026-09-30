@@ -16,12 +16,12 @@ cd superset
 bun install --frozen-lockfile --ignore-scripts
 node apps/desktop/node_modules/electron/install.js
 bun run --cwd apps/desktop install:deps
-bun run build:mac
+bun run build:mac --ad-hoc
 ```
 
-The app and disk image are written below `apps/desktop/release`. Use `bun run build:mac --dir` to build the app without making a disk image.
+The app and disk image are written below `apps/desktop/release`. Use `bun run build:mac --ad-hoc --dir` for a development app without a disk image. Ad-hoc builds cannot update signed installations and must not be published to the release feed.
 
-After a full build, `bun run build:mac --dir --skip-api --main-only` rebuilds main-process changes using the existing API, renderer, and preload output. Use the full build when any of those components change.
+After a full build, `bun run build:mac --ad-hoc --dir --skip-api --main-only` rebuilds main-process changes using the existing API, renderer, and preload output. Use the full build when any of those components change.
 
 The build uses checked-in placeholders, not your `.env`. The installed app generates its own authentication, encryption, and content-signing secrets. Never commit an installation's data or secrets.
 
@@ -57,13 +57,15 @@ Before starting the workspace host, the app connects existing Superset workspace
 
 ## Publish a download for the team
 
-Build an Apple Silicon release from the release branch with `bun run build:mac`, then run the verification commands above. It writes `superset-plus-plus-<version>-arm64.dmg`, a matching `.zip`, and `latest-mac.yml` under `apps/desktop/release`. The build verifies that the manifest names the generated files and that their sizes and hashes match. Rerun that check with `bun run scripts/personal/verify-mac-release.ts`. The DMG is for first installs; the ZIP and manifest let installed apps update themselves. A `--dir` build produces an app bundle, not release artifacts.
+Build an Apple Silicon release from the release branch with `bun run build:mac`, using the established signing key described below, then run the verification commands above. It writes `superset-plus-plus-<version>-arm64.dmg`, a matching `.zip`, and `latest-mac.yml` under `apps/desktop/release`. The build verifies the exact artifact names, sizes, and hashes, then extracts the updater ZIP, mounts the DMG read-only, and verifies all three app bundles against the release certificate, bundle ID, and app version. Rerun that check with `bun run scripts/personal/verify-mac-release.ts`. The DMG is for first installs; the ZIP and manifest let installed apps update themselves. A `--dir` build produces an app bundle, not release artifacts.
+
+Before creating a release, run `bun run scripts/personal/verify-mac-release.ts --for-publish`. This downloads the latest published manifest through authenticated `gh` and rejects an app version that is equal to or older than the published version. Release titles do not determine update order. The historical release called v1.2.0 contains app version 1.32.0, so the next release must exceed 1.32.0. Bump desktop, host-service, and CLI together on the release branch. Do not rename artifacts after building them.
 
 To publish the verified installer:
 
 1. Open [the repository's Releases page](https://github.com/kogan/superset/releases) and choose **Draft a new release**.
-2. Create a tag such as `superset-plus-plus-v1.30.0` at the exact commit used for the build. Use the app's version in the tag and release title.
-3. Describe the changes and state that this installer is for Apple Silicon Macs. Identify whether the build is ad-hoc signed or Developer ID signed and notarized.
+2. Create a tag such as `superset-plus-plus-v1.32.1` at the exact commit used for the build. Use the app's version in the tag and release title.
+3. Describe the changes and state that this installer is for Apple Silicon Macs. Identify the signing mode and whether it is notarized. Do not publish ad-hoc preview artifacts.
 4. Attach the `.dmg`, matching `.zip`, and `latest-mac.yml` under **Attach binaries**. Attach its SHA-256 checksum file if one was generated. The updater cannot work from a DMG alone.
 5. Publish the release and mark it as the latest release when it is ready for general use.
 6. Download the attached DMG to confirm the file is available. Share the release page with the team.
@@ -74,29 +76,41 @@ For an immediate handoff before publishing, share the verified DMG itself. The r
 
 ## Release builds and signing
 
-The fork's manual Mac workflow uses `macos-14`, an Apple Silicon label in [GitHub's runner reference](https://docs.github.com/en/actions/reference/runners/github-hosted-runners). It uploads build artifacts for review. Publishing a GitHub release is a separate maintainer action.
+The fork's manual Mac workflow uses `macos-14`, an Apple Silicon label in [GitHub's runner reference](https://docs.github.com/en/actions/reference/runners/github-hosted-runners). It explicitly builds an ad-hoc development preview and labels the uploaded artifact `development-only`. It has no release private key. Do not distribute those artifacts as updates; create releases on the signing Mac. Publishing a GitHub release is a separate maintainer action.
 
-Personal builds are ad-hoc signed. Apple notarization requires the maintainer's Apple signing identity and credentials; none are stored in this repository.
+The default Mac build uses the persistent self-signed release certificate pinned in `scripts/personal/mac-signing.ts`. Its fingerprint is public; the private key stays outside Git. A missing identity or a different `CSC_NAME` fails before compilation. Ad-hoc development builds require `--ad-hoc`. Apple notarization requires the maintainer's Apple signing identity and credentials; none are stored in this repository.
 
-For releases that retain the same signing identity across updates, install your **Developer ID Application** certificate and its private key in your macOS keychain, then run:
+To migrate to Apple Developer ID signing, plan a one-time managed reinstall, update the pinned release fingerprint in review, and install that **Developer ID Application** certificate and its private key in your macOS keychain. Then run:
 
 ```sh
 security find-identity -v -p codesigning
 bun run build:mac --signed
 ```
 
-The signed build checks for a valid Developer ID Application identity before compiling, enables certificate discovery, and requires signing during packaging. It cannot silently fall back to an ad-hoc signature. If you have multiple identities, select the same one for every release with electron-builder's `CSC_NAME` setting. Signing and notarization are separate: this option does not configure notarization credentials. The first switch from an ad-hoc build can still require permission approval again.
+The signed build checks for a valid Developer ID Application identity before compiling, enables certificate discovery, and requires signing during packaging. It cannot silently fall back to an ad-hoc signature. The selected identity must match the pinned release fingerprint. Signing and notarization are separate: this option does not configure notarization credentials. The first switch from an ad-hoc build can still require permission approval again.
 
 For internal distribution without an Apple Developer membership, use a persistent self-signed code-signing certificate. Keep its private key outside the repository and back it up securely. Import it into a dedicated keychain, add that keychain to your user's search list, and approve trust for the code-signing policy on the build Mac. Select the certificate explicitly by its SHA-1 fingerprint:
 
 ```sh
 security find-identity -v -p codesigning /path/to/signing.keychain-db
-CSC_NAME=YOUR_40_CHARACTER_CERTIFICATE_FINGERPRINT \
+CSC_NAME=3CAB8591B6DF300560E8ECC5697C2CC8CFCB9728 \
 CSC_KEYCHAIN=/path/to/signing.keychain-db \
 bun run build:mac --self-signed
 ```
 
 This mode requires the selected identity and refuses to fall back to an ad-hoc signature. It disables notarization and timestamping. It does not grant Apple trust or remove Gatekeeper's first-install approval requirement. Keep the same certificate and bundle identifier for future releases, and test a real update before distribution. The existing ad-hoc installation must be replaced manually once; it will reject the new certificate through its updater. Replacing or losing the self-signed certificate also requires a manual installation for existing users.
+
+Run a real native update check when changing Electron or signing configuration:
+
+```sh
+CSC_NAME=3CAB8591B6DF300560E8ECC5697C2CC8CFCB9728 \
+CSC_KEYCHAIN=/path/to/signing.keychain-db \
+python3 scripts/personal/verify-mac-update.py
+```
+
+This signs two disposable apps with the installed Electron version, serves a loopback update, and checks that Electron downloads, installs, and relaunches the newer app. It uses a separate bundle ID and profile and does not replace the installed superset++ app. Evidence is retained in the printed temporary directory. This checks the native update mechanism; separately run the release artifact verifier against each build and confirm that the published feed is reachable on the team's Macs.
+
+IT must replace old ad-hoc installations once while the app is closed, preserving user data. Installing a newer version alone does not bypass the signing transition. Keep the new app's signature intact when wrapping it for managed distribution. Self-signing is not Apple notarization or fleet-wide Gatekeeper approval.
 
 Do not run old SuperestSet and new superset++ helpers together. They share `com.deexi333.superestset`, but different ad-hoc builds have different code requirements. macOS can alternate its Documents permission between those identities and prompt repeatedly. Quitting the window may leave terminal daemons alive. Finish or explicitly stop the old terminal sessions before retiring the old app; never kill a daemon without checking which sessions it owns. Keep the current app at one stable installation path. A separate test data directory does not give a test build a separate macOS permission identity.
 

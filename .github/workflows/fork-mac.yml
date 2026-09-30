@@ -17,12 +17,13 @@ jobs:
       - run: bun run --cwd apps/desktop install:deps
       - run: bun run check:plugins && bun run check:i18n && bun run check:versions
       - run: bun run scripts/personal/verify-worktree-connections.ts
-      - run: bun run build:mac
+      - name: Build ad-hoc development preview (not an update release)
+        run: bun run build:mac --ad-hoc
       - run: test -f apps/desktop/release/latest-mac.yml
       - run: bun run scripts/personal/verify-packaged-api.ts
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
-          name: superset++-mac-arm64
+          name: superset++-mac-arm64-development-only
           path: |
             apps/desktop/release/*.dmg
             apps/desktop/release/*.zip

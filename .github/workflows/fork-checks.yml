@@ -41,6 +41,11 @@ jobs:
       - run: bun run check:plugins
       - run: bun run check:versions
       - run: bun run check:i18n
+      - name: Check fork release identity and update artifacts
+        run: bun test scripts/personal/mac-release.test.ts && bun x tsc -p scripts/personal/tsconfig.json
+      - name: Check packaged update mode
+        run: bun test src/main/lib/auto-update-mode.test.ts src/main/lib/update-error-classification.test.ts src/main/lib/update-error-redaction.test.ts
+        working-directory: apps/desktop
       - run: sudo apt-get update && sudo apt-get install -y ripgrep
       - run: bun test packages/port-scanner/src/
       - run: bun test packages/workspace-fs/src/search.test.ts packages/workspace-fs/src/search-content.test.ts
@@ -60,6 +65,9 @@ jobs:
       - run: bun test src/terminal-agents/
         working-directory: packages/host-service
       - run: bun test src/trpc/router/notifications
+        working-directory: packages/host-service
+      - name: Check worktree IDE and deletion actions
+        run: bun test src/runtime/ide src/runtime/setup/config.test.ts src/runtime/teardown test/integration/workspace-delete-teardown.integration.test.ts
         working-directory: packages/host-service
       - run: bun test src/renderer/stores/sidebar-agent-expansion.test.ts
         working-directory: apps/desktop
