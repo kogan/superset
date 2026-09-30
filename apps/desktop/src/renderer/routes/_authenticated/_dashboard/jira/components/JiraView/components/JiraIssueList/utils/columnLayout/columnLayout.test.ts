@@ -1,5 +1,9 @@
 import { expect, test } from "bun:test";
-import { applyColumnLayout, mergeColumnLayout } from "./columnLayout";
+import {
+	applyColumnLayout,
+	getVisibleBoardStatuses,
+	mergeColumnLayout,
+} from "./columnLayout";
 
 test("restores saved order and visibility, adding newly discovered columns at the end", () => {
 	const columns = [{ key: "todo" }, { key: "dev" }, { key: "review" }];
@@ -78,4 +82,45 @@ test("carries status-based visibility and order into actual board columns", () =
 		{ key: "dev", visible: false },
 		{ key: "qa", visible: true },
 	]);
+});
+
+test("only queries visible board statuses, so hidden backlog and done issues cannot fill the first page", () => {
+	const columns = [
+		{ key: "backlog", name: "Backlog", statuses: ["To Do"] },
+		{ key: "dev", name: "In Dev", statuses: ["In Development", "Review"] },
+		{ key: "qa", name: "QA", statuses: ["Review", "Testing"] },
+		{ key: "done", name: "Done", statuses: ["Closed", "Live"] },
+	];
+	const layout = [
+		{ key: "backlog", visible: false },
+		{ key: "done", visible: false },
+	];
+	expect(getVisibleBoardStatuses(columns, layout)).toEqual([
+		"In Development",
+		"Review",
+		"Testing",
+	]);
+	expect(getVisibleBoardStatuses([...columns].reverse(), layout)).toEqual(
+		getVisibleBoardStatuses(columns, layout),
+	);
+	expect(
+		getVisibleBoardStatuses(
+			columns,
+			columns.map(({ key }) => ({ key, visible: false })),
+		),
+	).toEqual([]);
+	expect(getVisibleBoardStatuses(undefined)).toEqual([]);
+});
+
+test("uses the same legacy visibility mappings for the Jira query and rendered board", () => {
+	const columns = [
+		{ key: "dev", name: "In Dev", statuses: ["In Development"] },
+		{ key: "done", name: "Done", statuses: ["Closed", "Live"] },
+	];
+	expect(
+		getVisibleBoardStatuses(columns, [
+			{ key: '["done","Closed"]', visible: false },
+			{ key: '["done","Live"]', visible: false },
+		]),
+	).toEqual(["In Development"]);
 });

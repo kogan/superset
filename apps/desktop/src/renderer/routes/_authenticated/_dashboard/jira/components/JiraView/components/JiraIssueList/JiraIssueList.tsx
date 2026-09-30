@@ -24,8 +24,12 @@ import { groupIssuesByStatus } from "./components/JiraKanban/utils/groupIssuesBy
 import { JiraMemberFilter } from "./components/JiraMemberFilter";
 import type { MemberSelection } from "./components/JiraMemberFilter/JiraMemberFilter";
 import { JiraTransitionDialog } from "./components/JiraTransitionDialog";
+import { useJiraIssues } from "./hooks/useJiraIssues/useJiraIssues";
 import { useJiraMovement } from "./hooks/useJiraMovement/useJiraMovement";
-import { applyColumnLayout } from "./utils/columnLayout";
+import {
+	applyColumnLayout,
+	getVisibleBoardStatuses,
+} from "./utils/columnLayout";
 
 export function JiraIssueList({ baseUrl }: { baseUrl: string }) {
 	const { t } = useLingui();
@@ -51,8 +55,9 @@ export function JiraIssueList({ baseUrl }: { baseUrl: string }) {
 		},
 	);
 	const configuredColumns = mode === "team" ? boardColumns.data : undefined;
-	const mappedStatuses = configuredColumns?.flatMap(
-		(column) => column.statuses,
+	const mappedStatuses = getVisibleBoardStatuses(
+		configuredColumns,
+		settings?.columnLayout,
 	);
 	const boardError = mode === "team" ? boardColumns.error : null;
 	const scope: JiraListInput["scope"] =
@@ -68,19 +73,16 @@ export function JiraIssueList({ baseUrl }: { baseUrl: string }) {
 		},
 		onError: (error) => toast.error(errorMessage(error)),
 	});
-	const issuesQuery = electronTrpc.jira.listIssues.useInfiniteQuery(
+	const queryEnabled =
+		ready &&
+		(mode === "mine" || (boardColumns.isSuccess && mappedStatuses.length > 0));
+	const issuesQuery = useJiraIssues(
 		{
 			scope,
 			status,
-			visibleStatuses: mappedStatuses?.length ? mappedStatuses : undefined,
+			visibleStatuses: mappedStatuses.length ? mappedStatuses : undefined,
 		},
-		{
-			enabled: ready && (mode === "mine" || boardColumns.isSuccess),
-			getNextPageParam: (page) => page.nextCursor ?? undefined,
-			retry: false,
-			staleTime: 30_000,
-			gcTime: 0,
-		},
+		queryEnabled,
 	);
 	const pages = issuesQuery.data?.pages ?? [];
 	const prQueries = electronTrpc.useQueries((trpc) =>
@@ -329,7 +331,8 @@ export function JiraIssueList({ baseUrl }: { baseUrl: string }) {
 						<Trans>Choose a team board to see everyone’s issues.</Trans>
 					)}
 				</output>
-			) : boardError && !configuredColumns ? null : issuesQuery.isPending ? (
+			) : boardError && !configuredColumns ? null : issuesQuery.isPending &&
+				queryEnabled ? (
 				<output className="flex flex-1 items-center justify-center gap-2 p-8 text-sm text-muted-foreground">
 					<LuRefreshCw className="size-4 animate-spin motion-reduce:animate-none" />
 					<Trans>Loading issues…</Trans>
@@ -387,19 +390,11 @@ export function JiraIssueList({ baseUrl }: { baseUrl: string }) {
 							</Trans>
 						)}
 					</p>
-					{issuesQuery.hasNextPage && (
-						<Button
-							variant="outline"
-							size="sm"
-							disabled={issuesQuery.isFetching}
-							onClick={() => void issuesQuery.fetchNextPage()}
-						>
-							{issuesQuery.isFetchingNextPage ? (
-								<Trans>Loading…</Trans>
-							) : (
-								<Trans>Load more</Trans>
-							)}
-						</Button>
+					{issuesQuery.isFetching && (
+						<output className="flex items-center gap-2 text-xs text-muted-foreground">
+							<LuRefreshCw className="size-3.5 animate-spin motion-reduce:animate-none" />
+							<Trans>Loading issues…</Trans>
+						</output>
 					)}
 				</div>
 			)}
