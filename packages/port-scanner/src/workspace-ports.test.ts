@@ -3,6 +3,7 @@ import { type ChildProcess, spawn } from "node:child_process";
 import { mkdir, mkdtemp, rm, symlink } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
+import type { DockerPort } from "./docker-ports.ts";
 import { matchWorkspaceRoot, WorkspacePortScanner } from "./workspace-ports.ts";
 
 const children: ChildProcess[] = [];
@@ -49,6 +50,133 @@ test("matches the deepest worktree and rejects sibling prefixes", () => {
 		"inner",
 	);
 	expect(matchWorkspaceRoot("/repos/app-other", roots)).toBeUndefined();
+});
+
+async function dockerFixture() {
+	const path = await mkdtemp(join(tmpdir(), "docker-worktree-ports-"));
+	directories.push(path);
+	const roots = ["incomm", "coinspot"].map((workspaceId) => ({
+		workspaceId,
+		path: join(path, workspaceId),
+	}));
+	for (const root of roots) await mkdir(root.path);
+	let containers: DockerPort[] = roots.map((root, index) => ({
+		host: "unix:///var/run/docker.sock",
+		containerId: (index === 0 ? "a" : "b").repeat(64),
+		containerName: `${root.workspaceId}-db`,
+		workingDirectory: root.path,
+		port: 5437 + index,
+		address: "0.0.0.0",
+	}));
+	const stopped: string[] = [];
+	const killed: number[] = [];
+	let unavailable = false;
+	const scanner = new WorkspacePortScanner({
+		readProcesses: async () => ({
+			ports: [5437, 5438, 6000].map((port) => ({
+				port,
+				address: "0.0.0.0",
+				pid: 1000,
+				processName: "com.docker.backend",
+			})),
+			directories: new Map([[1000, path]]),
+		}),
+		docker: {
+			readPorts: async () => {
+				if (unavailable) throw new Error("Docker unavailable");
+				return containers;
+			},
+			stopContainer: async ({ containerId }) => {
+				stopped.push(containerId);
+				containers = containers.filter(
+					(container) => container.containerId !== containerId,
+				);
+			},
+		},
+	});
+	const close = (
+		workspaceId: string,
+		port: number,
+		root = join(path, workspaceId),
+	) =>
+		scanner.killPort({
+			workspaceId,
+			path: root,
+			port,
+			killFn: async ({ pid }) => {
+				killed.push(pid);
+				return { success: true };
+			},
+		});
+	return {
+		scanner,
+		roots,
+		path,
+		close,
+		stopped,
+		killed,
+		setUnavailable: () => {
+			unavailable = true;
+		},
+	};
+}
+
+test("assigns each Docker container to its own worktree, never the shared backend's directory", async () => {
+	const { scanner, roots, path } = await dockerFixture();
+	await symlink(join(path, "incomm"), join(path, "alias"));
+	const ports = await scanner.getPorts(
+		[
+			{ workspaceId: "outer", path },
+			...roots.map((root) =>
+				root.workspaceId === "incomm"
+					? { ...root, path: join(path, "alias") }
+					: root,
+			),
+		],
+		[],
+	);
+	expect(ports.map(({ port, workspaceId }) => ({ port, workspaceId }))).toEqual(
+		[
+			{ port: 5437, workspaceId: "incomm" },
+			{ port: 5438, workspaceId: "coinspot" },
+		],
+	);
+	expect(ports.map(({ processName }) => processName)).toEqual([
+		"docker:incomm-db",
+		"docker:coinspot-db",
+	]);
+});
+
+test("closing a Docker port only stops the owning container and never signals the backend", async () => {
+	const fixture = await dockerFixture();
+	const { scanner, roots, close, stopped, killed, path } = fixture;
+	await scanner.getPorts(roots, []);
+	expect((await close("coinspot", 5437)).success).toBe(false);
+	expect((await close("incomm", 5437, join(path, "coinspot"))).success).toBe(
+		false,
+	);
+	expect(stopped).toEqual([]);
+	expect((await close("incomm", 5437)).success).toBe(true);
+	expect((await close("incomm", 5437)).success).toBe(true);
+	expect(stopped).toEqual(["a".repeat(64)]);
+	expect(killed).toEqual([]);
+	expect((await scanner.getPorts(roots, [])).map(({ port }) => port)).toEqual([
+		5438,
+	]);
+	fixture.setUnavailable();
+	expect((await close("coinspot", 5438)).success).toBe(false);
+	expect(stopped).toHaveLength(1);
+});
+
+test("Docker inspection failure never falls back to the daemon's worktree", async () => {
+	const fixture = await dockerFixture();
+	fixture.setUnavailable();
+	expect(
+		await fixture.scanner.getPorts(
+			[{ workspaceId: "outer", path: fixture.path }, ...fixture.roots],
+			[],
+		),
+	).toEqual([]);
 });
 
 describe.skipIf(process.platform !== "darwin" && process.platform !== "linux")(

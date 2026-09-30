@@ -6,6 +6,7 @@ import {
 	setTimeout,
 } from "node:timers";
 import { DetachedProcessResolver } from "./detached.ts";
+import { isDockerPortProcess } from "./docker-ports.ts";
 import {
 	buildProcessTrees,
 	getListeningPortsForPids,
@@ -518,7 +519,7 @@ export class PortManager extends EventEmitter {
 		const now = Date.now();
 
 		const validPortInfos = portInfos.filter(
-			(info) => !IGNORED_PORTS.has(info.port),
+			(info) => !IGNORED_PORTS.has(info.port) && !isDockerPortProcess(info),
 		);
 		const dedupedPortInfos = dedupePortInfosByPort(validPortInfos);
 
@@ -646,6 +647,7 @@ export class PortManager extends EventEmitter {
 				error: "Port does not belong to the requested workspace",
 			});
 		}
+		if (isDockerPortProcess(detectedPort)) return { success: false };
 
 		const shellPid = this.sessions.get(terminalId)?.pid;
 
