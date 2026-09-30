@@ -187,6 +187,20 @@ afterEach(() => {
 	manager.stopPeriodicScan();
 });
 
+it("does not assign a shared Docker backend to the terminal that launched it", async () => {
+	manager.upsertSession("incomm-terminal", "incomm", 1000);
+	processTable = [{ pid: 5001, ppid: 1 }];
+	terminalIdEnv.set(5001, "incomm-terminal");
+	listeningPorts = [5437, 5444, 5446].map((port) => ({
+		pid: 5001,
+		port,
+		address: "0.0.0.0",
+		processName: "com.docker.backend",
+	}));
+	await manager.forceScan();
+	expect(manager.getPortsByWorkspace("incomm")).toEqual([]);
+});
+
 describe("PortManager — #3372 lifecycle (interval runs only with sessions)", () => {
 	it("forceScan is a no-op when no sessions are registered", async () => {
 		await manager.forceScan();

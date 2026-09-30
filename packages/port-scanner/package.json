@@ -16,7 +16,8 @@
 		"build:types": "tsc -p tsconfig.types.json"
 	},
 	"dependencies": {
-		"pidtree": "0.6.0"
+		"pidtree": "0.6.0",
+		"zod": "4.4.3"
 	},
 	"devDependencies": {
 		"@superset/typescript": "workspace:*",
