@@ -52,9 +52,11 @@ import { useWorkspaceInitStore } from "renderer/stores/workspace-init";
 import { MOCK_ORG_ID, NOTIFICATION_EVENTS } from "shared/constants";
 import { AgentHooks } from "./components/AgentHooks";
 import { DockBadgeController } from "./components/DockBadgeController";
+import { FileAutoSave } from "./components/FileAutoSave";
 import { FileMenuListener } from "./components/FileMenuListener";
 import { GitInitConfirmDialog } from "./components/GitInitConfirmDialog";
 import { GlobalBrowserLifecycle } from "./components/GlobalBrowserLifecycle";
+import { InviteMemberDialog } from "./components/InviteMemberDialog";
 import { TeardownLogsDialog } from "./components/TeardownLogsDialog";
 import { V2NotificationController } from "./components/V2NotificationController";
 import { WindowTitle } from "./components/WindowTitle";
@@ -302,6 +304,7 @@ function AuthenticatedLayout() {
 			<CollectionsProvider>
 				<WindowTitle />
 				<GlobalBrowserLifecycle />
+				<FileAutoSave />
 				<LocalHostServiceProvider>
 					{/* Above the workspace fan-out: it needs sandbox addresses to
 					    include them as hosts. */}
@@ -338,6 +341,7 @@ function AuthenticatedLayout() {
 								<GitInitConfirmDialog />
 								<TeardownLogsDialog />
 								<Paywall />
+								<InviteMemberDialog />
 							</WorkerPoolContextProvider>
 						</HostWorkspacesProvider>
 					</SandboxAccessProvider>

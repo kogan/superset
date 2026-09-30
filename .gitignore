@@ -116,3 +116,4 @@ packages/i18n/locales/*/messages.ts
 .personal-tools/
 .personal-data/
 scripts/personal/__pycache__/
+evidence/

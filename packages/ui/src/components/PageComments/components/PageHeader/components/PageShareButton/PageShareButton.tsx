@@ -1,7 +1,7 @@
 "use client";
 
 import { Trans, useLingui } from "@lingui/react/macro";
-import { Globe, Share2 } from "lucide-react";
+import { Share2 } from "lucide-react";
 import { Button } from "../../../../../ui/button";
 import type {
 	PageHeaderActions,
@@ -42,11 +42,6 @@ export function PageShareButton({
 	const label = isPublic
 		? t({ message: "Share page (public)" })
 		: t({ message: "Share page" });
-	const icon = isPublic ? (
-		<Globe className="size-3.5" />
-	) : (
-		<Share2 className="size-3.5" />
-	);
 
 	return (
 		<PageSharePopover
@@ -58,28 +53,20 @@ export function PageShareButton({
 			onSetVisibility={setVisibility}
 			onSetSharedVersion={onSetSharedVersion}
 		>
-			{compact ? (
-				<Button
-					variant="ghost"
-					size="icon"
-					className="size-6 p-0 text-muted-foreground/60 hover:text-muted-foreground"
-					aria-label={label}
-					title={label}
-				>
-					{icon}
-				</Button>
-			) : (
-				<Button
-					size="xs"
-					variant="ghost"
-					className="gap-1.5"
-					aria-label={label}
-					title={label}
-				>
-					{icon}
-					<Trans>Share</Trans>
-				</Button>
-			)}
+			<Button
+				variant="ghost"
+				size="xs"
+				className={
+					compact
+						? "h-6 gap-1 px-1.5 text-xs text-muted-foreground hover:text-foreground"
+						: "gap-1.5"
+				}
+				aria-label={label}
+				title={label}
+			>
+				<Share2 className="size-3.5" />
+				<Trans>Share</Trans>
+			</Button>
 		</PageSharePopover>
 	);
 }

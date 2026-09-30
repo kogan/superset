@@ -1,6 +1,7 @@
 import { CommentModeButton, PageShareButton } from "@superset/ui/page-comments";
 import { usePageHeaderData } from "renderer/routes/_authenticated/_dashboard/hooks/usePageHeaderData";
 import type { PagePaneData } from "../../../../types";
+import type { CreateNewAgentSession } from "../../../useAgentSessionLauncher";
 import { usePagePaneUi } from "../../hooks/usePagePaneUi";
 import { PageWatcherMenu } from "./components/PageWatcherMenu";
 
@@ -8,12 +9,14 @@ interface PagePaneHeaderExtrasProps {
 	data: PagePaneData;
 	paneId: string;
 	workspaceId: string;
+	onCreateNewAgentSession: CreateNewAgentSession;
 }
 
 export function PagePaneHeaderExtras({
 	data,
 	paneId,
 	workspaceId,
+	onCreateNewAgentSession,
 }: PagePaneHeaderExtrasProps) {
 	const {
 		page,
@@ -31,9 +34,12 @@ export function PagePaneHeaderExtras({
 
 	return (
 		<>
-			{owned ? (
-				<PageWatcherMenu workspaceId={workspaceId} pageId={page?.id} />
-			) : null}
+			<PageWatcherMenu
+				workspaceId={workspaceId}
+				pageId={page?.id}
+				canManage={owned}
+				onCreateNewAgentSession={onCreateNewAgentSession}
+			/>
 			<CommentModeButton
 				compact
 				enabled={commentsEnabled}

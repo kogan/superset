@@ -11,9 +11,9 @@ import { GATED_FEATURES, usePaywall } from "renderer/components/Paywall";
 import { apiTrpcClient } from "renderer/lib/api-trpc-client";
 import { authClient } from "renderer/lib/auth-client";
 import { cloudTrpc } from "renderer/lib/cloud-trpc";
+import { useCopyShareLink } from "renderer/routes/_authenticated/_dashboard/hooks/useCopyShareLink";
 import { useCollections } from "renderer/routes/_authenticated/providers/CollectionsProvider";
 import { HostOfflineRunDialog } from "../components/HostOfflineRunDialog";
-import { useCopyAutomationLink } from "../hooks/useCopyAutomationLink";
 import { dispatchErrorCode, runErrorHelp } from "../utils/runErrorHelp";
 import { AutomationBody } from "./components/AutomationBody";
 import { AutomationBreadcrumbBar } from "./components/AutomationBreadcrumbBar";
@@ -60,7 +60,7 @@ function AutomationDetailPage() {
 	const currentUserId = session?.user?.id;
 	const [historyOpen, setHistoryOpen] = useState(history ?? false);
 	const [hostOfflineOpen, setHostOfflineOpen] = useState(false);
-	const copyAutomationLink = useCopyAutomationLink();
+	const copyShareLink = useCopyShareLink();
 	const { switchOrganization } = useCollections();
 
 	// The prompt body rides its own procedure — `get` omits it.
@@ -205,7 +205,7 @@ function AutomationDetailPage() {
 			<div className="flex flex-1 flex-col overflow-hidden">
 				<AutomationDetailHeader
 					name={automation.name}
-					onCopyLink={() => copyAutomationLink(automation.id)}
+					onCopyLink={() => copyShareLink(`automations/${automation.id}`)}
 					onDelete={() => {
 						alert({
 							title: t({

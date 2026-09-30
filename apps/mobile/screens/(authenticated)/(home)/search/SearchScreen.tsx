@@ -1,4 +1,5 @@
 import { Plural, useLingui } from "@lingui/react/macro";
+import { getWorkspaceActivityTime } from "@superset/shared/workspace-activity";
 import {
 	type NativeStackNavigationProp,
 	Stack,
@@ -91,8 +92,8 @@ export function SearchScreen() {
 
 	const activityTs = useCallback(
 		(workspace: HostWorkspaceItem) => {
-			const workspaceTs = new Date(workspace[sort]).getTime();
-			if (sort !== "updatedAt") return workspaceTs;
+			if (sort !== "updatedAt") return new Date(workspace[sort]).getTime();
+			const workspaceTs = getWorkspaceActivityTime(workspace);
 			const terminalTs = (terminalsByWorkspace.get(workspace.id) ?? []).reduce(
 				(newest, row) => Math.max(newest, row.ts),
 				0,

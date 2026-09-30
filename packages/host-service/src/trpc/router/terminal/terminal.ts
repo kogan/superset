@@ -1,3 +1,4 @@
+import { terminalColorsSchema } from "@superset/shared/terminal-colors";
 import { TERMINAL_HANDOFF_MAX_CHARS } from "@superset/shared/terminal-session-handoff";
 import { normalizeTerminalTitle } from "@superset/shared/terminal-title-scanner";
 import { TRPCError } from "@trpc/server";
@@ -38,6 +39,7 @@ export const createSessionInputSchema = z.object({
 		.transform((value) => (value ? value : undefined)),
 	cwd: z.string().optional(),
 	themeType: z.string().optional(),
+	colors: terminalColorsSchema.optional(),
 	cols: z.number().int().positive().optional(),
 	rows: z.number().int().positive().optional(),
 });
@@ -54,6 +56,7 @@ async function createTerminalSessionFromInput({
 		terminalId,
 		workspaceId: input.workspaceId,
 		themeType: parseThemeType(input.themeType),
+		colors: input.colors,
 		db: ctx.db,
 		eventBus: ctx.eventBus,
 		initialCommand: input.initialCommand,

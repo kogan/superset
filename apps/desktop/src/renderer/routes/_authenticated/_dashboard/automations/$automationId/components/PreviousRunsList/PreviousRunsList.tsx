@@ -57,11 +57,12 @@ export function PreviousRunsList({ runs }: PreviousRunsListProps) {
 	}
 
 	const handleOpenRun = (run: SelectAutomationRun) => {
-		if (!run.v2WorkspaceId) return;
-		localStorage.setItem("lastViewedWorkspaceId", run.v2WorkspaceId);
+		const workspaceId = run.v2WorkspaceId ?? run.cloudWorkspaceId;
+		if (!workspaceId) return;
+		localStorage.setItem("lastViewedWorkspaceId", workspaceId);
 		navigate({
 			to: "/v2-workspace/$workspaceId",
-			params: { workspaceId: run.v2WorkspaceId },
+			params: { workspaceId },
 			search: {
 				terminalId: run.terminalSessionId ?? undefined,
 			},
@@ -71,7 +72,7 @@ export function PreviousRunsList({ runs }: PreviousRunsListProps) {
 	return (
 		<ul className="flex flex-col gap-0.5 text-sm">
 			{runs.map((run) => {
-				const clickable = !!run.v2WorkspaceId;
+				const clickable = !!(run.v2WorkspaceId ?? run.cloudWorkspaceId);
 				const row = (
 					<button
 						type="button"

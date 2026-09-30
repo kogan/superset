@@ -148,4 +148,57 @@ describe("host.db migrations", () => {
 
 		expect(new Set(whens).size).toBe(whens.length);
 	});
+
+	for (const history of ["fork", "upstream"] as const) {
+		test(`upgrades the ${history} migration history and remains idempotent`, () => {
+			const sqlite = open();
+			try {
+				const folder = folderWithout({
+					omit:
+						history === "upstream"
+							? ["0036_external_workspace_paths", "0037_subagent_names"]
+							: [],
+					through:
+						history === "upstream"
+							? "0039_project_soft_delete"
+							: "0037_subagent_names",
+				});
+				migrate(drizzle(sqlite), { migrationsFolder: folder });
+				if (history === "fork") {
+					sqlite.exec(
+						"INSERT INTO external_workspace_paths VALUES ('/existing/worktree', 123)",
+					);
+				}
+
+				runMigrations(drizzle(sqlite), MIGRATIONS_FOLDER);
+				runMigrations(drizzle(sqlite), MIGRATIONS_FOLDER);
+
+				expect(() =>
+					sqlite
+						.prepare(
+							"SELECT transcript_path, subagent_names FROM terminal_agent_bindings",
+						)
+						.all(),
+				).not.toThrow();
+				expect(() =>
+					sqlite
+						.prepare("SELECT deleted_at, deleted_by_user_id FROM projects")
+						.all(),
+				).not.toThrow();
+				expect(tables(sqlite)).toContain("external_workspace_paths");
+				expect(
+					sqlite.prepare("SELECT created_at FROM __drizzle_migrations").all(),
+				).toHaveLength(readJournal(MIGRATIONS_FOLDER).entries.length);
+				if (history === "fork") {
+					expect(
+						sqlite.prepare("SELECT * FROM external_workspace_paths").all(),
+					).toEqual([
+						{ worktree_path: "/existing/worktree", connected_at: 123 },
+					]);
+				}
+			} finally {
+				sqlite.close();
+			}
+		});
+	}
 });

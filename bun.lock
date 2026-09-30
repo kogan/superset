@@ -206,6 +206,7 @@
         "@tiptap/extension-code-block-lowlight": "3.30.5",
         "@tiptap/extension-document": "3.30.5",
         "@tiptap/extension-emoji": "3.30.5",
+        "@tiptap/extension-file-handler": "3.30.5",
         "@tiptap/extension-hard-break": "3.30.5",
         "@tiptap/extension-heading": "3.30.5",
         "@tiptap/extension-history": "3.30.5",
@@ -225,7 +226,9 @@
         "@tiptap/extension-task-item": "3.30.5",
         "@tiptap/extension-task-list": "3.30.5",
         "@tiptap/extension-text": "3.30.5",
+        "@tiptap/extension-text-style": "3.30.5",
         "@tiptap/extension-underline": "3.30.5",
+        "@tiptap/extensions": "3.30.5",
         "@tiptap/pm": "3.30.5",
         "@tiptap/react": "3.30.5",
         "@tiptap/starter-kit": "3.30.5",
@@ -335,6 +338,7 @@
         "@happy-dom/global-registrator": "20.0.2",
         "@lingui/babel-plugin-lingui-macro": "6.6.0",
         "@sentry/vite-plugin": "5.4.0",
+        "@storybook/react-vite": "10.4.2",
         "@superset/typescript": "workspace:*",
         "@tailwindcss/vite": "4.2.2",
         "@tanstack/router-cli": "1.167.17",
@@ -363,6 +367,7 @@
         "material-icon-theme": "5.32.0",
         "rimraf": "6.1.3",
         "rollup-plugin-inject-process-env": "1.3.1",
+        "storybook": "10.4.2",
         "tailwindcss": "4.2.2",
         "tsx": "4.21.0",
         "typescript": "6.0.3",
@@ -1167,7 +1172,7 @@
     },
     "packages/pty-daemon": {
       "name": "@superset/pty-daemon",
-      "version": "0.3.4",
+      "version": "0.3.5",
       "bin": {
         "pty-daemon": "./src/main.ts",
       },
@@ -1405,7 +1410,7 @@
         "@parcel/watcher": "2.5.6",
         "chokidar": "4.0.3",
         "fast-glob": "3.3.3",
-        "picomatch": "4.0.3",
+        "picomatch": "4.0.4",
       },
       "devDependencies": {
         "@superset/typescript": "workspace:*",
@@ -1436,6 +1441,7 @@
     "node-pty@1.2.0-beta.14": "patches/node-pty@1.2.0-beta.14.patch",
     "@xterm/xterm@6.1.0-beta.302": "patches/@xterm%2Fxterm@6.1.0-beta.302.patch",
     "@pierre/trees@1.0.0-beta.5": "patches/@pierre%2Ftrees@1.0.0-beta.5.patch",
+    "expo-observe@57.0.19": "patches/expo-observe@57.0.19.patch",
     "metro@0.84.4": "patches/metro@0.84.4.patch",
     "react-native-screens@4.26.0": "patches/react-native-screens@4.26.0.patch",
   },
@@ -3361,6 +3367,8 @@
 
     "@tiptap/extension-emoji": ["@tiptap/extension-emoji@3.30.5", "", { "dependencies": { "emoji-regex": "^10.6.0", "emojibase-data": "^17", "is-emoji-supported": "^0.0.5" }, "peerDependencies": { "@tiptap/core": "3.30.5", "@tiptap/pm": "3.30.5", "@tiptap/suggestion": "3.30.5" } }, "sha512-zvxlczHm/OQTSo7+xNZSRdxCg5C82pJ1O0MGvE2j0jhF2L3BkzVH3TqRm8mHO7W6vLVha8Ym/Ep4Mll0bR4etg=="],
 
+    "@tiptap/extension-file-handler": ["@tiptap/extension-file-handler@3.30.5", "", { "peerDependencies": { "@tiptap/core": "3.30.5", "@tiptap/extension-text-style": "3.30.5", "@tiptap/pm": "3.30.5" } }, "sha512-sQ6cHoDnkFbhuEzylJbVNC2qPksdJGabBZagLNFEJcFWobPmZ4SCE7O/y/Fz61zqJK3e9/NGJTNcHn9DxGBZEA=="],
+
     "@tiptap/extension-floating-menu": ["@tiptap/extension-floating-menu@3.30.5", "", { "peerDependencies": { "@floating-ui/dom": "^1.0.0", "@tiptap/core": "3.30.5", "@tiptap/pm": "3.30.5" } }, "sha512-gTjGPWUpGn8IoW533TciZJZC/81LmBgU7zee+aRMRF3ix3K2z1pJjl6knDvrRQA6Kom+yWFaiueqGNXkrk38XQ=="],
 
     "@tiptap/extension-gapcursor": ["@tiptap/extension-gapcursor@3.30.5", "", { "peerDependencies": { "@tiptap/extensions": "3.30.5" } }, "sha512-h3m2ZA1XXLAfdHwdtG0MZnf0KWbNyP8xTI3RUlTDR5apmKmYVBaeocOJwTcFFZ92gPKqxYKyhteZqYtHOCZGJA=="],
@@ -3406,6 +3414,8 @@
     "@tiptap/extension-task-list": ["@tiptap/extension-task-list@3.30.5", "", { "peerDependencies": { "@tiptap/extension-list": "3.30.5" } }, "sha512-BJ/C6eZnXBt11ncMBgguvDrv4KArAEotY+oU2oxutX9E13C4bCxQmZt/ddYtLiXPrILUdOCTZWc9ljqld2ZkXg=="],
 
     "@tiptap/extension-text": ["@tiptap/extension-text@3.30.5", "", { "peerDependencies": { "@tiptap/core": "3.30.5" } }, "sha512-pOgj4mIGFlw4NUdA6PCTFP/MHrYWnOYiZRYeu0I3/Yo3iN4Am/CgYBLl8PWsNh+YPO2hA2DWs7ZMke9D2j5R+g=="],
+
+    "@tiptap/extension-text-style": ["@tiptap/extension-text-style@3.30.5", "", { "peerDependencies": { "@tiptap/core": "3.30.5" } }, "sha512-libXk+nSBOQmUiKneMegnipSVz7n/YfCuSVUxXn4LjAdD9zdpWgH2uBXbxo2q211dA7KxJyUhkPGoCpG0RmPQA=="],
 
     "@tiptap/extension-underline": ["@tiptap/extension-underline@3.30.5", "", { "peerDependencies": { "@tiptap/core": "3.30.5" } }, "sha512-u12G/WW2uFRY95BzrSAU9RW002K+7lFpSCL6fb7Puh8yLhek3lddOtAx0P+NI/PyMKtcoVMtBxoi+0mwVM7NPQ=="],
 
@@ -5671,7 +5681,7 @@
 
     "picocolors": ["picocolors@1.1.1", "", {}, "sha512-xceH2snhtb5M9liqDsmEw56le376mTZkEX/jEb/RxNFyegNul7eNslCXP9FDj/Lcu0X8KEyMceP2ntpaHrDEVA=="],
 
-    "picomatch": ["picomatch@4.0.3", "", {}, "sha512-5gTmgEY/sqK6gFXLIsQNH19lWb4ebPDLA4SdLP7dsWkIXHWlG66oPuVvXSGFPppYZz8ZDZq0dYYrbHfBCVUb1Q=="],
+    "picomatch": ["picomatch@4.0.4", "", {}, "sha512-QP88BAKvMam/3NxH6vj2o21R6MjxZUAd6nlwAS/pnGvN9IVLocLHxGYIzFhg6fUQ+5th6P4dv4eW9jX3DSIj7A=="],
 
     "pidtree": ["pidtree@0.6.0", "", { "bin": { "pidtree": "bin/pidtree.js" } }, "sha512-eG2dWTVw5bzqGRztnHExczNxt5VGsE6OwTeCG3fdUf9KBsZzO3R5OIIIzWR+iZA0NtZ+RDVdaoE2dK1cn6jH4g=="],
 

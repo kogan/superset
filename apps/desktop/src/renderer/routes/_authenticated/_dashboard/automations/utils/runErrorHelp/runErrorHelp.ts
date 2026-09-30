@@ -15,6 +15,18 @@ const HELP: Record<AutomationRunErrorCode, MessageDescriptor> = {
 		message:
 			"The workspace this automation is pinned to no longer exists on its host. Pin a different one in the automation's settings.",
 	}),
+	cloud_not_ready: msg({
+		message:
+			"The cloud workspace should have started but didn't answer in time. The next run tries again.",
+	}),
+	cloud_access_denied: msg({
+		message:
+			"The automation's owner can't use cloud workspaces in this organization anymore. Ask them to check their access, or run the automation on a device.",
+	}),
+	cloud_environment_unusable: msg({
+		message:
+			"The environment this automation starts cloud workspaces from was archived or has no repositories. Pick another environment in the automation's settings.",
+	}),
 	no_instructions: msg({
 		message:
 			"This automation has no instructions yet. Write a prompt in its settings before running it.",

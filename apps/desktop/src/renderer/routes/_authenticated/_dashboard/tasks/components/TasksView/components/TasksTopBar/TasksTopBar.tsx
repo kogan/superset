@@ -2,6 +2,7 @@ import { Trans, useLingui } from "@lingui/react/macro";
 import { Button } from "@superset/ui/button";
 import { Tabs, TabsList, TabsTrigger } from "@superset/ui/tabs";
 import { cn } from "@superset/ui/utils";
+import { useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 import { GoIssueOpened } from "react-icons/go";
 import {
@@ -12,18 +13,18 @@ import {
 } from "react-icons/hi2";
 import { SiLinear } from "react-icons/si";
 import { useIsV2CloudEnabled } from "renderer/hooks/useIsV2CloudEnabled";
+import { CreateTaskDialog } from "renderer/routes/_authenticated/_dashboard/components/CreateTaskDialog";
 import { OpenClosedFilter } from "renderer/routes/_authenticated/_dashboard/components/OpenClosedFilter";
 import { ProjectFilter } from "renderer/routes/_authenticated/_dashboard/components/ProjectFilter";
 import { WindowControlsInset } from "renderer/routes/_authenticated/_dashboard/components/WindowControlsInset";
 import { WorkItemsSearch } from "renderer/routes/_authenticated/_dashboard/components/WorkItemsSearch";
 import type { ViewMode } from "../../../../stores/tasks-filter-state";
+import { RunInWorkspacePopoverV2 } from "../../../RunInWorkspacePopoverV2";
 import type { TaskWithStatus } from "../../hooks/useTasksData";
 import type { SelectedIssue } from "../GitHubIssuesContent";
 import { AssigneeFilter } from "./components/AssigneeFilter";
-import { CreateTaskDialog } from "./components/CreateTaskDialog";
 import { LinearProjectFilter } from "./components/LinearProjectFilter";
 import { RunInWorkspacePopover } from "./components/RunInWorkspacePopover";
-import { RunInWorkspacePopoverV2 } from "./components/RunInWorkspacePopoverV2";
 import { RunIssuesInWorkspacePopover } from "./components/RunIssuesInWorkspacePopover";
 import { StatusFilter } from "./components/StatusFilter";
 
@@ -88,6 +89,7 @@ export function TasksTopBar({
 	onIncludeClosedIssuesChange,
 }: TasksTopBarProps) {
 	const { t } = useLingui();
+	const navigate = useNavigate();
 	const taskSourceLabels: Record<TaskSource, string> = {
 		tasks: t({
 			message: "Linear",
@@ -317,9 +319,17 @@ export function TasksTopBar({
 			<CreateTaskDialog
 				open={isCreateTaskOpen}
 				onOpenChange={setIsCreateTaskOpen}
-				currentTab={currentTab}
-				searchQuery={searchQuery}
-				assigneeFilter={assigneeFilter}
+				onCreated={(task) => {
+					const search: Record<string, string> = {};
+					if (currentTab !== "all") search.tab = currentTab;
+					if (assigneeFilter) search.assignee = assigneeFilter;
+					if (searchQuery) search.search = searchQuery;
+					navigate({
+						to: "/tasks/$taskId",
+						params: { taskId: task.id },
+						search,
+					});
+				}}
 			/>
 		</>
 	);

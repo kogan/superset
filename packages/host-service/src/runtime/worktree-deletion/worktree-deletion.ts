@@ -20,7 +20,7 @@ import {
 	dedupeFirstWins,
 	scanSkillsDir,
 } from "../../trpc/router/agent-tooling/scan-fs";
-import { resolveHostAgentConfig } from "../../trpc/router/agents/agents";
+import { resolveHostAgentConfig } from "../../terminal-agents/agent-config";
 import { resolveDefaultAccountEnv } from "../../trpc/router/usage/default-account";
 import { getProjectConfigPath } from "../setup/config";
 

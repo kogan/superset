@@ -92,7 +92,7 @@ describe("bug-hunt: filesystem sandbox (mutations confined, reads host-wide)", (
 		}
 	});
 
-	test("readFile still rejects in-workspace symlinks that escape the root", async () => {
+	test("readFile allows in-workspace symlinks that resolve outside the root", async () => {
 		const outside = join(repo.repoPath, "..", `symlink-target-${randomUUID()}`);
 		writeFileSync(outside, "secret");
 		const link = join(repo.repoPath, "innocent-looking.txt");
@@ -104,7 +104,7 @@ describe("bug-hunt: filesystem sandbox (mutations confined, reads host-wide)", (
 					absolutePath: link,
 					encoding: "utf8",
 				}),
-			).rejects.toThrow();
+			).resolves.toMatchObject({ kind: "text", content: "secret" });
 		} finally {
 			rmSync(link, { force: true });
 			rmSync(outside, { force: true });

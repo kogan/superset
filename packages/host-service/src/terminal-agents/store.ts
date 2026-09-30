@@ -4,11 +4,11 @@ import { mapEventType } from "../events/map-event-type";
 import { readSubagentDescription } from "./subagent-description";
 import {
 	getSubagentHarness,
-	isTrustedTranscriptPath,
 	readSubagentTranscript,
 	type SubagentTranscriptHint,
 } from "./subagent-harnesses";
 import type { SubagentTranscript } from "./subagent-transcript";
+import { isTrustedTranscriptPath } from "./transcript-path";
 import type {
 	TerminalAgentBinding,
 	TerminalAgentEndReason,

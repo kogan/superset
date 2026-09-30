@@ -5,6 +5,7 @@ import type { SelectAutomationRun, SelectUser } from "@superset/db/schema";
 import { i18n } from "@superset/i18n";
 import { formatCompactRelativeTime } from "@superset/i18n/format";
 import { useFormat } from "@superset/i18n/react";
+import { CLOUD_HOST_ID } from "@superset/shared/host-routing";
 import {
 	describeSchedule,
 	formatDateTimeInTimezone,
@@ -25,11 +26,11 @@ import { TableCell, TableRow } from "@superset/ui/table";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@superset/ui/tooltip";
 import { cn } from "@superset/ui/utils";
 import { useNavigate } from "@tanstack/react-router";
-import { LuEllipsis, LuPlay, LuRotateCw } from "react-icons/lu";
-import type { AutomationLastRun } from "renderer/routes/_authenticated/_dashboard/hooks/useFailedAutomations";
+import { LuCloud, LuEllipsis, LuPlay, LuRotateCw } from "react-icons/lu";
+import { useCopyShareLink } from "renderer/routes/_authenticated/_dashboard/hooks/useCopyShareLink";
 import type { ProjectOption } from "renderer/routes/_authenticated/components/DashboardNewWorkspaceModal/components/DashboardNewWorkspaceForm/PromptGroup/types";
 import { ProjectThumbnail } from "renderer/routes/_authenticated/components/ProjectThumbnail";
-import { useCopyAutomationLink } from "../../hooks/useCopyAutomationLink";
+import type { AutomationLastRun } from "../../hooks/useFailedAutomations";
 import { AutomationActionsMenuItems } from "./components/AutomationActionsMenuItems";
 
 type AutomationListItem = RouterOutputs["automation"]["list"][number];
@@ -135,7 +136,7 @@ export function AutomationRow({
 
 	const { t } = useLingui();
 	const navigate = useNavigate();
-	const copyAutomationLink = useCopyAutomationLink();
+	const copyShareLink = useCopyShareLink();
 	// No rrule but some trigger means the automation is driven by events
 	// rather than a clock; no triggers at all means it never fires.
 	const scheduleLabel = automation.rrule
@@ -160,11 +161,11 @@ export function AutomationRow({
 			search: { history: true },
 		});
 	const openLastRunWorkspace = () => {
-		if (!lastRun?.v2WorkspaceId) return;
-		localStorage.setItem("lastViewedWorkspaceId", lastRun.v2WorkspaceId);
+		if (!lastRun?.workspaceId) return;
+		localStorage.setItem("lastViewedWorkspaceId", lastRun.workspaceId);
 		navigate({
 			to: "/v2-workspace/$workspaceId",
-			params: { workspaceId: lastRun.v2WorkspaceId },
+			params: { workspaceId: lastRun.workspaceId },
 			search: {
 				terminalId: lastRun.terminalSessionId ?? undefined,
 			},
@@ -177,7 +178,7 @@ export function AutomationRow({
 			isOwner={isOwner}
 			enabled={automation.enabled}
 			onEdit={openDetail}
-			onCopyLink={() => copyAutomationLink(automation.id)}
+			onCopyLink={() => copyShareLink(`automations/${automation.id}`)}
 			onRunNow={() => onRunNow(automation)}
 			onToggleEnabled={() => onToggleEnabled(automation)}
 			onHistory={openHistory}
@@ -186,7 +187,7 @@ export function AutomationRow({
 	);
 
 	const lastRunMeta = lastRun ? LAST_RUN_META[lastRun.status] : null;
-	const lastRunClickable = !!lastRun?.v2WorkspaceId;
+	const lastRunClickable = !!lastRun?.workspaceId;
 
 	return (
 		<ContextMenu>
@@ -214,7 +215,12 @@ export function AutomationRow({
 							>
 								{automation.name}
 							</span>
-							{project ? (
+							{automation.targetHostId === CLOUD_HOST_ID ? (
+								<span className="ml-1 flex shrink-0 items-center gap-1 text-xs text-muted-foreground">
+									<LuCloud className="size-3.5 shrink-0" />
+									<Trans>Cloud</Trans>
+								</span>
+							) : project ? (
 								<span className="ml-1 flex min-w-0 shrink items-center gap-1.5 text-xs text-muted-foreground">
 									<ProjectThumbnail
 										projectName={project.name}

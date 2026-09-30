@@ -1,5 +1,5 @@
 import { useQueries, useQuery, useQueryClient } from "@tanstack/react-query";
-import { useParams } from "@tanstack/react-router";
+import { useMatchRoute } from "@tanstack/react-router";
 import { createContext, type ReactNode, useContext, useMemo } from "react";
 import { useCloudWorkspaces } from "renderer/hooks/useCloudWorkspaces";
 import { apiTrpcClient } from "renderer/lib/api-trpc-client";
@@ -75,7 +75,11 @@ async function requestAccess(
  */
 export function SandboxAccessProvider({ children }: { children: ReactNode }) {
 	const { workspaces: cloudWorkspaces, organizationId } = useCloudWorkspaces();
-	const { workspaceId: openWorkspaceId } = useParams({ strict: false });
+	const openMatch = useMatchRoute()({
+		to: "/v2-workspace/$workspaceId",
+		fuzzy: true,
+	});
+	const openWorkspaceId = openMatch ? openMatch.workspaceId : undefined;
 
 	// Only a `ready` row has a sandbox to address: `access` refuses anything
 	// else, and a provisioning workspace asking for a ticket every few seconds

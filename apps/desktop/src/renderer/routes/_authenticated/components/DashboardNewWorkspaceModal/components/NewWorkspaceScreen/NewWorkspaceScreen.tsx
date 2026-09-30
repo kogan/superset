@@ -6,6 +6,7 @@ import {
 	getAgentModeSupport,
 } from "@superset/shared/agent-models";
 import { startableCloudEnvironments } from "@superset/shared/cloud-environments";
+import { CLOUD_HOST_ID } from "@superset/shared/host-routing";
 import {
 	PromptInput,
 	PromptInputButton,
@@ -69,7 +70,6 @@ import {
 	useNewWorkspacePromptCardsVariant,
 } from "../../hooks/useNewWorkspacePromptCardsVariant";
 import { DevicePicker } from "../DashboardNewWorkspaceForm/components/DevicePicker";
-import { CLOUD_HOST_ID } from "../DashboardNewWorkspaceForm/components/DevicePicker/DevicePicker";
 import { useWorkspaceHostOptions } from "../DashboardNewWorkspaceForm/components/DevicePicker/hooks/useWorkspaceHostOptions";
 import { CheckoutPickerPill } from "../DashboardNewWorkspaceForm/PromptGroup/components/CheckoutPickerPill";
 import { CompareBaseBranchPicker } from "../DashboardNewWorkspaceForm/PromptGroup/components/CompareBaseBranchPicker";

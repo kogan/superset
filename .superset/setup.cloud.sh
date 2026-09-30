@@ -81,6 +81,7 @@ cloud_setup_main() {
   # workspaces that collided would silently share one database.
   export SUPERSET_WORKSPACE_NAME="cloud-${SUPERSET_SANDBOX_WORKSPACE_ID}"
 
+  step_install_dependencies || step_failed "Install dependencies"
   step_setup_neon_branch || step_failed "Set up Neon branch"
   allocate_port_base || step_failed "Allocate port base"
   step_write_env || step_failed "Write .env file"

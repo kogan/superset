@@ -64,6 +64,52 @@ Verify it's healthy:
 superset status
 ```
 
+### Run it under systemd
+
+On a server, let systemd start the host server at boot and restart it on
+failure. Run `superset start` without `--daemon` so systemd tracks the
+process:
+
+```ini
+# /etc/systemd/system/superset-host.service
+[Unit]
+Description=Superset host server
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+User=<user>
+ExecStart=/home/<user>/superset/bin/superset start
+Restart=on-failure
+KillMode=process
+
+[Install]
+WantedBy=multi-user.target
+```
+
+Keep `KillMode=process`. Other kill modes stop the terminal daemon, and with
+it every terminal and agent, whenever the service stops or restarts. The
+terminal daemon keeps running after the service stops, so the next start
+picks up the same terminals.
+
+This setup needs a CLI released after 1.30.2. With 1.30.2 and older,
+`systemctl restart` hangs until systemd kills the CLI, and the old host
+keeps running.
+
+```bash
+sudo systemctl daemon-reload
+sudo systemctl enable --now superset-host
+```
+
+To end every terminal and agent too, stop the unit first, then stop the
+terminal daemon. If you run `superset stop` while the unit is active,
+systemd starts the host again.
+
+```bash
+sudo systemctl stop superset-host
+superset stop --terminals
+```
+
 ## Getting started
 
 ### Create or adopt a project
@@ -150,6 +196,13 @@ superset workspaces create \
 
 ```bash
 superset stop
+```
+
+Your terminals and agents keep running in the terminal daemon, and the next
+`superset start` picks them up. To end them as well:
+
+```bash
+superset stop --terminals
 ```
 
 ## Shared state

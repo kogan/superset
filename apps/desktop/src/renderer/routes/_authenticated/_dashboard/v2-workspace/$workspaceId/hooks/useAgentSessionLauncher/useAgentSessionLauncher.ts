@@ -4,6 +4,8 @@ import type { WorkspaceStore } from "@superset/panes";
 import { toast } from "@superset/ui/sonner";
 import { workspaceTrpc } from "@superset/workspace-client";
 import { useCallback } from "react";
+import { useTerminalAppearance } from "renderer/hooks/useTerminalAppearance";
+import { terminalQueryColors } from "renderer/lib/terminal/terminal-query-colors";
 import type { StoreApi } from "zustand/vanilla";
 import type { PaneViewerData, TerminalPaneData } from "../../types";
 import { focusOrAddTerminalPane } from "../../utils/focusTerminalPane";
@@ -33,6 +35,7 @@ export function useAgentSessionLauncher({
 } {
 	const { t } = useLingui();
 	const runAgent = workspaceTrpc.agents.run.useMutation();
+	const appearance = useTerminalAppearance();
 
 	const createNewAgentSession = useCallback<CreateNewAgentSession>(
 		async (input) => {
@@ -42,6 +45,7 @@ export function useAgentSessionLauncher({
 				// no bind-wait race vs. the launching shell.
 				const result = await runAgent.mutateAsync({
 					workspaceId,
+					colors: terminalQueryColors(appearance.theme),
 					agent: input.configId,
 					prompt: input.prompt,
 					...(input.forkSessionId
@@ -85,7 +89,7 @@ export function useAgentSessionLauncher({
 				return null;
 			}
 		},
-		[runAgent, store, workspaceId, t],
+		[runAgent, store, workspaceId, t, appearance.theme],
 	);
 
 	const focusAgentTerminal = useCallback(
