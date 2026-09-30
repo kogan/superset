@@ -14,23 +14,40 @@ import { publicLocalEnvironment } from "../../packages/shared/src/standalone";
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "../..");
 const desktop = join(root, "apps/desktop");
 const runtime = join(desktop, "dist/local-runtime");
-const signedBuild = process.argv.includes("--signed");
+const selfSignedBuild = process.argv.includes("--self-signed");
+const developerIdBuild = process.argv.includes("--signed");
+if (selfSignedBuild && developerIdBuild)
+	throw new Error("Choose either --signed or --self-signed, not both.");
+const signedBuild = selfSignedBuild || developerIdBuild;
+const fingerprint = process.env.CSC_NAME?.trim().toUpperCase();
 if (signedBuild) {
+	if (selfSignedBuild && (!fingerprint || !/^[A-F0-9]{40}$/.test(fingerprint)))
+		throw new Error(
+			"Self-signed builds require CSC_NAME to contain the certificate's 40-character SHA-1 fingerprint. See DEVELOPMENT.md. No build was started.",
+		);
 	const identities = Bun.spawnSync([
 		"security",
 		"find-identity",
 		"-v",
 		"-p",
 		"codesigning",
+		...(process.env.CSC_KEYCHAIN ? [process.env.CSC_KEYCHAIN] : []),
 	]);
-	if (
-		identities.exitCode !== 0 ||
-		!identities.stdout.toString().includes('"Developer ID Application:')
-	) {
+	const identityLines = identities.stdout.toString().split("\n");
+	const identityAvailable = selfSignedBuild
+		? identityLines.some((line) => line.trim().split(/\s+/)[1] === fingerprint)
+		: identityLines.some((line) => line.includes('"Developer ID Application:'));
+	if (identities.exitCode !== 0 || !identityAvailable) {
 		throw new Error(
-			"Signed builds require a valid Developer ID Application certificate and its private key in your macOS keychain. See DEVELOPMENT.md. No build was started.",
+			selfSignedBuild
+				? "The selected signing certificate and private key must be unlocked and trusted for code signing in your keychain. See DEVELOPMENT.md. No build was started."
+				: "Signed builds require a valid Developer ID Application certificate and its private key in your macOS keychain. See DEVELOPMENT.md. No build was started.",
 		);
 	}
+	if (selfSignedBuild)
+		console.warn(
+			"[build-mac] Self-signed build: reuse this certificate for updates. This does not provide Apple notarization or Gatekeeper approval.",
+		);
 } else {
 	console.warn(
 		"[build-mac] Ad-hoc build: macOS permissions may need approval again after updates. Use --signed for a stable signing identity.",
@@ -86,6 +103,7 @@ const buildEnv: NodeJS.ProcessEnv = {
 	USERCONTENT_TOKEN_SECRET: "build-only-not-a-runtime-secret-000000000000000",
 	SECRETS_ENCRYPTION_KEY: Buffer.alloc(32).toString("base64"),
 	CSC_IDENTITY_AUTO_DISCOVERY: signedBuild ? "true" : "false",
+	CSC_NAME: selfSignedBuild ? fingerprint : process.env.CSC_NAME,
 	SUPERESTSET_BUILD_MAIN_ONLY: process.argv.includes("--main-only") ? "1" : "0",
 };
 // Do not inherit upstream telemetry/deploy credentials from the invoking shell.
@@ -176,6 +194,9 @@ await run(
 		"--config",
 		"electron-builder.ts",
 		...(signedBuild ? ["--config.forceCodeSigning=true"] : []),
+		...(selfSignedBuild
+			? ["--config.mac.timestamp=none", "--config.mac.notarize=false"]
+			: []),
 		"--mac",
 		...(process.argv.includes("--dir") ? ["dir"] : ["dmg", "zip"]),
 		"--arm64",
@@ -184,3 +205,6 @@ await run(
 	],
 	desktop,
 );
+if (!process.argv.includes("--dir")) {
+	await run(["bun", "run", "scripts/personal/verify-mac-release.ts"]);
+}

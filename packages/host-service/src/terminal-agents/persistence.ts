@@ -197,6 +197,30 @@ export function findResumeCandidateBinding(
 }
 
 /**
+ * Remember the transcript file the harness reported for a session. Written
+ * only while the binding still names that session, so a late hook from a
+ * session the terminal has moved on from cannot attach its file to the next.
+ */
+export function recordTerminalAgentTranscriptPath(
+	db: HostDb,
+	input: { terminalId: string; agentSessionId: string; transcriptPath: string },
+): void {
+	db.update(terminalAgentBindings)
+		.set({ transcriptPath: input.transcriptPath })
+		.where(
+			and(
+				eq(terminalAgentBindings.terminalId, input.terminalId),
+				eq(terminalAgentBindings.agentSessionId, input.agentSessionId),
+				or(
+					isNull(terminalAgentBindings.transcriptPath),
+					ne(terminalAgentBindings.transcriptPath, input.transcriptPath),
+				),
+			),
+		)
+		.run();
+}
+
+/**
  * Record where a consumed candidate's session was relaunched, so a pane
  * that was not mounted for the "resumed" lifecycle event can still find
  * it. Written by the resume path once the launch has a terminal id.
@@ -587,6 +611,9 @@ export class SqliteTerminalAgentBindingPersistence
 					lastEventType: binding.lastEventType,
 					endedAt: null,
 					endReason: null,
+					// A reported transcript belongs to the session that reported
+					// it; the next session in this terminal reports its own.
+					transcriptPath: sql`CASE WHEN ${terminalAgentBindings.agentSessionId} IS excluded.agent_session_id THEN ${terminalAgentBindings.transcriptPath} ELSE NULL END`,
 				},
 			})
 			.run();

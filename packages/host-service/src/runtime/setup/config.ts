@@ -1,5 +1,6 @@
 import { existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
+import type { WorktreeDeletionAction } from "@superset/shared/worktree-deletion";
 import {
 	defaultSupersetHomeDir,
 	SUPERSET_HOME_DIR_NAME,
@@ -13,6 +14,9 @@ const PROJECTS_DIR_NAME = "projects";
 export interface SetupConfig {
 	setup?: string[];
 	teardown?: string[];
+	close?: string[];
+	closeEnabled?: boolean;
+	closeAction?: WorktreeDeletionAction;
 	run?: string[];
 	/** Services a cloud workspace needs on every boot; runs once host-service is up. */
 	start?: string[];
@@ -27,11 +31,12 @@ interface LocalScriptMerge {
 interface LocalSetupConfig {
 	setup?: string[] | LocalScriptMerge;
 	teardown?: string[] | LocalScriptMerge;
+	close?: string[] | LocalScriptMerge;
 	run?: string[] | LocalScriptMerge;
 	start?: string[] | LocalScriptMerge;
 }
 
-const SCRIPT_KEYS = ["setup", "teardown", "run", "start"] as const;
+const SCRIPT_KEYS = ["setup", "teardown", "close", "run", "start"] as const;
 export type ScriptKey = (typeof SCRIPT_KEYS)[number];
 
 function isStringArray(value: unknown): value is string[] {
@@ -69,6 +74,15 @@ function validateSetupConfig(
 			return null;
 		}
 		result.cwd = obj.cwd.trim();
+	}
+	if (obj.closeEnabled !== undefined) {
+		if (typeof obj.closeEnabled !== "boolean") {
+			console.error(
+				`Invalid setup config at ${source}: 'closeEnabled' must be a boolean`,
+			);
+			return null;
+		}
+		result.closeEnabled = obj.closeEnabled;
 	}
 	for (const key of SCRIPT_KEYS) {
 		const value = obj[key];
@@ -142,6 +156,7 @@ function mergeBaseConfigs(
 	return {
 		setup: override.setup ?? base.setup,
 		teardown: override.teardown ?? base.teardown,
+		close: override.close ?? base.close,
 		run: override.run ?? base.run,
 		start: override.start ?? base.start,
 		cwd: override.cwd ?? base.cwd,
@@ -296,6 +311,13 @@ export function resolveScript(
 		homeDir?: string;
 	},
 ): ResolvedScript | null {
+	if (
+		key === "close" &&
+		readSetupConfigAt(getProjectConfigPath(args.repoPath))?.closeEnabled ===
+			false
+	) {
+		return null;
+	}
 	const config = loadSetupConfig(args);
 	const cwd = config?.cwd;
 	const commands = nonEmptyStrings(config?.[key]);

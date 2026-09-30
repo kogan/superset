@@ -67,7 +67,7 @@ export default function AuthenticatedLayout() {
 			<Stack.Screen
 				name="pages/[slug]/index"
 				options={{
-					...pageScreenOptions,
+					...glassHeaderOptions,
 					title: "",
 					headerBackTitle: t({ message: "Pages" }),
 				}}
@@ -83,13 +83,12 @@ export default function AuthenticatedLayout() {
 				}}
 			/>
 			<Stack.Screen
-				name="pages/[slug]/quick"
+				name="pages/[slug]/comment"
 				options={{
-					presentation: "formSheet",
-					title: t({ message: "Quick feedback" }),
-					sheetAllowedDetents: [0.6],
-					sheetGrabberVisible: true,
-					...glassHeaderOptions,
+					presentation: "transparentModal",
+					headerShown: false,
+					animation: "fade",
+					contentStyle: { backgroundColor: "transparent" },
 				}}
 			/>
 			<Stack.Screen
@@ -192,9 +191,7 @@ export default function AuthenticatedLayout() {
 				name="workspace/[id]/actions"
 				options={{
 					presentation: "formSheet",
-					// Half height is the whole sheet when there is nothing but Info;
-					// the full detent is what the pages grid needs to be scrollable.
-					sheetAllowedDetents: [0.65, 1.0],
+					sheetAllowedDetents: [1.0],
 					sheetGrabberVisible: true,
 					// The workspace name is the sheet's own centred headline, so
 					// the bar carries no title — only the native close button.

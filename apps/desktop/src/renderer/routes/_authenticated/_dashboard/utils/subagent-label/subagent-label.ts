@@ -17,6 +17,5 @@ export function getSubagentLabel(subagent: SubagentDisplay): string {
 	) {
 		return role.replace(/[_-]+/g, " ");
 	}
-	const shortId = subagent.id.slice(-8);
-	return i18n._(msg({ message: `Task ${shortId}` }));
+	return i18n._(msg({ message: "Subagent" }));
 }

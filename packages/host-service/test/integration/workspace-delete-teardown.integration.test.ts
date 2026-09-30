@@ -3,12 +3,15 @@ import {
 	existsSync,
 	mkdirSync,
 	mkdtempSync,
+	readFileSync,
+	realpathSync,
 	rmSync,
 	writeFileSync,
 } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { Server } from "@superset/pty-daemon";
+import { externalWorkspacePaths, hostAgentConfigs } from "../../src/db/schema";
 import { disposeDaemonClient } from "../../src/terminal/daemon-client-singleton";
 import {
 	initTerminalBaseEnv,
@@ -163,5 +166,243 @@ describe("workspace delete teardown integration", () => {
 		expect(result.worktreeRemoved).toBe(true);
 		expect(existsSync(markerPath)).toBe(false);
 		expect(existsSync(scenario.worktreePath)).toBe(false);
+	});
+	test("close commands run in the worktree before teardown and removal", async () => {
+		const { scenario, markerPath } = await setup(
+			"test -f {{MARKER}} && printf teardown >> {{MARKER}}",
+		);
+		await scenario.host.trpc.config.updateConfig.mutate({
+			projectId: scenario.projectId,
+			close: [
+				`test "$PWD" = ${shellQuote(scenario.worktreePath)} && printf close > ${shellQuote(markerPath)}`,
+			],
+		});
+		const result = await scenario.host.trpc.workspaceCleanup.destroy.mutate({
+			workspaceId: scenario.featureWorkspaceId,
+			force: true,
+		});
+		expect(result.worktreeRemoved).toBe(true);
+		expect(readFileSync(markerPath, "utf8")).toBe("closeteardown");
+	});
+
+	test("closing an imported worktree skips deletion actions and preserves its files", async () => {
+		const { scenario, markerPath } = await setup(
+			"printf teardown > {{MARKER}}.teardown",
+		);
+		scenario.host.db
+			.insert(externalWorkspacePaths)
+			.values({ worktreePath: realpathSync(scenario.worktreePath) })
+			.run();
+		await scenario.host.trpc.config.updateConfig.mutate({
+			projectId: scenario.projectId,
+			close: [
+				`test -d ${shellQuote(scenario.worktreePath)} && printf closed > ${shellQuote(markerPath)}`,
+			],
+		});
+		const result = await scenario.host.trpc.workspaceCleanup.destroy.mutate({
+			workspaceId: scenario.featureWorkspaceId,
+			force: true,
+			deleteBranch: true,
+		});
+		expect(result).toMatchObject({
+			success: true,
+			worktreeRemoved: false,
+			branchDeleted: false,
+		});
+		expect(existsSync(markerPath)).toBe(false);
+		expect(existsSync(`${markerPath}.teardown`)).toBe(false);
+		expect(existsSync(scenario.worktreePath)).toBe(true);
+	});
+
+	test.each([
+		false,
+		true,
+	])("deletion action enabled=%s preserves commands and controls execution", async (enabled) => {
+		const { scenario, markerPath } = await setup(
+			"printf teardown > {{MARKER}}.teardown",
+		);
+		const close = [`printf deleted > ${shellQuote(markerPath)}`];
+		await scenario.host.trpc.config.updateConfig.mutate({
+			projectId: scenario.projectId,
+			close,
+			closeEnabled: false,
+		});
+		await scenario.host.trpc.config.updateConfig.mutate({
+			projectId: scenario.projectId,
+			closeEnabled: enabled,
+		});
+		const config = await scenario.host.trpc.config.getConfigContent.query({
+			projectId: scenario.projectId,
+		});
+		expect(JSON.parse(config.content ?? "{}")).toMatchObject({
+			close,
+			closeEnabled: enabled,
+		});
+		const result = await scenario.host.trpc.workspaceCleanup.destroy.mutate({
+			workspaceId: scenario.featureWorkspaceId,
+			force: true,
+		});
+		expect(result.worktreeRemoved).toBe(true);
+		expect(existsSync(markerPath)).toBe(enabled);
+		expect(readFileSync(`${markerPath}.teardown`, "utf8")).toBe("teardown");
+	});
+
+	test.each([
+		{ enabled: true, exitCode: 0, completes: true },
+		{ enabled: true, exitCode: 0, completes: false },
+		{ enabled: false, exitCode: 7, completes: false },
+		{ enabled: true, exitCode: 7, completes: false },
+	])("skill deletion action respects enablement and exit status: %j", async ({
+		enabled,
+		exitCode,
+		completes,
+	}) => {
+		const { scenario, markerPath } = await setup(
+			"printf teardown > {{MARKER}}.teardown",
+		);
+		const configDir = join(scenario.repo.repoPath, "agent-config");
+		const skillDir = join(configDir, "skills", "work-note");
+		mkdirSync(skillDir, { recursive: true });
+		writeFileSync(
+			join(skillDir, "SKILL.md"),
+			"---\nname: work-note\ndescription: Fixture only.\n---\nWrite a test marker.\n",
+		);
+		const fakeAgent = join(configDir, "claude-fixture");
+		writeFileSync(
+			fakeAgent,
+			`#!/bin/bash\ntest -d ${shellQuote(scenario.worktreePath)} || exit 9\nprintf '%s\\n' "$PWD" "$@" > ${shellQuote(markerPath)}\n${completes ? `prompt="\${!#}"; completion="\${prompt##*completion file: }"; completion="\${completion%%. If blocked*}"; printf completed > "$completion"` : ""}\nexit ${exitCode}\n`,
+			{ mode: 0o755 },
+		);
+		scenario.host.db
+			.insert(hostAgentConfigs)
+			.values({
+				id: "deletion-agent-fixture",
+				presetId: "claude",
+				label: "Claude fixture",
+				command: fakeAgent,
+				promptTransport: "argv",
+				displayOrder: -1,
+				envJson: JSON.stringify({ CLAUDE_CONFIG_DIR: configDir }),
+			})
+			.run();
+		const skills = await scenario.host.trpc.config.listDeletionSkills.query({
+			projectId: scenario.projectId,
+			agent: "claude",
+		});
+		expect(skills.some((skill) => skill.name === "work-note")).toBe(true);
+		await scenario.host.trpc.config.updateConfig.mutate({
+			projectId: scenario.projectId,
+			closeEnabled: enabled,
+			close: ["exit 12"],
+			closeAction: {
+				type: "skill",
+				agent: "claude",
+				name: "work-note",
+				instructions: "Record the work.",
+			},
+		});
+		const deletion = scenario.host.trpc.workspaceCleanup.destroy.mutate({
+			workspaceId: scenario.featureWorkspaceId,
+			force: true,
+		});
+		if (enabled && (exitCode !== 0 || !completes)) {
+			await expect(deletion).rejects.toThrow("Worktree deletion action failed");
+			expect(existsSync(scenario.worktreePath)).toBe(true);
+			expect(existsSync(`${markerPath}.teardown`)).toBe(false);
+		} else {
+			expect((await deletion).worktreeRemoved).toBe(true);
+			expect(existsSync(`${markerPath}.teardown`)).toBe(true);
+		}
+		expect(existsSync(markerPath)).toBe(enabled);
+		if (enabled) {
+			const output = readFileSync(markerPath, "utf8");
+			expect(output).toContain(`${scenario.worktreePath}\n-p\n/work-note`);
+			expect(output).toContain("Record the work.");
+		}
+	});
+
+	test("missing deletion skill prevents desktop worktree deletion", async () => {
+		const { scenario, markerPath } = await setup(
+			"printf teardown > {{MARKER}}",
+		);
+		scenario.host.db
+			.insert(hostAgentConfigs)
+			.values({
+				id: "missing-skill-fixture",
+				presetId: "claude",
+				label: "Claude fixture",
+				command: "false",
+				promptTransport: "argv",
+				displayOrder: -1,
+				envJson: JSON.stringify({
+					CLAUDE_CONFIG_DIR: join(scenario.repo.repoPath, "no-skills"),
+				}),
+			})
+			.run();
+		await scenario.host.trpc.config.updateConfig.mutate({
+			projectId: scenario.projectId,
+			closeAction: {
+				type: "skill",
+				agent: "claude",
+				name: "not-installed",
+				instructions: "",
+			},
+		});
+		await expect(
+			scenario.host.trpc.workspaceCleanup.destroy.mutate({
+				workspaceId: scenario.featureWorkspaceId,
+				force: true,
+			}),
+		).rejects.toThrow("Worktree deletion action failed");
+		expect(existsSync(scenario.worktreePath)).toBe(true);
+		expect(existsSync(markerPath)).toBe(false);
+	});
+
+	test("failed close actions keep the worktree open until explicitly skipped", async () => {
+		const { scenario, markerPath } = await setup(
+			"printf teardown > {{MARKER}}",
+		);
+		await scenario.host.trpc.config.updateConfig.mutate({
+			projectId: scenario.projectId,
+			close: ["exit 7"],
+		});
+		await expect(
+			scenario.host.trpc.workspaceCleanup.destroy.mutate({
+				workspaceId: scenario.featureWorkspaceId,
+				force: true,
+			}),
+		).rejects.toThrow("Worktree deletion action failed");
+		expect(existsSync(markerPath)).toBe(false);
+		expect(existsSync(scenario.worktreePath)).toBe(true);
+		const workspace = scenario.host.db.query.workspaces
+			.findFirst({
+				where: (row, { eq }) => eq(row.id, scenario.featureWorkspaceId),
+			})
+			.sync();
+		expect(workspace?.archivedAt).toBeNull();
+		const result = await scenario.host.trpc.workspaceCleanup.destroy.mutate({
+			workspaceId: scenario.featureWorkspaceId,
+			force: true,
+			skipTeardown: true,
+		});
+		expect(result.worktreeRemoved).toBe(true);
+		expect(existsSync(markerPath)).toBe(false);
+	});
+	test("closing a workspace on the shared project checkout does not run worktree actions", async () => {
+		const { scenario, markerPath } = await setup(
+			"printf teardown > {{MARKER}}.teardown",
+		);
+		await scenario.host.trpc.config.updateConfig.mutate({
+			projectId: scenario.projectId,
+			close: [`printf closed > ${shellQuote(markerPath)}`],
+		});
+		const result = await scenario.host.trpc.workspaceCleanup.destroy.mutate({
+			workspaceId: scenario.workspaceId,
+			force: true,
+		});
+		expect(result.worktreeRemoved).toBe(false);
+		expect(existsSync(markerPath)).toBe(false);
+		expect(existsSync(`${markerPath}.teardown`)).toBe(false);
+		expect(existsSync(scenario.repo.repoPath)).toBe(true);
 	});
 });

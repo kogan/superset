@@ -37,6 +37,7 @@ import {
 	getPersistableSeqAnchor,
 	park,
 	reconnect,
+	sendColors,
 	sendDispose,
 	sendResize,
 	setVisible,
@@ -444,6 +445,11 @@ class TerminalRuntimeRegistryImpl {
 
 		// The refit may defer until the parser drains; the callback reports it.
 		const transport = entry.transport;
+		sendColors(
+			entry.transport,
+			appearance.theme,
+			entry.runtime.terminal.options.theme !== appearance.theme,
+		);
 		updateRuntimeAppearance(entry.runtime, appearance, () => {
 			const runtime = entry.runtime;
 			if (!runtime) return;
@@ -455,6 +461,11 @@ class TerminalRuntimeRegistryImpl {
 	updateAllAppearances(appearance: TerminalAppearance) {
 		for (const entry of this.entries.values()) {
 			if (!entry.runtime) continue;
+			sendColors(
+				entry.transport,
+				appearance.theme,
+				entry.runtime.terminal.options.theme !== appearance.theme,
+			);
 			updateRuntimeAppearance(entry.runtime, appearance, () => {
 				const runtime = entry.runtime;
 				if (!runtime) return;

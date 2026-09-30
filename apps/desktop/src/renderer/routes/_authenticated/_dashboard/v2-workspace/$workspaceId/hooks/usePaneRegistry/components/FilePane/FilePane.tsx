@@ -1,10 +1,9 @@
 import type { RendererContext } from "@superset/panes";
-import { FEATURE_FLAGS } from "@superset/shared/constants";
 import { useWorkspaceClient, workspaceTrpc } from "@superset/workspace-client";
-import { useFeatureFlagEnabled } from "posthog-js/react";
 import { useCallback, useEffect } from "react";
 import { FileSaveConflictDialog } from "renderer/components/FileSaveConflictDialog";
 import { MarkdownResourceProvider } from "renderer/components/MarkdownRenderer/providers/MarkdownResourceProvider";
+import { usePagesEnabled } from "renderer/hooks/usePagesEnabled";
 import type { LinkAction } from "renderer/lib/clickPolicy";
 import { getPathDirectory } from "shared/absolute-paths";
 import { useStore } from "zustand";
@@ -12,6 +11,7 @@ import {
 	decodeBase64,
 	useSharedFileDocument,
 } from "../../../../state/fileDocumentStore";
+import { fileAutoSave } from "../../../../state/fileDocumentStore/fileAutoSave";
 import type { FilePaneData, PaneViewerData } from "../../../../types";
 import { runUrlLinkAction } from "../../utils/runTerminalLinkAction";
 import { ErrorState } from "./components/ErrorState";
@@ -27,7 +27,7 @@ interface FilePaneProps {
 }
 
 export function FilePane({ context, workspaceId }: FilePaneProps) {
-	const isPagesEnabled = useFeatureFlagEnabled(FEATURE_FLAGS.PAGES) ?? false;
+	const isPagesEnabled = usePagesEnabled();
 	const data = context.pane.data as FilePaneData;
 	const { filePath } = data;
 	const isActiveTab = useStore(
@@ -39,6 +39,13 @@ export function FilePane({ context, workspaceId }: FilePaneProps) {
 		workspaceId,
 		absolutePath: filePath,
 	});
+
+	useEffect(
+		() => () => {
+			if (context.isActive) fileAutoSave.onFocusChange(document);
+		},
+		[context.isActive, document],
+	);
 
 	// Images a markdown file points at load through the workspace
 	// filesystem, so they work for cloud sandboxes and never put a raw path
@@ -151,7 +158,14 @@ export function FilePane({ context, workspaceId }: FilePaneProps) {
 	const ViewRenderer = activeView.Renderer;
 
 	return (
-		<div className="flex h-full w-full flex-col">
+		<div
+			className="flex h-full w-full flex-col"
+			onBlurCapture={(event) => {
+				if (!event.currentTarget.contains(event.relatedTarget as Node)) {
+					fileAutoSave.onFocusChange(document);
+				}
+			}}
+		>
 			<FileSaveConflictDialog
 				open={document.conflict !== null && context.isActive && isActiveTab}
 				filePath={filePath}

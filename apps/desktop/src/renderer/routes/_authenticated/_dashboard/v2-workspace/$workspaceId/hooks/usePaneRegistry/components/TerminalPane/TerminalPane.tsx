@@ -6,6 +6,7 @@ import { toast } from "@superset/ui/sonner";
 import { cn } from "@superset/ui/utils";
 import { workspaceTrpc } from "@superset/workspace-client";
 import { usePagesEnabled } from "renderer/hooks/usePagesEnabled";
+import { terminalQueryColors } from "renderer/lib/terminal/terminal-query-colors";
 import type { OpenFile } from "renderer/routes/_authenticated/_dashboard/v2-workspace/$workspaceId/types";
 import "@xterm/xterm/css/xterm.css";
 import {
@@ -17,6 +18,7 @@ import {
 	useSyncExternalStore,
 } from "react";
 import { env } from "renderer/env.renderer";
+import { useTerminalAppearance } from "renderer/hooks/useTerminalAppearance";
 import { useV2UserPreferences } from "renderer/hooks/useV2UserPreferences";
 import { useHotkey } from "renderer/hotkeys";
 import {
@@ -61,7 +63,6 @@ import { TerminalRichInput } from "./components/TerminalRichInput";
 import { terminalContextMenuLinkStore } from "./contextMenuLinkStore";
 import { useCopyOnSelect } from "./hooks/useCopyOnSelect";
 import { type HoveredLink, useLinkHoverState } from "./hooks/useLinkHoverState";
-import { useTerminalAppearance } from "./hooks/useTerminalAppearance";
 import { useTerminalInterruptClear } from "./hooks/useTerminalInterruptClear";
 import {
 	terminalRichInputOpenStore,
@@ -148,6 +149,10 @@ export function TerminalPane({
 	const themedUrl = new URL(baseWebsocketUrl);
 	themedUrl.searchParams.set("workspaceId", workspaceId);
 	themedUrl.searchParams.set("themeType", themeType);
+	themedUrl.searchParams.set(
+		"colors",
+		JSON.stringify(terminalQueryColors(appearance.theme)),
+	);
 	if (paneData.createOnAttach) {
 		themedUrl.searchParams.set("create", "1");
 	}

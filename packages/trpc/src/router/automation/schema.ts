@@ -48,6 +48,10 @@ export const createAutomationSchema = z
 		// workspaces.create — no project means session).
 		v2ProjectId: z.string().uuid().nullish(),
 		v2WorkspaceId: z.string().uuid().nullish(),
+		// With targetHostId "cloud": a cloud workspace to reuse every run, and
+		// the environment to start one from each run (or when the pin is gone).
+		cloudWorkspaceId: z.string().uuid().nullish(),
+		environmentId: z.string().uuid().nullish(),
 		// Workspace tags applied to each run's created workspace, so runs file
 		// themselves into the matching sidebar folders.
 		tags: workspaceTagsInputSchema.optional(),
@@ -80,6 +84,8 @@ export const updateAutomationSchema = z.object({
 	// the existing project.
 	v2ProjectId: z.string().uuid().nullish(),
 	v2WorkspaceId: z.string().uuid().nullish(),
+	cloudWorkspaceId: z.string().uuid().nullish(),
+	environmentId: z.string().uuid().nullish(),
 	// Full replacement of the tag set; undefined keeps the existing tags.
 	tags: workspaceTagsInputSchema.optional(),
 	continueAgentSession: z.boolean().optional(),

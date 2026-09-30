@@ -11,7 +11,7 @@ export const useWorkspaceAgentsRowStore = create<WorkspaceAgentsRowState>()(
 	devtools(
 		persist(
 			(set) => ({
-				enabled: true,
+				enabled: false,
 				setEnabled: (enabled) => set({ enabled }),
 			}),
 			{ name: "workspace-agents-row" },

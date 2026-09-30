@@ -5,9 +5,10 @@ import {
 	upsertConnection,
 } from "@superset/trpc/connectors";
 import { linearTokenResponseSchema } from "@superset/trpc/integrations/linear";
+import { organizationSyncsNow } from "@superset/trpc/sync-policy";
 import { Client } from "@upstash/qstash";
-
 import { env } from "@/env";
+import { STATE_COOKIES } from "@/lib/integrations/oauthFlow";
 import { resolveCallback } from "@/lib/integrations/resolveCallback";
 import { upsertIdentity } from "@/lib/integrations/upsertIdentity";
 
@@ -18,10 +19,11 @@ const settingsUrl = `${env.NEXT_PUBLIC_WEB_URL}/integrations/linear`;
 export async function GET(request: Request) {
 	const callback = await resolveCallback(request, {
 		params: ["code"],
-		redirect: (error) => Response.redirect(`${settingsUrl}?error=${error}`),
+		redirect: (error) => `${settingsUrl}?error=${error}`,
+		cookie: STATE_COOKIES.linear,
 	});
 	if (callback instanceof Response) return callback;
-	const { organizationId, userId, params } = callback;
+	const { organizationId, userId, params, exit, fail } = callback;
 
 	const tokenResponse = await fetch("https://api.linear.app/oauth/token", {
 		method: "POST",
@@ -35,9 +37,7 @@ export async function GET(request: Request) {
 		}),
 	});
 
-	if (!tokenResponse.ok) {
-		return Response.redirect(`${settingsUrl}?error=token_exchange_failed`);
-	}
+	if (!tokenResponse.ok) return fail("token_exchange_failed");
 
 	const tokenData = linearTokenResponseSchema.parse(await tokenResponse.json());
 
@@ -67,9 +67,7 @@ export async function GET(request: Request) {
 			user: { id: viewer.id, label: viewer.displayName },
 		},
 	});
-	if (result.conflict) {
-		return Response.redirect(`${settingsUrl}?error=workspace_already_linked`);
-	}
+	if (result.conflict) return fail("workspace_already_linked");
 
 	// The person who connected is the one Linear account we know for certain
 	// belongs to a Superset user, so link it. Linear user ids are scoped to
@@ -84,16 +82,21 @@ export async function GET(request: Request) {
 		displayName: viewer.name,
 	});
 
-	try {
-		await qstash.publishJSON({
-			url: `${env.NEXT_PUBLIC_API_URL}/api/integrations/linear/jobs/initial-sync`,
-			body: { organizationId, creatorUserId: userId },
-			retries: 3,
-		});
-	} catch (error) {
-		console.error("Failed to queue initial sync job:", error);
-		return Response.redirect(`${settingsUrl}?warning=sync_queued_failed`);
+	// A free organization's issues are mirrored into a Tasks screen it cannot
+	// open, so the backfill waits until it upgrades, where the subscription
+	// hook queues this same job.
+	if (await organizationSyncsNow(organizationId)) {
+		try {
+			await qstash.publishJSON({
+				url: `${env.NEXT_PUBLIC_API_URL}/api/integrations/linear/jobs/initial-sync`,
+				body: { organizationId, creatorUserId: userId },
+				retries: 3,
+			});
+		} catch (error) {
+			console.error("Failed to queue initial sync job:", error);
+			return exit(`${settingsUrl}?warning=sync_queued_failed`);
+		}
 	}
 
-	return Response.redirect(settingsUrl);
+	return exit(settingsUrl);
 }

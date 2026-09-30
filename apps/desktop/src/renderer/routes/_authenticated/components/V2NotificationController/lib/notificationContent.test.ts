@@ -43,7 +43,7 @@ describe("getV2NativeNotificationContent", () => {
 			}),
 		).toMatchObject({
 			title: "Improve notifications",
-			subtitle: "Claude · Needs attention",
+			subtitle: "Claude · Needs input",
 			body: "Open workspace",
 		});
 	});
@@ -129,7 +129,7 @@ describe("agent and finish-type matrix", () => {
 		const label = AGENT_IDENTITY_LABELS[agentId];
 		for (const [eventType, status] of [
 			["Stop", "Finished"],
-			["PermissionRequest", "Needs attention"],
+			["PermissionRequest", "Needs input"],
 			["Failed", "Failed"],
 		] as const) {
 			it(`${agentId} ${eventType} preserves context, status, and preview`, () => {
@@ -151,4 +151,20 @@ describe("agent and finish-type matrix", () => {
 			});
 		}
 	}
+});
+
+it("names the child that needs an answer", () => {
+	expect(
+		getV2NativeNotificationContent({
+			workspaceName: "test",
+			payload: payload({
+				eventType: "PermissionRequest",
+				subagent: { id: "child", name: "Review checkout" },
+				preview: "Which database?",
+			}),
+		}),
+	).toMatchObject({
+		subtitle: "Review checkout · Needs input",
+		body: "Which database?",
+	});
 });

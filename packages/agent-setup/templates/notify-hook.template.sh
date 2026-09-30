@@ -44,7 +44,7 @@ fi
 
 # Claude Code and Codex set agent_id only when the hook fires inside a
 # subagent (Task tool / spawn_agent). Subagent activity must not drive
-# terminal-level agent status, notifications, or the session id binding —
+# terminal-level agent status or the session id binding —
 # only the main loop counts. It is forwarded separately so the host can keep
 # a per-terminal roster of live subagents (see notifications.hook).
 # Snake_case is the Claude schema shared by Codex and most forks; camelCase
@@ -64,7 +64,8 @@ SUBAGENT_TYPE=$(json_field agent_type agentType)
 # transcript_path is the file the hook ran against (Claude: the parent
 # session; Codex: the child's own rollout); agent_transcript_path is the
 # child's transcript on SubagentStop. The host derives the child's file from
-# them so the subagent pane can follow it.
+# them so the subagent pane can follow it, and on a main-loop event keeps
+# transcript_path so a handoff reads the session where the harness wrote it.
 TRANSCRIPT_PATH=$(json_field transcript_path transcriptPath)
 AGENT_TRANSCRIPT_PATH=$(json_field agent_transcript_path agentTranscriptPath)
 
@@ -187,14 +188,33 @@ dispatch_to_host() {
   return 0
 }
 
-# Subagent events go to the host-service roster only: no v1 fallback, no
+PREVIEW_FIELD=""
+PREVIEW_KEYS="last_assistant_message last-assistant-message message"
+case "$EVENT_TYPE" in
+  StopFailure|stop_failure|Failed|failed) PREVIEW_KEYS="error_details error_message message last_assistant_message last-assistant-message" ;;
+  PermissionRequest|Elicitation|Notification|notification|PreToolUse|preToolUse|pre_tool_use|exec_approval_request|apply_patch_approval_request|request_user_input) PREVIEW_KEYS="question title message last_assistant_message last-assistant-message" ;;
+esac
+case "$EVENT_TYPE" in
+  Stop|stop|Interrupt|AfterAgent|agent-turn-complete|task_complete|post_agent|post_agent_turn|StopFailure|stop_failure|Failed|failed|PermissionRequest|Elicitation|Notification|notification|PreToolUse|preToolUse|pre_tool_use|exec_approval_request|apply_patch_approval_request|request_user_input)
+    for PREVIEW_KEY in $PREVIEW_KEYS; do
+      PREVIEW_VALUE=$(printf '%s' "$INPUT" | grep -oE "\"$PREVIEW_KEY\"[[:space:]]*:[[:space:]]*\"(\\\\.|[^\"\\\\])*\"" | head -n 1 | sed -E 's/^[^:]*:[[:space:]]*//')
+      if [ -n "$PREVIEW_VALUE" ] && [ "$PREVIEW_VALUE" != '""' ]; then
+        PREVIEW_FIELD=",\"preview\":$PREVIEW_VALUE"
+        break
+      fi
+    done
+    ;;
+esac
+
+
+# Subagent events carry their own status and input alerts: no v1 fallback, no
 # session id (a Codex child's session_id is its own thread, never the
 # terminal's resumable session), and the raw event name so the host can tell
 # a start from a stop.
 if [ -n "$SUBAGENT_ID" ]; then
   debug_log "subagent event=$EVENT_TYPE terminalId=$SUPERSET_TERMINAL_ID agentId=$AGENT_ID subagentId=$SUBAGENT_ID subagentType=$SUBAGENT_TYPE"
   [ -n "$SUPERSET_TERMINAL_ID" ] || exit 0
-  dispatch_to_host "{\"json\":{\"terminalId\":\"$(json_escape "$SUPERSET_TERMINAL_ID")\",\"eventType\":\"$(json_escape "$EVENT_TYPE")\",\"subagent\":{\"id\":\"$(json_escape "$SUBAGENT_ID")\",\"type\":\"$(json_escape "$SUBAGENT_TYPE")\",\"sessionId\":\"$(json_escape "$HOOK_SESSION_ID")\",\"transcriptPath\":\"$(json_escape "$TRANSCRIPT_PATH")\",\"agentTranscriptPath\":\"$(json_escape "$AGENT_TRANSCRIPT_PATH")\"}}}"
+  dispatch_to_host "{\"json\":{\"terminalId\":\"$(json_escape "$SUPERSET_TERMINAL_ID")\",\"eventType\":\"$(json_escape "$EVENT_TYPE")\",\"subagent\":{\"id\":\"$(json_escape "$SUBAGENT_ID")\",\"type\":\"$(json_escape "$SUBAGENT_TYPE")\",\"sessionId\":\"$(json_escape "$HOOK_SESSION_ID")\",\"transcriptPath\":\"$(json_escape "$TRANSCRIPT_PATH")\",\"agentTranscriptPath\":\"$(json_escape "$AGENT_TRANSCRIPT_PATH")\"}$PREVIEW_FIELD}}"
   exit 0
 fi
 
@@ -210,26 +230,11 @@ case "$V1_EVENT_TYPE" in
     ;;
 esac
 
-PREVIEW_FIELD=""
-PREVIEW_KEYS="last_assistant_message last-assistant-message message"
-case "$EVENT_TYPE" in
-  StopFailure|stop_failure|Failed|failed) PREVIEW_KEYS="error_details error_message message last_assistant_message last-assistant-message" ;;
-  PermissionRequest|Notification|notification|PreToolUse|preToolUse|pre_tool_use|exec_approval_request|apply_patch_approval_request|request_user_input) PREVIEW_KEYS="message last_assistant_message last-assistant-message" ;;
-esac
-case "$EVENT_TYPE" in
-  Stop|stop|Interrupt|AfterAgent|agent-turn-complete|task_complete|post_agent|post_agent_turn|StopFailure|stop_failure|Failed|failed|PermissionRequest|Notification|notification|PreToolUse|preToolUse|pre_tool_use|exec_approval_request|apply_patch_approval_request|request_user_input)
-    for PREVIEW_KEY in $PREVIEW_KEYS; do
-      PREVIEW_VALUE=$(printf '%s' "$INPUT" | grep -oE "\"$PREVIEW_KEY\"[[:space:]]*:[[:space:]]*\"(\\\\.|[^\"\\\\])*\"" | head -n 1 | sed -E 's/^[^:]*:[[:space:]]*//')
-      if [ -n "$PREVIEW_VALUE" ] && [ "$PREVIEW_VALUE" != '""' ]; then
-        PREVIEW_FIELD=",\"preview\":$PREVIEW_VALUE"
-        break
-      fi
-    done
-    ;;
-esac
 
 ATTRIBUTION_FIELD=""
 [ -n "$SUPERSET_ACCOUNT_ATTRIBUTION_TOKEN" ] && ATTRIBUTION_FIELD=",\"attributionToken\":\"$(json_escape "$SUPERSET_ACCOUNT_ATTRIBUTION_TOKEN")\""
+TRANSCRIPT_FIELD=""
+[ -n "$TRANSCRIPT_PATH" ] && TRANSCRIPT_FIELD=",\"transcriptPath\":\"$(json_escape "$TRANSCRIPT_PATH")\""
 LAUNCH_FIELD=""
 [ -n "$SUPERSET_AGENT_LAUNCH_ID" ] && LAUNCH_FIELD=",\"launchId\":\"$(json_escape "$SUPERSET_AGENT_LAUNCH_ID")\""
 ACCOUNT_FIELD=""
@@ -262,7 +267,7 @@ case "$EVENT_TYPE" in
 esac
 
 if [ -n "$SUPERSET_TERMINAL_ID" ]; then
-  dispatch_to_host "{\"json\":{\"terminalId\":\"$(json_escape "$SUPERSET_TERMINAL_ID")\",\"eventType\":\"$(json_escape "$EVENT_TYPE")\",\"agent\":{\"agentId\":\"$(json_escape "$AGENT_ID")\",\"sessionId\":\"$(json_escape "$SESSION_ID")\"}$PREVIEW_FIELD$ACCOUNT_FIELD$LAUNCH_FIELD$ATTRIBUTION_FIELD}}"
+  dispatch_to_host "{\"json\":{\"terminalId\":\"$(json_escape "$SUPERSET_TERMINAL_ID")\",\"eventType\":\"$(json_escape "$EVENT_TYPE")\",\"agent\":{\"agentId\":\"$(json_escape "$AGENT_ID")\",\"sessionId\":\"$(json_escape "$SESSION_ID")\"}$PREVIEW_FIELD$ACCOUNT_FIELD$TRANSCRIPT_FIELD$LAUNCH_FIELD$ATTRIBUTION_FIELD}}"
   [ "$HOOK_ACCEPTED" = "1" ] && exit 0
   # Delivered somewhere (2xx) but no host owned the terminal: keep the
   # pre-existing "any 2xx wins" behavior and skip the v1 fallback.

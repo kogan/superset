@@ -22,6 +22,10 @@ import { EventBus, GitWatcher, registerEventBusRoute } from "./events";
 import { agentIsBusy, PageWatchManager } from "./page-watch/index.ts";
 import { registerForwardMuxRoute } from "./ports/forward-mux-route";
 import { portManager } from "./ports/port-manager";
+import {
+	PROJECT_PURGE_INTERVAL_MS,
+	purgeExpiredProjects,
+} from "./projects/project-deletion";
 import type { ApiAuthProvider } from "./providers/auth";
 import type { HostAuthProvider } from "./providers/host-auth";
 import { runArchivedWorkspaceReconcile } from "./runtime/archived-workspace-reconcile";
@@ -41,9 +45,9 @@ import {
 	runSandboxSelfSeed,
 } from "./runtime/sandbox-self-seed";
 import {
-	isLiveTerminalSession,
+	isAgentTerminalAlive,
 	registerWorkspaceTerminalRoute,
-	writeFramedInputToSession,
+	sendAgentMessage,
 } from "./terminal/terminal";
 import {
 	SqliteTerminalAgentBindingPersistence,
@@ -67,6 +71,7 @@ import type {
 } from "./types";
 import { getHostWorkerPool } from "./workers/host-worker-pool";
 import { gitWorkspaceRefsTask } from "./workers/tasks/git";
+import { disposeWorkspaceTitleJobs } from "./workspaces/workspace-title-jobs";
 
 export interface CreateAppOptions {
 	config: {
@@ -115,6 +120,7 @@ export interface CreateAppResult {
 	 */
 	launchSandboxAgent: () => Promise<void>;
 	resumeCrashedAgents: () => Promise<void>;
+	terminalAgentStore: TerminalAgentStore;
 	dispose: () => Promise<void>;
 }
 
@@ -252,30 +258,46 @@ export function createApp(options: CreateAppOptions): CreateAppResult {
 	const pageWatch = new PageWatchManager({
 		api: {
 			listThreads: (pageId) => api.pageComment.list.query({ pageId }),
-			setWatch: async (pageId, agentId) => {
-				await api.page.setWatch.mutate({ id: pageId, agentId });
-			},
-			clearWatch: async (pageId) => {
-				await api.page.clearWatch.mutate({ id: pageId });
-			},
+			claimWatch: (input) => api.page.claimWatch.mutate(input),
+			renewWatch: (input) => api.page.renewWatch.mutate(input),
+			releaseWatch: (input) => api.page.releaseWatch.mutate(input),
+			reserveWatchDelivery: (input) =>
+				api.page.reserveWatchDelivery.mutate(input),
+			finishWatchDelivery: (input) =>
+				api.page.finishWatchDelivery.mutate(input),
 		},
-		sendToTerminal: async ({ workspaceId, terminalId, text }) => {
-			const result = await writeFramedInputToSession({
+		sendToTerminal: async ({
+			workspaceId,
+			terminalId,
+			expectedAgent,
+			acquireDelivery,
+			text,
+			signal,
+		}) => {
+			const result = await sendAgentMessage({
 				terminalId,
 				workspaceId,
 				text,
 				submit: true,
+				expectedAgent,
+				acquireDelivery,
+				signal,
+				terminalAgentStore,
 				db,
 				eventBus,
 			});
-			if ("error" in result) throw new Error(result.error);
+			if ("error" in result) {
+				if (result.inputStaged) return { inputStaged: true } as const;
+				throw new Error(result.error);
+			}
 		},
-		isTerminalAlive: isLiveTerminalSession,
+		isTerminalAlive: (terminalId, workspaceId) =>
+			isAgentTerminalAlive({ terminalId, workspaceId, db, eventBus }),
 		isAgentBusy: (terminalId) =>
 			agentIsBusy(terminalAgentStore.get(terminalId)?.lastEventType),
-		hasAgent: (terminalId) => {
+		getAgent: (terminalId) => {
 			const binding = terminalAgentStore.get(terminalId);
-			return binding !== undefined && binding.endedAt === undefined;
+			return binding?.endedAt === undefined ? binding : undefined;
 		},
 	});
 	pageWatch.subscribeToTerminalEvents(eventBus);
@@ -295,6 +317,24 @@ export function createApp(options: CreateAppOptions): CreateAppResult {
 	// process crashed out of — and a sandbox is provisioned fresh with exactly
 	// one project and one workspace, seeded by us, that no earlier build ever
 	// touched. There is nothing to recover, so the sweeps can only invent.
+	const purgeContext = {
+		credentials: providers.credentials,
+		api,
+		db,
+		eventBus,
+		organizationId: config.organizationId,
+	};
+	const runProjectPurge = () =>
+		purgeExpiredProjects(purgeContext).catch((err) => {
+			console.warn("[host-service] project purge failed:", err);
+			return 0;
+		});
+	const projectPurgeTimer =
+		process.env.SUPERSET_HOST_RUN_MODE === "sandbox"
+			? null
+			: setInterval(() => void runProjectPurge(), PROJECT_PURGE_INTERVAL_MS);
+	projectPurgeTimer?.unref?.();
+
 	void (async () => {
 		if (process.env.SUPERSET_HOST_RUN_MODE === "sandbox") return;
 		await runProjectBackfill({
@@ -320,6 +360,7 @@ export function createApp(options: CreateAppOptions): CreateAppResult {
 		}).catch((err) => {
 			console.warn("[host-service] archived-workspace reconcile failed:", err);
 		});
+		await runProjectPurge();
 		// Re-share the default account's Claude/Codex config into the selected
 		// provider profiles. Last: it touches no host state the sweeps above
 		// repair, and a slow filesystem must not delay them.
@@ -450,6 +491,8 @@ export function createApp(options: CreateAppOptions): CreateAppResult {
 
 	const ownsDb = options.db === undefined;
 	const dispose = async (): Promise<void> => {
+		if (projectPurgeTimer) clearInterval(projectPurgeTimer);
+		await disposeWorkspaceTitleJobs(db);
 		// Each step is best-effort and isolated: a throw in one cleanup must
 		// not skip the others, otherwise a flaky `.stop()` could leak the
 		// open SQLite handle for the rest of the process lifetime.
@@ -550,6 +593,7 @@ export function createApp(options: CreateAppOptions): CreateAppResult {
 		eventBus,
 		launchSandboxAgent,
 		resumeCrashedAgents,
+		terminalAgentStore,
 		dispose,
 	};
 }

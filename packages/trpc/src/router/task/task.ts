@@ -6,6 +6,8 @@ import {
 	buildTaskListOrderBy,
 	InvalidDueDateRangeError,
 	normalizeDueDateRange,
+	taskColumns,
+	taskCreatedAtSortKey,
 } from "@superset/db/task-list-query";
 import { getCurrentTxid } from "@superset/db/utils";
 import {
@@ -16,7 +18,14 @@ import { TRPCError, type TRPCRouterRecord } from "@trpc/server";
 import { and, asc, desc, eq, ilike, isNull, lt, or } from "drizzle-orm";
 import { alias } from "drizzle-orm/pg-core";
 import { z } from "zod";
+import { anchorAttachments } from "../../lib/attachments";
+import {
+	referencedFileIds,
+	toReadableDocument,
+	toStoredDocument,
+} from "../../lib/document-files";
 import { syncTask } from "../../lib/integrations/sync";
+import { setTaskLabels } from "../../lib/labels";
 import { protectedProcedure, type TRPCContext, userError } from "../../trpc";
 import { verifyOrgMembership } from "../integration/utils";
 import { requireActiveOrgMembership } from "../utils/active-org";
@@ -24,6 +33,11 @@ import {
 	requireOrgResourceAccess,
 	requireOrgScopedResource,
 } from "../utils/org-resource-access";
+import {
+	diffTaskActivity,
+	labelActivity,
+	recordTaskActivity,
+} from "./activity";
 import {
 	createTaskSchema,
 	type TaskListFilterInput,
@@ -75,7 +89,7 @@ async function getTaskAccess(
 
 async function getTaskById(userId: string, taskId: string) {
 	const [task] = await db
-		.select()
+		.select(taskColumns)
 		.from(tasks)
 		.where(and(eq(tasks.id, taskId), isNull(tasks.deletedAt)))
 		.limit(1);
@@ -97,7 +111,7 @@ async function getTaskBySlug(
 	await verifyOrgMembership(userId, organizationId);
 
 	const [task] = await db
-		.select()
+		.select(taskColumns)
 		.from(tasks)
 		.where(
 			and(
@@ -227,12 +241,19 @@ async function createTask(
 					existingSlugs.map((task) => task.slug),
 				);
 
+				const taskId = crypto.randomUUID();
 				const [task] = await tx
 					.insert(tasks)
 					.values({
+						id: taskId,
 						slug,
 						title: input.title,
-						description: input.description ?? null,
+						description: input.description
+							? toStoredDocument(input.description, {
+									kind: "tasks",
+									id: taskId,
+								})
+							: null,
 						statusId,
 						priority: input.priority ?? "none",
 						organizationId,
@@ -240,17 +261,43 @@ async function createTask(
 						assigneeId,
 						estimate: input.estimate ?? null,
 						dueDate: input.dueDate ?? null,
-						labels: input.labels ?? [],
 					})
-					.returning();
+					.returning({ id: tasks.id });
+				if (task && input.labels?.length) {
+					await setTaskLabels(tx, {
+						organizationId,
+						taskId: task.id,
+						names: input.labels,
+					});
+				}
+				const [created] = task
+					? await tx
+							.select(taskColumns)
+							.from(tasks)
+							.where(eq(tasks.id, task.id))
+					: [];
 
 				const txid = await getCurrentTxid(tx);
 
-				return { task, txid };
+				return { task: created, txid };
 			});
 
 			if (result.task) {
-				syncTask(result.task.id);
+				const { id, organizationId, description } = result.task;
+				syncTask(id);
+				if (description) {
+					await anchorAttachments({
+						parentKind: "issue",
+						parentId: id,
+						organizationId,
+						fileIds: referencedFileIds(description, { kind: "tasks", id }),
+					}).catch((error) => {
+						console.error(
+							`[task] could not keep the description's files for ${id}`,
+							error,
+						);
+					});
+				}
 			}
 
 			return result;
@@ -280,7 +327,7 @@ function selectTaskListRows() {
 
 	return db
 		.select({
-			task: tasks,
+			task: taskColumns,
 			assignee: {
 				id: assignee.id,
 				name: assignee.name,
@@ -346,7 +393,7 @@ export const taskRouter = {
 		const creator = alias(users, "creator");
 		return db
 			.select({
-				task: tasks,
+				task: taskColumns,
 				assignee: {
 					id: assignee.id,
 					name: assignee.name,
@@ -414,7 +461,7 @@ export const taskRouter = {
 
 			const rows = await selectTaskListRows()
 				.where(and(...filters))
-				.orderBy(desc(tasks.createdAt), desc(tasks.id))
+				.orderBy(desc(taskCreatedAtSortKey), desc(tasks.id))
 				.limit(input.limit + 1);
 
 			const items = rows.slice(0, input.limit);
@@ -433,7 +480,7 @@ export const taskRouter = {
 			await verifyOrgMembership(ctx.session.user.id, input);
 
 			return db
-				.select()
+				.select(taskColumns)
 				.from(tasks)
 				.where(and(eq(tasks.organizationId, input), isNull(tasks.deletedAt)))
 				.orderBy(desc(tasks.createdAt));
@@ -455,12 +502,23 @@ export const taskRouter = {
 				/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(
 					input,
 				);
-			if (looksLikeUuid) {
-				const task = await getTaskById(ctx.session.user.id, input);
-				if (task) return task;
-			}
-			const organizationId = await requireActiveOrgMembership(ctx);
-			return getTaskBySlug(ctx.session.user.id, organizationId, input);
+			const task =
+				(looksLikeUuid
+					? await getTaskById(ctx.session.user.id, input)
+					: null) ??
+				(await getTaskBySlug(
+					ctx.session.user.id,
+					await requireActiveOrgMembership(ctx),
+					input,
+				));
+			if (!task?.description) return task;
+			return {
+				...task,
+				description: await toReadableDocument(task.description, {
+					kind: "tasks",
+					id: task.id,
+				}),
+			};
 		}),
 
 	/**
@@ -558,11 +616,25 @@ export const taskRouter = {
 							isNull(tasks.deletedAt),
 						),
 					)
-					.returning();
+					.returning(taskColumns);
 
 				if (!task) {
 					return { task: null, txid: null };
 				}
+
+				await recordTaskActivity(
+					tx,
+					task.id,
+					{ kind: "user", userId: ctx.session.user.id },
+					diffTaskActivity(
+						{
+							...task,
+							statusId: current.statusId,
+							assigneeId: current.assigneeId,
+						},
+						task,
+					),
+				);
 
 				const txid = await getCurrentTxid(tx);
 
@@ -585,13 +657,29 @@ export const taskRouter = {
 	update: protectedProcedure
 		.input(updateTaskSchema)
 		.mutation(async ({ ctx, input }) => {
-			const { id, ...data } = input;
+			const { id, labels, ...data } = input;
 
 			const result = await db.transaction(async (tx) => {
 				const taskAccess = await getTaskAccess(tx, ctx.session.user.id, id);
+				const [before] = await tx
+					.select({
+						title: tasks.title,
+						description: tasks.description,
+						statusId: tasks.statusId,
+						priority: tasks.priority,
+						assigneeId: tasks.assigneeId,
+					})
+					.from(tasks)
+					.where(eq(tasks.id, id));
 
 				// Enforce assignee invariant: setting internal assignee clears external snapshot
 				const updateData: Record<string, unknown> = { ...data };
+				if (data.description) {
+					updateData.description = toStoredDocument(data.description, {
+						kind: "tasks",
+						id,
+					});
+				}
 
 				if (data.statusId) {
 					updateData.statusId = await getScopedStatusId(
@@ -614,11 +702,36 @@ export const taskRouter = {
 					updateData.assigneeAvatarUrl = null;
 				}
 
-				const [task] = await tx
+				const [updated] = await tx
 					.update(tasks)
-					.set(updateData)
+					.set({ ...updateData, updatedAt: new Date() })
 					.where(and(eq(tasks.id, id), isNull(tasks.deletedAt)))
 					.returning();
+
+				const labelChanges =
+					updated && labels
+						? await setTaskLabels(tx, {
+								organizationId: taskAccess.organizationId,
+								taskId: id,
+								names: labels,
+							})
+						: null;
+
+				if (before && updated) {
+					await recordTaskActivity(
+						tx,
+						id,
+						{ kind: "user", userId: ctx.session.user.id },
+						[
+							...diffTaskActivity(before, updated),
+							...labelActivity(labelChanges),
+						],
+					);
+				}
+
+				const [task] = updated
+					? await tx.select(taskColumns).from(tasks).where(eq(tasks.id, id))
+					: [];
 
 				const txid = await getCurrentTxid(tx);
 
@@ -626,7 +739,21 @@ export const taskRouter = {
 			});
 
 			if (result.task) {
-				syncTask(result.task.id);
+				const { id, organizationId, description } = result.task;
+				syncTask(id);
+				if (description) {
+					await anchorAttachments({
+						parentKind: "issue",
+						parentId: id,
+						organizationId,
+						fileIds: referencedFileIds(description, { kind: "tasks", id }),
+					}).catch((error) => {
+						console.error(
+							`[task] could not keep the description's files for ${id}`,
+							error,
+						);
+					});
+				}
 			}
 
 			return result;

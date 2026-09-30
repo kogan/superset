@@ -335,6 +335,16 @@ async function withPathLock<T>(
 	}
 }
 
+async function resolveWriteTarget(absolutePath: string): Promise<string> {
+	try {
+		return await fs.realpath(absolutePath);
+	} catch (error) {
+		const code = (error as NodeJS.ErrnoException).code;
+		if (code !== "ENOENT" && code !== "ELOOP") throw error;
+		return absolutePath;
+	}
+}
+
 async function writeAtomically({
 	rootPath,
 	absolutePath,
@@ -346,12 +356,13 @@ async function writeAtomically({
 	content: string | Uint8Array;
 	encoding?: string;
 }): Promise<void> {
-	const tempPath = `${absolutePath}.superset-tmp-${randomUUID()}`;
+	const targetPath = await resolveWriteTarget(absolutePath);
+	const tempPath = `${targetPath}.superset-tmp-${randomUUID()}`;
 	await assertParentWithinRoot(rootPath, tempPath);
 
 	let sourceMode: number | undefined;
 	try {
-		const currentStats = await fs.stat(absolutePath);
+		const currentStats = await fs.stat(targetPath);
 		sourceMode = currentStats.mode;
 	} catch (error) {
 		if (!isEnoent(error)) {
@@ -366,7 +377,7 @@ async function writeAtomically({
 		if (sourceMode !== undefined) {
 			await fs.chmod(tempPath, sourceMode);
 		}
-		await fs.rename(tempPath, absolutePath);
+		await fs.rename(tempPath, targetPath);
 	} finally {
 		await fs.rm(tempPath, { force: true });
 	}
@@ -432,7 +443,6 @@ export async function listDirectory({
 }
 
 export async function readFile({
-	rootPath,
 	absolutePath,
 	offset,
 	maxBytes,
@@ -445,13 +455,6 @@ export async function readFile({
 	encoding?: string;
 }): Promise<FsReadResult> {
 	const targetPath = normalizeAbsolutePath(absolutePath);
-	// Explicit outside-root paths are readable, but a path that lexically sits
-	// inside the workspace must also physically resolve there — otherwise a
-	// malicious repo symlink (docs/config.yml -> ~/.ssh/id_rsa) could disguise
-	// a sensitive host file as a workspace file.
-	if (isPathWithinRoot(rootPath, targetPath)) {
-		await assertRealpathWithinRoot(rootPath, targetPath);
-	}
 
 	const fileHandle = await fs.open(targetPath, "r");
 	try {
@@ -562,7 +565,7 @@ export async function writeFile({
 	const execute = async (): Promise<FsWriteResult> => {
 		if (precondition?.ifMatch !== undefined) {
 			try {
-				const stats = await fs.lstat(targetPath);
+				const stats = await fs.stat(targetPath);
 				const currentRevision = toRevision(stats);
 				if (currentRevision !== precondition.ifMatch) {
 					return { ok: false, reason: "conflict", currentRevision };
@@ -913,7 +916,10 @@ export async function movePath({
 	});
 
 	await fs.access(destinationPath).then(
-		() => {
+		async () => {
+			if (await isCaseOnlyRenameOfSameEntry(sourcePath, destinationPath)) {
+				return;
+			}
 			throw new Error(`Destination already exists: ${destinationPath}`);
 		},
 		(error: NodeJS.ErrnoException) => {
@@ -925,6 +931,23 @@ export async function movePath({
 
 	await fs.rename(sourcePath, destinationPath);
 	return { fromAbsolutePath: sourcePath, toAbsolutePath: destinationPath };
+}
+
+// On a case-insensitive volume, `Foo.ts` -> `foo.ts` finds the source itself
+// at the destination. The directory then lists a single entry under the
+// source's name; two hard links on a case-sensitive volume list both names,
+// and renaming one onto the other is a silent no-op in POSIX.
+async function isCaseOnlyRenameOfSameEntry(
+	sourcePath: string,
+	destinationPath: string,
+): Promise<boolean> {
+	if (sourcePath === destinationPath) return false;
+	if (sourcePath.toLowerCase() !== destinationPath.toLowerCase()) return false;
+	const names = await fs.readdir(path.dirname(destinationPath));
+	return (
+		names.includes(path.basename(sourcePath)) &&
+		!names.includes(path.basename(destinationPath))
+	);
 }
 
 export async function copyPath({

@@ -29,6 +29,7 @@ import type {
 import { DashboardSidebarAgentAvatar } from "../DashboardSidebarAgentAvatar";
 
 import { RenameSubagentDialog } from "./components/RenameSubagentDialog";
+import { SubagentStopButton } from "./components/SubagentStopButton";
 
 const STATUS_TEXT_CLASS: Record<RunningAgentStatus, string> = {
 	idle: "text-muted-foreground",
@@ -230,7 +231,11 @@ export function DashboardSidebarAgentRow({
 									{getSubagentLabel(subagent)}
 								</span>
 								<span className="shrink-0 text-[10px]">
-									<Trans>Subagent</Trans>
+									{subagent.needsInput ? (
+										<Trans>Needs input</Trans>
+									) : (
+										<Trans>Subagent</Trans>
+									)}
 								</span>
 							</button>
 							<button
@@ -247,19 +252,11 @@ export function DashboardSidebarAgentRow({
 							>
 								<Pencil className="size-3" aria-hidden />
 							</button>
-							<button
-								type="button"
-								onClick={(event) => {
-									event.stopPropagation();
-									void handleStop();
-								}}
-								disabled={!hostUrl || isStopping}
-								aria-label={stopLabel}
-								title={stopLabel}
-								className="shrink-0 rounded p-0.5 opacity-0 transition-opacity hover:bg-destructive/10 hover:text-destructive group-hover:opacity-100 focus-visible:opacity-100 disabled:pointer-events-none disabled:opacity-40"
-							>
-								<Square className="size-3" aria-hidden />
-							</button>
+							<SubagentStopButton
+								workspaceId={workspaceId}
+								terminalId={agent.terminalId}
+								subagentId={subagent.id}
+							/>
 						</div>
 					))}
 				</div>

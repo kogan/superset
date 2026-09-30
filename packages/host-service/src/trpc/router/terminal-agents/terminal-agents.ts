@@ -2,17 +2,15 @@ import {
 	type AgentDefinitionId,
 	BUILTIN_AGENT_IDS,
 } from "@superset/shared/agent-catalog";
+import { boundTranscriptText } from "@superset/shared/terminal-session-handoff";
 import { normalizeTerminalTitle } from "@superset/shared/terminal-title-scanner";
 import { TRPCError } from "@trpc/server";
 import { eq } from "drizzle-orm";
 import { z } from "zod";
 import type { HostDb } from "../../../db";
-import { terminalSessions, workspaces } from "../../../db/schema";
+import { terminalSessions } from "../../../db/schema";
 import type { EventBus } from "../../../events";
-import {
-	hasHarnessSession,
-	readHarnessTranscript,
-} from "../../../terminal/harness-transcript";
+import { getToolEnvironment } from "../../../terminal/clean-shell-env";
 import { reconcileMissingTerminalSessions } from "../../../terminal/reaper/reaper";
 import {
 	createTerminalSessionInternal,
@@ -23,6 +21,10 @@ import type {
 	TerminalAgentId,
 	TerminalAgentStore,
 } from "../../../terminal-agents";
+import { resolveHostAgentConfig } from "../../../terminal-agents/agent-config";
+import { terminalHarnessSession } from "../../../terminal-agents/harness-session-ref";
+import { hasHarnessSession } from "../../../terminal-agents/harness-sessions";
+import { readHarnessTranscriptOffLoop } from "../../../terminal-agents/harness-sessions/read-off-loop";
 import {
 	claimResumeCandidateBinding,
 	findResumeCandidateBinding,
@@ -33,15 +35,14 @@ import {
 	seedEndedTerminalAgentBinding,
 	unclaimResumeCandidateBinding,
 } from "../../../terminal-agents/persistence";
+import {
+	controlSubagent,
+	getSubagentStopTarget,
+} from "../../../terminal-agents/stop-subagent/stop-subagent";
 import type { HostServiceContext } from "../../../types";
 import { protectedProcedure, router } from "../../index";
-import {
-	type AgentRunResult,
-	resolveHostAgentConfig,
-	runAgentInWorkspace,
-} from "../agents/agents";
+import { type AgentRunResult, runAgentInWorkspace } from "../agents/agents";
 import { toTerminalSessionError } from "../terminal/errors";
-import { resolveDefaultAccountEnv } from "../usage/default-account";
 
 type GetOrCreateResult = {
 	binding: TerminalAgentBinding;
@@ -101,22 +102,8 @@ function bindingHasHarnessSession(
 	db: HostDb,
 	binding: TerminalAgentBinding,
 ): boolean | null {
-	const config = resolveHostAgentConfig(
-		db,
-		binding.definitionId ?? binding.agentId,
-	);
-	if (!config) return null;
-	const worktreePath = db
-		.select({ path: workspaces.worktreePath })
-		.from(workspaces)
-		.where(eq(workspaces.id, binding.workspaceId))
-		.get()?.path;
-	return hasHarnessSession({
-		agentId: config.presetId,
-		sessionId: binding.agentSessionId,
-		worktreePath,
-		env: { ...resolveDefaultAccountEnv(db, config.presetId), ...config.env },
-	});
+	const bound = terminalHarnessSession(db, binding.terminalId);
+	return bound ? hasHarnessSession(bound.ref) : null;
 }
 
 /**
@@ -394,6 +381,67 @@ const agentDefinitionIdSchema = z.union([
 
 const GET_OR_CREATE_TIMEOUT_MS = 10_000;
 
+const subagentControlInput = z.object({
+	workspaceId: z.string().min(1),
+	terminalId: z.string().min(1),
+	subagentId: z.string().min(1).max(256),
+});
+
+function resolveSubagentControl(
+	ctx: HostServiceContext,
+	input: z.infer<typeof subagentControlInput>,
+) {
+	const session = ctx.db.query.terminalSessions
+		.findFirst({
+			where: eq(terminalSessions.id, input.terminalId),
+		})
+		.sync();
+	const binding = ctx.terminalAgentStore.get(input.terminalId);
+	const subagent = ctx.terminalAgentStore.getSubagent(
+		input.terminalId,
+		input.subagentId,
+	);
+	if (
+		!session ||
+		session.originWorkspaceId !== input.workspaceId ||
+		session.status !== "active" ||
+		session.endedAt !== null ||
+		!binding ||
+		binding.workspaceId !== input.workspaceId ||
+		!subagent
+	)
+		throw new TRPCError({
+			code: "NOT_FOUND",
+			message: "Active subagent not found in this workspace",
+		});
+	const target = getSubagentStopTarget(binding, subagent);
+	if (!target)
+		throw new TRPCError({
+			code: "PRECONDITION_FAILED",
+			message: "This agent does not expose independent subagent controls",
+		});
+	return {
+		target,
+		subagent,
+		isStillCurrent: () => {
+			const current = ctx.terminalAgentStore.get(input.terminalId);
+			const child = ctx.terminalAgentStore.getSubagent(
+				input.terminalId,
+				input.subagentId,
+			);
+			return (
+				current?.workspaceId === input.workspaceId &&
+				current.agentSessionId === binding.agentSessionId &&
+				current.startedAt === binding.startedAt &&
+				child?.startedAt === subagent.startedAt &&
+				child.endedAt === undefined &&
+				child.sessionId === subagent.sessionId
+			);
+		},
+	};
+}
+const MAX_AGENT_TRANSCRIPT_CHARS = 400_000;
+
 export const terminalAgentsRouter = router({
 	list: protectedProcedure.query(({ ctx }) => {
 		return ctx.terminalAgentStore.list();
@@ -444,6 +492,61 @@ export const terminalAgentsRouter = router({
 				input.subagentId,
 			),
 		),
+
+	subagentStopCapability: protectedProcedure
+		.input(subagentControlInput)
+		.query(async ({ ctx, input }) => {
+			try {
+				const control = resolveSubagentControl(ctx, input);
+				await controlSubagent(control.target, {
+					mode: "probe",
+					env: await getToolEnvironment(),
+					isStillCurrent: control.isStillCurrent,
+				});
+				return { supported: true };
+			} catch {
+				return { supported: false };
+			}
+		}),
+
+	stopSubagent: protectedProcedure
+		.input(subagentControlInput)
+		.mutation(async ({ ctx, input }) => {
+			const control = resolveSubagentControl(ctx, input);
+			try {
+				await controlSubagent(control.target, {
+					mode: "stop",
+					env: await getToolEnvironment(),
+					isStillCurrent: control.isStillCurrent,
+				});
+			} catch (cause) {
+				throw new TRPCError({
+					code: "PRECONDITION_FAILED",
+					message: "Could not stop this subagent independently",
+					cause,
+				});
+			}
+			const currentChild = ctx.terminalAgentStore.getSubagent(
+				input.terminalId,
+				input.subagentId,
+			);
+			if (
+				control.isStillCurrent() &&
+				currentChild?.lastEventAt === control.subagent.lastEventAt
+			) {
+				const occurredAt = Date.now();
+				ctx.terminalAgentStore.recordSubagentEvent({
+					...input,
+					eventType: "SubagentStop",
+					occurredAt,
+				});
+				ctx.eventBus.broadcastAgentBindingsChanged({
+					workspaceId: input.workspaceId,
+					occurredAt,
+				});
+			}
+			return { subagentId: input.subagentId };
+		}),
 
 	renameSubagent: protectedProcedure
 		.input(
@@ -537,28 +640,25 @@ export const terminalAgentsRouter = router({
 	 */
 	transcript: protectedProcedure
 		.input(z.object({ workspaceId: z.string(), terminalId: z.string() }))
-		.query(({ ctx, input }) => {
+		.query(async ({ ctx, input }) => {
 			const binding = getTerminalAgentBinding(ctx.db, input.terminalId);
 			if (!binding || binding.workspaceId !== input.workspaceId) return null;
-			const worktreePath = ctx.db
-				.select({ path: workspaces.worktreePath })
-				.from(workspaces)
-				.where(eq(workspaces.id, input.workspaceId))
-				.get()?.path;
-			const config = resolveHostAgentConfig(
-				ctx.db,
-				binding.definitionId ?? binding.agentId,
-			);
-			return readHarnessTranscript({
-				agentId: binding.agentId,
-				agentSessionId: binding.agentSessionId,
-				worktreePath,
-				// A pinned provider account keeps its transcript under its own
-				// config directory.
-				env: config
-					? resolveDefaultAccountEnv(ctx.db, config.presetId)
-					: undefined,
-			});
+			const bound = terminalHarnessSession(ctx.db, input.terminalId);
+			const transcript = bound
+				? await readHarnessTranscriptOffLoop(
+						bound.ref,
+						MAX_AGENT_TRANSCRIPT_CHARS,
+					)
+				: null;
+			return transcript
+				? {
+						...transcript,
+						text: boundTranscriptText(
+							transcript.text,
+							MAX_AGENT_TRANSCRIPT_CHARS,
+						),
+					}
+				: null;
 		}),
 
 	/** See {@link findResumedSuccessor}. */

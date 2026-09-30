@@ -84,6 +84,22 @@ describe("external Superset workspaces", () => {
 			expect(existsSync(worktreePath)).toBe(true);
 			await host.trpc.project.remove.mutate({ projectId });
 			expect(existsSync(worktreePath)).toBe(true);
+			const archived = host.db.select().from(workspaces).all();
+			expect(archived.length).toBeGreaterThan(0);
+			expect(archived.every((workspace) => workspace.archivedAt !== null)).toBe(
+				true,
+			);
+			await host.trpc.project.purge.mutate({ projectId });
+			expect(readFileSync(join(worktreePath, "unique"), "utf8")).toBe(
+				"keep me",
+			);
+			expect(existsSync(join(worktreePath, "teardown-ran"))).toBe(false);
+			expect(await repo.git.raw(["worktree", "list", "--porcelain"])).toContain(
+				worktreePath,
+			);
+			expect(await repo.git.raw(["branch", "--list", branch])).toContain(
+				branch,
+			);
 			expect(host.db.select().from(workspaces).all()).toHaveLength(0);
 			expect(host.db.select().from(externalWorkspacePaths).all()).toHaveLength(
 				1,

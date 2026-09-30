@@ -31,6 +31,7 @@ export function readSubagentDescription(
 	const parsed = harness.parseTranscript(text);
 	if (parsed.description?.trim())
 		return normalizeTerminalTitle(parsed.description) ?? undefined;
+	if (parsed.allowPromptFallback === false) return undefined;
 	const prompt = parsed.entries
 		.find((entry) => entry.kind === "user" && !/^[<#]/.test(entry.text.trim()))
 		?.text.trim();

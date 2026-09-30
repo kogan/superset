@@ -36,7 +36,7 @@ describe("Jira code reviewers", () => {
 			visibleStatuses: ["In Development", "Needs QA", "Being QA'd"],
 		});
 		expect(urls[1]?.searchParams.get("jql")).toBe(
-			'(assignee = currentUser() OR cf[10123] = currentUser()) AND status IN ("In Development", "Needs QA", "Being QA\'d") AND issuetype != "Epic" ORDER BY updated DESC',
+			'(assignee = currentUser() OR cf[10123] = currentUser()) AND status IN ("In Development", "Needs QA", "Being QA\'d") AND issuetype != "Epic" ORDER BY Rank ASC',
 		);
 	});
 

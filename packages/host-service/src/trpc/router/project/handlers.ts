@@ -3,6 +3,7 @@ import { rm } from "node:fs/promises";
 import { TRPCError } from "@trpc/server";
 import { eq } from "drizzle-orm";
 import { projects } from "../../../db/schema";
+import { restoreProject } from "../../../projects/project-deletion";
 import type { HostServiceContext } from "../../../types";
 import { persistLocalProject } from "./utils/persist-project";
 import {
@@ -122,6 +123,7 @@ export async function createFromImportLocal(
 		.findFirst({ where: eq(projects.repoPath, resolved.repoPath) })
 		.sync();
 	if (existing) {
+		restoreProject(ctx, existing.id);
 		return {
 			projectId: existing.id,
 			repoPath: resolved.repoPath,

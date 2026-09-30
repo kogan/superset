@@ -1,6 +1,5 @@
 import type { LinearClient, WorkflowState } from "@linear/sdk";
 import { db } from "@superset/db/client";
-import type { SelectTask } from "@superset/db/schema";
 import { members, taskStatuses, tasks, users } from "@superset/db/schema";
 import { userConnection } from "@superset/trpc/connectors";
 import {
@@ -71,7 +70,7 @@ async function resolveLinearAssigneeId(
 }
 
 async function syncTaskToLinear(
-	task: SelectTask,
+	task: typeof tasks.$inferSelect,
 	teamId: string | null,
 ): Promise<{
 	success: boolean;

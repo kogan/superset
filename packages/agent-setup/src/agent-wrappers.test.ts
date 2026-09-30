@@ -26,7 +26,7 @@ let mockedHomeDir = path.join(TEST_ROOT, "home");
 
 mock.module("./notify-hook", () => ({
 	NOTIFY_SCRIPT_NAME: "superestset-notify.sh",
-	NOTIFY_SCRIPT_MARKER: "# SuperestSet agent notification hook v19",
+	NOTIFY_SCRIPT_MARKER: "# SuperestSet agent notification hook v21",
 	getNotifyScriptPath: () => path.join(TEST_HOOKS_DIR, "superestset-notify.sh"),
 	getNotifyScriptContent: () => "#!/bin/bash\nexit 0\n",
 	createNotifyScript: () => {},
@@ -68,6 +68,7 @@ const {
 	createMastraWrapper,
 	createOmpExtension,
 	createPiExtension,
+	createUfoWrapper,
 	getClaudeGlobalSettingsJsonContent,
 	getClaudeManagedHookCommand,
 	getCodexGlobalHooksJsonContent,
@@ -925,6 +926,38 @@ exit 0
 		expect(wrapper).toContain("# Superset wrapper for mastracode");
 		expect(wrapper).toContain('REAL_BIN="$(find_real_binary "mastracode")"');
 		expect(wrapper).toContain('exec "$REAL_BIN" "$@"');
+	});
+
+	it("runs UFO with its identity, original arguments, and exit status", () => {
+		createUfoWrapper();
+		const realBinDir = path.join(TEST_ROOT, "real-bin");
+		mkdirSync(realBinDir, { recursive: true });
+		writeFileSync(
+			path.join(realBinDir, "ufo"),
+			'#!/bin/bash\nprintf "%s\\0" "$SUPERSET_AGENT_ID" "$@"\nexit 23\n',
+			{ mode: 0o755 },
+		);
+		const result = spawnSync(
+			path.join(TEST_BIN_DIR, "ufo"),
+			["--resume", "conversation-id", "Keep $variables\nand 'quotes'"],
+			{
+				encoding: "utf8",
+				env: {
+					...process.env,
+					PATH: `${TEST_BIN_DIR}:${realBinDir}:/usr/bin:/bin`,
+					SUPERSET_AGENT_ID: "",
+					SUPERSET_TERMINAL_ID: "",
+				},
+			},
+		);
+		expect(result.status).toBe(23);
+		expect(result.stdout.split("\0")).toEqual([
+			"ufo",
+			"--resume",
+			"conversation-id",
+			"Keep $variables\nand 'quotes'",
+			"",
+		]);
 	});
 
 	it("creates amp wrapper passthrough", () => {
@@ -1923,9 +1956,22 @@ describe("agent-wrappers codex hooks.json", () => {
 			).toBe(true);
 		}
 
+		const matcher = new RegExp(parsed.hooks.PreToolUse[0].matcher ?? "(?!)");
+		for (const name of [
+			"request_user_input",
+			"functions.request_user_input",
+			"functions.request_user_input_async",
+		])
+			expect(matcher.test(name)).toBe(true);
+		for (const name of [
+			"exec_command",
+			"other_request_user_input",
+			"request_user_input_extra",
+		])
+			expect(matcher.test(name)).toBe(false);
 		expect(parsed.hooks.PreToolUse).toEqual([
 			{
-				matcher: "^request_user_input$",
+				matcher: "(^|[.:/])request_user_input(_async)?$",
 				hooks: [{ type: "command", command: expectedCommand }],
 			},
 		]);
@@ -2054,7 +2100,7 @@ describe("agent-wrappers codex hooks.json", () => {
 		}
 
 		for (const [eventName, matcher] of [
-			["PreToolUse", "^request_user_input$"],
+			["PreToolUse", "(^|[.:/])request_user_input(_async)?$"],
 			["PostToolUse", "*"],
 		] as const) {
 			expect(parsed.hooks[eventName]).toHaveLength(2);

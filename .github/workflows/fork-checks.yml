@@ -45,6 +45,9 @@ jobs:
       - run: bun test packages/port-scanner/src/
       - run: bun test packages/workspace-fs/src/search.test.ts packages/workspace-fs/src/search-content.test.ts
       - run: bun test packages/db/src/runtime.test.ts packages/auth/src/local-bootstrap.test.ts
+      - run: bun test packages/host-service/src/db/migrations.test.ts packages/shared/src/sqlite-migrations
+      - run: bun test packages/host-service/src/projects/project-deletion.test.ts
+      - run: bun test packages/trpc/src/router/page/watch-ownership.local.test.ts
       - run: bun test packages/trpc/src/lib/local-runtime/cache.test.ts packages/trpc/src/lib/local-objects/local-objects.test.ts apps/usercontent/scripts/standalone.test.ts
       - run: bun test src/lib/trpc/routers/jira/jira.test.ts src/lib/trpc/routers/jira/jira-transitions.test.ts src/renderer/routes/_authenticated/_dashboard/jira/components/JiraView/components/JiraIssueList/utils/columnLayout src/renderer/routes/_authenticated/_dashboard/jira/components/JiraView/components/JiraIssueList/components/JiraColumnsDialog src/renderer/routes/_authenticated/_dashboard/jira/components/JiraView/components/JiraIssueList/components/JiraKanban/utils/groupIssuesByStatus.test.ts src/renderer/routes/_authenticated/_dashboard/jira/components/JiraView/components/JiraIssueList/hooks/useJiraMovement/movement.test.ts src/renderer/routes/_authenticated/_dashboard/attention/hooks/useAttentionInbox/attention-items.test.ts src/renderer/routes/_authenticated/_dashboard/attention/hooks/useAttentionInbox/attention-projects.test.ts
         working-directory: apps/desktop
@@ -56,7 +59,11 @@ jobs:
         working-directory: packages/host-service
       - run: bun test src/terminal-agents/
         working-directory: packages/host-service
+      - run: bun test src/trpc/router/notifications
+        working-directory: packages/host-service
       - run: bun test src/renderer/stores/sidebar-agent-expansion.test.ts
+        working-directory: apps/desktop
+      - run: bun test src/renderer/routes/_authenticated/_dashboard/components/DashboardSidebar/components/DashboardSidebarWorkspaceItem/components/DashboardSidebarExpandedWorkspaceRow/components/DashboardSidebarWorkspaceChips/DashboardSidebarWorkspaceChips.test.tsx
         working-directory: apps/desktop
       - run: bun test src/renderer/routes/_authenticated/_dashboard/utils/subagent-label src/renderer/routes/_authenticated/_dashboard/components/DashboardSidebar/components/DashboardSidebarWorkspaceItem/components/DashboardSidebarExpandedWorkspaceRow/components/DashboardSidebarWorkspaceChips/components/DashboardSidebarAgentsList/components/DashboardSidebarAgentRow/components/RenameSubagentDialog
         working-directory: apps/desktop

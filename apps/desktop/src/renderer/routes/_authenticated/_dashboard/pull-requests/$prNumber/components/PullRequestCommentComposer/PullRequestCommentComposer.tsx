@@ -5,13 +5,13 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { LuLoaderCircle } from "react-icons/lu";
 import { useTerminalAgentBindings } from "renderer/hooks/host-service/useTerminalAgentBindings";
 import { useV2AgentConfigs } from "renderer/hooks/useV2AgentConfigs";
-import { AgentPickerSelect } from "renderer/routes/_authenticated/_dashboard/v2-workspace/$workspaceId/hooks/usePaneRegistry/components/AgentCommentComposer/components/AgentPickerSelect";
 import {
+	AgentSessionPicker,
 	type AgentTarget,
-	useDiffCommentTarget,
-} from "renderer/routes/_authenticated/_dashboard/v2-workspace/$workspaceId/hooks/usePaneRegistry/components/AgentCommentComposer/hooks/useDiffCommentTarget";
+	useAgentSessionTarget,
+} from "renderer/routes/_authenticated/_dashboard/components/AgentSessionPicker";
 
-export type { AgentTarget } from "renderer/routes/_authenticated/_dashboard/v2-workspace/$workspaceId/hooks/usePaneRegistry/components/AgentCommentComposer/hooks/useDiffCommentTarget";
+export type { AgentTarget } from "renderer/routes/_authenticated/_dashboard/components/AgentSessionPicker";
 
 interface PullRequestCommentComposerProps {
 	/** Short description of what the comment is anchored to ("Line 42"),
@@ -57,7 +57,7 @@ export function PullRequestCommentComposer({
 		[bindings],
 	);
 	const { data: configs = [] } = useV2AgentConfigs(hostUrl);
-	const { value, resolved, onValueChange } = useDiffCommentTarget({
+	const { value, resolved, onValueChange } = useAgentSessionTarget({
 		sessions,
 		configs,
 	});
@@ -170,7 +170,8 @@ export function PullRequestCommentComposer({
 			</div>
 			<div className="flex flex-wrap items-center justify-between gap-2 border-t border-border/60 bg-muted/30 px-2.5 py-1.5">
 				{destination === "agent" && (
-					<AgentPickerSelect
+					<AgentSessionPicker
+						workspaceId={linkedWorkspaceId}
 						value={value}
 						onValueChange={onValueChange}
 						sessions={sessions}

@@ -17,6 +17,8 @@ export interface CloudWorkspacesValue {
 	/** Undefined until the list has been fetched; empty when it never will be. */
 	workspaces: CloudWorkspaceRow[] | undefined;
 	organizationId: string | null;
+	/** False until the server has answered; a copy restored from disk is stale. */
+	isFresh: boolean;
 }
 
 /**
@@ -45,11 +47,14 @@ export function useCloudWorkspaces(): CloudWorkspacesValue {
 				current.state.data?.some((row) => row.status === "provisioning")
 					? PROVISIONING_POLL_MS
 					: false,
+			refetchIntervalInBackground: true,
 		},
 	);
 
 	return {
-		workspaces: query.data ?? (enabled ? undefined : []),
+		// A disabled query still holds the copy restored from disk.
+		workspaces: enabled ? query.data : [],
 		organizationId,
+		isFresh: query.isSuccess && !query.isStale,
 	};
 }

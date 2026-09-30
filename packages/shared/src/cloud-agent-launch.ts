@@ -32,6 +32,9 @@ export const CLOUD_AGENT_IDS: readonly string[] = HOST_AGENT_PRESETS.filter(
 	(preset) => INSTALLED_IN_SANDBOX.has(preset.presetId),
 ).map((preset) => preset.presetId);
 
+/** The prompt reaches host-service as one command-line argument, and the kernel limits its size. */
+export const CLOUD_AGENT_PROMPT_MAX_LENGTH = 20_000;
+
 export function isCloudAgentId(id: string): boolean {
 	return CLOUD_AGENT_IDS.includes(id);
 }

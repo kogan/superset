@@ -4,10 +4,13 @@ import { z } from "zod";
 import { terminalSessions, workspaces } from "../../../db/schema";
 import { mapEventType } from "../../../events";
 import { verifyAttributionToken } from "../../../terminal-agents/attribution-token";
+import { recordTerminalAgentTranscriptPath } from "../../../terminal-agents/persistence";
+import { isTrustedTranscriptPath } from "../../../terminal-agents/transcript-path";
 import type { HostServiceContext } from "../../../types";
 import { touchLocalWorkspaceActivity } from "../../../workspaces/local-workspace-store";
 import { publicProcedure, router } from "../../index";
 import { captureSessionAccount } from "../usage/session-account/session-account";
+import { continueWorkspaceNaming } from "../workspace-creation/utils/workspace-naming-job";
 
 // Hook scripts emit "" for unset env vars; we coerce to undefined so the
 // AgentIdentity broadcast carries only meaningful fields.
@@ -20,7 +23,7 @@ const agentIdentityInput = z
 	.optional();
 
 // Set when the hook fired inside a subagent (Claude Task tool, Codex
-// spawn_agent). Such events feed the terminal's subagent roster only.
+// spawn_agent). Input requests also notify without changing the parent.
 const subagentInput = z
 	.object({
 		id: z.string(),
@@ -45,6 +48,7 @@ const hookInput = z.object({
 	accountProfile: z.string().max(4096).optional(),
 	apiKey: z.boolean().optional(),
 	attributionToken: z.string().max(128).optional(),
+	transcriptPath: z.string().max(4096).optional(),
 });
 
 function trimOrUndefined(value: string | undefined): string | undefined {
@@ -110,7 +114,7 @@ export const notificationsRouter = router({
 	 */
 	hook: publicProcedure.input(hookInput).mutation(async ({ ctx, input }) => {
 		const subagentId = trimOrUndefined(input.subagent?.id);
-		const eventType = subagentId ? undefined : mapEventType(input.eventType);
+		const eventType = mapEventType(input.eventType);
 		if (!subagentId && !eventType) {
 			return { success: true, ignored: true as const };
 		}
@@ -131,10 +135,11 @@ export const notificationsRouter = router({
 
 		const occurredAt = Date.now();
 
-		// Subagent activity is not the terminal's lifecycle: no chime, no
-		// status change, no session id capture. The roster change is fanned
-		// out as an invalidation so the sidebar refetches bindings.
 		if (subagentId) {
+			const wasWaiting = ctx.terminalAgentStore.getSubagent(
+				input.terminalId,
+				subagentId,
+			)?.needsInput;
 			const agentType = trimOrUndefined(input.subagent?.type);
 			const recorded = ctx.terminalAgentStore.recordSubagentHook({
 				terminalId: input.terminalId,
@@ -155,6 +160,21 @@ export const notificationsRouter = router({
 			if (!recorded) {
 				return { success: true, ignored: true as const };
 			}
+			if (eventType === "PermissionRequest" && !wasWaiting) {
+				const child = ctx.terminalAgentStore.getSubagent(
+					input.terminalId,
+					subagentId,
+				);
+				const name = child?.customName ?? child?.description;
+				ctx.eventBus.broadcastAgentLifecycle({
+					workspaceId: terminalSession.originWorkspaceId,
+					terminalId: input.terminalId,
+					eventType,
+					subagent: { id: subagentId, ...(name ? { name } : {}) },
+					preview: trimOrUndefined(input.preview),
+					occurredAt,
+				});
+			}
 			ctx.eventBus.broadcastAgentBindingsChanged({
 				workspaceId: terminalSession.originWorkspaceId,
 				occurredAt,
@@ -167,15 +187,6 @@ export const notificationsRouter = router({
 
 		const agent = normalizeAgentIdentity(input.agent);
 		const preview = trimOrUndefined(input.preview);
-
-		ctx.eventBus.broadcastAgentLifecycle({
-			workspaceId: terminalSession.originWorkspaceId,
-			eventType,
-			terminalId: input.terminalId,
-			...(agent ? { agent } : {}),
-			...(preview ? { preview } : {}),
-			occurredAt,
-		});
 
 		const prior = ctx.terminalAgentStore.get(input.terminalId);
 		const account =
@@ -205,6 +216,32 @@ export const notificationsRouter = router({
 			...(agent?.definitionId ? { definitionId: agent.definitionId } : {}),
 			occurredAt,
 		});
+		const transcriptPath = trimOrUndefined(input.transcriptPath);
+		if (
+			agent?.sessionId &&
+			transcriptPath &&
+			isTrustedTranscriptPath(transcriptPath)
+		) {
+			recordTerminalAgentTranscriptPath(ctx.db, {
+				terminalId: input.terminalId,
+				agentSessionId: agent.sessionId,
+				transcriptPath,
+			});
+		}
+
+		if (
+			eventType !== "PermissionRequest" ||
+			prior?.lastEventType !== "PermissionRequest"
+		) {
+			ctx.eventBus.broadcastAgentLifecycle({
+				workspaceId: terminalSession.originWorkspaceId,
+				eventType,
+				terminalId: input.terminalId,
+				...(agent ? { agent } : {}),
+				...(preview ? { preview } : {}),
+				occurredAt,
+			});
+		}
 
 		// Every lifecycle event is activity for the sidebar's "Last active"
 		// ranking. Best-effort: a failed write must not fail the hook, which
@@ -218,6 +255,18 @@ export const notificationsRouter = router({
 		} catch (err) {
 			console.warn(
 				`[notifications.hook] failed to record activity for workspace ${terminalSession.originWorkspaceId}:`,
+				err,
+			);
+		}
+
+		try {
+			continueWorkspaceNaming(ctx, terminalSession.originWorkspaceId, {
+				eventType,
+				agentReply: preview,
+			});
+		} catch (err) {
+			console.warn(
+				`[notifications.hook] failed to schedule naming for workspace ${terminalSession.originWorkspaceId}:`,
 				err,
 			);
 		}

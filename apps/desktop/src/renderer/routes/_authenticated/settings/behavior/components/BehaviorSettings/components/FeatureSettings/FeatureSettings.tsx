@@ -25,6 +25,13 @@ export function FeatureSettings({
 	);
 	const items = [
 		{
+			id: SETTING_ITEM_ID.BEHAVIOR_FEATURE_WORKSPACES,
+			label: t({ message: "Workspaces" }),
+			enabled: preferences.workspacesView,
+			setEnabled: (enabled: boolean) =>
+				preferences.setEnabled("workspacesView", enabled),
+		},
+		{
 			id: SETTING_ITEM_ID.BEHAVIOR_FEATURE_ATTENTION,
 			label: t({ message: "Attention inbox" }),
 			enabled: preferences.attentionInbox,

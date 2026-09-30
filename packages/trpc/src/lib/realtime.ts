@@ -1,4 +1,7 @@
-import type { RealtimeNudgeKind } from "@superset/shared/realtime";
+import type {
+	RealtimeNudgeKind,
+	RealtimeUpdate,
+} from "@superset/shared/realtime";
 import { waitUntil } from "@vercel/functions";
 import { env } from "../env";
 
@@ -8,8 +11,11 @@ import { env } from "../env";
  * by it: the request is handed to the platform to finish after the response,
  * and a failed delivery only costs freshness until the next focus.
  */
-export function nudge(organizationId: string, kind: RealtimeNudgeKind): void {
-	// Local windows poll this one API owner; no hosted realtime service is needed.
+export function nudge(
+	organizationId: string,
+	kind: RealtimeNudgeKind,
+	update?: RealtimeUpdate,
+): void {
 	if (process.env.SUPERESTSET_LOCAL === "1") return;
 	waitUntil(
 		fetch(`${env.REALTIME_URL}/v2/nudge`, {
@@ -18,7 +24,7 @@ export function nudge(organizationId: string, kind: RealtimeNudgeKind): void {
 				authorization: `Bearer ${env.REALTIME_NUDGE_SECRET}`,
 				"content-type": "application/json",
 			},
-			body: JSON.stringify({ organizationId, kind }),
+			body: JSON.stringify({ organizationId, kind, update }),
 			signal: AbortSignal.timeout(5_000),
 		})
 			.then((response) => {

@@ -6,7 +6,7 @@ import {
 	type SubagentTranscriptEntry,
 	summarizeToolInput,
 } from "../subagent-transcript";
-import { defineSubagentHarness } from "./types";
+import { defineSubagentHarness, type ParsedSubagentTranscript } from "./types";
 
 /** Text of a Codex message content list (`input_text` / `output_text`). */
 function codexContentText(content: unknown): string {
@@ -20,12 +20,34 @@ function codexContentText(content: unknown): string {
 		.join("\n");
 }
 
-export function parseCodexRolloutTranscript(text: string): {
-	entries: SubagentTranscriptEntry[];
-	description?: string;
-} {
+function taskPathDescription(agentPath: string): string | undefined {
+	const task = agentPath
+		.split("/")
+		.filter((part) => part.trim())
+		.at(-1)
+		?.trim();
+	if (
+		!task ||
+		/^(root|default|general[-_ ]purpose|worker|agent|subagent)$/i.test(task) ||
+		/^(?:(?:task|worker|agent|subagent)[_-])?[\da-f-]{8,}$/i.test(task)
+	) {
+		return undefined;
+	}
+	const name = task
+		.replace(/([a-z\d])([A-Z])/g, "$1 $2")
+		.replace(/[_\s-]+/g, " ")
+		.trim();
+	return name ? name.charAt(0).toUpperCase() + name.slice(1) : undefined;
+}
+
+export function parseCodexRolloutTranscript(
+	text: string,
+): ParsedSubagentTranscript {
 	const entries: SubagentTranscriptEntry[] = [];
 	let description: string | undefined;
+	let ownAgentPath: string | undefined;
+	let sawSessionMetadata = false;
+	let allowPromptFallback = true;
 	let line = 0;
 	for (const raw of text.split("\n")) {
 		line += 1;
@@ -43,20 +65,26 @@ export function parseCodexRolloutTranscript(text: string): {
 		const id = typeof payload.id === "string" ? payload.id : `line-${line}`;
 
 		if (record.type === "session_meta") {
-			const nickname =
-				typeof payload.agent_nickname === "string"
-					? payload.agent_nickname
-					: "";
-			const agentPath =
-				typeof payload.agent_path === "string" ? payload.agent_path : "";
-			const task = agentPath.split("/").filter(Boolean).at(-1);
-			const name =
-				task && !/^(root|default|worker|agent|subagent)$/i.test(task)
-					? task.replace(/[_-]+/g, " ")
-					: nickname;
-			description = name
-				? name.charAt(0).toUpperCase() + name.slice(1)
+			if (sawSessionMetadata) continue;
+			sawSessionMetadata = true;
+			const source = isRecord(payload.source) ? payload.source : undefined;
+			const subagent = isRecord(source?.subagent) ? source.subagent : undefined;
+			const spawn = isRecord(subagent?.thread_spawn)
+				? subagent.thread_spawn
 				: undefined;
+			ownAgentPath =
+				typeof payload.agent_path === "string"
+					? payload.agent_path
+					: typeof spawn?.agent_path === "string"
+						? spawn.agent_path
+						: undefined;
+			description = taskPathDescription(ownAgentPath ?? "");
+			allowPromptFallback = !(
+				ownAgentPath ||
+				payload.parent_thread_id ||
+				payload.forked_from_id ||
+				subagent
+			);
 			continue;
 		}
 		if (record.type !== "response_item") continue;
@@ -75,6 +103,19 @@ export function parseCodexRolloutTranscript(text: string): {
 			case "agent_message": {
 				const body = codexContentText(payload.content).trim();
 				if (!body) break;
+				if (
+					!description &&
+					ownAgentPath &&
+					payload.recipient === ownAgentPath &&
+					/^Message Type: NEW_TASK\s*$/m.test(body)
+				) {
+					const taskName = /^Task name:[ \t]*([^\r\n]+)$/m.exec(body)?.[1];
+					const prompt = /^Payload:[ \t]*\r?\n([\s\S]*)$/m
+						.exec(body)?.[1]
+						?.trim();
+					description =
+						taskPathDescription(taskName ?? "") ?? prompt?.split("\n")[0];
+				}
 				const author = typeof payload.author === "string" ? payload.author : "";
 				entries.push({
 					id,
@@ -132,7 +173,7 @@ export function parseCodexRolloutTranscript(text: string): {
 				break;
 		}
 	}
-	return { entries, description };
+	return { entries, description, allowPromptFallback };
 }
 
 /**

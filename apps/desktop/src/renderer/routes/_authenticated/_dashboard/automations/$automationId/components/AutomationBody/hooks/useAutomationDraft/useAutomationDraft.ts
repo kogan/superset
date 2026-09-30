@@ -12,6 +12,8 @@ export interface AutomationDraft {
 	targetHostId: string | null;
 	v2ProjectId: string | null;
 	v2WorkspaceId: string | null;
+	cloudWorkspaceId: string | null;
+	environmentId: string | null;
 	tags: string[];
 	continueAgentSession: boolean;
 	triggers: DraftTrigger[];

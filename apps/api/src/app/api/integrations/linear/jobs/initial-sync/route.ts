@@ -177,7 +177,6 @@ async function performInitialSync(
 						"assigneeAvatarUrl",
 						"estimate",
 						"dueDate",
-						"labels",
 						"branch",
 						"startedAt",
 						"completedAt",

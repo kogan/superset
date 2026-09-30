@@ -1,6 +1,7 @@
 import { useLingui } from "@lingui/react/macro";
 import { errorMessage } from "@superset/i18n/errors";
 import { startableCloudEnvironments } from "@superset/shared/cloud-environments";
+import { CLOUD_HOST_ID } from "@superset/shared/host-routing";
 import { toast } from "@superset/ui/sonner";
 import { useMatchRoute, useNavigate } from "@tanstack/react-router";
 import { useCallback, useRef, useState } from "react";
@@ -13,7 +14,6 @@ import type { NewWorkspacePromptContextApi } from "renderer/stores/new-workspace
 import { usePromptHistoryStore } from "renderer/stores/prompt-history";
 import { useWorkspaceCreates } from "renderer/stores/workspace-creates";
 import { useDashboardNewWorkspaceDraft } from "../../../../../DashboardNewWorkspaceDraftContext";
-import { CLOUD_HOST_ID } from "../../../components/DevicePicker/DevicePicker";
 import type { WorkspaceCreateAgent } from "../../types";
 import type { UseUploadAttachmentsApi } from "../useUploadAttachments";
 import { linkCreatedJiraWorkspace } from "./linkCreatedJiraWorkspace";
@@ -183,16 +183,22 @@ export function useSubmitWorkspace(
 					// 20,000-character cap.
 					prompt:
 						(cloudPrompt ?? draft.prompt).trim().slice(0, 20_000) || undefined,
+					typedPrompt: draft.prompt.trim().slice(0, 20_000) || undefined,
+					taskIds: draft.linkedIssues
+						.flatMap((issue) =>
+							issue.source === "internal" && issue.taskId ? [issue.taskId] : [],
+						)
+						.slice(0, 10),
 					branch: draft.baseBranch ?? branchName ?? undefined,
+					...(attachmentIds.length > 0
+						? { attachmentFileIds: attachmentIds }
+						: {}),
 					...(wantCloudAgent
 						? {
 								agent: selectedAgent,
 								model: selectedModel ?? undefined,
 								effort: selectedEffort ?? undefined,
 								mode: selectedMode ?? undefined,
-								...(attachmentIds.length > 0
-									? { attachmentFileIds: attachmentIds }
-									: {}),
 							}
 						: {}),
 				});

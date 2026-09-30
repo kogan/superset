@@ -282,6 +282,7 @@ export async function deleteObjects(
 export async function presignedGetUrl(
 	key: string,
 	expiresInSeconds = 60 * 60,
+	signingDate?: Date,
 ): Promise<string> {
 	const local = localRuntime();
 	if (local) {
@@ -293,7 +294,9 @@ export async function presignedGetUrl(
 				bucket: "private",
 				key,
 				method: "GET",
-				exp: Math.floor(Date.now() / 1000) + expiresInSeconds,
+				exp:
+					Math.floor((signingDate?.getTime() ?? Date.now()) / 1000) +
+					expiresInSeconds,
 			},
 		});
 	}
@@ -305,7 +308,7 @@ export async function presignedGetUrl(
 	return getSignedUrl(
 		cloudClient,
 		new GetObjectCommand({ Bucket: bucket, Key: key }),
-		{ expiresIn: expiresInSeconds },
+		{ expiresIn: expiresInSeconds, signingDate },
 	);
 }
 

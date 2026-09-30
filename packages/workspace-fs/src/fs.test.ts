@@ -152,7 +152,7 @@ describe("readFile", () => {
 		}
 	});
 
-	it("rejects in-root symlinks that resolve outside the workspace root", async () => {
+	it("reads in-root symlinks that resolve outside the workspace root", async () => {
 		const rootPath = await createTempRoot();
 		const outsideRoot = await createTempRoot();
 		const targetPath = path.join(outsideRoot, "secret.txt");
@@ -160,13 +160,13 @@ describe("readFile", () => {
 		const linkPath = path.join(rootPath, "innocent.txt");
 		await fs.symlink(targetPath, linkPath);
 
-		await expect(
-			readFile({
-				rootPath,
-				absolutePath: linkPath,
-				encoding: "utf-8",
-			}),
-		).rejects.toThrow("outside workspace root");
+		const result = await readFile({
+			rootPath,
+			absolutePath: linkPath,
+			encoding: "utf-8",
+		});
+
+		expect(result).toMatchObject({ kind: "text", content: "secret" });
 	});
 
 	it("reads small file without exceeding limit", async () => {
@@ -310,6 +310,64 @@ describe("writeFile", () => {
 
 		expect(successes).toHaveLength(1);
 		expect(conflicts).toHaveLength(1);
+	});
+
+	it("writes through a symlinked file instead of replacing the link", async () => {
+		const rootPath = await createTempRoot();
+		const realPath = path.join(rootPath, "real", "CLAUDE.md");
+		await fs.mkdir(path.dirname(realPath));
+		await fs.writeFile(realPath, "before");
+		const absolutePath = path.join(rootPath, "CLAUDE.md");
+		await fs.symlink(realPath, absolutePath);
+
+		const result = await writeFile({
+			rootPath,
+			absolutePath,
+			content: "after",
+		});
+
+		expect(result.ok).toEqual(true);
+		expect((await fs.lstat(absolutePath)).isSymbolicLink()).toEqual(true);
+		expect(await fs.readFile(realPath, "utf-8")).toEqual("after");
+		expect((await fs.readdir(rootPath)).sort()).toEqual(["CLAUDE.md", "real"]);
+	});
+
+	it("matches a read revision when writing through a symlink", async () => {
+		const rootPath = await createTempRoot();
+		const realPath = path.join(rootPath, "real.txt");
+		await fs.writeFile(realPath, "before");
+		const absolutePath = path.join(rootPath, "link.txt");
+		await fs.symlink(realPath, absolutePath);
+
+		const readResult = await readFile({
+			rootPath,
+			absolutePath,
+			encoding: "utf-8",
+		});
+		const result = await writeFile({
+			rootPath,
+			absolutePath,
+			content: "after",
+			precondition: { ifMatch: readResult.revision },
+		});
+
+		expect(result.ok).toEqual(true);
+		expect((await fs.lstat(absolutePath)).isSymbolicLink()).toEqual(true);
+		expect(await fs.readFile(realPath, "utf-8")).toEqual("after");
+	});
+
+	it("still refuses a symlink that escapes the workspace root", async () => {
+		const rootPath = await createTempRoot();
+		const outsideRoot = await createTempRoot();
+		const outsidePath = path.join(outsideRoot, "secret.txt");
+		await fs.writeFile(outsidePath, "secret");
+		const absolutePath = path.join(rootPath, "link.txt");
+		await fs.symlink(outsidePath, absolutePath);
+
+		await expect(
+			writeFile({ rootPath, absolutePath, content: "leaked" }),
+		).rejects.toThrow("outside workspace root");
+		expect(await fs.readFile(outsidePath, "utf-8")).toEqual("secret");
 	});
 
 	it("writes Uint8Array content", async () => {
@@ -684,5 +742,53 @@ describe("movePath", () => {
 
 		expect(didThrow).toEqual(true);
 		expect((await fs.stat(sourceAbsolutePath)).isDirectory()).toEqual(true);
+	});
+
+	it("renames a file to a different case of its own name", async () => {
+		const rootPath = await createTempRoot();
+		const sourceAbsolutePath = path.join(rootPath, "beta.txt");
+		const destinationAbsolutePath = path.join(rootPath, "Beta.txt");
+		await fs.writeFile(sourceAbsolutePath, "beta");
+
+		await movePath({ rootPath, sourceAbsolutePath, destinationAbsolutePath });
+
+		expect(await fs.readdir(rootPath)).toEqual(["Beta.txt"]);
+		expect(await fs.readFile(destinationAbsolutePath, "utf8")).toEqual("beta");
+	});
+
+	it("rejects a destination that is a hard link to the source", async () => {
+		const rootPath = await createTempRoot();
+		const sourceAbsolutePath = path.join(rootPath, "a.txt");
+		const destinationAbsolutePath = path.join(rootPath, "b.txt");
+		await fs.writeFile(sourceAbsolutePath, "shared");
+		await fs.link(sourceAbsolutePath, destinationAbsolutePath);
+
+		await expect(
+			movePath({ rootPath, sourceAbsolutePath, destinationAbsolutePath }),
+		).rejects.toThrow("Destination already exists");
+		expect((await fs.readdir(rootPath)).sort()).toEqual(["a.txt", "b.txt"]);
+	});
+
+	it("rejects a hard link whose name differs from the source only by case", async () => {
+		const rootPath = await createTempRoot();
+		const sourceAbsolutePath = path.join(rootPath, "beta.txt");
+		const destinationAbsolutePath = path.join(rootPath, "Beta.txt");
+		await fs.writeFile(sourceAbsolutePath, "shared");
+		const linked = await fs
+			.link(sourceAbsolutePath, destinationAbsolutePath)
+			.then(() => true)
+			.catch((error: NodeJS.ErrnoException) => {
+				if (error.code === "EEXIST") return false;
+				throw error;
+			});
+		if (!linked) return;
+
+		await expect(
+			movePath({ rootPath, sourceAbsolutePath, destinationAbsolutePath }),
+		).rejects.toThrow("Destination already exists");
+		expect((await fs.readdir(rootPath)).sort()).toEqual([
+			"Beta.txt",
+			"beta.txt",
+		]);
 	});
 });
