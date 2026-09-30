@@ -22,6 +22,7 @@ import {
 	type AutoUpdateProgress,
 	type AutoUpdateStatus,
 	type AutoUpdateStatusEvent,
+	updateFeedUrl,
 } from "shared/auto-update";
 import { PLATFORM } from "shared/constants";
 
@@ -65,9 +66,7 @@ const IS_AUTO_UPDATE_PLATFORM = PLATFORM.IS_MAC || PLATFORM.IS_LINUX;
 // (for example latest-mac.yml and latest-linux.yml) from the correct release.
 // - Stable: fetches from /releases/latest/download/ (latest non-prerelease)
 // - Canary: fetches from /releases/download/desktop-canary/ (rolling canary tag)
-const UPDATE_FEED_URL = IS_PRERELEASE
-	? "https://github.com/kogan/superset/releases/download/desktop-canary"
-	: "https://github.com/kogan/superset/releases/latest/download";
+const UPDATE_FEED_URL = updateFeedUrl(IS_PRERELEASE);
 
 export type { AutoUpdateStatusEvent } from "shared/auto-update";
 

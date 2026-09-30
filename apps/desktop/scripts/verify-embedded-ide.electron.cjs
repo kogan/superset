@@ -6,13 +6,6 @@ const { join } = require("node:path");
 const net = require("node:net");
 const { randomUUID, randomBytes } = require("node:crypto");
 const assert = require("node:assert/strict");
-const { IdeManager } = require(join(process.argv[3], "ide-manager.js"));
-const { initializeIdeSettings, setIdeTheme } = require(
-	join(process.argv[3], "default-settings.js"),
-);
-const { installBranchChangesExtension } = require(
-	join(process.argv[3], "branch-changes-extension.js"),
-);
 app.on("window-all-closed", () => {});
 let runtime;
 let temporary;
@@ -25,6 +18,14 @@ const fail = (error) => {
 };
 process.on("uncaughtException", fail);
 process.on("unhandledRejection", fail);
+const { IdeManager } = require(join(process.argv[3], "ide-manager.js"));
+const { initializeIdeSettings, setIdeTheme } = require(
+	join(process.argv[3], "default-settings.js"),
+);
+const { installBranchChangesExtension } = require(
+	join(process.argv[3], "branch-changes-extension.js"),
+);
+
 const pause = (ms) => new Promise((r) => setTimeout(r, ms));
 async function waitForFile(path, accept = () => true) {
 	let latest;
@@ -54,13 +55,23 @@ async function waitForBranchView(guest, accept) {
    };
    return {
     expanded: header?.getAttribute('aria-expanded') === 'true',
+    messages: [...(pane?.querySelectorAll('.message') || [])].map(element => {
+     const range = document.createRange(); range.selectNodeContents(element);
+     return {text: element.textContent, rect: element.getBoundingClientRect().toJSON(), textRect: range.getBoundingClientRect().toJSON()};
+    }),
+    viewport: {width: innerWidth, height: innerHeight},
     files: [...(pane?.querySelectorAll('[role="treeitem"]') || [])].filter(visible).map(element => element.getAttribute('aria-label')),
-    noChanges: [...(pane?.querySelectorAll('.message') || [])].some(element => visible(element) && element.textContent === 'No changes'),
+    noChanges: [...(pane?.querySelectorAll('.message') || [])].some(element => {
+     const range = document.createRange(); range.selectNodeContents(element);
+     const rect = range.getBoundingClientRect();
+     return rect.width > 0 && rect.height > 0 && rect.top >= 0 && rect.bottom <= innerHeight && element.textContent === 'No changes';
+    }),
    };
   })()`);
 		if (accept(state)) return state;
 		await pause(100);
 	}
+
 	throw new Error(`Unexpected Branch Changes view: ${JSON.stringify(state)}`);
 }
 async function freePort() {

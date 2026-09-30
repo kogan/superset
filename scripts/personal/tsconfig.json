@@ -1,0 +1,9 @@
+{
+	"extends": "../release/tsconfig.json",
+	"include": [
+		"mac-signing.ts",
+		"mac-release.test.ts",
+		"verify-mac-release.ts",
+		"build-mac.ts"
+	]
+}

@@ -1,6 +1,6 @@
 import { spawn } from "node:child_process";
 import { constants } from "node:fs";
-import { cp, mkdtemp, realpath, rm } from "node:fs/promises";
+import { cp, mkdtemp, realpath, rm, symlink } from "node:fs/promises";
 import { createRequire } from "node:module";
 import { tmpdir } from "node:os";
 import { basename, dirname, join, resolve } from "node:path";
@@ -59,6 +59,11 @@ try {
 		],
 	});
 	if (!build.success) throw new Error(build.logs.map(String).join("\n"));
+	await symlink(
+		resolve(import.meta.dir, "../../../packages/host-service/node_modules"),
+		join(temporary, "node_modules"),
+		"dir",
+	);
 	const settingsBuild = await Bun.build({
 		entrypoints: [
 			resolve(
@@ -73,6 +78,7 @@ try {
 		outdir: temporary,
 		target: "node",
 		format: "cjs",
+		external: ["jsonc-parser"],
 		plugins: [linguiMacroPlugin],
 	});
 	if (!settingsBuild.success)

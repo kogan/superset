@@ -6,6 +6,7 @@
 import { existsSync } from "node:fs";
 import { join } from "node:path";
 import type { Configuration } from "electron-builder";
+import { FORK } from "../../packages/shared/src/standalone";
 import pkg from "./package.json";
 import {
 	packagedAsarUnpackGlobs,
@@ -24,7 +25,7 @@ const dmgBackgroundPath = join(
 );
 
 const config: Configuration = {
-	appId: "com.deexi333.superestset",
+	appId: FORK.bundleId,
 	productName,
 	copyright: `Copyright © ${currentYear} — ${author}`,
 	electronVersion: pkg.devDependencies.electron.replace(/^\^/, ""),
