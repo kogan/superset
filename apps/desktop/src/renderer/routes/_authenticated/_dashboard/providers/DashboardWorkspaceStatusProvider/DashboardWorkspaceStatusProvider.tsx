@@ -20,6 +20,7 @@ import {
 	type TerminalAgentBinding,
 } from "renderer/hooks/host-service/useTerminalAgentBindings";
 import { deriveTerminalAgentStatus } from "renderer/hooks/host-service/useTerminalAgentStatuses";
+import { useCloudWorkspaces } from "renderer/hooks/useCloudWorkspaces";
 import { getHostEventBus } from "renderer/lib/host-event-bus";
 import { getHostServiceClientByUrl } from "renderer/lib/host-service-client";
 import { useHostWorkspaces } from "renderer/routes/_authenticated/providers/HostWorkspacesProvider";
@@ -41,6 +42,8 @@ export interface SidebarWorkspaceStatusEntry {
 	statuses: ReadonlyMap<string, PaneStatus>;
 	/** Populated only for the active workspace — the only row that shows it. */
 	diffStats: DiffStats | null;
+	/** When the host reported `status`, for mark-seen; null when derived from bindings. */
+	reportedAt: number | null;
 }
 
 const EMPTY_ENTRY: SidebarWorkspaceStatusEntry = {
@@ -49,6 +52,7 @@ const EMPTY_ENTRY: SidebarWorkspaceStatusEntry = {
 	bindings: new Map(),
 	statuses: new Map(),
 	diffStats: null,
+	reportedAt: null,
 };
 
 /**
@@ -156,6 +160,7 @@ function entriesEqual(
 	return (
 		left.status === right.status &&
 		left.isUnread === right.isUnread &&
+		left.reportedAt === right.reportedAt &&
 		(left.diffStats === right.diffStats ||
 			(left.diffStats !== null &&
 				right.diffStats !== null &&
@@ -178,24 +183,55 @@ export function DashboardWorkspaceStatusProvider({
 	const [store] = useState(() => new SidebarWorkspaceStatusStore());
 	const queryClient = useQueryClient();
 	const { workspaces, cache: hostWorkspacesCache } = useHostWorkspaces();
-
-	const computedTargets = useMemo<WorkspaceStatusTarget[]>(
+	const { workspaces: cloudWorkspaces, isFresh: isCloudListFresh } =
+		useCloudWorkspaces();
+	const reportedByWorkspaceId = useMemo(
 		() =>
-			workspaces.map((workspace) => ({
+			new Map(
+				(cloudWorkspaces ?? []).map((workspace) => [
+					workspace.id,
+					{
+						status: workspace.agentStatus ?? null,
+						at: workspace.agentStatusAt?.getTime() ?? null,
+					},
+				]),
+			),
+		[cloudWorkspaces],
+	);
+	const workspaceSeenAt = useV2NotificationStore(
+		(state) => state.workspaceSeenAt,
+	);
+	const pruneWorkspaceSeen = useV2NotificationStore(
+		(state) => state.pruneWorkspaceSeen,
+	);
+	useEffect(() => {
+		if (!cloudWorkspaces || !isCloudListFresh) return;
+		const live = new Set(cloudWorkspaces.map((workspace) => workspace.id));
+		for (const id of Object.keys(
+			useV2NotificationStore.getState().workspaceSeenAt,
+		)) {
+			if (!live.has(id)) pruneWorkspaceSeen(id);
+		}
+	}, [cloudWorkspaces, isCloudListFresh, pruneWorkspaceSeen]);
+
+	const computedTargets = useMemo<WorkspaceStatusTarget[]>(() => {
+		const byId = new Map<string, WorkspaceStatusTarget>();
+		for (const workspace of workspaces) {
+			byId.set(workspace.id, {
 				workspaceId: workspace.id,
-				// A sandbox row gets no live subscription from the sidebar: holding
-				// a socket to it keeps its VM awake for as long as the app is open,
-				// and the sidebar is open all day. Its status goes live when the
-				// workspace itself is opened and its own subscribers connect.
 				hostUrl:
 					!enabled ||
 					!workspace.hostReachable ||
 					hostWorkspacesCache.isSandboxHost(workspace.hostId)
 						? null
 						: hostWorkspacesCache.resolveHostUrl(workspace.hostId),
-			})),
-		[workspaces, hostWorkspacesCache, enabled],
-	);
+			});
+		}
+		for (const workspace of cloudWorkspaces ?? []) {
+			byId.set(workspace.id, { workspaceId: workspace.id, hostUrl: null });
+		}
+		return [...byId.values()];
+	}, [workspaces, cloudWorkspaces, hostWorkspacesCache, enabled]);
 	// Fingerprint-stabilized: the host-workspaces cache object churns identity
 	// on unrelated updates, and the subscription effect below must only re-run
 	// when a workspace or its host URL actually changes.
@@ -353,16 +389,32 @@ export function DashboardWorkspaceStatusProvider({
 					break;
 				}
 			}
+			const report =
+				target.hostUrl === null
+					? reportedByWorkspaceId.get(target.workspaceId)
+					: undefined;
+			const reported =
+				report?.status === "review" &&
+				report.at !== null &&
+				(workspaceSeenAt[target.workspaceId] ?? 0) >= report.at
+					? null
+					: (report?.status ?? null);
 			const candidate: SidebarWorkspaceStatusEntry = {
 				status: getHighestPriorityStatus([
 					hasManualUnread ? "review" : undefined,
+					reported ?? undefined,
 					...statuses.values(),
 				]),
-				isUnread: hasManualUnread || hasAttentionTerminal,
+				isUnread:
+					hasManualUnread ||
+					hasAttentionTerminal ||
+					reported === "review" ||
+					reported === "failed",
 				bindings,
 				statuses,
 				diffStats:
 					target.workspaceId === activeWorkspaceId ? activeDiffStats : null,
+				reportedAt: report?.at ?? null,
 			};
 			const previousEntry = previous.get(target.workspaceId);
 			next.set(
@@ -381,6 +433,8 @@ export function DashboardWorkspaceStatusProvider({
 		terminalSeenAt,
 		activeWorkspaceId,
 		activeDiffStats,
+		reportedByWorkspaceId,
+		workspaceSeenAt,
 	]);
 
 	store.replaceEntries(entries);
@@ -455,10 +509,17 @@ export function useMarkSidebarWorkspaceTerminalsSeen(
 	const markTerminalSeen = useV2NotificationStore(
 		(state) => state.markTerminalSeen,
 	);
+	const markWorkspaceSeen = useV2NotificationStore(
+		(state) => state.markWorkspaceSeen,
+	);
 	return useCallback(() => {
 		// Host-clock only: "seen through the binding's last event".
-		for (const binding of store.get(workspaceId).bindings.values()) {
+		const entry = store.get(workspaceId);
+		for (const binding of entry.bindings.values()) {
 			markTerminalSeen(binding.terminalId, binding.lastEventAt);
 		}
-	}, [store, workspaceId, markTerminalSeen]);
+		if (entry.reportedAt !== null) {
+			markWorkspaceSeen(workspaceId, entry.reportedAt);
+		}
+	}, [store, workspaceId, markTerminalSeen, markWorkspaceSeen]);
 }

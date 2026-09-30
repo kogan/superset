@@ -15,7 +15,7 @@ mock.module("../../lib/r2", () => ({
 	objectExists: async () => true,
 }));
 
-const { db, dbWs } = await import("@superset/db/client");
+const { db, closeDatabase } = await import("@superset/db/client");
 const {
 	members,
 	organizations,
@@ -178,9 +178,7 @@ afterAll(async () => {
 	await db.delete(organizations).where(eq(organizations.id, ORG));
 	await db.delete(users).where(eq(users.id, USER));
 	await db.delete(users).where(eq(users.id, OTHER_USER));
-	// Guarded: the pooled client is shared, so a sibling integration file that
-	// already closed it must not fail this teardown.
-	await dbWs.$client.end?.().catch(() => {});
+	await closeDatabase();
 });
 
 describe("pageComment.listForOrganization", () => {

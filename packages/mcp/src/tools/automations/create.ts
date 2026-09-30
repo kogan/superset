@@ -1,4 +1,10 @@
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
+import {
+	describeEnvironments,
+	selectCloudEnvironment,
+	startableCloudEnvironments,
+} from "@superset/shared/cloud-environments";
+import { CLOUD_HOST_ID } from "@superset/shared/host-routing";
 import { workspaceTagsInputSchema } from "@superset/shared/workspace-tags";
 import { z } from "zod";
 import { createMcpCaller } from "../../caller";
@@ -26,14 +32,28 @@ export function register(server: McpServer): void {
 				.min(1)
 				.max(200)
 				.describe(
-					"Host agent instance id (UUID from /settings/agents) or presetId (e.g. 'claude', 'codex').",
+					"Host agent instance id (UUID from /settings/agents) or presetId (e.g. 'claude', 'codex'). A cloud automation runs 'claude' or 'codex'.",
 				),
 			targetHostId: z
 				.string()
 				.min(1)
 				.nullish()
 				.describe(
-					"Host that should run the automation. Defaults to the owner's online host.",
+					"Host that should run the automation. Defaults to the owner's online host. 'cloud' runs it in a cloud workspace: pass environmentId to start one per run, cloudWorkspaceId to reuse one, or both.",
+				),
+			cloudWorkspaceId: z
+				.string()
+				.uuid()
+				.nullish()
+				.describe(
+					"With targetHostId 'cloud': the cloud workspace to reuse every run.",
+				),
+			environmentId: z
+				.string()
+				.uuid()
+				.nullish()
+				.describe(
+					"With targetHostId 'cloud': the environment each run's cloud workspace starts from.",
 				),
 			v2ProjectId: z
 				.string()
@@ -69,7 +89,7 @@ export function register(server: McpServer): void {
 				.boolean()
 				.optional()
 				.describe(
-					"Deliver each run's prompt into the agent session the previous run left behind instead of starting another beside it. Requires v2WorkspaceId — that is where the session lives. Use for an automation that should build up one conversation (triaging items one by one) rather than starting clean each time.",
+					"Deliver each run's prompt into the agent session the previous run left behind instead of starting another beside it. Requires a pinned v2WorkspaceId or cloudWorkspaceId — that is where the session lives. Use for an automation that should build up one conversation (triaging items one by one) rather than starting clean each time.",
 				),
 			tags: workspaceTagsInputSchema
 				.optional()
@@ -79,6 +99,29 @@ export function register(server: McpServer): void {
 		},
 		handler: async (input, ctx) => {
 			const caller = createMcpCaller(ctx);
+			if (
+				input.targetHostId === CLOUD_HOST_ID &&
+				!input.environmentId &&
+				!input.cloudWorkspaceId
+			) {
+				// The same rule as workspaces_create: a default only when it is the only choice.
+				const environments = await caller.environment.list({
+					organizationId: ctx.organizationId,
+				});
+				const environment = selectCloudEnvironment(environments, undefined);
+				if (!environment) {
+					const startable = startableCloudEnvironments(environments);
+					throw new Error(
+						startable.length === 0
+							? "No environment with repositories in this organization. Create one in Settings → Environments."
+							: `Pass environmentId or cloudWorkspaceId, one of: ${describeEnvironments(startable)}`,
+					);
+				}
+				return caller.automation.create({
+					...input,
+					environmentId: environment.id,
+				});
+			}
 			return caller.automation.create(input);
 		},
 	});

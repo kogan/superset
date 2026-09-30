@@ -2,6 +2,8 @@ import { Trans, useLingui } from "@lingui/react/macro";
 import type { SelectAutomationRun } from "@superset/db/schema";
 import { errorMessage } from "@superset/i18n/errors";
 import type { DraftTrigger } from "@superset/shared/automation-triggers";
+import { isCloudAgentId } from "@superset/shared/cloud-agent-launch";
+import { CLOUD_HOST_ID } from "@superset/shared/host-routing";
 import type { RouterOutputs } from "@superset/trpc";
 import { Button } from "@superset/ui/button";
 import { toast } from "@superset/ui/sonner";
@@ -11,13 +13,13 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useMemo, useState } from "react";
 import { LuTriangleAlert } from "react-icons/lu";
 import { EmojiTextInput } from "renderer/components/EmojiTextInput";
-import { MarkdownEditor } from "renderer/components/MarkdownEditor";
-import { useHostUrl } from "renderer/hooks/host-service/useHostTargetUrl";
-import { useV2AgentChoices } from "renderer/hooks/useV2AgentChoices";
+import { RichText } from "renderer/components/RichText";
+import { CLOUD_AGENT_CHOICES } from "renderer/hooks/useV2AgentChoices/cloud-agent-choices";
 import { apiTrpcClient } from "renderer/lib/api-trpc-client";
 import { useWorkspaceHostOptions } from "renderer/routes/_authenticated/components/DashboardNewWorkspaceModal/components/DashboardNewWorkspaceForm/components/DevicePicker/hooks/useWorkspaceHostOptions/useWorkspaceHostOptions";
 import { AgentPicker } from "../../../components/AgentPicker";
 import { useProviderOptions } from "../../../components/providers/useProviderOptions";
+import { useAutomationAgentChoices } from "../../../hooks/useAutomationAgentChoices";
 import { useProjectFileSearch } from "../../../hooks/useProjectFileSearch";
 import { matchAgentChoice } from "../../../utils/agentIdentity";
 import { PreviousRunsList } from "../PreviousRunsList";
@@ -76,6 +78,8 @@ export function AutomationBody({
 			targetHostId: automation.targetHostId,
 			v2ProjectId: automation.v2ProjectId,
 			v2WorkspaceId: automation.v2WorkspaceId,
+			cloudWorkspaceId: automation.cloudWorkspaceId,
+			environmentId: automation.environmentId,
 			tags: automation.tags,
 			continueAgentSession: automation.continueAgentSession,
 			triggers: automation.triggers.map((trigger) => ({
@@ -119,9 +123,8 @@ export function AutomationBody({
 
 	const { localHostId } = useWorkspaceHostOptions();
 	const hostId = draft.targetHostId ?? localHostId ?? null;
-	const hostUrl = useHostUrl(hostId);
 	const { agents: hostAgents, isFetched: hostAgentsFetched } =
-		useV2AgentChoices(hostUrl);
+		useAutomationAgentChoices(hostId);
 	// Only warn once the host's terminal configs have loaded — the Superset
 	// chat entry is flag-gated, so list length alone can't tell "not loaded
 	// yet / host unreachable" apart from "agent missing".
@@ -262,10 +265,20 @@ export function AutomationBody({
 								v2ProjectId: draft.v2ProjectId,
 								targetHostId: draft.targetHostId,
 								v2WorkspaceId: draft.v2WorkspaceId,
+								cloudWorkspaceId: draft.cloudWorkspaceId,
+								environmentId: draft.environmentId,
 								tags: draft.tags,
 								continueAgentSession: draft.continueAgentSession,
 							}}
-							onScopeChange={(patch: Partial<ScopeDraft>) => edit(patch)}
+							onScopeChange={(patch: Partial<ScopeDraft>) =>
+								edit({
+									...patch,
+									...(patch.targetHostId === CLOUD_HOST_ID &&
+									!isCloudAgentId(draft.agent)
+										? { agent: CLOUD_AGENT_CHOICES[0]?.id ?? draft.agent }
+										: {}),
+								})
+							}
 							drafts={draft.triggers}
 							onEditTriggers={editTriggers}
 							problems={shownProblems}
@@ -278,8 +291,8 @@ export function AutomationBody({
 						</span>
 						<div className="flex flex-col rounded-xl border border-border bg-card/40">
 							<div className="min-h-[240px] px-4 py-3">
-								<MarkdownEditor
-									content={draft.prompt}
+								<RichText
+									value={draft.prompt}
 									// No onSave: it fires on blur, which would save twice.
 									onChange={(next: string) => edit({ prompt: next })}
 									editable={!readOnly}

@@ -28,7 +28,6 @@ export interface LinearIssue {
 		type: string;
 		position: number;
 	};
-	labels: { nodes: Array<{ id: string; name: string }> };
 	project: { id: string; name: string } | null;
 	cycle: { id: string; name: string } | null;
 }
@@ -118,12 +117,6 @@ const ISSUES_QUERY = `
           type
           position
         }
-        labels {
-          nodes {
-            id
-            name
-          }
-        }
         project {
           id
           name
@@ -210,7 +203,6 @@ export function mapIssueToTask(
 		assigneeAvatarUrl,
 		estimate: issue.estimate,
 		dueDate: issue.dueDate ? new Date(issue.dueDate) : null,
-		labels: issue.labels.nodes.map((l) => l.name),
 		branch: issue.branchName || null,
 		startedAt: issue.startedAt ? new Date(issue.startedAt) : null,
 		completedAt: issue.completedAt ? new Date(issue.completedAt) : null,

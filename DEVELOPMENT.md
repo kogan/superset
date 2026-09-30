@@ -57,7 +57,7 @@ Before starting the workspace host, the app connects existing Superset workspace
 
 ## Publish a download for the team
 
-Build an Apple Silicon release from the release branch with `bun run build:mac`, then run the verification commands above. It writes `superset++-<version>-arm64.dmg`, a matching `.zip`, and `latest-mac.yml` under `apps/desktop/release`. The DMG is for first installs; the ZIP and manifest let installed apps update themselves. A `--dir` build produces an app bundle, not release artifacts.
+Build an Apple Silicon release from the release branch with `bun run build:mac`, then run the verification commands above. It writes `superset-plus-plus-<version>-arm64.dmg`, a matching `.zip`, and `latest-mac.yml` under `apps/desktop/release`. The build verifies that the manifest names the generated files and that their sizes and hashes match. Rerun that check with `bun run scripts/personal/verify-mac-release.ts`. The DMG is for first installs; the ZIP and manifest let installed apps update themselves. A `--dir` build produces an app bundle, not release artifacts.
 
 To publish the verified installer:
 
@@ -86,6 +86,17 @@ bun run build:mac --signed
 ```
 
 The signed build checks for a valid Developer ID Application identity before compiling, enables certificate discovery, and requires signing during packaging. It cannot silently fall back to an ad-hoc signature. If you have multiple identities, select the same one for every release with electron-builder's `CSC_NAME` setting. Signing and notarization are separate: this option does not configure notarization credentials. The first switch from an ad-hoc build can still require permission approval again.
+
+For internal distribution without an Apple Developer membership, use a persistent self-signed code-signing certificate. Keep its private key outside the repository and back it up securely. Import it into a dedicated keychain, add that keychain to your user's search list, and approve trust for the code-signing policy on the build Mac. Select the certificate explicitly by its SHA-1 fingerprint:
+
+```sh
+security find-identity -v -p codesigning /path/to/signing.keychain-db
+CSC_NAME=YOUR_40_CHARACTER_CERTIFICATE_FINGERPRINT \
+CSC_KEYCHAIN=/path/to/signing.keychain-db \
+bun run build:mac --self-signed
+```
+
+This mode requires the selected identity and refuses to fall back to an ad-hoc signature. It disables notarization and timestamping. It does not grant Apple trust or remove Gatekeeper's first-install approval requirement. Keep the same certificate and bundle identifier for future releases, and test a real update before distribution. The existing ad-hoc installation must be replaced manually once; it will reject the new certificate through its updater. Replacing or losing the self-signed certificate also requires a manual installation for existing users.
 
 Do not run old SuperestSet and new superset++ helpers together. They share `com.deexi333.superestset`, but different ad-hoc builds have different code requirements. macOS can alternate its Documents permission between those identities and prompt repeatedly. Quitting the window may leave terminal daemons alive. Finish or explicitly stop the old terminal sessions before retiring the old app; never kill a daemon without checking which sessions it owns. Keep the current app at one stable installation path. A separate test data directory does not give a test build a separate macOS permission identity.
 

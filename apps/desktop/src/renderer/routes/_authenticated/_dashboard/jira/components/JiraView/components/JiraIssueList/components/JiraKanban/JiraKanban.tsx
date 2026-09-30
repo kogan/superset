@@ -12,7 +12,7 @@ import { toast } from "@superset/ui/sonner";
 import { useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 import { useHostProjects } from "renderer/hooks/host-projects/useHostProjects";
-import { getPullRequestTarget } from "renderer/lib/getPullRequestTarget";
+import { getPullRequestTarget } from "renderer/lib/github/getPullRequestTarget";
 import { electronTrpcClient } from "renderer/lib/trpc-client";
 import { usePullRequestsSplitViewStore } from "renderer/routes/_authenticated/_dashboard/pull-requests/stores/pullRequestsSplitViewStore";
 import { JiraKanbanCard } from "./components/JiraKanbanCard";
@@ -40,11 +40,11 @@ export function JiraKanban({
 	const { projects } = useHostProjects();
 	const openPullRequest = (url: string) => {
 		const target = getPullRequestTarget(url, projects);
-		if (target) {
+		if (target?.projectId) {
 			usePullRequestsSplitViewStore.getState().expandDetail();
 			void navigate({
 				to: "/pull-requests/$prNumber",
-				params: { prNumber: target.prNumber },
+				params: { prNumber: String(target.ref.number) },
 				search: { project: target.projectId },
 			});
 			return;

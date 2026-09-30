@@ -825,7 +825,7 @@ export function usePaneRegistry({
 				getIcon: () => <GitPullRequest className="size-3.5" />,
 				getTitle: (pane) => {
 					const data = pane.data as PullRequestPaneData;
-					return t({ message: `Pull request #${data.prNumber}` });
+					return t({ message: `Pull request #${data.number}` });
 				},
 				renderPane: (ctx: RendererContext<PaneViewerData>) => (
 					<PullRequestPane
@@ -888,6 +888,7 @@ export function usePaneRegistry({
 							),
 							renderHeaderExtras: (ctx: RendererContext<PaneViewerData>) => (
 								<PagePaneHeaderExtras
+									onCreateNewAgentSession={createNewAgentSession}
 									data={ctx.pane.data as PagePaneData}
 									paneId={ctx.pane.id}
 									workspaceId={workspaceId}

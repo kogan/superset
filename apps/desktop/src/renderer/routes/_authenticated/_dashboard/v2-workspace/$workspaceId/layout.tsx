@@ -9,6 +9,7 @@ import {
 } from "renderer/hooks/useCloudWorkspaces";
 import { useV2UserPreferences } from "renderer/hooks/useV2UserPreferences";
 import { electronTrpc } from "renderer/lib/electron-trpc";
+import { WorkspaceNotFoundState } from "renderer/routes/_authenticated/_dashboard/components/WorkspaceNotFoundState";
 import { useDashboardSidebarState } from "renderer/routes/_authenticated/hooks/useDashboardSidebarState";
 import { useCollections } from "renderer/routes/_authenticated/providers/CollectionsProvider";
 import { useHostWorkspaces } from "renderer/routes/_authenticated/providers/HostWorkspacesProvider";
@@ -19,7 +20,6 @@ import { StateScreenShell } from "../components/StateScreenShell";
 import { WorkspaceCreateErrorState } from "../components/WorkspaceCreateErrorState";
 import { WorkspaceCreatingState } from "../components/WorkspaceCreatingState";
 import { WorkspaceHostIncompatibleState } from "../components/WorkspaceHostIncompatibleState";
-import { WorkspaceNotFoundState } from "../components/WorkspaceNotFoundState";
 import { useRemoteHostStatus } from "../hooks/useRemoteHostStatus";
 import { useWorkspaceMissVerdict } from "../hooks/useWorkspaceMissVerdict";
 import { WorkspaceProvider } from "../providers/WorkspaceProvider";
@@ -162,7 +162,10 @@ function V2WorkspaceLayout() {
 		}
 		return (
 			<StateScreenShell>
-				<WorkspaceNotFoundState workspaceId={workspaceId} />
+				<WorkspaceNotFoundState
+					workspaceId={workspaceId}
+					browseTo="/v2-workspaces"
+				/>
 			</StateScreenShell>
 		);
 	}
@@ -173,7 +176,10 @@ function V2WorkspaceLayout() {
 				<WorkspaceCreatingState
 					name={workspace.name}
 					branch={workspace.branch}
-					startedAt={new Date(workspace.createdAt).getTime()}
+					startedAt={pendingTransaction.createdAt.getTime()}
+					workspaceReady={
+						hostWorkspace ? Boolean(hostWorkspace.worktreePath) : true
+					}
 					isSession={workspace.type === "session"}
 				/>
 			</StateScreenShell>

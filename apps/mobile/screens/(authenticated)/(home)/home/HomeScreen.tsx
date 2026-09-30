@@ -2,6 +2,7 @@ import { LegendList } from "@legendapp/list/react-native";
 import { useLingui } from "@lingui/react/macro";
 import { i18n } from "@superset/i18n";
 import { FEATURE_FLAGS } from "@superset/shared/constants";
+import { getWorkspaceActivityTime } from "@superset/shared/workspace-activity";
 import { useQueryClient } from "@tanstack/react-query";
 import { isAfter } from "date-fns";
 import * as Haptics from "expo-haptics";
@@ -221,12 +222,12 @@ export function HomeScreen() {
 		(state) => state.toggleProject,
 	);
 
-	// Recency ranks a workspace by its latest activity — the newest of its own
-	// update and its terminals'.
+	// Recency ranks a workspace by its latest activity — the newest of its
+	// own and its terminals'.
 	const activityTs = useCallback(
 		(workspace: HostWorkspaceItem) => {
-			const workspaceTs = new Date(workspace[sort]).getTime();
-			if (sort !== "updatedAt") return workspaceTs;
+			if (sort !== "updatedAt") return new Date(workspace[sort]).getTime();
+			const workspaceTs = getWorkspaceActivityTime(workspace);
 			const terminalTs = (terminalsByWorkspace.get(workspace.id) ?? []).reduce(
 				(newest, row) => Math.max(newest, row.ts),
 				0,

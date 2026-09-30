@@ -6,19 +6,24 @@ import { waitForUnresponsiveHost } from "../../lib/host/liveness";
 import {
 	isProcessAlive,
 	readManifest,
-	removeManifest,
+	removeManifestIfOwnedBy,
 } from "../../lib/host/manifest";
 import {
 	describeHostExit,
 	type SpawnHostResult,
 	spawnHostService,
 } from "../../lib/host/spawn";
+import { terminateProcess } from "../../lib/host/terminate";
 import { resolveOrganization } from "../../lib/resolve-org";
 
 export default command({
+	sandbox: false,
 	description: "Start the host service",
 	options: {
 		daemon: boolean().desc("Run in background"),
+		autoUpdate: boolean().desc(
+			"Automatically update and restart this host hourly",
+		),
 		port: number().desc("Port to listen on"),
 		org: string().desc("Organization to register under (id, slug, or name)"),
 	},
@@ -51,6 +56,7 @@ export default command({
 				api: ctx.api,
 				port: options.port,
 				daemon: options.daemon ?? false,
+				autoUpdate: options.autoUpdate ?? false,
 			});
 
 			spinner.stop(
@@ -81,9 +87,6 @@ export default command({
 		}
 
 		const stopWatching = new AbortController();
-		signal.addEventListener("abort", () => stopWatching.abort(), {
-			once: true,
-		});
 		const failure = await Promise.race([
 			running.exited.then(
 				(exit) => `exited unexpectedly (${describeHostExit(exit)})`,
@@ -91,7 +94,7 @@ export default command({
 			waitForUnresponsiveHost({
 				endpoint: `http://127.0.0.1:${running.port}`,
 				authToken: running.secret,
-				signal: stopWatching.signal,
+				signal: AbortSignal.any([signal, stopWatching.signal]),
 			}).then((unresponsive) =>
 				unresponsive ? "stopped answering health checks" : null,
 			),
@@ -101,14 +104,15 @@ export default command({
 		if (failure && !signal.aborted) {
 			// A wedged event loop never runs a SIGTERM handler.
 			if (isProcessAlive(running.pid)) process.kill(running.pid, "SIGKILL");
-			if (readManifest(organization.id)?.pid === running.pid) {
-				removeManifest(organization.id);
-			}
+			removeManifestIfOwnedBy(organization.id, running.pid);
 			throw new CLIError(
 				`Host service ${failure}`,
-				"Run it under a supervisor that restarts on failure, e.g. systemd with Restart=on-failure.",
+				"Run it under a supervisor that restarts on failure, e.g. systemd with Restart=on-failure and KillMode=process.",
 			);
 		}
+
+		await terminateProcess(running.pid, { exited: running.exited });
+		removeManifestIfOwnedBy(organization.id, running.pid);
 
 		return {
 			data: {

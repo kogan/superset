@@ -11,6 +11,7 @@ import { BulletList } from "@tiptap/extension-bullet-list";
 import { Code } from "@tiptap/extension-code";
 import CodeBlockLowlight from "@tiptap/extension-code-block-lowlight";
 import { Document } from "@tiptap/extension-document";
+import FileHandler from "@tiptap/extension-file-handler";
 import { HardBreak } from "@tiptap/extension-hard-break";
 import { Heading } from "@tiptap/extension-heading";
 import { History } from "@tiptap/extension-history";
@@ -27,6 +28,8 @@ import TaskItem from "@tiptap/extension-task-item";
 import TaskList from "@tiptap/extension-task-list";
 import { Text } from "@tiptap/extension-text";
 import { Underline } from "@tiptap/extension-underline";
+import { Dropcursor, TrailingNode } from "@tiptap/extensions";
+import type { Node as ProseMirrorNode } from "@tiptap/pm/model";
 import {
 	type Editor,
 	EditorContent,
@@ -35,9 +38,8 @@ import {
 } from "@tiptap/react";
 import { BubbleMenu } from "@tiptap/react/menus";
 import { common, createLowlight } from "lowlight";
-import { useEffect, useRef } from "react";
+import { type MutableRefObject, useEffect, useRef } from "react";
 import { BubbleMenuToolbar } from "renderer/components/MarkdownRenderer/components/TipTapMarkdownRenderer/components/BubbleMenuToolbar";
-import { env } from "renderer/env.renderer";
 import { useInlineUrlPolicy } from "renderer/lib/clickPolicy";
 import {
 	SafeLink,
@@ -52,28 +54,51 @@ import {
 	type FileMentionSearchFn,
 	FileMentionSuggestion,
 } from "./components/FileMention";
+import { ImageView } from "./components/ImageView";
+import {
+	getLinearProxyUrl,
+	isLinearImageUrl,
+} from "./components/ImageView/utils/linearImage";
+import {
+	RecordMentionNode,
+	type RecordMentionSearchFn,
+	RecordMentionSuggestion,
+} from "./components/RecordMention";
 import { SlashCommand } from "./components/SlashCommand";
 
 const lowlight = createLowlight(common);
 
-const LINEAR_IMAGE_HOST = "uploads.linear.app";
-
-function isLinearImageUrl(src: string): boolean {
-	try {
-		const url = new URL(src);
-		return url.host === LINEAR_IMAGE_HOST;
-	} catch {
-		return false;
-	}
-}
-
-function getLinearProxyUrl(linearUrl: string): string {
-	const proxyUrl = new URL(`${env.NEXT_PUBLIC_API_URL}/api/proxy/linear-image`);
-	proxyUrl.searchParams.set("url", linearUrl);
-	return proxyUrl.toString();
-}
+const escapeAttribute = (value: string) =>
+	value.replace(/&/g, "&amp;").replace(/"/g, "&quot;");
 
 const LinearImage = Image.extend({
+	addNodeView() {
+		return ReactNodeViewRenderer(ImageView);
+	},
+	addStorage() {
+		return {
+			markdown: {
+				serialize(
+					state: {
+						write: (text: string) => void;
+						esc: (text: string) => string;
+					},
+					node: ProseMirrorNode,
+				) {
+					const { src, alt, title, width } = node.attrs;
+					if (width) {
+						state.write(
+							`<img src="${escapeAttribute(src ?? "")}" alt="${escapeAttribute(alt ?? "")}" width="${Math.round(Number(width))}">`,
+						);
+						return;
+					}
+					state.write(
+						`![${state.esc(alt ?? "")}](${String(src ?? "").replace(/[()]/g, "\\$&")}${title ? ` "${String(title).replace(/"/g, '\\"')}"` : ""})`,
+					);
+				},
+			},
+		};
+	},
 	addAttributes() {
 		return {
 			...this.parent?.(),
@@ -154,8 +179,14 @@ interface MarkdownEditorProps {
 	onEnterSubmit?: () => void;
 	/** If provided, enables @-mention file search for the editor. */
 	searchFiles?: FileMentionSearchFn;
+	/** If provided (and searchFiles isn't), @ mentions people, tasks, and pull requests. */
+	searchMentions?: RecordMentionSearchFn;
 	/** If provided, pasted file items (e.g. clipboard images) are forwarded here. */
 	onPasteFiles?: (files: File[]) => void;
+	/** If provided, files dropped on the editor are forwarded here with the drop position. */
+	onDropFiles?: (files: File[], position: number) => void;
+	/** Receives the editor so a caller can insert content at the cursor. */
+	editorHandle?: MutableRefObject<Editor | null>;
 	/** Toggle optional affordances. Each defaults to enabled. */
 	features?: {
 		slashCommand?: boolean;
@@ -172,6 +203,13 @@ function getMarkdown(editor: Editor | null): string {
 		| Record<string, { getMarkdown?: () => string }>
 		| undefined;
 	return storage?.markdown?.getMarkdown?.() ?? "";
+}
+
+const SIGNED_URL_QUERY =
+	/(https?:\/\/[^\s?#)"'<>]+)\?[^\s#)"'<>]*X-Amz-[^\s#)"'<>]*/g;
+
+function withoutUrlSignatures(markdown: string): string {
+	return markdown.replace(SIGNED_URL_QUERY, "$1");
 }
 
 function isMarkdownTable(text: string): boolean {
@@ -199,7 +237,10 @@ export function MarkdownEditor({
 	onModEnter,
 	onEnterSubmit,
 	searchFiles,
+	searchMentions,
 	onPasteFiles,
+	onDropFiles,
+	editorHandle,
 	features,
 	editable = true,
 }: MarkdownEditorProps) {
@@ -218,8 +259,14 @@ export function MarkdownEditor({
 	// Thread through a ref so the extension reads the live callback each fire.
 	const searchFilesRef = useRef(searchFiles);
 	searchFilesRef.current = searchFiles;
+	const searchMentionsRef = useRef(searchMentions);
+	searchMentionsRef.current = searchMentions;
 	const onPasteFilesRef = useRef(onPasteFiles);
 	onPasteFilesRef.current = onPasteFiles;
+	const onDropFilesRef = useRef(onDropFiles);
+	onDropFilesRef.current = onDropFiles;
+	const onModEnterRef = useRef(onModEnter);
+	onModEnterRef.current = onModEnter;
 	const onEnterSubmitRef = useRef(onEnterSubmit);
 	onEnterSubmitRef.current = onEnterSubmit;
 	const editorRef = useRef<Editor | null>(null);
@@ -299,6 +346,16 @@ export function MarkdownEditor({
 			LinearImage.configure({
 				HTMLAttributes: { class: "max-w-full h-auto rounded-md my-3" },
 			}),
+			Dropcursor.configure({ color: "var(--primary)", width: 2 }),
+			TrailingNode,
+			...(onDropFilesRef.current
+				? [
+						FileHandler.configure({
+							onDrop: (_editor, files, position) =>
+								onDropFilesRef.current?.(files, position),
+						}),
+					]
+				: []),
 			TableKit.configure({
 				table: {
 					resizable: false,
@@ -338,6 +395,15 @@ export function MarkdownEditor({
 			}),
 			...(showSlashCommand ? [SlashCommand] : []),
 			...(showEmoji ? [EmojiSuggestion] : []),
+			RecordMentionNode,
+			...(!showFileMention && searchMentionsRef.current
+				? [
+						RecordMentionSuggestion.configure({
+							searchMentions: (query) =>
+								searchMentionsRef.current?.(query) ?? Promise.resolve([]),
+						}),
+					]
+				: []),
 			...(showFileMention
 				? [
 						FileMentionNode,
@@ -352,11 +418,11 @@ export function MarkdownEditor({
 		content,
 		editorProps: {
 			attributes: {
-				class: cn("focus:outline-none min-h-[100px]", editorClassName),
+				class: cn("focus:outline-none min-h-0", editorClassName),
 			},
 			handleKeyDown: (_, event) => {
 				if ((event.metaKey || event.ctrlKey) && event.key === "Enter") {
-					onModEnter?.();
+					onModEnterRef.current?.();
 					return true;
 				}
 				if (
@@ -424,6 +490,7 @@ export function MarkdownEditor({
 		},
 	});
 	editorRef.current = editor;
+	if (editorHandle) editorHandle.current = editor;
 
 	useEffect(() => {
 		if (editor && editor.isEditable !== editable) editor.setEditable(editable);
@@ -433,7 +500,8 @@ export function MarkdownEditor({
 		if (!editor || editor.isFocused) return;
 
 		const currentMarkdown = getMarkdown(editor);
-		if (currentMarkdown === content) return;
+		if (withoutUrlSignatures(currentMarkdown) === withoutUrlSignatures(content))
+			return;
 
 		editor.commands.setContent(content, { emitUpdate: false });
 	}, [content, editor]);
@@ -449,7 +517,7 @@ export function MarkdownEditor({
 					}}
 					shouldShow={({ editor: e, from, to }) => {
 						if (from === to) return false;
-						if (e.isActive("codeBlock")) return false;
+						if (e.isActive("codeBlock") || e.isActive("image")) return false;
 						return true;
 					}}
 				>
@@ -458,7 +526,7 @@ export function MarkdownEditor({
 			)}
 			<EditorContent
 				editor={editor}
-				className="w-full flex-1 min-h-0 flex flex-col [&>.ProseMirror]:flex-1 [&>.ProseMirror]:min-h-0"
+				className="w-full flex-1 min-h-0 flex flex-col [&>.ProseMirror]:flex-1"
 			/>
 		</div>
 	);

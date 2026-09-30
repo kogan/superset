@@ -319,25 +319,44 @@ The running host server.
 
 Stop the local host server.
 
-<Command name="superset stop">
+<Command
+	name="superset stop"
+	options={[
+		{ flag: "--terminals", description: "Also stop the terminal daemon. This ends every terminal and agent on the machine for the organization." },
+	]}
+>
 Sends SIGTERM, waits up to 10 seconds, sends SIGKILL if still alive, then
 removes the manifest. If sending SIGTERM itself throws, the command errors
 and the manifest is left in place.
 
+The terminal daemon keeps running after the host server stops, so the next
+`superset start` picks up the same terminals. With `--terminals`, the command
+stops the host server first, then the terminal daemon, the same way. It
+signals only the pid the daemon reports over its socket, never the pid in its
+manifest, which can be stale. If the socket is missing or refuses the
+connection, the manifest is removed without a signal. If the socket accepts
+the connection but the daemon does not answer, the command errors after it
+has stopped the host server, and leaves the daemon and its manifest in place.
+
 ```bash
 superset stop
+superset stop --terminals
 ```
 
 <CommandReturns>
-The stopped host server, if one was running.
+The processes the command stopped, if any were running.
 
 <JsonOutput>
 ```ts
-// No manifest
+// Nothing running
 { running: false }
 
-// Manifest existed
-{ pid: number; organizationId: string }
+// Something stopped
+{
+  pid: number | null;               // host server; null if none was running
+  terminalDaemonPids: number[];     // empty without --terminals or if none was running
+  organizationId: string;
+}
 ```
 </JsonOutput>
 </CommandReturns>
@@ -1326,22 +1345,6 @@ Page metadata including `id`, `title`, `version`, and `url`, plus `unanchored`,
 Delete a page and every version. Interactive terminals ask for confirmation
 unless `--yes` is passed; non-interactive input does not prompt.
 </Command>
-
----
-
-### environments
-
-<Command name="superset environments list">
-List the active organization's cloud environments, including their IDs, names,
-and repositories. Human-readable output marks unusable environments. JSON
-returns the environment array, including entries that cannot start a workspace.
-
-```bash
-superset environments list --json
-```
-</Command>
-
----
 
 ### mcp
 

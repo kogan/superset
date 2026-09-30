@@ -267,6 +267,20 @@
       "when": 1789910883438,
       "tag": "0037_subagent_names",
       "breakpoints": true
+    },
+    {
+      "idx": 38,
+      "version": "6",
+      "when": 1790376226579,
+      "tag": "0038_binding_transcript_path",
+      "breakpoints": true
+    },
+    {
+      "idx": 39,
+      "version": "6",
+      "when": 1790492072422,
+      "tag": "0039_project_soft_delete",
+      "breakpoints": true
     }
   ]
 }

@@ -20,6 +20,10 @@
 			"types": "./dist-types/host/index.d.ts",
 			"default": "./src/host/index.ts"
 		},
+		"./watch-scan": {
+			"types": "./dist-types/find-nested-repos.d.ts",
+			"default": "./src/find-nested-repos.ts"
+		},
 		"./resource-uri": {
 			"types": "./dist-types/resource-uri.d.ts",
 			"default": "./src/resource-uri.ts"
@@ -35,7 +39,7 @@
 		"@parcel/watcher": "2.5.6",
 		"chokidar": "4.0.3",
 		"fast-glob": "3.3.3",
-		"picomatch": "4.0.3"
+		"picomatch": "4.0.4"
 	},
 	"devDependencies": {
 		"@superset/typescript": "workspace:*",

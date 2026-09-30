@@ -37,7 +37,7 @@ import {
 	useChangesSidebarFilePolicy,
 } from "renderer/lib/clickPolicy";
 import { FileIcon } from "renderer/lib/fileIcons";
-import { DiscardConfirmDialog } from "renderer/routes/_authenticated/_dashboard/v2-workspace/$workspaceId/components/DiscardConfirmDialog";
+import { DiscardConfirmDialog } from "renderer/routes/_authenticated/_dashboard/components/DiscardConfirmDialog";
 import { StatusIndicator } from "renderer/routes/_authenticated/_dashboard/v2-workspace/$workspaceId/components/StatusIndicator";
 import {
 	type ChangesetFile,
