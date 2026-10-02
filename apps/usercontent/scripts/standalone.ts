@@ -22,6 +22,7 @@ type StandaloneOptions = {
 	staticUrl?: string;
 	appUrl?: string;
 	frameAncestors?: string;
+	realtimeUrl?: string;
 };
 
 type RunningStandaloneServer = {
@@ -37,6 +38,7 @@ type IpcReadyMessage = {
 
 const DEFAULT_HOSTNAME = "127.0.0.1";
 const DEFAULT_ADVERTISED_HOSTNAME = "frame.usercontent.localhost";
+const DEFAULT_REALTIME_URL = "https://realtime.superset.sh";
 
 function rangeFromWorkerRange(
 	range: R2Range | undefined,
@@ -55,18 +57,21 @@ function createEnv({
 	origin,
 	appUrl,
 	frameAncestors,
+	realtimeUrl,
 }: {
 	store: LocalObjectStore;
 	secret: string;
 	origin: string;
 	appUrl: string;
 	frameAncestors: string;
+	realtimeUrl: string;
 }): UsercontentEnv {
 	return {
 		USERCONTENT_URL: origin,
 		MEDIA_URL: origin,
 		APP_URL: appUrl,
 		FRAME_ANCESTORS: frameAncestors,
+		REALTIME_URL: realtimeUrl,
 		USERCONTENT_TOKEN_SECRET: secret,
 		PRIVATE: {
 			async get(key, options) {
@@ -151,6 +156,7 @@ export async function startStandaloneUsercontentServer(
 	let origin = `http://${advertisedHost}:${port}`;
 	let appUrl = options.appUrl ?? origin;
 	let frameAncestors = options.frameAncestors ?? `${origin} file:`;
+	const realtimeUrl = options.realtimeUrl ?? DEFAULT_REALTIME_URL;
 
 	const fetch = async (request: Request): Promise<Response> => {
 		const objectResponse = await handleLocalObjectRequest({
@@ -167,6 +173,7 @@ export async function startStandaloneUsercontentServer(
 				origin,
 				appUrl,
 				frameAncestors,
+				realtimeUrl,
 			}),
 		);
 	};
@@ -224,6 +231,7 @@ async function main(): Promise<void> {
 		staticUrl: process.env.STATIC_URL,
 		appUrl: process.env.APP_URL,
 		frameAncestors: process.env.FRAME_ANCESTORS,
+		realtimeUrl: process.env.REALTIME_URL,
 	});
 	ipcReady(running.origin);
 
