@@ -67,7 +67,12 @@ export async function GET(request: Request) {
 			user: { id: viewer.id, label: viewer.displayName },
 		},
 	});
-	if (result.conflict) return fail("workspace_already_linked");
+	if (result.conflict) {
+		const owner = result.conflict.ownerEmail
+			? `&owner=${encodeURIComponent(result.conflict.ownerEmail)}`
+			: "";
+		return exit(`${settingsUrl}?error=workspace_already_linked${owner}`);
+	}
 
 	// The person who connected is the one Linear account we know for certain
 	// belongs to a Superset user, so link it. Linear user ids are scoped to

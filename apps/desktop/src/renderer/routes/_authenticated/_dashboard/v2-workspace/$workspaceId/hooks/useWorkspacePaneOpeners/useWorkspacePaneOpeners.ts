@@ -38,7 +38,6 @@ export function useWorkspacePaneOpeners({
 	newTabPresets,
 	executePreset,
 	setRightSidebarOpen,
-	pageOpenAction,
 }: {
 	store: StoreApi<WorkspaceStore<PaneViewerData>>;
 	launcher: TerminalLauncher;
@@ -48,7 +47,6 @@ export function useWorkspacePaneOpeners({
 		options?: { target?: "new-tab" | "active-tab" },
 	) => void | Promise<void>;
 	setRightSidebarOpen: V2UserPreferencesApi["setRightSidebarOpen"];
-	pageOpenAction: V2UserPreferencesApi["preferences"]["pageOpenAction"];
 }): {
 	openDiffPane: (
 		filePath: string,
@@ -65,7 +63,7 @@ export function useWorkspacePaneOpeners({
 	/** Close the visible Changes pane, or open/focus one when none is showing. */
 	toggleChangesPane: () => void;
 	openCommentPane: (comment: CommentPaneData) => void;
-	openPagePane: (page: PagePaneData) => void;
+	openPagePane: (page: PagePaneData, placement: "split" | "tab") => void;
 	/** Focus or open the pane showing the workspace's linked PR summary. */
 	openPullRequestPane: (ref: PullRequestRef) => void;
 } {
@@ -248,14 +246,10 @@ export function useWorkspacePaneOpeners({
 	}, [store, openChangesPane, collections, workspace.id, setRightSidebarOpen]);
 
 	const openPagePane = useCallback(
-		(page: PagePaneData) => {
-			openPagePaneInStore(
-				store,
-				page,
-				pageOpenAction === "newTab" ? "tab" : "split",
-			);
+		(page: PagePaneData, placement: "split" | "tab") => {
+			openPagePaneInStore(store, page, placement);
 		},
-		[store, pageOpenAction],
+		[store],
 	);
 
 	const openPullRequestPane = useCallback(

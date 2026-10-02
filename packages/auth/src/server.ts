@@ -331,6 +331,7 @@ export const auth = betterAuth({
 				github: {
 					clientId: env.GH_CLIENT_ID,
 					clientSecret: env.GH_CLIENT_SECRET,
+					prompt: "select_account",
 				},
 				google: {
 					clientId: env.GOOGLE_CLIENT_ID,
@@ -479,7 +480,7 @@ export const auth = betterAuth({
 				definePayload: async ({
 					user,
 				}: {
-					user: { id: string };
+					user: { id: string; name?: string | null; image?: string | null };
 					session: Record<string, unknown>;
 				}) => {
 					const userMemberships = await db.query.members.findMany({
@@ -489,7 +490,15 @@ export const auth = betterAuth({
 					const organizationIds = [
 						...new Set(userMemberships.map((m) => m.organizationId)),
 					];
-					return { sub: user.id, organizationIds };
+					// A Worker that attributes content to a person has to read
+					// who they are from the signed token; a caller-supplied name
+					// is a name they chose for someone else.
+					return {
+						sub: user.id,
+						organizationIds,
+						name: user.name ?? null,
+						image: user.image ?? null,
+					};
 				},
 			},
 		}),

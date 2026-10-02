@@ -49,6 +49,7 @@ import { syncInstalledPluginMcpServers } from "./lib/plugin-installs";
 import { portForwardManager } from "./lib/port-forward";
 import { ensureProjectIconsDir, getProjectIconPath } from "./lib/project-icons";
 import { runQuitCleanup } from "./lib/quit-sequence";
+import { startResourceJournal } from "./lib/resource-metrics/resource-journal";
 import { initSentry } from "./lib/sentry";
 import {
 	prewarmTerminalRuntime,
@@ -579,6 +580,7 @@ if (!gotTheLock) {
 		);
 		setupAutoUpdater();
 		initTray();
+		startResourceJournal();
 
 		const coldStartUrl = findDeepLinkInArgv(process.argv);
 		if (coldStartUrl) {

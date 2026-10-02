@@ -891,6 +891,8 @@ export const cloudWorkspaces = pgTable(
 			.notNull()
 			.references(() => environments.id),
 		hostVersion: text("host_version"),
+		/** The creator's agent sign-ins the running box booted with, keyed; null before it was recorded. */
+		bootAgentCredentialDigest: text("boot_agent_credential_digest"),
 		agentStatus: text("agent_status").$type<ActiveAgentStatus>(),
 		agentStatusAt: timestamp("agent_status_at", { withTimezone: true }),
 		/** What the creator typed, as markdown; null when the box started idle. */
@@ -1747,6 +1749,7 @@ export const automationRuns = pgTable(
 			.on(t.triggerId, t.resourceKey)
 			.where(sql`status IN ('dispatching', 'dispatched')`),
 		index("automation_runs_history_idx").on(t.automationId, t.createdAt),
+		index("automation_runs_org_created_idx").on(t.organizationId, t.createdAt),
 		index("automation_runs_status_idx").on(t.status),
 		index("automation_runs_workspace_idx").on(t.v2WorkspaceId),
 		index("automation_runs_cloud_workspace_idx").on(t.cloudWorkspaceId),
@@ -2042,8 +2045,8 @@ export const attachmentParentKind = pgEnum("attachment_parent_kind", [
 	// belong to exists; publish snapshots them onto that version and clears
 	// the staged rows, so a version is never served missing its own assets.
 	"page",
-	// A cloud workspace's prompt; the parent id is the workspace's.
-	"cloud_workspace_prompt",
+	// A file handed to a cloud workspace; the parent id is the workspace's.
+	"cloud_workspace",
 	// A comment on a task; the parent id is the task_comments row's.
 	"task_comment",
 	// A file in a project's description; the parent id is the project's.

@@ -13,6 +13,8 @@ File search results, terminal file links, and **Open IDE** in a diff open the fi
 
 Opening the IDE also reveals the worktree's **Changes** panel with **All changes** selected. This compares the branch with its base and includes committed changes. Use **Changes** in the IDE toolbar to return to that comparison. The IDE's own Source Control view lists uncommitted edits and requires workspace trust; it stays disabled in Restricted Mode until you choose to trust the folder.
 
+In the Explorer, rename files inline and drag files or folders to move them. Open editors, including ones with unsaved edits, follow the new path.
+
 Use the **Dark / Light** selector beside **Stop IDE** to change the editor's appearance. Each worktree remembers its choice, and new profiles start in dark mode. To choose another VS Code theme, open the IDE command palette and run **Preferences: Color Theme**.
 
 You can turn the feature off in **Settings → General → Features → Embedded IDE**. This hides the entry points and prevents saved IDE panes from starting again. Open sessions remain available so you can save your work and stop them with **Stop IDE**.
@@ -31,6 +33,8 @@ Each workspace keeps its own extensions and settings. Switching tabs or workspac
 
 The runtime supports macOS and Linux on Apple Silicon/ARM64 and x64. Native Windows hosts are not supported yet. For a remote workspace, extensions, terminals, and debug adapters run on the remote host and the desktop connects through Superset's authenticated forwarding.
 
+The editor also opens files outside the workspace, including files reached through a symlink, and saves your edits to them. Creating, deleting, moving, and copying files stay inside the workspace.
+
 Existing Files tabs migrate into the IDE. If the old editor still holds unsaved or conflicted changes, its recovery view stays open until you save or close it.
 
 **⌘O** opens the workspace in an external IDE ([IDE Integration](/use-with-ide)).
@@ -43,11 +47,23 @@ Use **Save** or **⌘S** to write your edits. If an agent or script changes the 
 - **Reload from disk** replaces your buffer with the disk version. It is unavailable if the file cannot be read.
 - **Overwrite file** replaces the disk version with your edits.
 
-The editor does not autosave or merge simultaneous edits.
+The editor does not merge simultaneous edits.
+
+## Auto Save
+
+Auto Save is off by default. Set it in **Settings → Files & Editor → Editing → Auto Save**:
+
+- **After delay (3s)**: saves 3 seconds after you stop typing
+- **On focus change**: saves when you leave the file's pane or the Superset window
+- **On window change**: saves when the Superset window loses focus
+
+Auto Save applies to files you edit by hand, including files in editors that are not active. It pauses for a file with a save conflict or a failed save until you resolve it.
 
 ## Markdown Links
 
-Web links in Markdown previews follow **Settings → Links**. By default, Shift-click opens a new tab, Cmd/Ctrl-click opens a split browser pane, and Cmd/Ctrl+Shift-click opens the system browser. A plain click keeps you editing.
+Web links in Markdown previews follow **Settings → Browser → URL links**, and links to Superset Pages follow **Settings → Files & Editor → Page links**. By default, Shift-click opens a new tab, Cmd/Ctrl-click opens a split browser pane, and Cmd/Ctrl+Shift-click opens the system browser. A plain click keeps you editing.
+
+**⌘C** in a rendered Markdown view copies the text as you see it, without backticks or fences. To copy the Markdown source, right-click the selection and choose **Copy as Markdown**.
 
 ## Cross-Workspace Search
 
@@ -58,6 +74,8 @@ The search bar searches across all open workspaces.
 ## Tabs, Splits, and Panes
 
 The workspace shell supports tabs and split panes. Drop a pane onto the tab strip to create a new tab; mix terminals, the IDE, diffs, and browser panes in one layout. Moving an IDE pane keeps it connected to its original worktree.
+
+If one pane fails to render, it shows **This pane hit an error** with **Retry** and **Close pane**. The rest of the workspace keeps working. **Close pane** also removes the pane from the saved layout, so it does not come back after a reload.
 
 ### Branch changes inside the IDE
 
