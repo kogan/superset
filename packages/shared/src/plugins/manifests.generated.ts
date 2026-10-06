@@ -438,6 +438,60 @@ export const FIRST_PARTY_MANIFESTS = {
 			}
 		]
 	} as const,
+	"superhuman": {
+		"$schema": "https://superset.sh/schemas/plugin/1.0.0.json",
+		"name": "superhuman",
+		"version": "1.0.0",
+		"description": "Work your inbox from Superhuman: find and read threads, triage what needs you, draft replies in your voice, and schedule from your calendar.",
+		"author": {
+			"name": "Superset",
+			"url": "https://superset.sh"
+		},
+		"homepage": "https://docs.superset.sh",
+		"repository": "https://github.com/superset-sh/superset",
+		"license": "MIT",
+		"keywords": [
+			"superhuman",
+			"email",
+			"mail",
+			"inbox",
+			"calendar"
+		],
+		"extensions": {
+			"superset": {
+				"interface": {
+					"displayName": "Superhuman",
+					"category": "Communication",
+					"icon": "superhuman"
+				},
+				"connector": {
+					"slug": "superhuman_mcp"
+				},
+				"mcp": {
+					"type": "streamable-http",
+					"url": "https://mcp.mail.superhuman.com/mcp"
+				}
+			}
+		},
+		"skills": [
+			{
+				"name": "find-in-superhuman",
+				"description": "Find and read mail in Superhuman — the thread where something was said, sent, or promised — by filtering on who, when, and which split before searching by words, reading the thread before answering, and linking the thread behind every claim. Use when the user asks what someone emailed, whether a reply or an invoice ever arrived, what the latest is on a thread, or what is on their calendar."
+			},
+			{
+				"name": "reply-from-superhuman",
+				"description": "Draft a reply, a follow-up, or a new email in Superhuman in the user's own voice — read the whole thread first, reuse an existing draft instead of adding a second one, keep the right people on the thread, and leave sending to the user unless they asked for it. Use when the user says reply to, answer, follow up with, draft an email to, or send, or when a triage turned up threads that need a response."
+			},
+			{
+				"name": "schedule-with-superhuman",
+				"description": "Find a time and put a meeting on the calendar through Superhuman — read what is already booked, check the participants' availability, propose slots, and create the event only once the user picks one. Use when the user asks what is on their calendar, when they are free, to find a time with someone, or to schedule, move, or set up a call."
+			},
+			{
+				"name": "triage-superhuman-inbox",
+				"description": "Work through a Superhuman inbox — sort what is there into needs a reply, waiting on someone else, worth knowing, and noise, then archive, star, label, remind, or unsubscribe only as the user directs. Use when the user asks what needs their attention, what they are waiting on, to triage or clean up their inbox, or to deal with newsletters and notifications."
+			}
+		]
+	} as const,
 } as const;
 
 export type FirstPartyPluginName = keyof typeof FIRST_PARTY_MANIFESTS;

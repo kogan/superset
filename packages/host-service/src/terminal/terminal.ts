@@ -59,7 +59,7 @@ import {
 	onDaemonDisconnect,
 } from "./daemon-client-singleton.ts";
 import {
-	buildV2TerminalEnv,
+	buildHostLaunchEnv,
 	getShellLaunchArgs,
 	getTerminalBaseEnv,
 	resolveLaunchShell,
@@ -3090,21 +3090,13 @@ async function createTerminalSessionUnlocked({
 	const shell = resolveLaunchShell(baseEnv);
 	const shellArgs = getShellLaunchArgs({ shell, supersetHomeDir });
 	const ptyEnv = {
-		...buildV2TerminalEnv({
-			baseEnv,
-			shell,
-			supersetHomeDir,
-			organizationId: process.env.ORGANIZATION_ID || "",
+		...buildHostLaunchEnv({
 			themeType,
 			cwd,
 			terminalId,
 			workspaceId,
 			workspacePath: workspace.worktreePath,
 			rootPath,
-			supersetEnv:
-				process.env.NODE_ENV === "development" ? "development" : "production",
-			agentHookPort: process.env.SUPERSET_AGENT_HOOK_PORT || "",
-			agentHookVersion: process.env.SUPERSET_AGENT_HOOK_VERSION || "",
 			hostAgentHookUrl: getHostAgentHookUrl(),
 		}),
 		// Usage-tab default account: provider CLIs typed or preset-launched in

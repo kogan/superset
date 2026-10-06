@@ -10,7 +10,7 @@ import { createRelaySocket } from "@superset/workspace-client";
 import { useEffect } from "react";
 import { env } from "renderer/env.renderer";
 import { useActiveOrganizationId } from "renderer/hooks/useActiveOrganizationId";
-import { getJwt } from "renderer/lib/auth-client";
+import { ensureFreshJwt } from "renderer/lib/auth-client";
 import { cloudTrpc } from "renderer/lib/cloud-trpc";
 
 /**
@@ -92,7 +92,7 @@ export function RealtimeNudges() {
 		const socket = createRelaySocket({
 			buildUrl: () =>
 				`${env.REALTIME_URL}${realtimeNudgesPath(organizationId)}`,
-			getToken: () => getJwt(),
+			getToken: () => ensureFreshJwt(),
 			minReconnectionDelay: 1_000,
 			maxReconnectionDelay: 30_000,
 		});

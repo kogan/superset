@@ -3,11 +3,14 @@
 // host-service event loop. Credential env is resolved in-process (it needs
 // the credential provider) and crosses as plain data.
 
+import { existsSync, mkdirSync } from "node:fs";
+import { dirname } from "node:path";
 import {
 	getGitAuthorName,
 	type ResolvedGitInfo,
 	readGitIdentity,
 } from "../../runtime/git/identity.ts";
+import { resolveRef } from "../../runtime/git/refs.ts";
 import { createUserSimpleGit } from "../../runtime/git/simple-git.ts";
 import {
 	readWorkspaceRefs,
@@ -33,6 +36,9 @@ import type { GitStatusSnapshotComputation } from "../../trpc/router/git/utils/g
 import { getGitStatusSnapshot } from "../../trpc/router/git/utils/git-status.ts";
 import type { GitStatusPartial } from "../../trpc/router/git/utils/git-status-partial/index.ts";
 import { getGitStatusPartial } from "../../trpc/router/git/utils/git-status-partial/index.ts";
+import { addBranchWorktree } from "../../trpc/router/workspace-creation/shared/add-branch-worktree.ts";
+import { listWorktreeBranches } from "../../trpc/router/workspace-creation/shared/branch-search.ts";
+import { enablePushAutoSetupRemote } from "../../trpc/router/workspace-creation/shared/git-config.ts";
 import {
 	normalizeWorktreePath,
 	parseWorktreeList,
@@ -607,6 +613,71 @@ export const gitPrHeadBaseTask = defineWorkerTask<
 	},
 });
 
+export type RestoreWorktreeResult =
+	| { kind: "restored" }
+	| { kind: "already-registered" }
+	| { kind: "registered-elsewhere"; path: string }
+	| { kind: "path-occupied" }
+	| { kind: "branch-missing" };
+
+/** Re-create an archived workspace's worktree on its existing branch. */
+export const gitRestoreWorktreeTask = defineWorkerTask<
+	{
+		repoPath: string;
+		worktreePath: string;
+		branch: string;
+		remoteName: string;
+		sparsePaths: string[];
+		gitEnv: GitTaskEnv;
+	},
+	RestoreWorktreeResult
+>({
+	type: "git/restoreWorktree",
+	handler: async ({
+		repoPath,
+		worktreePath,
+		branch,
+		remoteName,
+		sparsePaths,
+		gitEnv,
+	}) => {
+		const git = createUserSimpleGit(repoPath).env(gitEnv);
+		await git
+			.raw(["worktree", "prune"])
+			.catch((err: unknown) =>
+				console.warn("[git/restoreWorktree] worktree prune failed:", err),
+			);
+		const registeredPath = (await listWorktreeBranches(git)).worktreeMap.get(
+			branch,
+		);
+		if (registeredPath) {
+			return normalizeWorktreePath(registeredPath) ===
+				normalizeWorktreePath(worktreePath)
+				? { kind: "already-registered" }
+				: { kind: "registered-elsewhere", path: registeredPath };
+		}
+		if (existsSync(worktreePath)) return { kind: "path-occupied" };
+
+		const ref = await resolveRef(git, branch, { remote: remoteName });
+		if (ref?.kind !== "local" && ref?.kind !== "remote-tracking") {
+			return { kind: "branch-missing" };
+		}
+		mkdirSync(dirname(worktreePath), { recursive: true });
+		await addBranchWorktree({
+			git,
+			plan: {
+				branch: ref.shortName,
+				startPoint: ref,
+				usedExistingBranch: true,
+			},
+			worktreePath,
+			sparsePaths,
+		});
+		await enablePushAutoSetupRemote(git, worktreePath, "[git/restoreWorktree]");
+		return { kind: "restored" };
+	},
+});
+
 export const gitTasks = [
 	gitStatusSnapshotTask,
 	gitStatusPartialTask,
@@ -627,4 +698,5 @@ export const gitTasks = [
 	gitCommitTask,
 	gitPushTask,
 	gitPrHeadBaseTask,
+	gitRestoreWorktreeTask,
 ];

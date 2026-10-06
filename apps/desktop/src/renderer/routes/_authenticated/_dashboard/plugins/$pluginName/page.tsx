@@ -4,7 +4,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useEffect } from "react";
 import { Redirect } from "renderer/components/Redirect";
 import { usePluginsEnabled } from "renderer/hooks/usePluginsEnabled";
-import { usePluginCatalog } from "renderer/routes/_authenticated/_dashboard/plugins/hooks/usePluginCatalog";
+import { usePluginCatalog } from "renderer/hooks/usePluginCatalog";
 import { PluginDetail } from "./components/PluginDetail";
 
 export type PluginDetailSearch = {

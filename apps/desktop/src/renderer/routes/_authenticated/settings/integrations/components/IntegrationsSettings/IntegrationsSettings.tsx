@@ -99,6 +99,12 @@ export function IntegrationsSettings({
 			{ enabled: !!activeOrganizationId },
 		);
 
+	const { data: linearConnection, isPending: isLinearPending } =
+		cloudTrpc.integration.linear.getConnection.useQuery(
+			{ organizationId: activeOrganizationId ?? "" },
+			{ enabled: !!activeOrganizationId },
+		);
+
 	// These three keep a disconnected row around, which integration.list does
 	// not filter out — their per-provider getConnection does.
 	const { data: sentryConnection, isPending: isSentryPending } =
@@ -144,14 +150,13 @@ export function IntegrationsSettings({
 		fetchGithubInstallation();
 	}, [fetchGithubInstallation]);
 
-	const linearConnection = integrations?.find((i) => i.provider === "linear");
 	const slackConnection = integrations?.find((i) => i.provider === "slack");
 
 	const providerStates: Record<IntegrationProvider, ProviderState> = {
 		linear: {
-			isConnected: !!linearConnection,
+			isConnected: !!linearConnection && !linearConnection.needsReconnect,
 			connectedOrgName: linearConnection?.externalOrgName,
-			isLoading: isIntegrationsPending,
+			isLoading: isLinearPending,
 		},
 		github: {
 			isConnected: !!githubInstallation && !githubInstallation.suspended,

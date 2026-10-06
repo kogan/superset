@@ -122,8 +122,6 @@ export const FEATURE_FLAGS = {
 	 * hash the site's single distinct id to one side.
 	 */
 	MOBILE_LAUNCH: "mobile-launch",
-	/** Gates access to the experimental mobile-first agents UI on web. */
-	WEB_AGENTS_UI_ACCESS: "web-agents-ui-access",
 	/** Gates access to Cloud features (environment variables, sandboxes). */
 	CLOUD_ACCESS: "cloud-access",
 	/** When enabled, blocks remote agent execution on the desktop (e.g., for enterprise orgs). */

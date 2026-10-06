@@ -639,6 +639,38 @@
 					}
 				}
 			]
+		},
+		"superhuman_mcp": {
+			"displayName": "Superhuman",
+			"icon": "superhuman",
+			"category": "Communication",
+			"scope": "user",
+			"methods": [
+				{
+					"type": "oauth2",
+					"label": "OAuth 2.0",
+					"client": "dynamic",
+					"authorization_url": "https://mcp.mail.superhuman.com/mcp",
+					"scopes": ["openid", "email", "profile", "offline_access"],
+					"identity": {
+						"mcp": "https://mcp.mail.superhuman.com/mcp",
+						"tool": "list_accounts",
+						"arguments": {},
+						"account": {
+							"id": "$.accounts[?(@.isPrimary)].accountEmail",
+							"label": "$.accounts[?(@.isPrimary)].accountEmail"
+						},
+						"user": {
+							"id": "$.accounts[?(@.isPrimary)].accountEmail"
+						}
+					},
+					"bind": {
+						"headers": {
+							"Authorization": "Bearer ${config.access_token}"
+						}
+					}
+				}
+			]
 		}
 	}
 }

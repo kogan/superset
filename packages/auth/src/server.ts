@@ -8,6 +8,7 @@ import {
 	githubInstallations,
 	members,
 	subscriptions,
+	tasks,
 } from "@superset/db/schema";
 import type { sessions } from "@superset/db/schema/auth";
 import * as authSchema from "@superset/db/schema/auth";
@@ -34,17 +35,7 @@ import {
 } from "better-auth/api";
 import { bearer, customSession, organization } from "better-auth/plugins";
 import { jwt } from "better-auth/plugins/jwt";
-import {
-	and,
-	asc,
-	count,
-	desc,
-	eq,
-	inArray,
-	isNull,
-	ne,
-	sql,
-} from "drizzle-orm";
+import { and, asc, count, desc, eq, inArray, isNull, ne, sql } from "drizzle-orm";
 import type Stripe from "stripe";
 import { env } from "./env";
 import { acceptInvitationEndpoint } from "./lib/accept-invitation-endpoint";
@@ -105,10 +96,9 @@ const PENDING_DELETION_ALLOWED_PATH_PREFIXES = [
 
 const NOTIFY_SLACK_URL = `${apiOrigin}/api/integrations/stripe/jobs/notify-slack`;
 /**
- * Backfills the integrations that only sync for a paying organization.
- * GitHub and Linear deliveries are dropped at the webhook while an org is on
- * the free plan, so whatever changed in the gap is missing until these jobs
- * replay it.
+ * Backfills GitHub for a paying organization. Its deliveries are dropped at the
+ * webhook while an org is on the free plan, so whatever changed in the gap is
+ * missing until this job replays it.
  */
 async function resumeGatedSyncs(organizationId: string): Promise<void> {
 	const [installation, linearConnections] = await Promise.all([
@@ -721,6 +711,18 @@ export const auth = betterAuth({
 				},
 
 				beforeDeleteTeam: async ({ team }) => {
+					const [teamTask] = await db
+						.select({ id: tasks.id })
+						.from(tasks)
+						.where(eq(tasks.teamId, team.id))
+						.limit(1);
+					if (teamTask) {
+						throw new APIError("BAD_REQUEST", {
+							message:
+								"This team still has tasks. Move or delete them before deleting the team.",
+						});
+					}
+
 					// Linear-style: deleting a team would otherwise orphan any
 					// members who were only in this team. Re-home them into the
 					// next-oldest team in the org before the FK cascade fires.

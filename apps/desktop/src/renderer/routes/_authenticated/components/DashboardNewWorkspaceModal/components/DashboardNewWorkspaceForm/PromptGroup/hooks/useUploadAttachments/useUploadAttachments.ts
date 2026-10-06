@@ -1,6 +1,11 @@
 import type { FileUIPart } from "ai";
 import { useCallback, useEffect } from "react";
-import { awaitUploads, pruneAttachmentUploads, startUpload } from "./store";
+import {
+	awaitUploads,
+	pruneAttachmentUploads,
+	readyAttachmentId,
+	startUpload,
+} from "./store";
 
 export interface UploadFailure {
 	filename?: string;
@@ -10,6 +15,7 @@ export interface UploadFailure {
 export interface UseUploadAttachmentsApi {
 	awaitUploads: () => Promise<{
 		readyIds: string[];
+		ready: Array<{ attachmentId: string; name: string; mimeType: string }>;
 		errors: UploadFailure[];
 	}>;
 }
@@ -47,7 +53,7 @@ export function useUploadAttachments({
 	}, [files, hostUrl]);
 
 	const awaitForCurrent = useCallback(async () => {
-		if (!hostUrl) return { readyIds: [], errors: [] };
+		if (!hostUrl) return { readyIds: [], ready: [], errors: [] };
 		const result = await awaitUploads(
 			hostUrl,
 			files.map((f) => f.id),
@@ -56,7 +62,19 @@ export function useUploadAttachments({
 			const file = files.find((f) => f.id === failure.fileId);
 			return { filename: file?.filename, message: failure.message };
 		});
-		return { readyIds: result.readyIds, errors };
+		const ready = files.flatMap((file) => {
+			const attachmentId = readyAttachmentId(file.id, hostUrl);
+			return attachmentId
+				? [
+						{
+							attachmentId,
+							name: file.filename ?? attachmentId,
+							mimeType: file.mediaType ?? "application/octet-stream",
+						},
+					]
+				: [];
+		});
+		return { readyIds: result.readyIds, ready, errors };
 	}, [hostUrl, files]);
 
 	return { awaitUploads: awaitForCurrent };

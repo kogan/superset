@@ -21,7 +21,9 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
 	ActivityIndicator,
 	Alert,
+	Dimensions,
 	Keyboard,
+	type KeyboardEvent,
 	LayoutAnimation,
 	Pressable,
 	View,
@@ -29,6 +31,7 @@ import {
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Icon } from "@/components/ui/icon";
 import { Text } from "@/components/ui/text";
+import { useArchivedCloudWorkspaces } from "@/hooks/useArchivedCloudWorkspaces";
 import { getHostWorkspacesQueryKey } from "@/hooks/useHostWorkspaces";
 import { useWorkspaceHost } from "@/hooks/useWorkspaceHost";
 import { errorCopy } from "@/lib/errors";
@@ -42,6 +45,10 @@ import {
 	useHostTerminals,
 } from "@/screens/(authenticated)/(home)/home/hooks/useHostTerminals";
 import { HeaderNotice } from "@/screens/(authenticated)/components/HeaderNotice";
+import {
+	anchorOf,
+	ToolbarAnchor,
+} from "@/screens/(authenticated)/components/ToolbarAnchor";
 import { useAgentIconUris } from "@/screens/(authenticated)/hooks/useAgentIconUris";
 import { useCreateTerminalWorkspace } from "@/screens/(authenticated)/hooks/useCreateTerminalWorkspace";
 import { useSlashCommands } from "@/screens/(authenticated)/hooks/useSlashCommands";
@@ -69,6 +76,7 @@ import { useHostCompatibility } from "../hooks/useHostCompatibility";
 import { usePullRequestIconUri } from "../hooks/usePullRequestIconUri";
 import { useWorkspaceHeaderActions } from "../hooks/useWorkspaceHeaderActions";
 import { useWorkspacePullRequests } from "../hooks/useWorkspacePullRequest";
+import { keyboardOverlap } from "../utils/keyboardOverlap";
 import { orderTerminalRows } from "../utils/orderTerminalRows";
 import { PULL_REQUEST_SYMBOL, pullRequestStatus } from "../utils/pullRequest";
 import { WorkspaceCreateFailedState } from "./components/WorkspaceCreateFailedState";
@@ -136,6 +144,12 @@ export function WorkspaceScreen() {
 		retrySandbox,
 		isResolving,
 	} = useWorkspaceHost(id ?? null);
+	const { workspaces: archivedRows } = useArchivedCloudWorkspaces({
+		enabled: !cloud && !workspace && !isResolving,
+	});
+	const archivedCloud = cloud
+		? null
+		: (archivedRows.find((row) => row.id === id) ?? null);
 	const {
 		terminalsByWorkspace,
 		isReady: terminalsReady,
@@ -433,6 +447,14 @@ export function WorkspaceScreen() {
 	useEffect(() => {
 		if (id) clearManualUnread(id);
 	}, [id, clearManualUnread]);
+	const markCloudRead = useUnreadWorkspacesStore(
+		(state) => state.markCloudRead,
+	);
+	const cloudAgentStatusAt = cloud?.agentStatusAt?.getTime() ?? null;
+	useEffect(() => {
+		if (id && cloudAgentStatusAt !== null)
+			markCloudRead(id, cloudAgentStatusAt);
+	}, [id, cloudAgentStatusAt, markCloudRead]);
 
 	// Port of desktop's useClearActivePaneAttention: viewing the tab clears
 	// its `review` state by advancing the seen mark to the binding's last
@@ -560,6 +582,7 @@ export function WorkspaceScreen() {
 	const [keyboardHeight, setKeyboardHeight] = useState(0);
 	const [composerActive, setComposerActive] = useState(false);
 	const composerRef = useRef<ComposerHandle>(null);
+	const shareAnchorRef = useRef<View>(null);
 	const [select, setSelect] = useState<TerminalSelectState>({
 		active: false,
 		hasSelection: false,
@@ -651,22 +674,25 @@ export function WorkspaceScreen() {
 	);
 
 	useEffect(() => {
-		const show = Keyboard.addListener("keyboardWillShow", (event) => {
+		const animate = (event: KeyboardEvent) =>
 			LayoutAnimation.configureNext({
 				duration: event.duration || 250,
 				update: { type: LayoutAnimation.Types.keyboard },
 			});
-			setKeyboardHeight(event.endCoordinates.height);
+		// Change-frame, not just show: on iPad the keyboard docks, undocks,
+		// floats and splits without ever hiding.
+		const change = Keyboard.addListener("keyboardWillChangeFrame", (event) => {
+			animate(event);
+			setKeyboardHeight(
+				keyboardOverlap(event.endCoordinates, Dimensions.get("window").height),
+			);
 		});
 		const hide = Keyboard.addListener("keyboardWillHide", (event) => {
-			LayoutAnimation.configureNext({
-				duration: event.duration || 250,
-				update: { type: LayoutAnimation.Types.keyboard },
-			});
+			animate(event);
 			setKeyboardHeight(0);
 		});
 		return () => {
-			show.remove();
+			change.remove();
 			hide.remove();
 		};
 	}, []);
@@ -863,7 +889,7 @@ export function WorkspaceScreen() {
 			<Stack.Screen
 				options={{
 					...headerOptions,
-					title: workspace?.name ?? cloud?.name ?? "",
+					title: workspace?.name ?? cloud?.name ?? archivedCloud?.name ?? "",
 					headerTitle: notice
 						? () => (
 								<HeaderNotice
@@ -922,19 +948,28 @@ export function WorkspaceScreen() {
 							</Stack.Toolbar.Menu>
 							<Stack.Toolbar.MenuAction
 								icon="square.and.arrow.up"
-								onPress={shareWorkspace}
+								onPress={() => shareWorkspace(anchorOf(shareAnchorRef))}
 							>
 								{t({ message: "Share" })}
 							</Stack.Toolbar.MenuAction>
 						</Stack.Toolbar.Menu>
 						<Stack.Toolbar.Menu inline>
-							<Stack.Toolbar.MenuAction
-								icon="trash"
-								destructive
-								onPress={deleteWorkspace}
-							>
-								{t({ message: "Delete workspace" })}
-							</Stack.Toolbar.MenuAction>
+							{cloud ? (
+								<Stack.Toolbar.MenuAction
+									icon="archivebox"
+									onPress={deleteWorkspace}
+								>
+									{t({ message: "Archive workspace" })}
+								</Stack.Toolbar.MenuAction>
+							) : (
+								<Stack.Toolbar.MenuAction
+									icon="trash"
+									destructive
+									onPress={deleteWorkspace}
+								>
+									{t({ message: "Delete workspace" })}
+								</Stack.Toolbar.MenuAction>
+							)}
 						</Stack.Toolbar.Menu>
 					</Stack.Toolbar.Menu>
 				</Stack.Toolbar>
@@ -1031,6 +1066,12 @@ export function WorkspaceScreen() {
 							}}
 						/>
 					</>
+				) : archivedCloud ? (
+					<CloudWorkspaceProvisioningState
+						cloud={archivedCloud}
+						unreachable={false}
+						onRetry={retrySandbox}
+					/>
 				) : cloud && !host ? (
 					<CloudWorkspaceProvisioningState
 						cloud={cloud}
@@ -1119,6 +1160,7 @@ export function WorkspaceScreen() {
 					selectHasSelection={select.hasSelection}
 				/>
 			) : null}
+			<ToolbarAnchor ref={shareAnchorRef} />
 		</View>
 	);
 }
