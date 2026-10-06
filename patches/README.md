@@ -26,7 +26,9 @@ instead of consulting the file map. Taken verbatim from upstream —
 guide](https://docs.swmansion.com/react-native-worklets/docs/bundleMode/setup/).
 Temporary until the change lands in Metro.
 
-**Guard test:** `apps/mobile/metro-worklets-patch.test.ts`.
+**Guard test:** `apps/mobile/metro-worklets-patch.test.ts`. It checks every
+metro in `bun.lock`, not only the top-level one: `@expo/metro` pins its own
+exact metro, and that nested copy is the one `expo export` bundles with.
 
 **Regenerating after a version bump** (~5 min): upstream keeps one patch per
 Metro version. Find yours with `bun why metro --top`, then:

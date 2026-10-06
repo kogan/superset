@@ -13,6 +13,10 @@
 			"types": "./src/connectors/index.ts",
 			"default": "./src/connectors/index.ts"
 		},
+		"./account-labels": {
+			"types": "./src/account-labels.ts",
+			"default": "./src/account-labels.ts"
+		},
 		"./page-zoom": {
 			"types": "./src/page-zoom.ts",
 			"default": "./src/page-zoom.ts"
@@ -112,6 +116,10 @@
 		"./sandbox-contract": {
 			"types": "./src/sandbox-contract.ts",
 			"default": "./src/sandbox-contract.ts"
+		},
+		"./pull-request-diff": {
+			"types": "./src/pull-request-diff/index.ts",
+			"default": "./src/pull-request-diff/index.ts"
 		},
 		"./pull-request": {
 			"types": "./src/pull-request.ts",
@@ -277,10 +285,6 @@
 			"types": "./src/page-slug.ts",
 			"default": "./src/page-slug.ts"
 		},
-		"./task-slug": {
-			"types": "./src/task-slug.ts",
-			"default": "./src/task-slug.ts"
-		},
 		"./claude-command": {
 			"types": "./src/claude-command.ts",
 			"default": "./src/claude-command.ts"
@@ -300,6 +304,10 @@
 		"./host-info": {
 			"types": "./src/host-info.ts",
 			"default": "./src/host-info.ts"
+		},
+		"./auth-token-crypto": {
+			"types": "./src/auth-token-crypto.ts",
+			"default": "./src/auth-token-crypto.ts"
 		},
 		"./rotating-log": {
 			"types": "./src/rotating-log.ts",
@@ -365,6 +373,10 @@
 			"types": "./src/plugins/manifest-schema.ts",
 			"default": "./src/plugins/manifest-schema.ts"
 		},
+		"./cloud-workspace-groups": {
+			"types": "./src/cloud-workspace-groups.ts",
+			"default": "./src/cloud-workspace-groups.ts"
+		},
 		"./workspace-activity": {
 			"types": "./src/workspace-activity.ts",
 			"default": "./src/workspace-activity.ts"
@@ -381,11 +393,11 @@
 	"scripts": {
 		"clean": "git clean -xdf .cache .turbo dist node_modules",
 		"typecheck": "tsc --noEmit --emitDeclarationOnly false",
-		"test": "bun test"
+		"test": "bun test --isolate"
 	},
 	"dependencies": {
 		"@date-fns/tz": "1.4.1",
-		"@lingui/core": "6.6.0",
+		"@lingui/core": "6.8.0",
 		"@superset/i18n": "workspace:*",
 		"culori": "4.0.2",
 		"drizzle-orm": "0.45.2",
@@ -393,7 +405,7 @@
 		"jose": "6.2.2",
 		"rrule": "2.8.1",
 		"semver": "7.7.4",
-		"zod": "4.4.3"
+		"zod": "4.6.5"
 	},
 	"devDependencies": {
 		"@superset/typescript": "workspace:*",
@@ -401,7 +413,7 @@
 		"@types/friendly-words": "1.2.2",
 		"@types/semver": "7.7.1",
 		"@xterm/xterm": "6.1.0-beta.302",
-		"bun-types": "1.3.14",
-		"typescript": "6.0.3"
+		"bun-types": "1.4.2",
+		"typescript": "7.0.2"
 	}
 }

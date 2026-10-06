@@ -180,6 +180,8 @@ function V2WorkspaceContent() {
 	const ideEnabled = useFeaturePreferences((state) => state.embeddedIde);
 	useClearActivePaneAttention({ store });
 	const launcher = useV2TerminalLauncher();
+	const { createNewAgentSession, openAgentChat, focusAgentTerminal } =
+		useAgentSessionLauncher({ workspaceId, store });
 	const {
 		matchedPresets,
 		newTabPresets,
@@ -188,6 +190,7 @@ function V2WorkspaceContent() {
 	} = useV2PresetExecution({
 		store,
 		launcher,
+		openAgentChat,
 	});
 	const workspaceRun = useV2WorkspaceRun({
 		store,
@@ -291,9 +294,6 @@ function V2WorkspaceContent() {
 	}, [store]);
 	const isChatV3Enabled = useFeatureFlagEnabled(FEATURE_FLAGS.CHAT_V3) ?? false;
 	const isPagesEnabled = usePagesEnabled();
-	const { createNewAgentSession, focusAgentTerminal } = useAgentSessionLauncher(
-		{ workspaceId, store },
-	);
 	useRunPendingChatHandoff({
 		workspaceId,
 		isLayoutReady,

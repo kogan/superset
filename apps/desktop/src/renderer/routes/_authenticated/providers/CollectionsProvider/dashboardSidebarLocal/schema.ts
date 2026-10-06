@@ -15,6 +15,23 @@ const persistedDateSchema = z
 	.union([z.string(), z.date()])
 	.transform((value) => (typeof value === "string" ? new Date(value) : value));
 
+export const pendingChatHandoffSchema = z.object({
+	agentId: z.string(),
+	prompt: z.string(),
+	attachments: z
+		.array(
+			z.object({
+				attachmentId: z.string(),
+				name: z.string(),
+				mimeType: z.string(),
+			}),
+		)
+		.optional(),
+	modelId: z.string().optional(),
+	modeId: z.string().optional(),
+});
+export type PendingChatHandoff = z.infer<typeof pendingChatHandoffSchema>;
+
 export const dashboardSidebarProjectSchema = z.object({
 	projectId: z.string().uuid(),
 	createdAt: persistedDateSchema,
@@ -229,10 +246,7 @@ export const workspaceLocalStateSchema = z.object({
 	// the new chat is started with the conversation as its first message. The
 	// v2 workspace page drains this once on first open (see
 	// useRunPendingChatHandoff) and clears it before running.
-	pendingChatHandoff: z
-		.object({ agentId: z.string(), prompt: z.string() })
-		.nullable()
-		.default(null),
+	pendingChatHandoff: pendingChatHandoffSchema.nullable().default(null),
 });
 
 // Defaults for fields heal can synthesize. Identity fields (workspaceId,
@@ -265,7 +279,7 @@ const WORKSPACE_LOCAL_STATE_OPTIONAL_DEFAULTS = {
 		v1PaneId: string | null;
 	}>,
 	pendingCreationPresetIds: [] as string[],
-	pendingChatHandoff: null as { agentId: string; prompt: string } | null,
+	pendingChatHandoff: null as PendingChatHandoff | null,
 };
 
 /**

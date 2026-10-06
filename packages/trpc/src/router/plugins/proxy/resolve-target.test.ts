@@ -1,5 +1,6 @@
 // biome-ignore-all lint/suspicious/noTemplateCurlyInString: ${config.*} is the manifest placeholder syntax, not a template literal
 import { beforeEach, describe, expect, mock, test } from "bun:test";
+import { setTestEnv } from "../../../../test/env";
 import type { InstalledPlugin } from "../connections";
 
 // Every dependency that reaches the database is stubbed so the validated env
@@ -31,9 +32,7 @@ class StubUnavailable extends Error {
 	}
 }
 
-mock.module("../../../env", () => ({
-	env: { NEXT_PUBLIC_API_URL: "https://api.superset.test" },
-}));
+setTestEnv({ NEXT_PUBLIC_API_URL: "https://api.superset.test" });
 
 mock.module("../connections", () => ({
 	installedPlugin: (userId: string, plugin: string, marketplace?: string) => {

@@ -122,6 +122,13 @@ export const serverErrorMessages: Record<
 				message: `This automation belongs to ${params?.organizationName}. Switch to that organization to open it.`,
 			}),
 		),
+	"serverError.automation.onlyTheOwnerOrAnOrganizationOwner": () =>
+		i18n._(
+			msg({
+				message:
+					"Only the owner or an organization owner can delete this automation",
+			}),
+		),
 	"serverError.automation.automationsRequireThePro": () =>
 		i18n._(
 			msg({
@@ -427,6 +434,24 @@ export const serverErrorMessages: Record<
 				message: "GitHub sync requires the Pro plan.",
 			}),
 		),
+	"serverError.integration.linearIssueNotFound": () =>
+		i18n._(
+			msg({
+				message: "That Linear issue doesn't exist or you can't see it.",
+			}),
+		),
+	"serverError.integration.linearNotConnected": () =>
+		i18n._(
+			msg({
+				message: "Connect your Linear account to use Linear here.",
+			}),
+		),
+	"serverError.integration.linearRateLimited": () =>
+		i18n._(
+			msg({
+				message: "Linear is limiting requests. Try again in a few minutes.",
+			}),
+		),
 	"serverError.integration.notAMemberOfThisOrganization": () =>
 		i18n._(
 			msg({
@@ -552,6 +577,12 @@ export const serverErrorMessages: Record<
 		i18n._(
 			msg({
 				message: "Members cannot modify roles",
+			}),
+		),
+	"serverError.organization.connectLinearToTrackTasks": () =>
+		i18n._(
+			msg({
+				message: "Connect your Linear account before tracking tasks in Linear.",
 			}),
 		),
 	"serverError.organization.onlyOwnersCanUpdateOrganizationSettings": () =>
@@ -871,12 +902,6 @@ export const serverErrorMessages: Record<
 				message: "Too many support reports. Try again later.",
 			}),
 		),
-	"serverError.task.failedToGenerateAUniqueTask": () =>
-		i18n._(
-			msg({
-				message: "Failed to generate a unique task slug",
-			}),
-		),
 	"serverError.team.teamNotFoundInThisOrganization": () =>
 		i18n._(
 			msg({
@@ -932,10 +957,10 @@ export const serverErrorMessages: Record<
 				message: "Only host owners can change membership",
 			}),
 		),
-	"serverError.host.onlyHostOwnersCanDelete": () =>
+	"serverError.host.onlyHostOwnersOrOrganizationOwnersCanDelete": () =>
 		i18n._(
 			msg({
-				message: "Only host owners can delete this host",
+				message: "Only host owners or organization owners can delete this host",
 			}),
 		),
 	"serverError.host.thisUserRunsTheHostService": () =>

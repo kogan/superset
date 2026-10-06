@@ -54,12 +54,15 @@ export function OpenBrowserPageInAppButton({
 							});
 							return;
 						}
-						if (!target?.projectId) return;
+						if (!target) return;
 						usePullRequestsSplitViewStore.getState().expandDetail();
 						void navigate({
 							to: "/pull-requests/$prNumber",
 							params: { prNumber: String(target.ref.number) },
-							search: { project: target.projectId },
+							search: {
+								project: target.projectId ?? undefined,
+								repo: target.ref.repoFullName,
+							},
 						});
 					}}
 				>

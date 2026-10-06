@@ -467,6 +467,7 @@ export async function cloneRepoInto(
 	repoCloneUrl: string,
 	parentDir: string,
 	credentials?: GitCredentialProvider,
+	signal?: AbortSignal,
 ): Promise<ResolvedRepo> {
 	const parsedUrl = parseGitHubRemote(repoCloneUrl);
 	const expectedSlug = parsedUrl
@@ -482,8 +483,9 @@ export async function cloneRepoInto(
 
 	try {
 		const env = await cloneEnv(credentials, repoCloneUrl);
-		const git = createUserSimpleGit();
+		const git = createUserSimpleGit(undefined, { abort: signal });
 		await (env ? git.env(env) : git).clone(repoCloneUrl, targetPath);
+		signal?.throwIfAborted();
 	} catch (err) {
 		await rollbackTargetDir(targetPath);
 		throw new TRPCError({

@@ -172,10 +172,18 @@ export type AcpSubagentUpdate = z.infer<typeof acpSubagentUpdateSchema>;
 const acpConfigSelectOptionSchema = z.looseObject({
 	value: z.string().optional(),
 	name: z.string(),
+	description: z.string().nullable().optional(),
 	options: z
-		.array(z.looseObject({ value: z.string(), name: z.string() }))
+		.array(
+			z.looseObject({
+				value: z.string(),
+				name: z.string(),
+				description: z.string().nullable().optional(),
+			}),
+		)
 		.optional(),
 });
+export type AcpConfigSelectOption = z.infer<typeof acpConfigSelectOptionSchema>;
 
 /**
  * `config_option_update` is where v2 keeps the session mode: v2 dropped
@@ -186,7 +194,8 @@ const acpConfigSelectOptionSchema = z.looseObject({
 export const acpConfigOptionUpdateSchema = z.looseObject({
 	configOptions: z.array(
 		z.looseObject({
-			configId: z.string().min(1),
+			configId: z.string().min(1).optional(),
+			id: z.string().min(1).optional(),
 			name: z.string(),
 			type: z.string().optional(),
 			category: z.string().nullable().optional(),

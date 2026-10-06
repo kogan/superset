@@ -31,12 +31,17 @@ export function useChatWiring(): ChatWiring {
 		const transport: ChatTransport = {
 			createSession: (input) => client.createSession.mutate(input),
 			prompt: (input) => client.prompt.mutate(input),
+			removeQueuedPrompt: (input) => client.removeQueuedPrompt.mutate(input),
+			steerQueuedPrompt: (input) => client.steerQueuedPrompt.mutate(input),
+			resumeQueue: (input) => client.resumeQueue.mutate(input),
 			cancelTurn: (input) => client.cancelTurn.mutate(input),
 			respondToApproval: (input) => client.respondToApproval.mutate(input),
 			setMode: (input) => client.setMode.mutate(input),
+			setConfigOption: (input) => client.setConfigOption.mutate(input),
 			closeSession: (input) => client.closeSession.mutate(input),
 			forkSession: (input) => client.forkSession.mutate(input),
 			getSession: (input) => client.getSession.query(input),
+			getQueue: (input) => client.getQueue.query(input),
 			listSessions: (input) => client.listSessions.query(input),
 			getItems: (input) => client.getItems.query(input),
 		};

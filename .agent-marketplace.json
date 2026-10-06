@@ -106,6 +106,16 @@
 			"category": "development",
 			"source": "./plugins/stripe",
 			"version": "1.0.0"
+		},
+		{
+			"name": "superhuman",
+			"description": "Work your inbox from Superhuman: find and read threads, triage what needs you, draft replies in your voice, and schedule from your calendar.",
+			"author": {
+				"name": "Superset"
+			},
+			"category": "communication",
+			"source": "./plugins/superhuman",
+			"version": "1.0.0"
 		}
 	],
 	"featured": ["github", "linear"],

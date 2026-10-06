@@ -64,6 +64,7 @@ import {
 	promptSourceFromSession,
 	recordPromptVersion,
 	refreshScheduleNextRuns,
+	requireAutomationDeleteAccess,
 	scheduleSummariesFor,
 	summarizeSchedules,
 	syncScheduleTrigger,
@@ -508,6 +509,7 @@ export const automationRouter = {
 					id: automationTriggers.id,
 					kind: automationTriggers.kind,
 					config: automationTriggers.config,
+					connectionId: automationTriggers.connectionId,
 					nextRunAt: automationTriggers.nextRunAt,
 					secretPrefix: automationTriggers.secretPrefix,
 					secretRotatedAt: automationTriggers.secretRotatedAt,
@@ -835,7 +837,11 @@ export const automationRouter = {
 		.input(z.object({ id: z.string().uuid() }))
 		.mutation(async ({ ctx, input }) => {
 			const organizationId = await requireActiveOrgMembership(ctx);
-			await getAutomationForUser(ctx.session.user.id, organizationId, input.id);
+			await requireAutomationDeleteAccess(
+				ctx.session.user.id,
+				organizationId,
+				input.id,
+			);
 
 			await db.delete(automations).where(eq(automations.id, input.id));
 			nudge(organizationId, "automation_runs");

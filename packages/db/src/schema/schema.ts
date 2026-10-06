@@ -177,13 +177,35 @@ export const taskStatuses = pgTable(
 export type InsertTaskStatus = typeof taskStatuses.$inferInsert;
 export type SelectTaskStatus = typeof taskStatuses.$inferSelect;
 
+/** Task slugs are `<key>-<number>`, with one counter per team. */
+export const taskSequences = pgTable(
+	"task_sequences",
+	{
+		teamId: uuid("team_id")
+			.primaryKey()
+			.references(() => teams.id, { onDelete: "cascade" }),
+		organizationId: uuid("organization_id")
+			.notNull()
+			.references(() => organizations.id, { onDelete: "cascade" }),
+		key: text().notNull(),
+		lastNumber: integer("last_number").notNull().default(0),
+	},
+	(table) => [
+		unique("task_sequences_organization_key_unique").on(
+			table.organizationId,
+			table.key,
+		),
+	],
+);
+
 export const tasks = pgTable(
 	"tasks",
 	{
 		id: uuid().primaryKey().defaultRandom(),
 
 		// Core fields
-		slug: text().notNull(),
+		/** Leave out on insert: the tasks_assign_number trigger sets slug and number, and team_id when it is left out. */
+		slug: text().notNull().default(sql`NULL`),
 		title: text().notNull(),
 		description: text(),
 		statusId: uuid("status_id")
@@ -201,6 +223,11 @@ export const tasks = pgTable(
 		creatorId: uuid("creator_id")
 			.notNull()
 			.references(() => users.id, { onDelete: "cascade" }),
+		teamId: uuid("team_id")
+			.notNull()
+			.default(sql`NULL`)
+			.references(() => teams.id),
+		number: integer().notNull().default(sql`NULL`),
 
 		// Planning
 		estimate: integer(),
@@ -264,6 +291,7 @@ export const tasks = pgTable(
 			table.externalId,
 		),
 		unique("tasks_org_slug_unique").on(table.organizationId, table.slug),
+		unique("tasks_team_number_unique").on(table.teamId, table.number),
 	],
 );
 
@@ -359,6 +387,33 @@ export const taskActivity = pgTable(
 
 export type InsertTaskActivity = typeof taskActivity.$inferInsert;
 
+export const taskImports = pgTable(
+	"task_imports",
+	{
+		taskId: uuid("task_id")
+			.primaryKey()
+			.references(() => tasks.id, { onDelete: "cascade" }),
+		organizationId: uuid("organization_id").notNull(),
+		provider: integrationProvider().notNull(),
+		externalId: text("external_id").notNull(),
+		externalUrl: text("external_url").notNull(),
+		importedByUserId: uuid("imported_by_user_id").references(() => users.id, {
+			onDelete: "set null",
+		}),
+		createdAt: timestamp("created_at").notNull().defaultNow(),
+	},
+	(table) => [
+		unique("task_imports_org_provider_external_unique").on(
+			table.organizationId,
+			table.provider,
+			table.externalId,
+		),
+	],
+);
+
+export type InsertTaskImport = typeof taskImports.$inferInsert;
+export type SelectTaskImport = typeof taskImports.$inferSelect;
+
 // Integration connections for external providers (Linear, GitHub, etc.)
 export const integrationConnections = pgTable(
 	"integration_connections",
@@ -453,6 +508,11 @@ export const connections = pgTable(
 		externalAccountLabel: text("external_account_label"),
 		externalUserId: text("external_user_id"),
 		externalUserLabel: text("external_user_label"),
+
+		// What the person calls this account. Two accounts on one connector are
+		// told apart by the provider's own labels otherwise, and those are often
+		// the same word twice — "harshith@tegon.ai · harshith@tegon.ai".
+		nickname: text(),
 
 		config: jsonb().$type<Record<string, string | null>>(),
 		state: jsonb().$type<IntegrationConfig>(),
@@ -1561,6 +1621,8 @@ export const automationTriggers = pgTable(
 
 		kind: automationTriggerKind().notNull(),
 		config: jsonb().$type<TriggerConfig>().notNull(),
+
+		connectionId: uuid("connection_id"),
 
 		// Schedule kind only. A column rather than config because the dispatcher
 		// indexes and sorts on it.

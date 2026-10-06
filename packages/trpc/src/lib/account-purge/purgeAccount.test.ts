@@ -1,6 +1,7 @@
 import { afterEach, beforeEach, describe, expect, mock, test } from "bun:test";
 import type { SQL } from "drizzle-orm";
 import { PgDialect } from "drizzle-orm/pg-core";
+import { setTestEnv } from "../../../test/env";
 
 interface FakeOrganization {
 	id: string;
@@ -39,13 +40,11 @@ const customerById = (id: string) => {
 	return customer;
 };
 
-mock.module("../../env", () => ({
-	env: {
-		POSTHOG_API_HOST: "https://posthog.test",
-		POSTHOG_PROJECT_ID: "264803",
-		POSTHOG_API_KEY: "phx_test",
-	},
-}));
+setTestEnv({
+	POSTHOG_API_HOST: "https://posthog.test",
+	POSTHOG_PROJECT_ID: "264803",
+	POSTHOG_API_KEY: "phx_test",
+});
 
 mock.module("@superset/db/client", () => {
 	const tx = {

@@ -32,7 +32,6 @@ const rows = <T>(value: T[]) =>
 		orderBy: () => Promise.resolve(value),
 	});
 
-mock.module("../../env", () => ({ env: {} }));
 mock.module("@superset/auth/server", () => ({ auth: {} }));
 mock.module("../../lib/analytics", () => ({ posthog: { capture: () => {} } }));
 mock.module("./proxy", () => ({

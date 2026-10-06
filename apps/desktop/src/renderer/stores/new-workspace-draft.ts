@@ -10,7 +10,7 @@ export type LinkedIssue = {
 	number?: number;
 	state?: "open" | "closed";
 } & (
-	| { source?: "github" | "internal" }
+	| { source?: "github" | "internal" | "linear" }
 	| { source: "jira"; connectionRevision: string }
 );
 

@@ -36,11 +36,10 @@ export function useRunPendingChatHandoff({
 	const pending =
 		rows.find((row) => row.workspaceId === workspaceId)?.pendingChatHandoff ??
 		null;
-	const agentId = pending?.agentId;
-	const prompt = pending?.prompt;
 
 	useEffect(() => {
-		if (!isLayoutReady || !agentId || !prompt) return;
+		if (!isLayoutReady || !pending?.agentId) return;
+		if (!pending.prompt && !pending.attachments?.length) return;
 		// The row can vanish between render and effect (sidebar delete, another
 		// window); TanStack DB's update throws on a missing key.
 		if (!collections.v2WorkspaceLocalState.get(workspaceId)) return;
@@ -48,16 +47,12 @@ export function useRunPendingChatHandoff({
 			draft.pendingChatHandoff = null;
 		});
 		void createNewAgentSession({
-			configId: agentId,
+			configId: pending.agentId,
 			placement: "new-tab",
-			prompt,
+			prompt: pending.prompt,
+			attachments: pending.attachments,
+			modelId: pending.modelId,
+			modeId: pending.modeId,
 		});
-	}, [
-		isLayoutReady,
-		agentId,
-		prompt,
-		workspaceId,
-		collections,
-		createNewAgentSession,
-	]);
+	}, [isLayoutReady, pending, workspaceId, collections, createNewAgentSession]);
 }

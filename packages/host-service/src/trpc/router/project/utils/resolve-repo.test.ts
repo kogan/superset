@@ -607,6 +607,13 @@ describe("cloneRepoInto", () => {
 		);
 	});
 
+	test("a cancelled clone rejects and leaves no target directory behind", async () => {
+		await expect(
+			cloneRepoInto(source, parentDir, undefined, AbortSignal.abort()),
+		).rejects.toThrow(/Failed to clone repository/);
+		expect(existsSync(join(parentDir, "source-repo"))).toBe(false);
+	});
+
 	test("throws when the URL normalizes to no usable segment", async () => {
 		await expect(cloneRepoInto("/", parentDir)).rejects.toThrow(
 			/Could not derive repository name/,

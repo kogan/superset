@@ -388,6 +388,78 @@ describe("probeIdentity", () => {
 		expect(identity.user).toEqual({ id: "42", label: "h@tegon.ai" });
 	});
 
+	test("superhuman_mcp reads the default account wherever the server lists it", async () => {
+		const calls: { method?: string; params?: { name?: string } }[] = [];
+		globalThis.fetch = (async (_url: string, init: RequestInit) => {
+			const body = init.body
+				? (JSON.parse(String(init.body)) as {
+						id?: number;
+						method?: string;
+						params?: { name?: string };
+					})
+				: {};
+			calls.push({ method: body.method, params: body.params });
+			if (init.method === "DELETE") return new Response(null, { status: 204 });
+			if (body.id === undefined) return new Response(null, { status: 202 });
+			const result =
+				body.method === "tools/call"
+					? {
+							content: [
+								{
+									type: "text",
+									text: JSON.stringify({
+										accounts: [
+											{
+												accountEmail: "personal@example.com",
+												isPrimary: false,
+												addedAt: "2026-09-01T00:00:00Z",
+											},
+											{
+												accountEmail: "h@tegon.ai",
+												isPrimary: true,
+												addedAt: "2026-08-13T19:55:57Z",
+											},
+										],
+									}),
+								},
+							],
+						}
+					: {
+							protocolVersion: "2025-06-18",
+							serverInfo: { name: "Superhuman Mail" },
+						};
+			return new Response(
+				JSON.stringify({ jsonrpc: "2.0", id: body.id, result }),
+				{
+					status: 200,
+					headers: {
+						"Content-Type": "application/json",
+						"mcp-session-id": "sess-sh",
+					},
+				},
+			);
+		}) as unknown as typeof fetch;
+
+		const identity = await probeIdentity(
+			"superhuman_mcp",
+			connectorMethod(requireConnector("superhuman_mcp")),
+			"sh-test",
+		);
+
+		expect(calls.map((c) => c.method ?? "[DELETE]")).toEqual([
+			"initialize",
+			"notifications/initialized",
+			"tools/call",
+			"[DELETE]",
+		]);
+		expect(calls[2]?.params?.name).toBe("list_accounts");
+		expect(identity.account).toEqual({
+			id: "h@tegon.ai",
+			label: "h@tegon.ai",
+		});
+		expect(identity.user).toEqual({ id: "h@tegon.ai", label: null });
+	});
+
 	test("a url probe reports the status of a non-JSON error body", async () => {
 		respond(null, {
 			status: 502,
@@ -513,6 +585,20 @@ describe("authorizeUrl for a dynamic client", () => {
 				code_challenge_methods_supported: ["S256"],
 				client_id_metadata_document_supported: true,
 			},
+			"https://mcp.mail.superhuman.com/.well-known/oauth-protected-resource/mcp":
+				{
+					resource: "https://mcp.mail.superhuman.com/mcp",
+					authorization_servers: ["https://mcp.auth.mail.superhuman.com"],
+				},
+			"https://mcp.auth.mail.superhuman.com/.well-known/oauth-authorization-server":
+				{
+					issuer: "https://mcp.auth.mail.superhuman.com",
+					authorization_endpoint:
+						"https://mcp.auth.mail.superhuman.com/oauth2/authorize",
+					token_endpoint: "https://mcp.auth.mail.superhuman.com/oauth2/token",
+					code_challenge_methods_supported: ["S256"],
+					client_id_metadata_document_supported: true,
+				},
 		};
 		globalThis.fetch = (async (input: string | URL) => {
 			const route = routes[String(input)];
@@ -545,5 +631,22 @@ describe("authorizeUrl for a dynamic client", () => {
 			"mcp openid email profile offline_access",
 		);
 		expect(url.searchParams.get("code_challenge_method")).toBe("S256");
+	});
+
+	test("superhuman_mcp names the resource and asks for the OIDC scopes", async () => {
+		const url = await authorize("superhuman_mcp");
+
+		expect(`${url.origin}${url.pathname}`).toBe(
+			"https://mcp.auth.mail.superhuman.com/oauth2/authorize",
+		);
+		expect(url.searchParams.get("client_id")).toBe(
+			"https://api.test/api/connectors/superhuman_mcp/client-metadata",
+		);
+		expect(url.searchParams.get("resource")).toBe(
+			"https://mcp.mail.superhuman.com/mcp",
+		);
+		expect(url.searchParams.get("scope")).toBe(
+			"openid email profile offline_access",
+		);
 	});
 });

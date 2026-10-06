@@ -6,7 +6,10 @@ import type {
 	GetItemsInput,
 	GetSessionInput,
 	PromptInput,
+	QueuedPromptInput,
 	RespondToApprovalInput,
+	ResumeQueueInput,
+	SetConfigOptionInput,
 	SetModeInput,
 } from "@superset/chat/protocol";
 import {
@@ -18,7 +21,10 @@ import {
 	getSessionInputSchema,
 	listSessionsInputSchema,
 	promptInputSchema,
+	queuedPromptInputSchema,
 	respondToApprovalInputSchema,
+	resumeQueueInputSchema,
+	setConfigOptionInputSchema,
 	setModeInputSchema,
 } from "@superset/chat/protocol";
 import { z } from "zod";
@@ -27,7 +33,11 @@ import type { ChatJournal } from "../../journal";
 import type { ChatSessionStore } from "../../projection";
 import type { PageResult } from "../../replay";
 import { readPage } from "../../replay";
-import type { LiveSessionRegistry, PromptResult } from "../../sessions";
+import type {
+	LiveSessionRegistry,
+	PromptResult,
+	QueueState,
+} from "../../sessions";
 
 export const createSessionCommandSchema = createSessionInputSchema
 	.omit({ workspaceId: true })
@@ -64,17 +74,24 @@ export type GetSessionResult = {
 	live: boolean;
 };
 
+export type GetQueueResult = QueueState & { live: boolean };
+
 export type ChatCommands = {
 	createSession(input: CreateSessionCommandInput): CreateSessionResult;
 	prompt(input: PromptInput): PromptResult;
+	removeQueuedPrompt(input: QueuedPromptInput): void;
+	steerQueuedPrompt(input: QueuedPromptInput): void;
+	resumeQueue(input: ResumeQueueInput): void;
 	cancelTurn(input: CancelTurnInput): void;
 	respondToApproval(input: RespondToApprovalInput): void;
 	setMode(input: SetModeInput): void;
+	setConfigOption(input: SetConfigOptionInput): void;
 	closeSession(input: CloseSessionInput): Promise<void>;
 	forkSession(
 		input: ForkSessionCommandInput,
 	): Promise<CreateSessionResult | null>;
 	getSession(input: GetSessionInput): GetSessionResult;
+	getQueue(input: GetSessionInput): GetQueueResult;
 	listSessions(input: ListSessionsCommandInput): ChatSessionRow[];
 	getItems(input: z.input<typeof getItemsInputSchema>): PageResult;
 };
@@ -139,10 +156,33 @@ export function createCommands(options: CommandsOptions): ChatCommands {
 			);
 		},
 
+		removeQueuedPrompt(input) {
+			const parsed: QueuedPromptInput = queuedPromptInputSchema.parse(input);
+			options.dedupe.run(`removeQueuedPrompt:${parsed.commandId}`, () => {
+				options.live.require(parsed.sessionId).removeQueued(parsed.itemId);
+			});
+		},
+
+		steerQueuedPrompt(input) {
+			const parsed: QueuedPromptInput = queuedPromptInputSchema.parse(input);
+			options.dedupe.run(`steerQueuedPrompt:${parsed.commandId}`, () => {
+				options.live.require(parsed.sessionId).steerQueued(parsed.itemId);
+			});
+		},
+
+		resumeQueue(input) {
+			const parsed: ResumeQueueInput = resumeQueueInputSchema.parse(input);
+			options.dedupe.run(`resumeQueue:${parsed.commandId}`, () => {
+				options.live.require(parsed.sessionId).resumeQueue();
+			});
+		},
+
 		cancelTurn(input) {
 			const parsed: CancelTurnInput = cancelTurnInputSchema.parse(input);
 			options.dedupe.run(`cancelTurn:${parsed.commandId}`, () => {
-				options.live.require(parsed.sessionId).cancelTurn(parsed.turnId);
+				options.live
+					.require(parsed.sessionId)
+					.cancelTurn(parsed.turnId, parsed.pauseQueue);
 			});
 		},
 
@@ -160,6 +200,16 @@ export function createCommands(options: CommandsOptions): ChatCommands {
 			const parsed: SetModeInput = setModeInputSchema.parse(input);
 			options.dedupe.run(`setMode:${parsed.commandId}`, () => {
 				options.live.require(parsed.sessionId).setMode(parsed.modeId);
+			});
+		},
+
+		setConfigOption(input) {
+			const parsed: SetConfigOptionInput =
+				setConfigOptionInputSchema.parse(input);
+			options.dedupe.run(`setConfigOption:${parsed.commandId}`, () => {
+				options.live
+					.require(parsed.sessionId)
+					.setConfigOption(parsed.configId, parsed.value);
 			});
 		},
 
@@ -201,6 +251,13 @@ export function createCommands(options: CommandsOptions): ChatCommands {
 						}
 					: null,
 			};
+		},
+
+		getQueue(input) {
+			const parsed: GetSessionInput = getSessionInputSchema.parse(input);
+			const session = options.live.get(parsed.sessionId);
+			if (!session) return { live: false, paused: false, prompts: [] };
+			return { live: true, ...session.queueState };
 		},
 
 		listSessions,

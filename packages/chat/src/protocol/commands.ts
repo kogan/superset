@@ -7,6 +7,9 @@ const commandBaseFields = {
 	sessionId: z.string().min(1),
 };
 
+/** A start `modeId` asking for no harness default: the agent opens in its own mode. */
+export const AGENT_DEFAULT_MODE = "agent-default";
+
 export const createSessionInputSchema = z.object({
 	commandId: z.uuid(),
 	workspaceId: z.string().min(1),
@@ -31,9 +34,19 @@ export const steerInputSchema = z.object({
 });
 export type SteerInput = z.infer<typeof steerInputSchema>;
 
+export const queuedPromptInputSchema = z.object({
+	...commandBaseFields,
+	itemId: z.string().min(1),
+});
+export type QueuedPromptInput = z.infer<typeof queuedPromptInputSchema>;
+
+export const resumeQueueInputSchema = z.object(commandBaseFields);
+export type ResumeQueueInput = z.infer<typeof resumeQueueInputSchema>;
+
 export const cancelTurnInputSchema = z.object({
 	...commandBaseFields,
 	turnId: z.string().min(1),
+	pauseQueue: z.boolean().optional(),
 });
 export type CancelTurnInput = z.infer<typeof cancelTurnInputSchema>;
 
@@ -60,8 +73,8 @@ export type SetModelInput = z.infer<typeof setModelInputSchema>;
 
 export const setConfigOptionInputSchema = z.object({
 	...commandBaseFields,
-	optionId: z.string().min(1),
-	value: z.unknown(),
+	configId: z.string().min(1),
+	value: z.string().min(1),
 });
 export type SetConfigOptionInput = z.infer<typeof setConfigOptionInputSchema>;
 
