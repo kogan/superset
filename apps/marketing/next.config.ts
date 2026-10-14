@@ -1,9 +1,9 @@
 import { join } from "node:path";
 import { withSentryConfig } from "@sentry/nextjs";
 import { SUPPORTED_LOCALES } from "@superset/i18n/locales";
-import { CANONICAL_URLS } from "@superset/shared/constants";
 import { config as dotenvConfig } from "dotenv";
 import type { NextConfig } from "next";
+import { buildLegacyRedirects } from "./src/lib/legacy-redirects";
 
 // Load .env from monorepo root during development
 if (process.env.NODE_ENV !== "production") {
@@ -21,7 +21,7 @@ const isProduction = process.env.NODE_ENV === "production";
 const apiOrigin = process.env.NEXT_PUBLIC_API_URL
 	? new URL(process.env.NEXT_PUBLIC_API_URL).origin
 	: isProduction
-		? CANONICAL_URLS.API
+		? "https://api.superset.sh"
 		: null;
 
 // Third parties this site actually loads (probed against production):
@@ -149,7 +149,8 @@ const config: NextConfig = {
 	},
 
 	async redirects() {
-		const docsUrl = process.env.NEXT_PUBLIC_DOCS_URL || CANONICAL_URLS.DOCS;
+		const docsUrl =
+			process.env.NEXT_PUBLIC_DOCS_URL || "https://docs.superset.sh";
 		return [
 			// These URLs were advertised before discovery files were excluded
 			// from locale expansion. Keep existing inbound links working.
@@ -180,7 +181,7 @@ const config: NextConfig = {
 			},
 			{
 				source: "/mcp",
-				destination: `${CANONICAL_URLS.API}/mcp`,
+				destination: "https://api.superset.sh/mcp",
 				permanent: false,
 			},
 			{
@@ -193,6 +194,7 @@ const config: NextConfig = {
 				destination: `${docsUrl}/:path*`,
 				permanent: false,
 			},
+			...buildLegacyRedirects({ locales: SUPPORTED_LOCALES, docsUrl }),
 		];
 	},
 
@@ -208,7 +210,7 @@ const config: NextConfig = {
 							'</index.md>; rel="alternate"; type="text/markdown"',
 							'</llms.txt>; rel="describedby"; type="text/plain"',
 							'</.well-known/api-catalog>; rel="api-catalog"; type="application/linkset+json"',
-							`<${CANONICAL_URLS.API}/openapi.json>; rel="service-desc"; type="application/vnd.oai.openapi+json"`,
+							'<https://api.superset.sh/openapi.json>; rel="service-desc"; type="application/vnd.oai.openapi+json"',
 						].join(", "),
 					},
 				],

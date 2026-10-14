@@ -1,10 +1,9 @@
 import { msg } from "@lingui/core/macro";
 import { i18n } from "@superset/i18n";
 import { COMPANY } from "@superset/shared/constants";
-import { BrowserWindow, Menu, shell } from "electron";
+import { app, BrowserWindow, Menu, shell } from "electron";
 import { env } from "main/env.main";
 import { resetTerminalStateDev } from "main/lib/terminal/dev-reset";
-import { getAppDisplayName } from "./app-display-name";
 import {
 	checkForUpdatesInteractive,
 	simulateDownloading,
@@ -295,14 +294,10 @@ export function createApplicationMenu() {
 	}
 
 	if (process.platform === "darwin") {
-		const displayName = getAppDisplayName();
 		template.unshift({
-			label: displayName,
+			label: app.name,
 			submenu: [
-				{
-					role: "about",
-					label: i18n._(msg({ message: `About ${displayName}` })),
-				},
+				{ role: "about" },
 				{ type: "separator" },
 				{
 					label: i18n._(
@@ -328,17 +323,11 @@ export function createApplicationMenu() {
 				{ type: "separator" },
 				{ role: "services" },
 				{ type: "separator" },
-				{
-					role: "hide",
-					label: i18n._(msg({ message: `Hide ${displayName}` })),
-				},
+				{ role: "hide" },
 				{ role: "hideOthers" },
 				{ role: "unhide" },
 				{ type: "separator" },
-				{
-					role: "quit",
-					label: i18n._(msg({ message: `Quit ${displayName}` })),
-				},
+				{ role: "quit" },
 				{
 					label: i18n._(
 						msg({

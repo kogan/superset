@@ -1172,6 +1172,7 @@ export function WorkspaceScreen() {
 						    covers the viewport this would move. Always mounted — it
 						    fades itself, which it cannot do if the parent unmounts it. */}
 						<ScrollToBottomButton
+							systemName="arrow.down"
 							visible={!atBottom && !select.active}
 							onPress={() => {
 								// The tap lands in SwiftUI, where RN autocapture cannot see

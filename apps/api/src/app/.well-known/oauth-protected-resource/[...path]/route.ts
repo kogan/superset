@@ -1,5 +1,4 @@
 import { auth } from "@superset/auth/server";
-import { CANONICAL_URLS } from "@superset/shared/constants";
 import { buildProtectedResourceMetadata } from "@/lib/oauth-metadata";
 
 interface RouteContext {
@@ -25,7 +24,7 @@ export async function GET(
 					? authServerMetadata.issuer
 					: undefined,
 			resourceName: "Superset MCP Server",
-			resourceDocumentation: `${CANONICAL_URLS.MARKETING}/auth.md`,
+			resourceDocumentation: "https://superset.sh/auth.md",
 			scopesSupported: Array.isArray(authServerMetadata.scopes_supported)
 				? authServerMetadata.scopes_supported
 				: undefined,

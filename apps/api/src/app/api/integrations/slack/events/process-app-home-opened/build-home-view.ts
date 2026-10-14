@@ -1,5 +1,4 @@
 import type { KnownBlock } from "@slack/types";
-import { CANONICAL_URLS } from "@superset/shared/constants";
 import { DEFAULT_SLACK_MODEL, SLACK_MODELS } from "../../constants";
 
 interface BuildHomeViewParams {
@@ -171,7 +170,7 @@ export function buildHomeView({
 						text: "Open Superset",
 						emoji: true,
 					},
-					url: CANONICAL_URLS.APP,
+					url: "https://app.superset.sh",
 					style: "primary",
 				},
 			],

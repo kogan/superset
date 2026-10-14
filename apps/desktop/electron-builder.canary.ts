@@ -14,7 +14,6 @@ import baseConfig from "./electron-builder";
 import pkg from "./package.json";
 
 const productName = "Superset Canary";
-const displayName = "Superset Canary";
 const canaryMacIconPath = join(pkg.resources, "build/icons/icon-canary.icns");
 const canaryLinuxIconPath = join(pkg.resources, "build/icons/icon-canary.png");
 const canaryWinIconPath = join(pkg.resources, "build/icons/icon-canary.ico");
@@ -37,8 +36,8 @@ const config: Configuration = {
 		artifactName: `Superset-Canary-\${version}-\${arch}.\${ext}`,
 		extendInfo: {
 			...baseConfig.mac?.extendInfo,
-			CFBundleName: displayName,
-			CFBundleDisplayName: displayName,
+			CFBundleName: productName,
+			CFBundleDisplayName: productName,
 		},
 	},
 
@@ -46,10 +45,6 @@ const config: Configuration = {
 		...baseConfig.linux,
 		...(existsSync(canaryLinuxIconPath) ? { icon: canaryLinuxIconPath } : {}),
 		synopsis: `${pkg.description} (Canary)`,
-		desktop: {
-			...baseConfig.linux?.desktop,
-			entry: { ...baseConfig.linux?.desktop?.entry, Name: displayName },
-		},
 		artifactName: `superset-canary-\${version}-\${arch}.\${ext}`,
 	},
 

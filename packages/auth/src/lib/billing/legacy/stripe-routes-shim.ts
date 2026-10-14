@@ -1,4 +1,3 @@
-import { COMPANY } from "@superset/shared/constants";
 import type { Autumn } from "autumn-js";
 import { APIError, createAuthEndpoint } from "better-auth/api";
 import { SEATS_FEATURE_ID } from "../autumn/features";
@@ -13,7 +12,8 @@ export const BILLING_ERROR_CODES = {
 		"Subscription has no pending cancellation or scheduled plan change",
 } as const;
 
-export const ENTERPRISE_CHECKOUT_MESSAGE = `Enterprise subscriptions are managed by admins. Contact ${COMPANY.SUPPORT_EMAIL}.`;
+export const ENTERPRISE_CHECKOUT_MESSAGE =
+	"Enterprise subscriptions are managed by admins. Contact support@superset.sh.";
 
 function billingError(code: keyof typeof BILLING_ERROR_CODES): APIError {
 	return new APIError("BAD_REQUEST", {

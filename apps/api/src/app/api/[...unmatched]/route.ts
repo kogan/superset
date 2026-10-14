@@ -1,4 +1,3 @@
-import { CANONICAL_URLS } from "@superset/shared/constants";
 import { getOAuthProtectedResourceMetadataUrl } from "@/lib/oauth-metadata";
 
 function notFound(request: Request): Response {
@@ -8,7 +7,7 @@ function notFound(request: Request): Response {
 			error: {
 				code: "NOT_FOUND",
 				message: `No route matches ${new URL(request.url).pathname}.`,
-				hint: `API surface: ${origin}/openapi.json. MCP server: ${origin}/mcp. Auth: ${CANONICAL_URLS.MARKETING}/auth.md`,
+				hint: `API surface: ${origin}/openapi.json. MCP server: ${origin}/mcp. Auth: https://superset.sh/auth.md`,
 			},
 		},
 		{ status: 404 },

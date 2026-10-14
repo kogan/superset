@@ -375,7 +375,7 @@ function PlansPage() {
 
 		if (action === "contact") {
 			track("enterprise_trial_requested", { source: "billing_plans" });
-			openUrl.mutate(COMPANY.MAIL_TO);
+			openUrl.mutate("mailto:support@superset.sh");
 			return;
 		}
 
@@ -451,7 +451,7 @@ function PlansPage() {
 									track("billing_support_contacted", {
 										source: "billing_plans_inline",
 									});
-									openUrl.mutate(COMPANY.MAIL_TO);
+									openUrl.mutate("mailto:support@superset.sh");
 								}}
 								className="inline-flex items-center gap-1 text-primary hover:underline"
 							>
