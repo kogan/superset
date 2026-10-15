@@ -6087,8 +6087,14 @@ msgstr "對話方塊、側邊面板、氣泡卡片和懸浮層"
 msgid "Dictate"
 msgstr "語音輸入"
 
+msgid "Dictation"
+msgstr "語音輸入"
+
 msgid "Dictation is not available on this device"
 msgstr "此裝置不支援語音輸入"
+
+msgid "Dictation is not available right now"
+msgstr "語音輸入暫時無法使用"
 
 msgid "Didn't hear back"
 msgstr "未收到回應"
@@ -13465,6 +13471,9 @@ msgstr "正在重新連線…"
 msgid "Reconnecting… your conversation is kept."
 msgstr "正在重新連線… 對話會保留。"
 
+msgid "Recording"
+msgstr "正在錄音"
+
 msgid "Red"
 msgstr "紅色"
 
@@ -15360,6 +15369,9 @@ msgstr "顯示"
 msgid "Show a confirmation dialog when quitting the app"
 msgstr "退出應用時顯示確認對話方塊"
 
+msgid "Show a microphone in the chat composer. Speech is transcribed by ChatGPT when Codex is signed in to it, otherwise on your Mac when possible, and otherwise by Superset's servers."
+msgstr "在聊天輸入框中顯示麥克風。如果 Codex 已登入 ChatGPT，語音由 ChatGPT 轉寫；否則在可行時於你的 Mac 上轉寫，再不行則由 Superset 的伺服器轉寫。"
+
 msgid "Show a Usage button in the home sidebar, under Pull requests"
 msgstr "在首頁側邊欄的「拉取請求」下方顯示「用量」按鈕"
 
@@ -15533,6 +15545,9 @@ msgstr "應用更新可安裝時顯示在側邊欄的膠囊提示"
 
 msgid "Sign in"
 msgstr "登入"
+
+msgid "Sign in again to use dictation"
+msgstr "請重新登入以使用語音輸入"
 
 msgid "Sign in as Local Admin (dev)"
 msgstr "以本地管理員身份登入（開發）"
@@ -17602,6 +17617,9 @@ msgstr "此拉取請求已不可用。"
 msgid "This pull request link is invalid."
 msgstr "這個拉取請求連結無效。"
 
+msgid "This recording is too long to transcribe"
+msgstr "這段錄音太長，無法轉寫"
+
 msgid "This removes every selected worktree from disk and deletes its workspace record."
 msgstr "這會把每個選中的worktree從磁碟上移除，並刪除它的工作區記錄。"
 
@@ -17861,6 +17879,9 @@ msgstr "每次會話的 Token，近 30 天"
 msgid "Tokens stay off your machine"
 msgstr "權杖不會留在你的裝置上"
 
+msgid "Too many dictations. Try again later."
+msgstr "語音輸入次數過多，請稍後再試。"
+
 msgid "Too many feedback submissions. Try again later."
 msgstr "回饋提交次數過多。請稍後重試。"
 
@@ -17956,6 +17977,12 @@ msgstr "任務管理位置"
 
 msgid "Tracking"
 msgstr "已追蹤"
+
+msgid "Transcribing"
+msgstr "正在轉寫"
+
+msgid "Transcribing…"
+msgstr "正在轉寫…"
 
 msgid "Translated"
 msgstr "已翻譯"
@@ -18136,6 +18163,9 @@ msgstr "無法開始語音輸入"
 
 msgid "Unable to transcribe audio"
 msgstr "無法轉寫音訊"
+
+msgid "Unable to transcribe this recording"
+msgstr "無法轉寫這段錄音"
 
 msgid "Unarchive"
 msgstr "取消封存"

@@ -6087,8 +6087,14 @@ msgstr "Pencereler, sayfalar, açılır kutular ve üzerine gelme yüzeyleri"
 msgid "Dictate"
 msgstr "Sesle yaz"
 
+msgid "Dictation"
+msgstr "Sesle yazma"
+
 msgid "Dictation is not available on this device"
 msgstr "Bu cihazda sesle yazma kullanılamıyor"
+
+msgid "Dictation is not available right now"
+msgstr "Sesle yazma şu anda kullanılamıyor"
 
 msgid "Didn't hear back"
 msgstr "Yanıt alınamadı"
@@ -13465,6 +13471,9 @@ msgstr "Yeniden bağlanılıyor…"
 msgid "Reconnecting… your conversation is kept."
 msgstr "Yeniden bağlanılıyor… konuşman korunuyor."
 
+msgid "Recording"
+msgstr "Kaydediliyor"
+
 msgid "Red"
 msgstr "Kırmızı"
 
@@ -15360,6 +15369,9 @@ msgstr "Göster"
 msgid "Show a confirmation dialog when quitting the app"
 msgstr "Uygulamadan çıkarken onay penceresi göster"
 
+msgid "Show a microphone in the chat composer. Speech is transcribed by ChatGPT when Codex is signed in to it, otherwise on your Mac when possible, and otherwise by Superset's servers."
+msgstr "Sohbet giriş alanında bir mikrofon göster. Codex ChatGPT'de oturum açmışsa konuşmayı ChatGPT yazıya döker; aksi halde mümkünse Mac'iniz, o da olmazsa Superset sunucuları döker."
+
 msgid "Show a Usage button in the home sidebar, under Pull requests"
 msgstr "Ana sayfa kenar çubuğunda, pull request'lerin altında bir Kullanım düğmesi göster"
 
@@ -15533,6 +15545,9 @@ msgstr "Bir uygulama güncellemesi kurulmaya hazır olduğunda gösterilen kenar
 
 msgid "Sign in"
 msgstr "Oturum aç"
+
+msgid "Sign in again to use dictation"
+msgstr "Sesle yazmayı kullanmak için yeniden oturum açın"
 
 msgid "Sign in as Local Admin (dev)"
 msgstr "Yerel yönetici olarak oturum aç (dev)"
@@ -17602,6 +17617,9 @@ msgstr "Bu pull request artık kullanılamıyor."
 msgid "This pull request link is invalid."
 msgstr "Bu pull request bağlantısı geçersiz."
 
+msgid "This recording is too long to transcribe"
+msgstr "Bu kayıt yazıya dökmek için çok uzun"
+
 msgid "This removes every selected worktree from disk and deletes its workspace record."
 msgstr "Bu işlem, seçili her worktree'yi diskten kaldırır ve çalışma alanı kaydını siler."
 
@@ -17861,6 +17879,9 @@ msgstr "oturum başına token, son 30 gün"
 msgid "Tokens stay off your machine"
 msgstr "Belirteçler makinenizde saklanmaz"
 
+msgid "Too many dictations. Try again later."
+msgstr "Çok fazla sesle yazma isteği. Daha sonra yeniden deneyin."
+
 msgid "Too many feedback submissions. Try again later."
 msgstr "Çok fazla geri bildirim gönderimi. Daha sonra yeniden deneyin."
 
@@ -17956,6 +17977,12 @@ msgstr "Görevleri şurada takip et"
 
 msgid "Tracking"
 msgstr "İzleme"
+
+msgid "Transcribing"
+msgstr "Yazıya dökülüyor"
+
+msgid "Transcribing…"
+msgstr "Yazıya dökülüyor…"
 
 msgid "Translated"
 msgstr "Çevrildi"
@@ -18136,6 +18163,9 @@ msgstr "Sesle yazma başlatılamıyor"
 
 msgid "Unable to transcribe audio"
 msgstr "Ses yazıya dökülemiyor"
+
+msgid "Unable to transcribe this recording"
+msgstr "Bu kayıt yazıya dökülemiyor"
 
 msgid "Unarchive"
 msgstr "Arşivden çıkar"

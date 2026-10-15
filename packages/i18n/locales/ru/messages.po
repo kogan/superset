@@ -6087,8 +6087,14 @@ msgstr "Диалоги, шторки, поповеры и поверхности
 msgid "Dictate"
 msgstr "Диктовать"
 
+msgid "Dictation"
+msgstr "Диктовка"
+
 msgid "Dictation is not available on this device"
 msgstr "Диктовка недоступна на этом устройстве"
+
+msgid "Dictation is not available right now"
+msgstr "Диктовка сейчас недоступна"
 
 msgid "Didn't hear back"
 msgstr "Ответа не поступило"
@@ -13465,6 +13471,9 @@ msgstr "Переподключение…"
 msgid "Reconnecting… your conversation is kept."
 msgstr "Переподключение… разговор сохранён."
 
+msgid "Recording"
+msgstr "Идёт запись"
+
 msgid "Red"
 msgstr "Красный"
 
@@ -15360,6 +15369,9 @@ msgstr "Показать"
 msgid "Show a confirmation dialog when quitting the app"
 msgstr "Показывать подтверждение при выходе из приложения"
 
+msgid "Show a microphone in the chat composer. Speech is transcribed by ChatGPT when Codex is signed in to it, otherwise on your Mac when possible, and otherwise by Superset's servers."
+msgstr "Показывать микрофон в поле ввода чата. Речь расшифровывает ChatGPT, если в Codex выполнен вход в ChatGPT, иначе по возможности ваш Mac, а в остальных случаях серверы Superset."
+
 msgid "Show a Usage button in the home sidebar, under Pull requests"
 msgstr "Показывать кнопку «Использование» в боковой панели главного экрана под пул-реквестами"
 
@@ -15533,6 +15545,9 @@ msgstr "Плашка в боковой панели, появляется, ко�
 
 msgid "Sign in"
 msgstr "Войти"
+
+msgid "Sign in again to use dictation"
+msgstr "Войдите снова, чтобы пользоваться диктовкой"
 
 msgid "Sign in as Local Admin (dev)"
 msgstr "Войти как локальный админ (dev)"
@@ -17602,6 +17617,9 @@ msgstr "Этот пул-реквест больше недоступен."
 msgid "This pull request link is invalid."
 msgstr "Эта ссылка на пул-реквест недействительна."
 
+msgid "This recording is too long to transcribe"
+msgstr "Эта запись слишком длинная для расшифровки"
+
 msgid "This removes every selected worktree from disk and deletes its workspace record."
 msgstr "Это удалит каждый выбранный worktree с диска и сотрёт запись о его рабочей области."
 
@@ -17861,6 +17879,9 @@ msgstr "токенов за сессию, последние 30 дней"
 msgid "Tokens stay off your machine"
 msgstr "Токены не хранятся на вашем компьютере"
 
+msgid "Too many dictations. Try again later."
+msgstr "Слишком много диктовок. Повторите попытку позже."
+
 msgid "Too many feedback submissions. Try again later."
 msgstr "Слишком много отзывов. Попробуйте позже."
 
@@ -17956,6 +17977,12 @@ msgstr "Где вести задачи"
 
 msgid "Tracking"
 msgstr "Отслеживание"
+
+msgid "Transcribing"
+msgstr "Расшифровка"
+
+msgid "Transcribing…"
+msgstr "Расшифровка…"
 
 msgid "Translated"
 msgstr "Переведено"
@@ -18136,6 +18163,9 @@ msgstr "Не удалось запустить диктовку"
 
 msgid "Unable to transcribe audio"
 msgstr "Не удалось расшифровать аудио"
+
+msgid "Unable to transcribe this recording"
+msgstr "Не удалось расшифровать эту запись"
 
 msgid "Unarchive"
 msgstr "Вернуть из архива"

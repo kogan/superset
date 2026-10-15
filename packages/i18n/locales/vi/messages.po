@@ -6087,8 +6087,14 @@ msgstr "Dialog, sheet, popover và các bề mặt khi di chuột"
 msgid "Dictate"
 msgstr "Đọc chính tả"
 
+msgid "Dictation"
+msgstr "Đọc chính tả"
+
 msgid "Dictation is not available on this device"
 msgstr "Đọc chính tả không khả dụng trên thiết bị này"
+
+msgid "Dictation is not available right now"
+msgstr "Đọc chính tả hiện không khả dụng"
 
 msgid "Didn't hear back"
 msgstr "Không có phản hồi"
@@ -13465,6 +13471,9 @@ msgstr "Đang kết nối lại…"
 msgid "Reconnecting… your conversation is kept."
 msgstr "Đang kết nối lại… cuộc trò chuyện của bạn được giữ nguyên."
 
+msgid "Recording"
+msgstr "Đang ghi âm"
+
 msgid "Red"
 msgstr "Đỏ"
 
@@ -15360,6 +15369,9 @@ msgstr "Hiện"
 msgid "Show a confirmation dialog when quitting the app"
 msgstr "Hiện hộp thoại xác nhận khi thoát ứng dụng"
 
+msgid "Show a microphone in the chat composer. Speech is transcribed by ChatGPT when Codex is signed in to it, otherwise on your Mac when possible, and otherwise by Superset's servers."
+msgstr "Hiển thị micrô trong ô soạn chat. Giọng nói được ChatGPT chuyển thành văn bản khi Codex đã đăng nhập vào đó, nếu không thì trên máy Mac của bạn khi có thể, và nếu không nữa thì trên máy chủ của Superset."
+
 msgid "Show a Usage button in the home sidebar, under Pull requests"
 msgstr "Hiện nút Mức sử dụng trong thanh bên trang chủ, bên dưới Pull request"
 
@@ -15533,6 +15545,9 @@ msgstr "Pill ở thanh bên hiện khi có bản cập nhật ứng dụng sẵn
 
 msgid "Sign in"
 msgstr "Đăng nhập"
+
+msgid "Sign in again to use dictation"
+msgstr "Đăng nhập lại để dùng đọc chính tả"
 
 msgid "Sign in as Local Admin (dev)"
 msgstr "Đăng nhập với quyền Local Admin (dev)"
@@ -17602,6 +17617,9 @@ msgstr "Pull request này không còn khả dụng."
 msgid "This pull request link is invalid."
 msgstr "Liên kết pull request này không hợp lệ."
 
+msgid "This recording is too long to transcribe"
+msgstr "Bản ghi âm này quá dài để chuyển thành văn bản"
+
 msgid "This removes every selected worktree from disk and deletes its workspace record."
 msgstr "Thao tác này xóa mọi worktree đã chọn khỏi đĩa và xóa bản ghi workspace của chúng."
 
@@ -17861,6 +17879,9 @@ msgstr "token mỗi phiên, 30 ngày gần nhất"
 msgid "Tokens stay off your machine"
 msgstr "Token không nằm trên máy của bạn"
 
+msgid "Too many dictations. Try again later."
+msgstr "Quá nhiều lượt đọc chính tả. Hãy thử lại sau."
+
 msgid "Too many feedback submissions. Try again later."
 msgstr "Quá nhiều lượt gửi góp ý. Hãy thử lại sau."
 
@@ -17956,6 +17977,12 @@ msgstr "Theo dõi công việc trong"
 
 msgid "Tracking"
 msgstr "Theo dõi"
+
+msgid "Transcribing"
+msgstr "Đang chuyển thành văn bản"
+
+msgid "Transcribing…"
+msgstr "Đang chuyển thành văn bản…"
 
 msgid "Translated"
 msgstr "Đã dịch"
@@ -18136,6 +18163,9 @@ msgstr "Không thể bắt đầu đọc chính tả"
 
 msgid "Unable to transcribe audio"
 msgstr "Không thể chuyển âm thanh thành văn bản"
+
+msgid "Unable to transcribe this recording"
+msgstr "Không thể chuyển bản ghi âm này thành văn bản"
 
 msgid "Unarchive"
 msgstr "Bỏ lưu trữ"

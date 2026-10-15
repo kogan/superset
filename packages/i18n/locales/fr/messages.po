@@ -6087,8 +6087,14 @@ msgstr "Boîtes de dialogue, panneaux latéraux, popovers et surfaces au survol"
 msgid "Dictate"
 msgstr "Dicter"
 
+msgid "Dictation"
+msgstr "Dictée"
+
 msgid "Dictation is not available on this device"
 msgstr "La dictée n'est pas disponible sur cet appareil"
+
+msgid "Dictation is not available right now"
+msgstr "La dictée n'est pas disponible pour le moment"
 
 msgid "Didn't hear back"
 msgstr "Aucune réponse"
@@ -13465,6 +13471,9 @@ msgstr "Reconnexion…"
 msgid "Reconnecting… your conversation is kept."
 msgstr "Reconnexion… votre conversation est conservée."
 
+msgid "Recording"
+msgstr "Enregistrement en cours"
+
 msgid "Red"
 msgstr "Rouge"
 
@@ -15360,6 +15369,9 @@ msgstr "Afficher"
 msgid "Show a confirmation dialog when quitting the app"
 msgstr "Afficher une boîte de dialogue de confirmation à la fermeture de l'application"
 
+msgid "Show a microphone in the chat composer. Speech is transcribed by ChatGPT when Codex is signed in to it, otherwise on your Mac when possible, and otherwise by Superset's servers."
+msgstr "Afficher un micro dans le champ de saisie du chat. La parole est transcrite par ChatGPT lorsque Codex y est connecté, sinon sur votre Mac quand c'est possible, et à défaut par les serveurs de Superset."
+
 msgid "Show a Usage button in the home sidebar, under Pull requests"
 msgstr "Afficher un bouton Utilisation dans la barre latérale d'accueil, sous Pull requests"
 
@@ -15533,6 +15545,9 @@ msgstr "Pastille de barre latérale affichée lorsqu'une mise à jour de l'appli
 
 msgid "Sign in"
 msgstr "Se connecter"
+
+msgid "Sign in again to use dictation"
+msgstr "Reconnectez-vous pour utiliser la dictée"
 
 msgid "Sign in as Local Admin (dev)"
 msgstr "Se connecter en tant qu'administrateur local (dev)"
@@ -17602,6 +17617,9 @@ msgstr "Cette pull request n'est plus disponible."
 msgid "This pull request link is invalid."
 msgstr "Ce lien de pull request est invalide."
 
+msgid "This recording is too long to transcribe"
+msgstr "Cet enregistrement est trop long pour être transcrit"
+
 msgid "This removes every selected worktree from disk and deletes its workspace record."
 msgstr "Cette action retire du disque chaque worktree sélectionné et supprime son enregistrement d'espace de travail."
 
@@ -17861,6 +17879,9 @@ msgstr "tokens par session, 30 derniers jours"
 msgid "Tokens stay off your machine"
 msgstr "Les jetons ne sont pas stockés sur votre machine"
 
+msgid "Too many dictations. Try again later."
+msgstr "Trop de dictées. Réessayez plus tard."
+
 msgid "Too many feedback submissions. Try again later."
 msgstr "Trop de retours envoyés. Réessayez plus tard."
 
@@ -17956,6 +17977,12 @@ msgstr "Suivre les tâches dans"
 
 msgid "Tracking"
 msgstr "Suivi"
+
+msgid "Transcribing"
+msgstr "Transcription en cours"
+
+msgid "Transcribing…"
+msgstr "Transcription en cours…"
 
 msgid "Translated"
 msgstr "Traduit"
@@ -18136,6 +18163,9 @@ msgstr "Impossible de démarrer la dictée"
 
 msgid "Unable to transcribe audio"
 msgstr "Impossible de transcrire l'audio"
+
+msgid "Unable to transcribe this recording"
+msgstr "Impossible de transcrire cet enregistrement"
 
 msgid "Unarchive"
 msgstr "Désarchiver"

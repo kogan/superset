@@ -6087,8 +6087,14 @@ msgstr "Dialogen, sheets, popovers en hover-oppervlakken"
 msgid "Dictate"
 msgstr "Dicteren"
 
+msgid "Dictation"
+msgstr "Dicteren"
+
 msgid "Dictation is not available on this device"
 msgstr "Dicteren is niet beschikbaar op dit apparaat"
+
+msgid "Dictation is not available right now"
+msgstr "Dicteren is nu niet beschikbaar"
 
 msgid "Didn't hear back"
 msgstr "Geen reactie ontvangen"
@@ -13465,6 +13471,9 @@ msgstr "Opnieuw verbinden…"
 msgid "Reconnecting… your conversation is kept."
 msgstr "Opnieuw verbinden… je gesprek blijft bewaard."
 
+msgid "Recording"
+msgstr "Opnemen"
+
 msgid "Red"
 msgstr "Rood"
 
@@ -15360,6 +15369,9 @@ msgstr "Tonen"
 msgid "Show a confirmation dialog when quitting the app"
 msgstr "Toon een bevestiging bij het afsluiten van de app"
 
+msgid "Show a microphone in the chat composer. Speech is transcribed by ChatGPT when Codex is signed in to it, otherwise on your Mac when possible, and otherwise by Superset's servers."
+msgstr "Een microfoon in het chatinvoerveld tonen. Spraak wordt getranscribeerd door ChatGPT als Codex daarbij is ingelogd, anders waar mogelijk op je Mac, en anders door de servers van Superset."
+
 msgid "Show a Usage button in the home sidebar, under Pull requests"
 msgstr "Toon een knop Gebruik in de zijbalk van het startscherm, onder Pull requests"
 
@@ -15533,6 +15545,9 @@ msgstr "Zijbalkpil die verschijnt als een app-update klaarstaat"
 
 msgid "Sign in"
 msgstr "Inloggen"
+
+msgid "Sign in again to use dictation"
+msgstr "Log opnieuw in om te dicteren"
 
 msgid "Sign in as Local Admin (dev)"
 msgstr "Inloggen als lokale beheerder (dev)"
@@ -17602,6 +17617,9 @@ msgstr "Deze pull request is niet meer beschikbaar."
 msgid "This pull request link is invalid."
 msgstr "Deze link naar een pull request is ongeldig."
 
+msgid "This recording is too long to transcribe"
+msgstr "Deze opname is te lang om te transcriberen"
+
 msgid "This removes every selected worktree from disk and deletes its workspace record."
 msgstr "Hiermee wordt elke geselecteerde worktree van schijf gehaald en het bijbehorende werkruimterecord verwijderd."
 
@@ -17861,6 +17879,9 @@ msgstr "tokens per sessie, laatste 30 dagen"
 msgid "Tokens stay off your machine"
 msgstr "Tokens blijven van je machine af"
 
+msgid "Too many dictations. Try again later."
+msgstr "Te veel dicteeropdrachten. Probeer het later opnieuw."
+
 msgid "Too many feedback submissions. Try again later."
 msgstr "Te veel feedbackinzendingen. Probeer het later opnieuw."
 
@@ -17956,6 +17977,12 @@ msgstr "Taken bijhouden in"
 
 msgid "Tracking"
 msgstr "Bijgehouden"
+
+msgid "Transcribing"
+msgstr "Transcriberen"
+
+msgid "Transcribing…"
+msgstr "Transcriberen…"
 
 msgid "Translated"
 msgstr "Vertaald"
@@ -18136,6 +18163,9 @@ msgstr "Kan dicteren niet starten"
 
 msgid "Unable to transcribe audio"
 msgstr "Kan audio niet transcriberen"
+
+msgid "Unable to transcribe this recording"
+msgstr "Kan deze opname niet transcriberen"
 
 msgid "Unarchive"
 msgstr "Dearchiveren"

@@ -6087,8 +6087,14 @@ msgstr "대화상자, 시트, 팝오버, 호버 표면"
 msgid "Dictate"
 msgstr "받아쓰기"
 
+msgid "Dictation"
+msgstr "받아쓰기"
+
 msgid "Dictation is not available on this device"
 msgstr "이 기기에서는 받아쓰기를 사용할 수 없습니다"
+
+msgid "Dictation is not available right now"
+msgstr "지금은 받아쓰기를 사용할 수 없습니다"
 
 msgid "Didn't hear back"
 msgstr "응답이 없습니다"
@@ -13465,6 +13471,9 @@ msgstr "다시 연결하는 중…"
 msgid "Reconnecting… your conversation is kept."
 msgstr "다시 연결하는 중… 대화는 유지됩니다."
 
+msgid "Recording"
+msgstr "녹음 중"
+
 msgid "Red"
 msgstr "빨강"
 
@@ -15360,6 +15369,9 @@ msgstr "표시"
 msgid "Show a confirmation dialog when quitting the app"
 msgstr "앱을 종료할 때 확인 대화 상자를 표시합니다"
 
+msgid "Show a microphone in the chat composer. Speech is transcribed by ChatGPT when Codex is signed in to it, otherwise on your Mac when possible, and otherwise by Superset's servers."
+msgstr "채팅 입력창에 마이크를 표시합니다. Codex가 ChatGPT에 로그인되어 있으면 ChatGPT가 받아쓰고, 그렇지 않으면 가능한 경우 Mac에서, 그 외에는 Superset 서버에서 받아씁니다."
+
 msgid "Show a Usage button in the home sidebar, under Pull requests"
 msgstr "홈 사이드바의 풀 리퀘스트 아래에 사용량 버튼을 표시합니다"
 
@@ -15533,6 +15545,9 @@ msgstr "앱 업데이트를 설치할 수 있을 때 사이드바에 표시되�
 
 msgid "Sign in"
 msgstr "로그인"
+
+msgid "Sign in again to use dictation"
+msgstr "받아쓰기를 사용하려면 다시 로그인하세요"
 
 msgid "Sign in as Local Admin (dev)"
 msgstr "로컬 관리자로 로그인 (dev)"
@@ -17602,6 +17617,9 @@ msgstr "이 풀 리퀘스트는 더 이상 사용할 수 없습니다."
 msgid "This pull request link is invalid."
 msgstr "이 풀 리퀘스트 링크가 올바르지 않습니다."
 
+msgid "This recording is too long to transcribe"
+msgstr "이 녹음은 너무 길어서 받아쓸 수 없습니다"
+
 msgid "This removes every selected worktree from disk and deletes its workspace record."
 msgstr "선택한 worktree를 디스크에서 모두 제거하고 해당 워크스페이스 기록도 삭제합니다."
 
@@ -17861,6 +17879,9 @@ msgstr "세션당 토큰, 최근 30일"
 msgid "Tokens stay off your machine"
 msgstr "토큰은 내 머신에 남지 않습니다"
 
+msgid "Too many dictations. Try again later."
+msgstr "받아쓰기 요청이 너무 많습니다. 나중에 다시 시도하세요."
+
 msgid "Too many feedback submissions. Try again later."
 msgstr "피드백 제출이 너무 많습니다. 나중에 다시 시도하세요."
 
@@ -17956,6 +17977,12 @@ msgstr "작업 관리 위치"
 
 msgid "Tracking"
 msgstr "추적 기간"
+
+msgid "Transcribing"
+msgstr "받아쓰기 중"
+
+msgid "Transcribing…"
+msgstr "받아쓰기 중…"
 
 msgid "Translated"
 msgstr "번역됨"
@@ -18136,6 +18163,9 @@ msgstr "받아쓰기를 시작할 수 없습니다"
 
 msgid "Unable to transcribe audio"
 msgstr "오디오를 변환할 수 없습니다"
+
+msgid "Unable to transcribe this recording"
+msgstr "이 녹음을 받아쓸 수 없습니다"
 
 msgid "Unarchive"
 msgstr "보관 해제"

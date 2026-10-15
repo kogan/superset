@@ -6087,8 +6087,14 @@ msgstr "Dialogy, sheety, popovery a plochy při najetí"
 msgid "Dictate"
 msgstr "Diktovat"
 
+msgid "Dictation"
+msgstr "Diktování"
+
 msgid "Dictation is not available on this device"
 msgstr "Diktování není na tomto zařízení dostupné"
+
+msgid "Dictation is not available right now"
+msgstr "Diktování teď není dostupné"
 
 msgid "Didn't hear back"
 msgstr "Bez odpovědi"
@@ -13465,6 +13471,9 @@ msgstr "Připojuji znovu…"
 msgid "Reconnecting… your conversation is kept."
 msgstr "Připojuji znovu… konverzace zůstává zachována."
 
+msgid "Recording"
+msgstr "Nahrávání"
+
 msgid "Red"
 msgstr "Červená"
 
@@ -15360,6 +15369,9 @@ msgstr "Zobrazit"
 msgid "Show a confirmation dialog when quitting the app"
 msgstr "Zobrazit před ukončením aplikace potvrzovací dialog"
 
+msgid "Show a microphone in the chat composer. Speech is transcribed by ChatGPT when Codex is signed in to it, otherwise on your Mac when possible, and otherwise by Superset's servers."
+msgstr "Zobrazit v editoru chatu mikrofon. Řeč přepisuje ChatGPT, pokud je k němu přihlášen Codex, jinak se přepisuje na vašem Macu, když to jde, a jinak na serverech Superset."
+
 msgid "Show a Usage button in the home sidebar, under Pull requests"
 msgstr "Zobrazovat tlačítko Využití v postranním panelu domovské obrazovky pod pull requesty"
 
@@ -15533,6 +15545,9 @@ msgstr "Štítek v postranním panelu, když je připravená aktualizace aplikac
 
 msgid "Sign in"
 msgstr "Přihlásit se"
+
+msgid "Sign in again to use dictation"
+msgstr "Pro diktování se znovu přihlaste"
 
 msgid "Sign in as Local Admin (dev)"
 msgstr "Přihlásit se jako Local Admin (dev)"
@@ -17602,6 +17617,9 @@ msgstr "Tento pull request už není dostupný."
 msgid "This pull request link is invalid."
 msgstr "Tento odkaz na pull request je neplatný."
 
+msgid "This recording is too long to transcribe"
+msgstr "Tato nahrávka je na přepis příliš dlouhá"
+
 msgid "This removes every selected worktree from disk and deletes its workspace record."
 msgstr "Tímto se z disku odstraní každý vybraný worktree a smaže se záznam jeho pracovního prostoru."
 
@@ -17861,6 +17879,9 @@ msgstr "tokenů na relaci, posledních 30 dní"
 msgid "Tokens stay off your machine"
 msgstr "Tokeny zůstávají mimo váš počítač"
 
+msgid "Too many dictations. Try again later."
+msgstr "Příliš mnoho diktování. Zkuste to později."
+
 msgid "Too many feedback submissions. Try again later."
 msgstr "Příliš mnoho odeslaných zpětných vazeb. Zkuste to později."
 
@@ -17956,6 +17977,12 @@ msgstr "Sledovat úkoly v"
 
 msgid "Tracking"
 msgstr "Sleduji"
+
+msgid "Transcribing"
+msgstr "Přepisování"
+
+msgid "Transcribing…"
+msgstr "Přepisování…"
 
 msgid "Translated"
 msgstr "Přeloženo"
@@ -18136,6 +18163,9 @@ msgstr "Diktování se nepodařilo spustit"
 
 msgid "Unable to transcribe audio"
 msgstr "Zvuk se nepodařilo přepsat"
+
+msgid "Unable to transcribe this recording"
+msgstr "Tuto nahrávku se nepodařilo přepsat"
 
 msgid "Unarchive"
 msgstr "Obnovit z archivu"

@@ -6087,8 +6087,14 @@ msgstr "Dialogs, sheets, popovers, and hover surfaces"
 msgid "Dictate"
 msgstr "Dictate"
 
+msgid "Dictation"
+msgstr "Dictation"
+
 msgid "Dictation is not available on this device"
 msgstr "Dictation is not available on this device"
+
+msgid "Dictation is not available right now"
+msgstr "Dictation is not available right now"
 
 msgid "Didn't hear back"
 msgstr "Didn't hear back"
@@ -13465,6 +13471,9 @@ msgstr "Reconnecting…"
 msgid "Reconnecting… your conversation is kept."
 msgstr "Reconnecting… your conversation is kept."
 
+msgid "Recording"
+msgstr "Recording"
+
 msgid "Red"
 msgstr "Red"
 
@@ -15360,6 +15369,9 @@ msgstr "Show"
 msgid "Show a confirmation dialog when quitting the app"
 msgstr "Show a confirmation dialog when quitting the app"
 
+msgid "Show a microphone in the chat composer. Speech is transcribed by ChatGPT when Codex is signed in to it, otherwise on your Mac when possible, and otherwise by Superset's servers."
+msgstr "Show a microphone in the chat composer. Speech is transcribed by ChatGPT when Codex is signed in to it, otherwise on your Mac when possible, and otherwise by Superset's servers."
+
 msgid "Show a Usage button in the home sidebar, under Pull requests"
 msgstr "Show a Usage button in the home sidebar, under Pull requests"
 
@@ -15533,6 +15545,9 @@ msgstr "Sidebar pill shown when an app update is ready to install"
 
 msgid "Sign in"
 msgstr "Sign in"
+
+msgid "Sign in again to use dictation"
+msgstr "Sign in again to use dictation"
 
 msgid "Sign in as Local Admin (dev)"
 msgstr "Sign in as Local Admin (dev)"
@@ -17602,6 +17617,9 @@ msgstr "This pull request is no longer available."
 msgid "This pull request link is invalid."
 msgstr "This pull request link is invalid."
 
+msgid "This recording is too long to transcribe"
+msgstr "This recording is too long to transcribe"
+
 msgid "This removes every selected worktree from disk and deletes its workspace record."
 msgstr "This removes every selected worktree from disk and deletes its workspace record."
 
@@ -17861,6 +17879,9 @@ msgstr "tokens per session, trailing 30 days"
 msgid "Tokens stay off your machine"
 msgstr "Tokens stay off your machine"
 
+msgid "Too many dictations. Try again later."
+msgstr "Too many dictations. Try again later."
+
 msgid "Too many feedback submissions. Try again later."
 msgstr "Too many feedback submissions. Try again later."
 
@@ -17956,6 +17977,12 @@ msgstr "Track tasks in"
 
 msgid "Tracking"
 msgstr "Tracking"
+
+msgid "Transcribing"
+msgstr "Transcribing"
+
+msgid "Transcribing…"
+msgstr "Transcribing…"
 
 msgid "Translated"
 msgstr "Translated"
@@ -18136,6 +18163,9 @@ msgstr "Unable to start dictation"
 
 msgid "Unable to transcribe audio"
 msgstr "Unable to transcribe audio"
+
+msgid "Unable to transcribe this recording"
+msgstr "Unable to transcribe this recording"
 
 msgid "Unarchive"
 msgstr "Unarchive"

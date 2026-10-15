@@ -6087,8 +6087,14 @@ msgstr "ダイアログ、シート、ポップオーバー、ホバー表示"
 msgid "Dictate"
 msgstr "音声入力"
 
+msgid "Dictation"
+msgstr "音声入力"
+
 msgid "Dictation is not available on this device"
 msgstr "このデバイスでは音声入力を利用できません"
+
+msgid "Dictation is not available right now"
+msgstr "現在、音声入力は利用できません"
 
 msgid "Didn't hear back"
 msgstr "応答がありません"
@@ -13465,6 +13471,9 @@ msgstr "再接続中…"
 msgid "Reconnecting… your conversation is kept."
 msgstr "再接続中… 会話は保持されます。"
 
+msgid "Recording"
+msgstr "録音中"
+
 msgid "Red"
 msgstr "赤"
 
@@ -15360,6 +15369,9 @@ msgstr "表示"
 msgid "Show a confirmation dialog when quitting the app"
 msgstr "アプリ終了時に確認ダイアログを表示"
 
+msgid "Show a microphone in the chat composer. Speech is transcribed by ChatGPT when Codex is signed in to it, otherwise on your Mac when possible, and otherwise by Superset's servers."
+msgstr "チャットの入力欄にマイクを表示します。Codex が ChatGPT にサインインしている場合は ChatGPT が、それ以外は可能であれば Mac 上で、それもできない場合は Superset のサーバーが音声を文字起こしします。"
+
 msgid "Show a Usage button in the home sidebar, under Pull requests"
 msgstr "ホームのサイドバーの「プルリクエスト」の下に「使用量」ボタンを表示"
 
@@ -15533,6 +15545,9 @@ msgstr "アプリの更新をインストールできるときにサイドバー
 
 msgid "Sign in"
 msgstr "サインイン"
+
+msgid "Sign in again to use dictation"
+msgstr "音声入力を使うには再度サインインしてください"
 
 msgid "Sign in as Local Admin (dev)"
 msgstr "ローカル管理者としてサインイン(開発用)"
@@ -17602,6 +17617,9 @@ msgstr "このプルリクエストは利用できなくなりました。"
 msgid "This pull request link is invalid."
 msgstr "このプルリクエストのリンクは無効です。"
 
+msgid "This recording is too long to transcribe"
+msgstr "この録音は長すぎて文字起こしできません"
+
 msgid "This removes every selected worktree from disk and deletes its workspace record."
 msgstr "選択したすべてのワークツリーをディスクから削除し、ワークスペースの記録も削除します。"
 
@@ -17861,6 +17879,9 @@ msgstr "直近30日のセッションあたりトークン"
 msgid "Tokens stay off your machine"
 msgstr "トークンはマシンに残らない"
 
+msgid "Too many dictations. Try again later."
+msgstr "音声入力の回数が多すぎます。しばらくしてからもう一度お試しください。"
+
 msgid "Too many feedback submissions. Try again later."
 msgstr "フィードバックの送信が多すぎます。しばらくしてからお試しください。"
 
@@ -17956,6 +17977,12 @@ msgstr "タスクの管理先"
 
 msgid "Tracking"
 msgstr "計測期間"
+
+msgid "Transcribing"
+msgstr "文字起こし中"
+
+msgid "Transcribing…"
+msgstr "文字起こし中…"
 
 msgid "Translated"
 msgstr "翻訳済み"
@@ -18136,6 +18163,9 @@ msgstr "音声入力を開始できません"
 
 msgid "Unable to transcribe audio"
 msgstr "音声を文字起こしできません"
+
+msgid "Unable to transcribe this recording"
+msgstr "この録音を文字起こしできません"
 
 msgid "Unarchive"
 msgstr "アーカイブ解除"

@@ -6087,8 +6087,14 @@ msgstr "Dialog, sheet, popover e superfici hover"
 msgid "Dictate"
 msgstr "Detta"
 
+msgid "Dictation"
+msgstr "Dettatura"
+
 msgid "Dictation is not available on this device"
 msgstr "La dettatura non è disponibile su questo dispositivo"
+
+msgid "Dictation is not available right now"
+msgstr "La dettatura non è disponibile al momento"
 
 msgid "Didn't hear back"
 msgstr "Nessuna risposta"
@@ -13465,6 +13471,9 @@ msgstr "Riconnessione…"
 msgid "Reconnecting… your conversation is kept."
 msgstr "Riconnessione… la conversazione viene conservata."
 
+msgid "Recording"
+msgstr "Registrazione in corso"
+
 msgid "Red"
 msgstr "Rosso"
 
@@ -15360,6 +15369,9 @@ msgstr "Mostra"
 msgid "Show a confirmation dialog when quitting the app"
 msgstr "Mostra una finestra di conferma quando esci dall'app"
 
+msgid "Show a microphone in the chat composer. Speech is transcribed by ChatGPT when Codex is signed in to it, otherwise on your Mac when possible, and otherwise by Superset's servers."
+msgstr "Mostra un microfono nel campo della chat. Il parlato viene trascritto da ChatGPT quando Codex vi ha effettuato l'accesso, altrimenti sul tuo Mac quando possibile, e altrimenti dai server di Superset."
+
 msgid "Show a Usage button in the home sidebar, under Pull requests"
 msgstr "Mostra un pulsante Utilizzo nella barra laterale della home, sotto Pull request"
 
@@ -15533,6 +15545,9 @@ msgstr "Pillola nella barra laterale mostrata quando un aggiornamento dell'app �
 
 msgid "Sign in"
 msgstr "Accedi"
+
+msgid "Sign in again to use dictation"
+msgstr "Accedi di nuovo per usare la dettatura"
 
 msgid "Sign in as Local Admin (dev)"
 msgstr "Accedi come Local Admin (dev)"
@@ -17602,6 +17617,9 @@ msgstr "Questa pull request non è più disponibile."
 msgid "This pull request link is invalid."
 msgstr "Questo link alla pull request non è valido."
 
+msgid "This recording is too long to transcribe"
+msgstr "Questa registrazione è troppo lunga da trascrivere"
+
 msgid "This removes every selected worktree from disk and deletes its workspace record."
 msgstr "Rimuove dal disco ogni worktree selezionato ed elimina il record del suo workspace."
 
@@ -17861,6 +17879,9 @@ msgstr "token per sessione, ultimi 30 giorni"
 msgid "Tokens stay off your machine"
 msgstr "I token non vengono salvati sulla tua macchina"
 
+msgid "Too many dictations. Try again later."
+msgstr "Troppe dettature. Riprova più tardi."
+
 msgid "Too many feedback submissions. Try again later."
 msgstr "Troppi invii di feedback. Riprova più tardi."
 
@@ -17956,6 +17977,12 @@ msgstr "Gestisci le attività in"
 
 msgid "Tracking"
 msgstr "Monitoraggio"
+
+msgid "Transcribing"
+msgstr "Trascrizione in corso"
+
+msgid "Transcribing…"
+msgstr "Trascrizione in corso…"
 
 msgid "Translated"
 msgstr "Tradotto"
@@ -18136,6 +18163,9 @@ msgstr "Impossibile avviare la dettatura"
 
 msgid "Unable to transcribe audio"
 msgstr "Impossibile trascrivere l'audio"
+
+msgid "Unable to transcribe this recording"
+msgstr "Impossibile trascrivere questa registrazione"
 
 msgid "Unarchive"
 msgstr "Ripristina dall'archivio"
