@@ -1,7 +1,6 @@
 import { Plural, Trans, useLingui } from "@lingui/react/macro";
 import { FlashList, type FlashListRef } from "@shopify/flash-list";
 import { useFormat } from "@superset/i18n/react";
-import { CANONICAL_URLS } from "@superset/shared/constants";
 import { useQueries, useQueryClient } from "@tanstack/react-query";
 import * as Clipboard from "expo-clipboard";
 import { Stack, useLocalSearchParams, useRouter } from "expo-router";
@@ -624,7 +623,7 @@ export function FilesChangedScreen() {
 
 	const shareUrl =
 		pullRequest?.url ??
-		(workspaceId ? `${CANONICAL_URLS.APP}/workspaces/${workspaceId}` : null);
+		(workspaceId ? `https://app.superset.sh/workspaces/${workspaceId}` : null);
 
 	return (
 		<View className="bg-background flex-1">

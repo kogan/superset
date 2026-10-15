@@ -1,6 +1,5 @@
 import { db } from "@superset/db/client";
 import { members, subscriptions } from "@superset/db/schema";
-import { COMPANY } from "@superset/shared/constants";
 import type { BetterAuthPlugin } from "better-auth";
 import {
 	APIError,
@@ -75,7 +74,8 @@ async function billingCaller(
 function refuseEnterprise(planId: string): void {
 	if (!selfServePlan(planId)) {
 		throw new APIError("FORBIDDEN", {
-			message: `Enterprise subscriptions are managed by admins. Contact ${COMPANY.SUPPORT_EMAIL}.`,
+			message:
+				"Enterprise subscriptions are managed by admins. Contact support@superset.sh.",
 		});
 	}
 }

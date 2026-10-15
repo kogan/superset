@@ -11,7 +11,7 @@ import {
 	Text,
 } from "@react-email/components";
 import { Tailwind } from "@react-email/tailwind";
-import { CANONICAL_URLS, COMPANY } from "@superset/shared/constants";
+import { COMPANY } from "@superset/shared/constants";
 import type { ReactNode } from "react";
 import { env } from "../../../lib/env";
 
@@ -113,7 +113,7 @@ export function EmailLayout({
 						</Section>
 						<Text style={footerText}>
 							<Link
-								href={CANONICAL_URLS.MARKETING}
+								href="https://superset.sh"
 								style={{
 									color: emailTheme.colors.faint,
 									textDecoration: "none",

@@ -1,6 +1,5 @@
 import { Trans, useLingui } from "@lingui/react/macro";
 import { errorMessage } from "@superset/i18n/errors";
-import { CANONICAL_URLS } from "@superset/shared/constants";
 import { sanitizeSegment } from "@superset/shared/workspace-launch";
 import { Button } from "@superset/ui/button";
 import { Checkbox } from "@superset/ui/checkbox";
@@ -355,7 +354,7 @@ function ProjectPage() {
 										These commands run automatically when a workspace is
 										created.{" "}
 										<a
-											href={`${CANONICAL_URLS.DOCS}/setup-teardown-scripts`}
+											href="https://docs.superset.sh/setup-teardown-scripts"
 											target="_blank"
 											rel="noopener noreferrer"
 											className="group inline-flex items-center gap-0.5 underline underline-offset-2 hover:text-foreground transition-colors"

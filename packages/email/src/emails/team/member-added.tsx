@@ -1,5 +1,4 @@
 import { Heading, Section, Text } from "@react-email/components";
-import { CANONICAL_URLS } from "@superset/shared/constants";
 import { Button, EmailLayout } from "../../components";
 
 interface MemberAddedEmailProps {
@@ -15,7 +14,7 @@ export function MemberAddedEmail({
 	organizationName = "Acme Inc",
 	role = "member",
 	addedByName = "John Smith",
-	dashboardLink = CANONICAL_URLS.APP,
+	dashboardLink = "https://app.superset.sh",
 }: MemberAddedEmailProps) {
 	const roleDisplay =
 		role === "member" ? "Member" : role === "admin" ? "Admin" : "Owner";

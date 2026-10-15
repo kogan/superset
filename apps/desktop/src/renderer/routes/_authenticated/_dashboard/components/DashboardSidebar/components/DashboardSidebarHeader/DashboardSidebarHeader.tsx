@@ -57,6 +57,10 @@ import {
 	pullRequestsSearchFromFilters,
 	usePullRequestsFilterStore,
 } from "renderer/routes/_authenticated/_dashboard/pull-requests/stores/pullRequestsFilterStore";
+import {
+	tasksSearchFromFilters,
+	useTasksFilterStore,
+} from "renderer/routes/_authenticated/_dashboard/tasks/stores/tasks-filter-state";
 import { useHostWorkspaces } from "renderer/routes/_authenticated/providers/HostWorkspacesProvider";
 import {
 	getUsageLastSection,
@@ -70,7 +74,6 @@ import {
 } from "renderer/stores/add-repository-modal";
 import { useFeaturePreferences } from "renderer/stores/feature-preferences";
 import { COLLAPSED_WORKSPACE_SIDEBAR_WIDTH } from "renderer/stores/workspace-sidebar-state";
-
 import { AttentionNavigation } from "./components/AttentionNavigation";
 import { WorkspacesNavigation } from "./components/WorkspacesNavigation";
 

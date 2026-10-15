@@ -1,6 +1,6 @@
 {
 	"name": "@superset/host-service",
-	"version": "1.36.0",
+	"version": "1.37.0",
 	"private": true,
 	"type": "module",
 	"exports": {
@@ -112,7 +112,6 @@
 		"simple-git": "4.0.2",
 		"superjson": "2.2.6",
 		"tree-kill": "1.2.2",
-		"yaml": "2.9.1",
 		"zod": "4.6.5"
 	},
 	"devDependencies": {

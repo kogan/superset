@@ -1,7 +1,4 @@
-import { ROOT_DOMAIN } from "./app-identity";
 import type { TriggerConfigInput } from "./automation-triggers";
-
-export { CANONICAL_URLS, IOS_APP } from "./app-identity";
 
 // Auth
 export const AUTH_PROVIDERS = ["github", "google"] as const;
@@ -15,12 +12,21 @@ export const PROTOCOL_SCHEMES = {
 	PROD: "superestset",
 } as const;
 
+const IOS_TEAM_ID = "NV9657CS5A";
+const IOS_BUNDLE_ID = "sh.superset.mobile";
+
+export const IOS_APP = {
+	TEAM_ID: IOS_TEAM_ID,
+	BUNDLE_ID: IOS_BUNDLE_ID,
+	APP_ID: `${IOS_TEAM_ID}.${IOS_BUNDLE_ID}`,
+} as const;
+
 // Company
 // Root domain flips the whole brand at cutover. Default keeps superset.sh so
-// nothing changes until NEXT_PUBLIC_ROOT_DOMAIN is set. All
+// nothing changes until NEXT_PUBLIC_ROOT_DOMAIN is set (e.g. boid.so). All
 // domain-derived URLs below build off this; social handles / GitHub / Discord
 // are external identities and are updated by hand on rebrand.
-const SUPPORT_EMAIL = `support@${ROOT_DOMAIN}`;
+const ROOT_DOMAIN = process.env.NEXT_PUBLIC_ROOT_DOMAIN || "superset.sh";
 const MARKETING_URL =
 	process.env.NEXT_PUBLIC_MARKETING_URL || `https://${ROOT_DOMAIN}`;
 const APP_STORE_ID = "6788926383";
@@ -38,8 +44,7 @@ export const COMPANY = {
 	X_URL: "https://x.com/superset_sh",
 	LINKEDIN_URL: "https://www.linkedin.com/company/superset-sh",
 	YOUTUBE_URL: "https://www.youtube.com/@superset-sh",
-	SUPPORT_EMAIL,
-	MAIL_TO: `mailto:${SUPPORT_EMAIL}`,
+	MAIL_TO: `mailto:support@${ROOT_DOMAIN}`,
 	TEAM_EMAIL: `team@${ROOT_DOMAIN}`,
 	TEAM_MAIL_TO: `mailto:team@${ROOT_DOMAIN}`,
 	REPORT_ISSUE_URL: "https://github.com/superset-sh/superset/issues/new",
@@ -294,7 +299,8 @@ export const SHARED_ENVIRONMENT_NAME = "Default";
 // Terminals set no TERM_PROGRAM, like xterm. Agents take kitty-only paths
 // under "kitty" that xterm.js cannot serve, and under "vscode" Claude Code
 // amplifies the full-fidelity wheel stream ~2x. Without it, agents identify
-// the terminal from its XTVERSION reply ("xterm.js") and the CSI-u probe.
+// the terminal from its XTVERSION reply ("Superset (xterm.js)", see the
+// desktop terminal-version-reply) and the CSI-u probe.
 export const TERMINAL_IDENTITY_ENV_KEYS = [
 	"TERM_PROGRAM",
 	"TERM_PROGRAM_VERSION",

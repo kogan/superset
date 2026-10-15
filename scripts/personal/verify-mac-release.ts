@@ -106,6 +106,9 @@ export async function verifyMacApp(app: string, version: string) {
 		CFBundleIdentifier: FORK.bundleId,
 		CFBundleShortVersionString: version,
 		CFBundleVersion: version,
+		// Electron derives its helper process paths from CFBundleName, so this
+		// has to stay the productName the helper bundles are named after.
+		CFBundleName: desktop.productName,
 	})) {
 		assert.equal(
 			await command(["/usr/libexec/PlistBuddy", "-c", `Print :${key}`, plist]),
@@ -113,6 +116,37 @@ export async function verifyMacApp(app: string, version: string) {
 			key,
 		);
 	}
+	// Electron looks its helpers up as Contents/Frameworks/<CFBundleName>
+	// Helper[ (Role)].app and calls FATAL "Unable to find helper app" when one
+	// is missing, so the app dies before any window. 1.36.0 shipped exactly
+	// that: an upstream refactor set CFBundleName to its own brand while the
+	// helper bundles kept the fork's productName, and nothing caught it
+	// because every other check still passed. Resolve the paths the way
+	// Electron does rather than trusting the plist alone.
+	const bundleName = await command([
+		"/usr/libexec/PlistBuddy",
+		"-c",
+		"Print :CFBundleName",
+		plist,
+	]);
+	for (const role of ["", " (GPU)", " (Plugin)", " (Renderer)"]) {
+		const helper = `${bundleName} Helper${role}`;
+		const executable = join(
+			app,
+			"Contents/Frameworks",
+			`${helper}.app`,
+			"Contents/MacOS",
+			helper,
+		);
+		assert(
+			await stat(executable).then(
+				(entry) => entry.isFile(),
+				() => false,
+			),
+			`Electron cannot resolve its helper process: ${executable}`,
+		);
+	}
+
 	await command([
 		"codesign",
 		"--verify",
