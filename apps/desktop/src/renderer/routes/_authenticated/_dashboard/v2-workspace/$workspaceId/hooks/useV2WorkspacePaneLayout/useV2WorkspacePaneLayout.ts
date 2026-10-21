@@ -10,6 +10,7 @@ import {
 	rememberV2PaneSelection,
 } from "renderer/stores/v2-pane-selection";
 import type { PaneViewerData } from "../../types";
+import { placeInTabs } from "./utils/placeInTabs";
 import {
 	getSharedPaneLayoutSnapshot,
 	preserveLocalPaneSelection,
@@ -61,6 +62,7 @@ export function useV2WorkspacePaneLayout({
 			seededSnapshot: getSnapshot(seededLayout),
 			store: createWorkspaceStore<PaneViewerData>({
 				initialState: seededLayout,
+				...(slot === "rightPaneLayout" ? { placePane: placeInTabs } : {}),
 			}),
 		};
 	}, [collections, workspaceId, slot, selectionKey]);

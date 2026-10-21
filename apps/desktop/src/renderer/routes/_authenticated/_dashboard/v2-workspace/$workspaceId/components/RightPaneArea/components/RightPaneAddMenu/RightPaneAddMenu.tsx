@@ -11,14 +11,20 @@ import {
 	LuFolderTree,
 	LuGitPullRequestArrow,
 } from "react-icons/lu";
-import { TbWorld } from "react-icons/tb";
+import { TbDeviceDesktop, TbWorld } from "react-icons/tb";
 import type { RightPaneKind } from "../../types";
 
 interface RightPaneAddMenuProps {
 	onAdd: (kind: RightPaneKind) => void;
+	runAfterClose: (action: () => void) => void;
+	canAddDesktop: boolean;
 }
 
-export function RightPaneAddMenu({ onAdd }: RightPaneAddMenuProps) {
+export function RightPaneAddMenu({
+	onAdd,
+	runAfterClose,
+	canAddDesktop,
+}: RightPaneAddMenuProps) {
 	return (
 		<>
 			<DropdownMenuItem className="gap-2" onClick={() => onAdd("files")}>
@@ -58,7 +64,18 @@ export function RightPaneAddMenu({ onAdd }: RightPaneAddMenuProps) {
 					<Trans>Browser</Trans>
 				</span>
 			</DropdownMenuItem>
-			<DropdownMenuItem className="gap-2" onClick={() => onAdd("terminal")}>
+			{canAddDesktop && (
+				<DropdownMenuItem className="gap-2" onClick={() => onAdd("desktop")}>
+					<TbDeviceDesktop className="size-4" />
+					<span>
+						<Trans>Desktop</Trans>
+					</span>
+				</DropdownMenuItem>
+			)}
+			<DropdownMenuItem
+				className="gap-2"
+				onClick={() => runAfterClose(() => onAdd("terminal"))}
+			>
 				<BsTerminalPlus className="size-4" />
 				<span>
 					<Trans>Terminal</Trans>

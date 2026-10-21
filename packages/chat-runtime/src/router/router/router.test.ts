@@ -156,6 +156,16 @@ describe("createChatRouter", () => {
 			}),
 		).rejects.toMatchObject({ code: "NOT_FOUND" });
 
+		await expect(
+			caller.rewindSession({
+				commandId: randomUUID(),
+				sessionId: "missing",
+				itemId: "item-1",
+				prompt: "edited",
+				workspaceId: "workspace-1",
+			}),
+		).rejects.toMatchObject({ code: "NOT_FOUND" });
+
 		const created = await caller.createSession(createSessionInput());
 		await runtime.live.dispose(created.sessionId);
 		await expect(
@@ -217,6 +227,20 @@ describe("createChatRouter", () => {
 			await caller.listSessions({ workspaceId: "workspace-2" }),
 		).toHaveLength(1);
 		expect(await caller.listSessions({ limit: 1 })).toHaveLength(1);
+		await runtime.dispose();
+	});
+
+	test("discoverSessions reports an unknown harness", async () => {
+		const { runtime, caller } = newCaller();
+		await expect(
+			caller.discoverSessions({
+				workspaceId: "workspace-1",
+				harness: "nope",
+			}),
+		).rejects.toMatchObject({
+			code: "BAD_REQUEST",
+			message: "unknown harness nope",
+		});
 		await runtime.dispose();
 	});
 });

@@ -8,6 +8,10 @@
 			"types": "./src/worktree-deletion.ts",
 			"default": "./src/worktree-deletion.ts"
 		},
+		"./oauth-refresh": {
+			"types": "./src/oauth-refresh.ts",
+			"default": "./src/oauth-refresh.ts"
+		},
 		"./terminal-colors": "./src/terminal-colors.ts",
 		"./voice": {
 			"types": "./src/voice/index.ts",
@@ -69,6 +73,14 @@
 			"types": "./src/page-presence.ts",
 			"default": "./src/page-presence.ts"
 		},
+		"./presence-visits": {
+			"types": "./src/presence-visits.ts",
+			"default": "./src/presence-visits.ts"
+		},
+		"./workspace-access": {
+			"types": "./src/workspace-access.ts",
+			"default": "./src/workspace-access.ts"
+		},
 		"./page-presence-client": {
 			"types": "./src/page-presence-client.ts",
 			"default": "./src/page-presence-client.ts"
@@ -113,9 +125,21 @@
 			"types": "./src/agent-status.ts",
 			"default": "./src/agent-status.ts"
 		},
+		"./app-identity": {
+			"types": "./src/app-identity.ts",
+			"default": "./src/app-identity.ts"
+		},
+		"./brand": {
+			"types": "./src/brand.ts",
+			"default": "./src/brand.ts"
+		},
 		"./constants": {
 			"types": "./src/constants.ts",
 			"default": "./src/constants.ts"
+		},
+		"./legacy-host-redirects": {
+			"types": "./src/legacy-host-redirects.ts",
+			"default": "./src/legacy-host-redirects.ts"
 		},
 		"./format-scaled": {
 			"types": "./src/format-scaled.ts",
@@ -189,9 +213,17 @@
 			"types": "./src/dev-app-profile.ts",
 			"default": "./src/dev-app-profile.ts"
 		},
+		"./release-notes": {
+			"types": "./src/release-notes.ts",
+			"default": "./src/release-notes.ts"
+		},
 		"./desktop-notices": {
 			"types": "./src/desktop-notices.ts",
 			"default": "./src/desktop-notices.ts"
+		},
+		"./mcp-servers": {
+			"types": "./src/mcp-servers.ts",
+			"default": "./src/mcp-servers.ts"
 		},
 		"./media-files": {
 			"types": "./src/media-files.ts",
@@ -224,6 +256,10 @@
 		"./names": {
 			"types": "./src/names/index.ts",
 			"default": "./src/names/index.ts"
+		},
+		"./sharing": {
+			"types": "./src/sharing/index.ts",
+			"default": "./src/sharing/index.ts"
 		},
 		"./terminal-link-parsing": {
 			"types": "./src/terminal-link-parsing/index.ts",
@@ -389,9 +425,9 @@
 			"types": "./src/rrule.ts",
 			"default": "./src/rrule.ts"
 		},
-		"./terminal-session-handoff": {
-			"types": "./src/terminal-session-handoff.ts",
-			"default": "./src/terminal-session-handoff.ts"
+		"./session-handoff": {
+			"types": "./src/session-handoff.ts",
+			"default": "./src/session-handoff.ts"
 		},
 		"./theme-colors": {
 			"types": "./src/themes/types.ts",
@@ -445,7 +481,7 @@
 		"@types/friendly-words": "1.2.2",
 		"@types/semver": "7.7.1",
 		"@xterm/xterm": "6.1.0-beta.315",
-		"bun-types": "1.4.2",
+		"bun-types": "1.4.3",
 		"typescript": "7.0.2"
 	}
 }

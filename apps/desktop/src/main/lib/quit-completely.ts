@@ -2,9 +2,10 @@ import { msg } from "@lingui/core/macro";
 import { i18n } from "@superset/i18n";
 import { app, dialog } from "electron";
 import { quitAppCompletely } from "main/index";
+import { getAppDisplayName } from "./app-display-name";
 
 export async function confirmAndQuitCompletely(): Promise<void> {
-	const appName = app.name;
+	const displayName = getAppDisplayName();
 	try {
 		const { response } = await dialog.showMessageBox({
 			type: "warning",
@@ -20,17 +21,17 @@ export async function confirmAndQuitCompletely(): Promise<void> {
 			cancelId: 1,
 			title: i18n._(
 				msg({
-					message: `Quit ${appName} Completely`,
+					message: `Quit ${displayName} Completely`,
 				}),
 			),
 			message: i18n._(
 				msg({
-					message: `Quit ${appName} and stop all background services?`,
+					message: `Quit ${displayName} and stop all background services?`,
 				}),
 			),
 			detail: i18n._(
 				msg({
-					message: `All open terminal sessions will be killed and any running host-services will be stopped. Use “Close ${appName}” instead if you want services to keep running for the next launch.`,
+					message: `All open terminal sessions will be killed and any running host-services will be stopped. Use “Close ${displayName}” instead if you want services to keep running for the next launch.`,
 				}),
 			),
 		});

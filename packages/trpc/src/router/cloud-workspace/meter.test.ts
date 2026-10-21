@@ -312,7 +312,7 @@ describe("meter", () => {
 
 describe("with BILLING_PROVIDER=stripe", () => {
 	test("boxes start, wake and reconcile without asking Autumn", async () => {
-		await assertMayBoot("org_1");
+		await assertMayBoot("org_1", 4);
 		expect(
 			await authorizeBoot({
 				organizationId: "org_1",

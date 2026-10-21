@@ -1,22 +1,22 @@
 import { db } from "@superset/db/client";
 import {
-	cloudWorkspacePresence,
 	cloudWorkspaceRepositories,
 	cloudWorkspaces,
 	cloudWorkspaceVisibilityEnum,
 	environments,
 	githubRepositories,
-	members,
 	users,
 } from "@superset/db/schema";
+import { MACHINE_SIZES, machineSpec } from "@superset/shared/billing";
 import {
 	CLOUD_AGENT_PROMPT_MAX_LENGTH,
 	isCloudAgentId,
 } from "@superset/shared/cloud-agent-launch";
 import type { TRPCRouterRecord } from "@trpc/server";
 import { TRPCError } from "@trpc/server";
-import { and, asc, desc, eq, inArray, isNotNull, ne, sql } from "drizzle-orm";
+import { and, asc, desc, eq, isNotNull, ne } from "drizzle-orm";
 import { z } from "zod";
+import { organizationMachineSizes } from "../../lib/billing/plan";
 import { assertCloudAccess, assertMember } from "../../lib/cloud-guards";
 import { nudge } from "../../lib/realtime";
 import {
@@ -32,10 +32,13 @@ import {
 	sandboxExists,
 	stopAndSnapshot,
 } from "../../lib/sandbox";
+import { pushWorkspaceAccess } from "../../lib/workspace-access";
 import { jwtProcedure, userError } from "../../trpc";
 import { hostServiceMutation } from "../automation/relay-client";
+import { ensureDefaultEnvironment } from "../environment/default-environment";
+import { regionForRequest } from "../environment/region-for-request";
 import {
-	isVisibleTo,
+	canOpenWorkspace,
 	loadVisibleWorkspace,
 	notFound,
 	visibleTo,
@@ -45,6 +48,7 @@ import { queueSettleWorkspace, settleWorkspaceNow } from "./meter";
 import { nextSandboxNameFor } from "./provision";
 import { queueReap } from "./reap";
 import { cloudWorkspaceRecordRouter } from "./record";
+import { cloudWorkspaceSharingRouter } from "./sharing";
 import { queueProvision, startCloudWorkspace } from "./start";
 import { transitionCloudWorkspace } from "./transition";
 import {
@@ -78,7 +82,7 @@ async function loadReadyWorkspace(
 	}
 	await assertCloudAccess(ctx);
 	assertMember(ctx.organizationIds, row.organizationId);
-	if (!isVisibleTo(row, ctx.userId)) throw notFound();
+	if (!(await canOpenWorkspace(row, ctx.userId))) throw notFound();
 	if (row.status !== "ready") {
 		throw new TRPCError({
 			code: "PRECONDITION_FAILED",
@@ -134,53 +138,19 @@ async function addressSandbox(
 }
 
 /**
- * Current members who have opened the workspaces, most recently seen first.
- * The creator counts as present from the moment they created it.
+ * Released desktop and mobile builds still read `presence`; it now lives in the realtime WorkspaceHub.
+ * TODO(2026-10-26): drop `presence` from list and create once MINIMUM_DESKTOP_VERSION is past the release that stopped reading it.
  */
-async function loadPresence(organizationId: string, workspaceIds: string[]) {
-	if (workspaceIds.length === 0) return [];
-	const isMember = (userId: typeof users.id) =>
-		and(eq(members.userId, userId), eq(members.organizationId, organizationId));
-	const [visits, creators] = await Promise.all([
-		db
-			.select({
-				cloudWorkspaceId: cloudWorkspacePresence.cloudWorkspaceId,
-				userId: cloudWorkspacePresence.userId,
-				name: users.name,
-				image: users.image,
-				lastSeenAt: cloudWorkspacePresence.lastSeenAt,
-			})
-			.from(cloudWorkspacePresence)
-			.innerJoin(users, eq(cloudWorkspacePresence.userId, users.id))
-			.innerJoin(members, isMember(users.id))
-			.where(inArray(cloudWorkspacePresence.cloudWorkspaceId, workspaceIds)),
-		db
-			.select({
-				cloudWorkspaceId: cloudWorkspaces.id,
-				userId: users.id,
-				name: users.name,
-				image: users.image,
-				lastSeenAt: cloudWorkspaces.createdAt,
-			})
-			.from(cloudWorkspaces)
-			.innerJoin(users, eq(cloudWorkspaces.createdByUserId, users.id))
-			.innerJoin(members, isMember(users.id))
-			.where(inArray(cloudWorkspaces.id, workspaceIds)),
-	]);
-	const visited = new Set(
-		visits.map((visit) => `${visit.cloudWorkspaceId}:${visit.userId}`),
-	);
-	return [
-		...visits,
-		...creators.filter(
-			(creator) =>
-				!visited.has(`${creator.cloudWorkspaceId}:${creator.userId}`),
-		),
-	].sort((a, b) => b.lastSeenAt.getTime() - a.lastSeenAt.getTime());
-}
+const NO_PRESENCE: {
+	userId: string;
+	name: string;
+	image: string | null;
+	lastSeenAt: Date;
+}[] = [];
 
 export const cloudWorkspaceRouter = {
 	...cloudWorkspaceRecordRouter,
+	sharing: cloudWorkspaceSharingRouter,
 
 	/**
 	 * Whether this account may use cloud workspaces. Clients decide their
@@ -232,16 +202,10 @@ export const cloudWorkspaceRouter = {
 					),
 				)
 				.orderBy(desc(cloudWorkspaces.createdAt));
-			const presence = await loadPresence(
-				input.organizationId,
-				rows.map((r) => r.workspace.id),
-			);
 			return rows.map(({ workspace, createdBy }) => ({
 				...workspace,
 				createdBy,
-				presence: presence
-					.filter((p) => p.cloudWorkspaceId === workspace.id)
-					.map(({ cloudWorkspaceId: _id, ...person }) => person),
+				presence: NO_PRESENCE,
 			}));
 		}),
 
@@ -298,6 +262,19 @@ export const cloudWorkspaceRouter = {
 			}));
 		}),
 
+	machineSizes: jwtProcedure
+		.input(z.object({ organizationId: z.string().uuid() }))
+		.query(async ({ ctx, input }) => {
+			assertMember(ctx.organizationIds, input.organizationId);
+			const { sizes, defaultSize } = await organizationMachineSizes(
+				input.organizationId,
+			);
+			return {
+				defaultSize,
+				sizes: sizes.map((name) => ({ name, ...machineSpec(name) })),
+			};
+		}),
+
 	listBranches: jwtProcedure
 		.input(
 			z.object({
@@ -328,7 +305,11 @@ export const cloudWorkspaceRouter = {
 				/** Omitted = the repo's default branch, resolved here — a client
 				 * whose branch query hadn't answered must not guess "main". */
 				branch: z.string().min(1).max(300).optional(),
-				environmentId: z.string().uuid(),
+				/** One of the two: an environment, or a repository whose default
+				 * environment is used — made on first use when the organization
+				 * has none that checks the repository out. */
+				environmentId: z.string().uuid().optional(),
+				repositoryId: z.string().uuid().optional(),
 				/**
 				 * A built-in agent to launch on first boot with `prompt`. Absent
 				 * means the workspace comes up idle.
@@ -347,6 +328,8 @@ export const cloudWorkspaceRouter = {
 				typedPrompt: z.string().max(20000).optional(),
 				/** Tasks the composer linked; each must be in this organization. */
 				taskIds: z.array(z.string().uuid()).max(10).optional(),
+				/** A size the organization offers (see `machineSizes`); omitted = its default. */
+				machineSize: z.enum(MACHINE_SIZES).optional(),
 			}),
 		)
 		.mutation(async ({ ctx, input }) => {
@@ -361,16 +344,36 @@ export const cloudWorkspaceRouter = {
 				});
 			}
 
+			const environmentId =
+				input.environmentId ??
+				(input.repositoryId
+					? (
+							await ensureDefaultEnvironment({
+								organizationId: input.organizationId,
+								repositoryId: input.repositoryId,
+								userId: ctx.userId,
+								region: regionForRequest(ctx.headers),
+							})
+						).id
+					: null);
+			if (!environmentId) {
+				throw new TRPCError({
+					code: "BAD_REQUEST",
+					message: "environmentId or repositoryId is required",
+				});
+			}
+
 			const row = await startCloudWorkspace({
 				organizationId: input.organizationId,
 				userId: ctx.userId,
-				environmentId: input.environmentId,
+				environmentId,
 				name: input.name,
 				prompt: input.prompt,
 				branch: input.branch,
 				typedPrompt: input.typedPrompt,
 				taskIds: input.taskIds,
 				attachmentFileIds: input.attachmentFileIds,
+				machineSize: input.machineSize,
 				...(input.agent
 					? {
 							launch: {
@@ -394,7 +397,7 @@ export const cloudWorkspaceRouter = {
 				createdBy: creator
 					? { userId: creator.id, name: creator.name, image: creator.image }
 					: null,
-				presence: [],
+				presence: NO_PRESENCE,
 			};
 		}),
 
@@ -450,47 +453,6 @@ export const cloudWorkspaceRouter = {
 				row,
 				input.wake ? "wake" : "address",
 			);
-			// Only the open workspace wakes; addressing a listed one is not
-			// being in it.
-			// Presence is a hint; this call is also the sandbox keepalive.
-			if (input.wake) {
-				try {
-					const [visit] = await db
-						.insert(cloudWorkspacePresence)
-						.values({ cloudWorkspaceId: row.id, userId: ctx.userId })
-						.onConflictDoUpdate({
-							target: [
-								cloudWorkspacePresence.cloudWorkspaceId,
-								cloudWorkspacePresence.userId,
-							],
-							set: { lastSeenAt: new Date() },
-						})
-						.returning({ firstVisit: sql<boolean>`xmax = 0` });
-					if (visit?.firstVisit && ctx.userId !== row.createdByUserId) {
-						await recordCloudWorkspaceActivity(
-							db,
-							row.id,
-							{ kind: "user", userId: ctx.userId },
-							{ event: "joined" },
-						);
-					}
-					nudge(row.organizationId, "cloud_workspaces", {
-						kind: "cloud_workspaces",
-						workspaceId: row.id,
-						presence: (await loadPresence(row.organizationId, [row.id])).map(
-							({ cloudWorkspaceId: _id, lastSeenAt, ...person }) => ({
-								...person,
-								lastSeenAt: lastSeenAt.getTime(),
-							}),
-						),
-					});
-				} catch (error) {
-					console.error(
-						`[cloud-workspace] ${row.id} presence write failed`,
-						error,
-					);
-				}
-			}
 			const host = await mintSandboxGateAccess({
 				workspaceId: row.id,
 				userId: ctx.userId,
@@ -613,6 +575,9 @@ export const cloudWorkspaceRouter = {
 					{ fromVisibility: row.visibility, toVisibility: input.visibility },
 				);
 			}
+			if (input.visibility !== row.visibility) {
+				pushWorkspaceAccess(row.organizationId, row.id);
+			}
 			nudge(row.organizationId, "cloud_workspaces");
 			return { visibility: input.visibility };
 		}),
@@ -626,7 +591,9 @@ export const cloudWorkspaceRouter = {
 			if (!row) return { deleted: false };
 			await assertCloudAccess(ctx);
 			assertMember(ctx.organizationIds, row.organizationId);
-			if (!isVisibleTo(row, ctx.userId)) return { deleted: false };
+			if (!(await canOpenWorkspace(row, ctx.userId))) {
+				return { deleted: false };
+			}
 
 			const archivedAt = new Date();
 			// From any state, provisioning included: the job checks the row

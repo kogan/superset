@@ -15,25 +15,23 @@ import { userError } from "../../i18n-error";
 import { nudge } from "../../lib/realtime";
 import {
 	findSandboxSession,
-	IMAGE_SANDBOX_VCPUS,
 	listActiveWorkspaceSandboxes,
 	MEMORY_MB_PER_VCPU,
 	stopSandbox,
 } from "../../lib/sandbox";
 import { publishCloudWorkspaceJob } from "./jobs";
 
-const LOCK_WINDOW_MS = 15 * 60 * 1000;
-const LOCK_TTL_MS = 40 * 60 * 1000;
+const LOCK_WINDOW_MS = 30 * 60 * 1000;
+const LOCK_TTL_MS = 70 * 60 * 1000;
 const CAP_GRACE_MS = 10 * 60 * 1000;
 const SETTLE_LEASE_MS = 2 * 60 * 1000;
-const UNATTACHED_BOOT_GRACE_MS = 30 * 60 * 1000;
-const RECONCILE_LOOKBACK_MS = 30 * 60 * 1000;
+const UNATTACHED_BOOT_GRACE_MS = 60 * 60 * 1000;
+const RECONCILE_LOOKBACK_MS = 60 * 60 * 1000;
 const RECONCILE_CONCURRENCY = 25;
 
-export const DEFAULT_BOX = {
-	memoryMb: IMAGE_SANDBOX_VCPUS * MEMORY_MB_PER_VCPU,
-	vcpus: IMAGE_SANDBOX_VCPUS,
-};
+export function boxFor(vcpus: number): { memoryMb: number; vcpus: number } {
+	return { memoryMb: vcpus * MEMORY_MB_PER_VCPU, vcpus };
+}
 
 type Boot = typeof cloudWorkspaceBoots.$inferSelect;
 type Refusal = "cloudNeedsPaidPlan" | "usageLimitReached";
@@ -105,9 +103,10 @@ function isUniqueViolation(error: unknown): boolean {
 
 export async function assertMayBoot(
 	organizationId: string,
-	box = DEFAULT_BOX,
+	vcpus: number,
 ): Promise<void> {
 	if (!billingUsesAutumn) return;
+	const box = boxFor(vcpus);
 	const result = await checkOrFailOpen(organizationId, () =>
 		autumnClient.check({
 			customerId: organizationId,

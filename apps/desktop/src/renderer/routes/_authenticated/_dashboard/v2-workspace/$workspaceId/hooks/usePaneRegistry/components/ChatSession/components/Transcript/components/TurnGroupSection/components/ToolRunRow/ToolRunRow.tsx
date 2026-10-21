@@ -1,4 +1,8 @@
-import type { ToolCall } from "@superset/chat/protocol";
+import type {
+	Item,
+	Reasoning as ReasoningItem,
+	ToolCall,
+} from "@superset/chat/protocol";
 import { Shimmer } from "@superset/ui/ai-elements/shimmer";
 import {
 	Collapsible,
@@ -9,6 +13,7 @@ import { cn } from "@superset/ui/utils";
 import { ChevronRight } from "lucide-react";
 import { memo } from "react";
 import { toolKindIcon } from "../../../../utils/toolKindIcon";
+import { ReasoningRow } from "../../../ReasoningRow";
 import { ToolCallRow } from "../../../ToolCallRow";
 import { RailStep } from "../RailStep";
 import { dominantKind } from "./utils/dominantKind";
@@ -19,6 +24,9 @@ const SUMMARY_SWEEP_SECONDS = 1.6;
 type ToolRunRowProps = {
 	rowKey: string;
 	items: ToolCall[];
+	steps: readonly Item[];
+	/** Each step's thinking text, "" for a tool call. */
+	stepTexts: readonly string[];
 	collapsed: boolean;
 	onToggle: (rowKey: string, collapsed: boolean) => void;
 };
@@ -28,8 +36,9 @@ function sameTools(previous: ToolRunRowProps, next: ToolRunRowProps): boolean {
 		previous.rowKey === next.rowKey &&
 		previous.collapsed === next.collapsed &&
 		previous.onToggle === next.onToggle &&
-		previous.items.length === next.items.length &&
-		previous.items.every((item, index) => item === next.items[index])
+		previous.steps.length === next.steps.length &&
+		previous.steps.every((step, index) => step === next.steps[index]) &&
+		previous.stepTexts.every((text, index) => text === next.stepTexts[index])
 	);
 }
 
@@ -38,9 +47,15 @@ export const ToolRunRow = memo(function ToolRunRow({
 	items,
 	onToggle,
 	rowKey,
+	steps,
+	stepTexts,
 }: ToolRunRowProps) {
-	const live = items.some((tool) => tool.status === "running");
-	const summary = stepSummary(items);
+	const done = items.filter((tool) => tool.status !== "running");
+	const live = done.length === 0;
+	const summary = stepSummary(live ? items : done);
+	const current = collapsed
+		? items.find((tool) => tool.status === "running")
+		: undefined;
 	const Icon = toolKindIcon(dominantKind(items));
 	return (
 		<Collapsible
@@ -71,10 +86,22 @@ export const ToolRunRow = memo(function ToolRunRow({
 					</span>
 				)}
 			</CollapsibleTrigger>
+			{current && (
+				<RailStep>
+					<ToolCallRow item={current} />
+				</RailStep>
+			)}
 			<CollapsibleContent>
-				{items.map((tool) => (
-					<RailStep key={tool.id}>
-						<ToolCallRow item={tool} />
+				{steps.map((step, index) => (
+					<RailStep key={step.id}>
+						{step.kind === "reasoning" ? (
+							<ReasoningRow
+								item={step as ReasoningItem}
+								text={stepTexts[index] ?? ""}
+							/>
+						) : (
+							<ToolCallRow item={step as ToolCall} />
+						)}
 					</RailStep>
 				))}
 			</CollapsibleContent>

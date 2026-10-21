@@ -1,13 +1,15 @@
 import { useLingui } from "@lingui/react/macro";
 import { toast } from "@superset/ui/sonner";
 import { createFileRoute } from "@tanstack/react-router";
-import { useEffect } from "react";
+import { useCallback, useEffect, useRef } from "react";
 import { Redirect } from "renderer/components/Redirect";
 import { usePluginsEnabled } from "renderer/hooks/usePluginsEnabled";
 import { usePluginCatalog } from "renderer/hooks/usePluginCatalog";
+import { useInstallAfterConnect } from "renderer/routes/_authenticated/_dashboard/hooks/useInstallAfterConnect";
 import { PluginDetail } from "./components/PluginDetail";
 
 export type PluginDetailSearch = {
+	connect?: boolean;
 	connected?: string;
 	error?: string;
 };
@@ -17,23 +19,27 @@ export const Route = createFileRoute(
 )({
 	component: PluginDetailPage,
 	validateSearch: (search: Record<string, unknown>): PluginDetailSearch => ({
+		connect: search.connect === true ? true : undefined,
 		connected:
 			typeof search.connected === "string" ? search.connected : undefined,
 		error: typeof search.error === "string" ? search.error : undefined,
 	}),
 });
 
-function useConnectOutcome(plugin: string) {
+function useConnectOutcome(plugin: string, onConnected: () => void) {
 	const { t } = useLingui();
 	const navigate = Route.useNavigate();
 	const { connected, error } = Route.useSearch();
+	const onConnectedRef = useRef(onConnected);
+	onConnectedRef.current = onConnected;
 
 	useEffect(() => {
 		if (connected === undefined && !error) return;
 
 		if (connected !== undefined) {
-			const label = connected || plugin;
+			const label = plugin;
 			toast.success(t({ message: `Connected ${label}` }));
+			onConnectedRef.current();
 		} else if (error === "oauth_denied") {
 			toast.error(
 				t({ message: `You declined the ${plugin} authorization request.` }),
@@ -65,13 +71,31 @@ function PluginDetailPage() {
 	const isEnabled = usePluginsEnabled();
 	const { plugins, isLoading } = usePluginCatalog();
 	const plugin = plugins.find((entry) => entry.name === pluginName);
+	const { connect } = Route.useSearch();
+	const navigate = Route.useNavigate();
 
-	useConnectOutcome(pluginName);
+	const installAfterConnect = useInstallAfterConnect();
+	const onConnected = useCallback(
+		() => void installAfterConnect(pluginName),
+		[installAfterConnect, pluginName],
+	);
+
+	useConnectOutcome(plugin?.interface.displayName ?? pluginName, onConnected);
+
+	useEffect(() => {
+		if (connect) void navigate({ search: {}, replace: true });
+	}, [connect, navigate]);
 
 	if (isEnabled === undefined) return null;
 	if (!isEnabled) return <Redirect to="/v2-workspaces" />;
 	if (isLoading) return null;
 	if (!plugin) return <Redirect to="/plugins" />;
 
-	return <PluginDetail plugin={plugin} />;
+	return (
+		<PluginDetail
+			plugin={plugin}
+			openConnect={connect}
+			onConnected={onConnected}
+		/>
+	);
 }

@@ -103,7 +103,7 @@ export function ChatPane({
 						...(handoffPrompt ? { pendingPrompt: handoffPrompt } : {}),
 					});
 				}}
-				onForkAgent={({ presetId, label, model, modeId, handoffPrompt }) =>
+				onOpenAgentChat={({ presetId, label, model, modeId, handoffPrompt }) =>
 					ctx.store.getState().addTab({
 						panes: [
 							{
@@ -117,18 +117,35 @@ export function ChatPane({
 										? { chatModelId: model.id, chatModelLabel: model.label }
 										: {}),
 									...(modeId ? { chatModeId: modeId } : {}),
-									pendingPrompt: handoffPrompt,
+									...(handoffPrompt ? { pendingPrompt: handoffPrompt } : {}),
 								} satisfies ChatPaneData,
 							},
 						],
 					})
 				}
+				onRewound={(prompt) => {
+					const { agent, chatModelId, chatModelLabel, chatModeId } =
+						latest.current;
+					ctx.actions.updateData({
+						terminalId: latest.current.terminalId,
+						sessionId: null,
+						...(agent ? { agent: { id: agent.id } } : {}),
+						...(chatModelId ? { chatModelId } : {}),
+						...(chatModelLabel ? { chatModelLabel } : {}),
+						...(chatModeId ? { chatModeId } : {}),
+						pendingPrompt: prompt,
+					});
+				}}
 				onModeChange={(chatModeId) => {
 					if (data.agent) saveChatMode(data.agent.id, chatModeId);
 					ctx.actions.updateData({ ...data, chatModeId });
 				}}
-				onSessionCreated={(sessionId) =>
-					ctx.actions.updateData({ ...latest.current, sessionId })
+				onSessionCreated={(sessionId, pendingPrompt) =>
+					ctx.actions.updateData({
+						...latest.current,
+						sessionId,
+						...(pendingPrompt ? { pendingPrompt } : {}),
+					})
 				}
 				onOpenFile={onOpenFile}
 				onOpenPage={openPage}

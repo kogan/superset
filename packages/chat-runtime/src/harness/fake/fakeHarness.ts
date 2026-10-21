@@ -80,7 +80,10 @@ export class FakeHarness implements HarnessAdapter {
 		return this.queue.iterable();
 	}
 
-	prompt(_content: UserContent[]): void {
+	readonly prompted: UserContent[][] = [];
+
+	prompt(content: UserContent[]): void {
+		this.prompted.push(content);
 		const turn = this.script.turns[this.nextTurnIndex];
 		if (!turn) throw new Error("fake harness script exhausted");
 		this.nextTurnIndex += 1;

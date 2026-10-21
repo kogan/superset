@@ -155,3 +155,75 @@ export function autumnProPlanId({
 }): "pro" | "pro_annual" {
 	return annual ? "pro_annual" : "pro";
 }
+
+// Display copy of the Autumn `pro` and `pro_annual` seat prices; checkout bills
+// from Autumn, so change both together.
+export const PRO_SEAT_PRICE = {
+	currency: "USD",
+	monthlyCents: 2000,
+	yearlyCents: 18000,
+} as const;
+
+export function proSeatPricePerMonth({ annual }: { annual: boolean }): number {
+	const cents = annual
+		? PRO_SEAT_PRICE.yearlyCents / 12
+		: PRO_SEAT_PRICE.monthlyCents;
+	return cents / 100;
+}
+
+export const MEMORY_GB_PER_VCPU = 2;
+/** The size an environment's golden box is built at. */
+export const GOLDEN_BOX_VCPUS = 8;
+
+export const MACHINE_SIZE_VCPUS = {
+	small: 2,
+	medium: 4,
+	large: 8,
+	xlarge: 16,
+	"2xlarge": 32,
+} as const;
+export type MachineSize = keyof typeof MACHINE_SIZE_VCPUS;
+export const MACHINE_SIZES = Object.keys(MACHINE_SIZE_VCPUS) as [
+	MachineSize,
+	...MachineSize[],
+];
+/** Every organization can run these; the rest need an Autumn feature each. */
+export const OPEN_MACHINE_SIZES: readonly MachineSize[] = [
+	"small",
+	"medium",
+	"large",
+];
+export const DEFAULT_MACHINE_SIZE: MachineSize = "medium";
+
+export function isMachineSize(value: unknown): value is MachineSize {
+	return typeof value === "string" && Object.hasOwn(MACHINE_SIZE_VCPUS, value);
+}
+
+export function offeredMachineSizes(
+	gated: readonly MachineSize[],
+): MachineSize[] {
+	return MACHINE_SIZES.filter(
+		(size) => OPEN_MACHINE_SIZES.includes(size) || gated.includes(size),
+	);
+}
+
+export function defaultMachineSize(
+	offered: readonly MachineSize[],
+): MachineSize {
+	return offered.includes(DEFAULT_MACHINE_SIZE)
+		? DEFAULT_MACHINE_SIZE
+		: (offered[0] ?? DEFAULT_MACHINE_SIZE);
+}
+
+export function machineSpec(size: MachineSize): {
+	vcpus: number;
+	memoryGb: number;
+	costVsDefault: number;
+} {
+	const vcpus = MACHINE_SIZE_VCPUS[size];
+	return {
+		vcpus,
+		memoryGb: vcpus * MEMORY_GB_PER_VCPU,
+		costVsDefault: vcpus / MACHINE_SIZE_VCPUS[DEFAULT_MACHINE_SIZE],
+	};
+}

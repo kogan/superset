@@ -2,6 +2,8 @@ export type {
 	CreatePaneInput,
 	CreateTabInput,
 	CreateWorkspaceStoreOptions,
+	OpenPaneArgs,
+	PlacePane,
 	WorkspaceStore,
 } from "./core/store";
 export { createWorkspaceStore } from "./core/store";

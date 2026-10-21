@@ -9,9 +9,10 @@ import type { DashboardSidebarRunningAgent } from "./hooks/useDashboardSidebarWo
 
 interface DashboardSidebarWorkspaceChipsProps {
 	workspaceId: string;
-	agents: DashboardSidebarRunningAgent[];
-	agentsExpanded: boolean;
-	agentsRegionId: string;
+	/** Optional: the legacy row renders this strip without the agents tree. */
+	agents?: DashboardSidebarRunningAgent[];
+	agentsExpanded?: boolean;
+	agentsRegionId?: string;
 	isInSection?: boolean;
 	indentation?: DashboardSidebarWorkspaceIndentation;
 	/** Invoked when the strip itself (not one of its chips) is clicked. */
@@ -30,8 +31,8 @@ function stopChipDragStart(event: SyntheticEvent<HTMLDivElement>) {
 
 export function DashboardSidebarWorkspaceChips({
 	workspaceId,
-	agents,
-	agentsExpanded,
+	agents = [],
+	agentsExpanded = false,
 	agentsRegionId,
 	isInSection = false,
 	indentation,

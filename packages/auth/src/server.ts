@@ -12,8 +12,10 @@ import { MemberRemovedBillingEmail } from "@superset/email/emails/billing/member
 import { OrganizationInvitationEmail } from "@superset/email/emails/team/invitation";
 import { MemberAddedEmail } from "@superset/email/emails/team/member-added";
 import { MemberRemovedEmail } from "@superset/email/emails/team/member-removed";
+import { NOREPLY_FROM } from "@superset/email/sender";
 import { canInvite, type OrganizationRole } from "@superset/shared/auth";
 import { ACTIVE_SUBSCRIPTION_STATUSES } from "@superset/shared/billing";
+import { COMPANY } from "@superset/shared/constants";
 import { getTrustedVercelPreviewOrigins } from "@superset/shared/vercel-preview-origins";
 import { Client } from "@upstash/qstash";
 import { betterAuth } from "better-auth";
@@ -48,6 +50,11 @@ import { jwksAdapter } from "./lib/cached-jwks";
 import { generateMagicTokenForInvite } from "./lib/generate-magic-token";
 import { getActivationVariant } from "./lib/lifecycle";
 import { loadCustomSessionData } from "./lib/load-custom-session-data";
+import {
+	convertPendingShares,
+	removeInvitationShares,
+	removeMemberShares,
+} from "./lib/pending-shares";
 import { invitationRateLimit } from "./lib/rate-limit";
 import { resend } from "./lib/resend";
 import {
@@ -380,19 +387,27 @@ export const auth = betterAuth({
 					user: { id: string; name?: string | null; image?: string | null };
 					session: Record<string, unknown>;
 				}) => {
-					const userMemberships = await db.query.members.findMany({
-						where: eq(members.userId, user.id),
-						columns: { organizationId: true },
-					});
+					const [userMemberships, userTeams] = await Promise.all([
+						db.query.members.findMany({
+							where: eq(members.userId, user.id),
+							columns: { organizationId: true },
+						}),
+						db
+							.select({ teamId: authSchema.teamMembers.teamId })
+							.from(authSchema.teamMembers)
+							.where(eq(authSchema.teamMembers.userId, user.id)),
+					]);
 					const organizationIds = [
 						...new Set(userMemberships.map((m) => m.organizationId)),
 					];
+					const teamIds = [...new Set(userTeams.map((t) => t.teamId))];
 					// A Worker that attributes content to a person has to read
 					// who they are from the signed token; a caller-supplied name
 					// is a name they chose for someone else.
 					return {
 						sub: user.id,
 						organizationIds,
+						teamIds,
 						name: user.name ?? null,
 						image: user.image ?? null,
 					};
@@ -500,7 +515,7 @@ export const auth = betterAuth({
 				});
 
 				await resend.emails.send({
-					from: "Superset <noreply@superset.sh>",
+					from: NOREPLY_FROM,
 					to: data.email,
 					subject: `${data.inviter.user.name} invited you to join ${data.organization.name}`,
 					react: OrganizationInvitationEmail({
@@ -756,6 +771,19 @@ export const auth = betterAuth({
 				},
 
 				afterAddMember: async ({ member, user, organization }) => {
+					try {
+						await convertPendingShares({
+							organizationId: organization.id,
+							userId: member.userId,
+							email: user.email,
+						});
+					} catch (error) {
+						console.error(
+							"[org/after-add-member] Failed to convert pending shares:",
+							error,
+						);
+					}
+
 					// Linear-style: auto-add new org members to the oldest team so
 					// they aren't dropped into an empty teams view. Additional team
 					// memberships are added explicitly by admins.
@@ -800,7 +828,7 @@ export const auth = betterAuth({
 
 					if (acceptedInvitation) {
 						await resend.emails.send({
-							from: "Superset <noreply@superset.sh>",
+							from: NOREPLY_FROM,
 							to: user.email,
 							subject: `You've been added to ${organization.name}`,
 							react: MemberAddedEmail({
@@ -873,7 +901,7 @@ export const auth = betterAuth({
 
 					await resend.batch.send(
 						recipients.map((recipient) => ({
-							from: "Superset <noreply@superset.sh>",
+							from: NOREPLY_FROM,
 							to: recipient.email,
 							subject: `Billing update: New member added to ${organization.name}`,
 							react: MemberAddedBillingEmail({
@@ -913,8 +941,20 @@ export const auth = betterAuth({
 
 				afterRemoveMember: async ({ user, organization }) => {
 					if (localMode) return;
+					try {
+						await removeMemberShares({
+							organizationId: organization.id,
+							userId: user.id,
+						});
+					} catch (error) {
+						console.error(
+							"[org/after-remove-member] Failed to remove shares:",
+							error,
+						);
+					}
+
 					await resend.emails.send({
-						from: "Superset <noreply@superset.sh>",
+						from: NOREPLY_FROM,
 						to: user.email,
 						subject: `You've been removed from ${organization.name}`,
 						react: MemberRemovedEmail({
@@ -989,7 +1029,7 @@ export const auth = betterAuth({
 
 					await resend.batch.send(
 						recipients.map((recipient) => ({
-							from: "Superset <noreply@superset.sh>",
+							from: NOREPLY_FROM,
 							to: recipient.email,
 							subject: `Billing update: Member removed from ${organization.name}`,
 							react: MemberRemovedBillingEmail({
@@ -1026,6 +1066,24 @@ export const auth = betterAuth({
 						);
 					}
 				},
+
+				afterCancelInvitation: async ({ invitation }) => {
+					await removeInvitationShares(invitation.id).catch((error) =>
+						console.error(
+							"[org/after-cancel-invitation] Failed to remove shares:",
+							error,
+						),
+					);
+				},
+
+				afterRejectInvitation: async ({ invitation }) => {
+					await removeInvitationShares(invitation.id).catch((error) =>
+						console.error(
+							"[org/after-reject-invitation] Failed to remove shares:",
+							error,
+						),
+					);
+				},
 			},
 		}),
 		bearer(),
@@ -1041,6 +1099,7 @@ export const auth = betterAuth({
 				const data = await loadCustomSessionData({
 					userId,
 					activeOrganizationId: session.activeOrganizationId ?? null,
+					withPlan: !billingUsesAutumn,
 				});
 
 				const { activeOrganizationId, allMemberships, membership } =
@@ -1062,7 +1121,12 @@ export const auth = betterAuth({
 				// reached, so an "active"-only read here would strand trialing
 				// and past_due organizations on a cold start.
 				let plan: string | null = null;
-				if (activeOrganizationId === data.planOrganizationId) {
+				if (billingUsesAutumn) {
+					const tier = activeOrganizationId
+						? await organizationPlanFromAutumn(activeOrganizationId)
+						: "free";
+					plan = tier === "free" ? null : tier;
+				} else if (activeOrganizationId === data.planOrganizationId) {
 					plan = data.plan;
 				} else if (activeOrganizationId) {
 					// A concurrent request moved the session's active organization

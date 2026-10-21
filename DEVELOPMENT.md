@@ -5,7 +5,7 @@ To use the app, follow the [download and installation instructions](README.md#do
 ## Requirements
 
 - Apple Silicon Mac and Xcode Command Line Tools (`xcode-select --install`).
-- Git and Bun 1.3.14, pinned in `.bun-version`.
+- Git and Bun 1.4.3, pinned in `.bun-version`.
 - GitHub access to clone this repository.
 
 ## Build the Mac app
