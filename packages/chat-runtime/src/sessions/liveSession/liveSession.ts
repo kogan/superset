@@ -1,15 +1,18 @@
 import { randomUUID } from "node:crypto";
-import type {
-	DurableEvent,
-	Envelope,
-	SessionState,
-	Turn,
-	UserContent,
-	UserMessage,
+import {
+	type DiscoverSessionsResult,
+	type DurableEvent,
+	type Envelope,
+	type SessionState,
+	sessionStateSchema,
+	type Turn,
+	type UserContent,
+	type UserMessage,
+	wrapHiddenText,
 } from "@superset/chat/protocol";
-import { sessionStateSchema } from "@superset/chat/protocol";
 import type {
 	AdapterEvent,
+	DiscoverNativeSessionsInput,
 	HarnessAdapter,
 	HarnessStartOptions,
 } from "../../harness";
@@ -67,6 +70,9 @@ export class LiveSession {
 	private currentTurn: Turn | null = null;
 	private pump: Promise<void> | null = null;
 	private stopped = false;
+	/** Turns a user prompt started, and those of them that have shown anything yet. */
+	private readonly promptedTurns = new Set<string>();
+	private readonly turnsWithOutput = new Set<string>();
 
 	constructor(private readonly options: LiveSessionOptions) {
 		this.sessionState = { status: "starting", harness: options.harness };
@@ -82,6 +88,22 @@ export class LiveSession {
 
 	get terminalId(): string | undefined {
 		return this.options.terminalId;
+	}
+
+	get harness(): string {
+		return this.options.harness;
+	}
+
+	supportsNativeDiscovery(): boolean {
+		return typeof this.options.adapter.discoverSessions === "function";
+	}
+
+	discoverSessions(
+		input: DiscoverNativeSessionsInput,
+	): Promise<DiscoverSessionsResult> {
+		const discover = this.options.adapter.discoverSessions;
+		if (!discover) return Promise.resolve({ supported: false, sessions: [] });
+		return discover.call(this.options.adapter, input);
 	}
 
 	get state(): SessionState {
@@ -116,6 +138,14 @@ export class LiveSession {
 	): PromptResult {
 		const itemId = this.mintId();
 		const seq = ++this.sent;
+		const shown = content.filter(
+			(part) => !(part.type === "text" && part.hidden),
+		);
+		const sent = content.map((part) =>
+			part.type === "text" && part.hidden
+				? { type: "text" as const, text: wrapHiddenText(part.text) }
+				: part,
+		);
 		const wantsSteer =
 			steerTurnId !== undefined ||
 			this.sessionState.awaitingBackground === true;
@@ -129,11 +159,11 @@ export class LiveSession {
 				kind: "user_message",
 				clientId,
 				startedAtMs: this.now(),
-				content,
+				content: shown,
 			};
 			this.injectInto(running, {
 				item,
-				content,
+				content: sent,
 				turnId: this.mintId(),
 				seq,
 			});
@@ -145,12 +175,12 @@ export class LiveSession {
 			kind: "user_message",
 			clientId,
 			startedAtMs: this.now(),
-			content,
+			content: shown,
 			...(queued ? { queued: true } : {}),
 		};
 		const turnId = this.mintId();
 		if (queued) {
-			this.queue.push({ item, content, turnId, seq });
+			this.queue.push({ item, content: sent, turnId, seq });
 			this.appendDurable({ type: "item", item, turnId });
 			if (
 				steerTurnId &&
@@ -162,8 +192,13 @@ export class LiveSession {
 			return { itemId, queued: true };
 		}
 		this.appendDurable({ type: "item", item, turnId });
-		this.deliver({ item, content, turnId, seq });
+		this.deliver({ item, content: sent, turnId, seq });
 		return { itemId, queued: false };
+	}
+
+	/** Writes finished turns and items from another session's transcript into this one. */
+	seed(events: DurableEvent[]): void {
+		for (const event of events) this.appendDurable(event);
 	}
 
 	removeQueued(itemId: string): void {
@@ -271,8 +306,8 @@ export class LiveSession {
 		);
 	}
 
-	fork(): Promise<string | null> {
-		return this.options.adapter.fork?.() ?? Promise.resolve(null);
+	fork(cut?: { upToMessageId: string }): Promise<string | null> {
+		return this.options.adapter.fork?.(cut) ?? Promise.resolve(null);
 	}
 
 	async dispose(): Promise<void> {
@@ -292,6 +327,9 @@ export class LiveSession {
 	private handle(event: AdapterEvent): void {
 		switch (event.kind) {
 			case "item":
+				if (event.item.kind !== "user_message") {
+					this.turnsWithOutput.add(event.turnId);
+				}
 				this.appendDurable({
 					type: "item",
 					item: event.item,
@@ -309,6 +347,7 @@ export class LiveSession {
 						this.options.adapter.cancelTurn();
 					}
 				} else {
+					this.noteSilentTurn(event.turn);
 					this.deliverNextQueued();
 				}
 				return;
@@ -329,9 +368,30 @@ export class LiveSession {
 		}
 	}
 
+	/** A turn that ends as if it worked but shows nothing would otherwise read as success. */
+	private noteSilentTurn(turn: Turn): void {
+		const prompted = this.promptedTurns.delete(turn.id);
+		const showed = this.turnsWithOutput.delete(turn.id);
+		if (!prompted || showed || turn.status !== "completed") return;
+		const at = this.now();
+		this.appendDurable({
+			type: "item",
+			item: {
+				id: this.mintId(),
+				kind: "notice",
+				noticeKind: "error",
+				text: "The agent finished without replying. It may have failed to reach its model.",
+				startedAtMs: at,
+				completedAtMs: at,
+			},
+			turnId: turn.id,
+		});
+	}
+
 	private attributeAwaitingPrompt(turnId: string): void {
 		const awaiting = this.awaitingTurn;
 		if (!awaiting) return;
+		this.promptedTurns.add(turnId);
 		this.awaitingTurn = null;
 		this.appendDurable({
 			type: "item",
@@ -342,6 +402,10 @@ export class LiveSession {
 
 	private deliver(prompt: PendingPrompt): void {
 		this.awaitingTurn = prompt;
+		this.send(prompt);
+	}
+
+	private send(prompt: PendingPrompt): void {
 		try {
 			this.options.adapter.prompt(prompt.content);
 		} catch (error) {

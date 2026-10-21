@@ -1,6 +1,7 @@
 import { Trans, useLingui } from "@lingui/react/macro";
 import { useFormat } from "@superset/i18n/react";
 import { isPaymentFailingStatus } from "@superset/shared/billing";
+import { COMPANY } from "@superset/shared/constants";
 import { Button } from "@superset/ui/button";
 import { Link } from "@tanstack/react-router";
 import { HiArrowRight } from "react-icons/hi2";
@@ -17,6 +18,7 @@ import {
 } from "../../../utils/settings-search";
 import { useBillingActions } from "../../hooks/useBillingActions";
 import { BillingDetails } from "./components/BillingDetails";
+import { CloudUsageCard } from "./components/CloudUsageCard";
 import { CurrentPlanCard } from "./components/CurrentPlanCard";
 import { PaymentFailedBanner } from "./components/PaymentFailedBanner";
 import { RecentInvoices } from "./components/RecentInvoices";
@@ -93,7 +95,7 @@ export function BillingOverview({ visibleItems }: BillingOverviewProps) {
 						<Trans>
 							For questions about billing,{" "}
 							<a
-								href="mailto:support@superset.sh"
+								href={COMPANY.MAIL_TO}
 								className="text-primary hover:underline"
 							>
 								contact us
@@ -149,6 +151,7 @@ export function BillingOverview({ visibleItems }: BillingOverviewProps) {
 						</div>
 					</div>
 				)}
+				{showOverview && <CloudUsageCard />}
 				{showOverview && isOwner && plan !== "free" && <BillingDetails />}
 				<RecentInvoices />
 			</div>

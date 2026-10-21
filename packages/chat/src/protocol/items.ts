@@ -22,6 +22,8 @@ export const userContentSchema = z.discriminatedUnion("type", [
 		type: z.literal("text"),
 		text: z.string(),
 		elements: z.array(textElementSchema).optional(),
+		/** Reaches the agent, but is not kept on the transcript's user message. */
+		hidden: z.boolean().optional(),
 	}),
 	z.looseObject({
 		type: z.literal("attachment"),
@@ -31,6 +33,21 @@ export const userContentSchema = z.discriminatedUnion("type", [
 	}),
 ]);
 export type UserContent = z.infer<typeof userContentSchema>;
+
+const HIDDEN_TEXT_TAG = "superset-context";
+
+/** How a hidden part reaches the agent, so a replay of its history can drop it again. */
+export function wrapHiddenText(text: string): string {
+	return `<${HIDDEN_TEXT_TAG}>${text}</${HIDDEN_TEXT_TAG}>`;
+}
+
+export function isHiddenText(text: string): boolean {
+	const trimmed = text.trim();
+	return (
+		trimmed.startsWith(`<${HIDDEN_TEXT_TAG}>`) &&
+		trimmed.endsWith(`</${HIDDEN_TEXT_TAG}>`)
+	);
+}
 
 /** `path` is relative to the worktree. An item never carries image bytes. */
 export const imageAttachmentSchema = z.looseObject({
@@ -118,7 +135,10 @@ export const agentMessageSchema = z.looseObject({
 	...itemBaseFields,
 	kind: z.literal("agent_message"),
 	text: z.string(),
+	/** The agent's own id for this message, where it gives one. */
+	agentMessageId: z.string().optional(),
 	attachments: z.array(itemAttachmentSchema).optional(),
+	model: z.string().optional(),
 });
 export type AgentMessage = z.infer<typeof agentMessageSchema>;
 

@@ -1,4 +1,4 @@
-import type { PlanTier } from "@superset/shared/billing";
+import type { MachineSize, PlanTier } from "@superset/shared/billing";
 import { Redis } from "@upstash/redis";
 import { AutumnError } from "autumn-js";
 import { env } from "../../../env";
@@ -8,6 +8,7 @@ import { getAutumnCustomer } from "./customer";
 const MEMORY_TTL_MS = 10_000;
 const SHARED_TTL_SECONDS = 60;
 const LAST_KNOWN_TTL_SECONDS = 24 * 60 * 60;
+const AUTUMN_READ_TIMEOUT_MS = 2_000;
 
 const FREE: OrganizationBilling = {
 	tier: "free",
@@ -18,6 +19,8 @@ const FREE: OrganizationBilling = {
 	billingInterval: null,
 	lapsed: false,
 	paymentState: { kind: "ok" },
+	cloudUsage: null,
+	gatedMachineSizes: [],
 };
 
 const FAIL_OPEN: OrganizationBilling = {
@@ -29,6 +32,8 @@ const FAIL_OPEN: OrganizationBilling = {
 	billingInterval: null,
 	lapsed: false,
 	paymentState: { kind: "ok" },
+	cloudUsage: null,
+	gatedMachineSizes: [],
 };
 
 const redis = new Redis({
@@ -62,7 +67,9 @@ async function fetchBilling(
 ): Promise<OrganizationBilling> {
 	try {
 		return billingFromCustomer(
-			await getAutumnCustomer(organizationId),
+			await getAutumnCustomer(organizationId, {
+				timeoutMs: AUTUMN_READ_TIMEOUT_MS,
+			}),
 			Date.now(),
 		);
 	} catch (error) {
@@ -105,7 +112,14 @@ export async function organizationBilling(
 			`[billing/plan-state] Autumn unavailable for ${organizationId}; serving ${lastKnown ? "last known" : "fail-open"} state`,
 			error,
 		);
-		return lastKnown ?? FAIL_OPEN;
+		const fallback = lastKnown
+			? { ...lastKnown, gatedMachineSizes: [] }
+			: FAIL_OPEN;
+		memory.set(organizationId, {
+			value: fallback,
+			expiresAt: Date.now() + MEMORY_TTL_MS,
+		});
+		return fallback;
 	}
 }
 
@@ -113,6 +127,12 @@ export async function organizationPlanFromAutumn(
 	organizationId: string,
 ): Promise<PlanTier> {
 	return (await organizationBilling(organizationId)).tier;
+}
+
+export async function organizationGatedMachineSizesFromAutumn(
+	organizationId: string,
+): Promise<MachineSize[]> {
+	return (await organizationBilling(organizationId)).gatedMachineSizes ?? [];
 }
 
 export async function invalidateOrganizationBilling(

@@ -2,6 +2,7 @@ import {
 	cancelTurnInputSchema,
 	closeSessionInputSchema,
 	createSessionInputSchema,
+	discoverSessionsInputSchema,
 	forkSessionInputSchema,
 	getItemBodiesInputSchema,
 	getItemsInputSchema,
@@ -12,6 +13,7 @@ import {
 	queuedPromptInputSchema,
 	respondToApprovalInputSchema,
 	resumeQueueInputSchema,
+	rewindSessionInputSchema,
 	setConfigOptionInputSchema,
 	setModeInputSchema,
 	stopBackgroundTaskInputSchema,
@@ -67,7 +69,13 @@ export function createChatRouter(
 ) {
 	function guarded<T>(execute: () => T): T {
 		try {
-			return execute();
+			const result = execute();
+			if (result instanceof Promise) {
+				return result.catch((error: unknown) => {
+					throw mapCommandError(runtime, error);
+				}) as T;
+			}
+			return result;
 		} catch (error) {
 			throw mapCommandError(runtime, error);
 		}
@@ -146,6 +154,16 @@ export function createChatRouter(
 				return guarded(() => runtime.commands.forkSession({ ...rest, cwd }));
 			}),
 
+		rewindSession: t.procedure
+			.input(
+				rewindSessionInputSchema.extend({ workspaceId: z.string().min(1) }),
+			)
+			.mutation(async ({ input }) => {
+				const { workspaceId, ...rest } = input;
+				const cwd = await options.resolveCwd(workspaceId);
+				return guarded(() => runtime.commands.rewindSession({ ...rest, cwd }));
+			}),
+
 		closeSession: t.procedure
 			.input(closeSessionInputSchema)
 			.mutation(({ input }) => runtime.commands.closeSession(input)),
@@ -168,6 +186,22 @@ export function createChatRouter(
 						: { scopeId: input.workspaceId }),
 				}),
 			),
+
+		discoverSessions: t.procedure
+			.input(discoverSessionsInputSchema)
+			.query(async ({ input }) => {
+				const cwd = await options.resolveCwd(input.workspaceId);
+				try {
+					return await runtime.commands.discoverSessions({
+						harness: input.harness,
+						scopeId: input.workspaceId,
+						cwd,
+						...(input.cursor ? { cursor: input.cursor } : {}),
+					});
+				} catch (error) {
+					throw mapCommandError(runtime, error);
+				}
+			}),
 
 		getItems: t.procedure
 			.input(getItemsInputSchema)

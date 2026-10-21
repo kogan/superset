@@ -37,7 +37,6 @@ const SESSION_TIMEOUT_MS = 4 * 60 * 60 * 1000;
 const EXTEND_BELOW_MS = 60 * 60 * 1000;
 const WORKSPACE_SNAPSHOT_EXPIRATION_MS = 30 * 24 * 60 * 60 * 1000;
 /** 2 GB of memory per vCPU; disk is 64 GB regardless. */
-export const IMAGE_SANDBOX_VCPUS = 8;
 export const MEMORY_MB_PER_VCPU = 2048;
 const GOLDEN_SESSION_TIMEOUT_MS = 30 * 60 * 1000;
 const BOOT_COMMAND = "/usr/local/bin/superset-boot";
@@ -100,6 +99,7 @@ export interface SandboxClaim {
 	networkPolicy: NetworkPolicy;
 	/** Ports the workspace's repository asks to publish, beside the platform's. */
 	ports?: readonly number[];
+	vcpus: number;
 }
 
 /** Vercel allows 5 tags per sandbox. */
@@ -196,17 +196,18 @@ export async function provisionSandbox(args: {
 	const sandbox =
 		(await getSandbox(args.name)) ??
 		(args.environment.sourceKind === "fork"
-			? // A fork copies the golden's resources and its region; a snapshot
-				// only exists where it was taken.
+			? // A fork copies the golden's region; a snapshot only exists where
+				// it was taken.
 				await Sandbox.fork({
 					...config,
 					sourceSandbox: args.environment.sourceRef,
+					resources: { vcpus: args.claim.vcpus },
 				})
 			: await Sandbox.create({
 					...config,
 					image: args.environment.sourceRef,
 					region: args.environment.region as SandboxRegion,
-					resources: { vcpus: IMAGE_SANDBOX_VCPUS },
+					resources: { vcpus: args.claim.vcpus },
 				}));
 	await writeIdentity(sandbox, args.claim.identity);
 	await runBoot(sandbox, args.claim.hostSecret);
@@ -369,11 +370,22 @@ export async function wakeSandbox(args: {
 		});
 		const hostTarget = sandbox.domain(HOST_SERVICE_PORT);
 		const wasRunning = sandbox.status === "running";
+		let vcpus = sandbox.vcpus ?? args.claim.vcpus;
+		if (!wasRunning && vcpus !== args.claim.vcpus) {
+			await sandbox
+				.update({ resources: { vcpus: args.claim.vcpus } })
+				.then(() => {
+					vcpus = args.claim.vcpus;
+				})
+				.catch((error) =>
+					console.warn(
+						`[sandbox] resize to ${args.claim.vcpus} vCPUs failed for ${args.providerSandboxId}`,
+						error,
+					),
+				);
+		}
 		if (!wasRunning && args.beforeResume) {
-			await args.beforeResume({
-				memoryMb: sandbox.memory ?? IMAGE_SANDBOX_VCPUS * MEMORY_MB_PER_VCPU,
-				vcpus: sandbox.vcpus ?? IMAGE_SANDBOX_VCPUS,
-			});
+			await args.beforeResume({ memoryMb: vcpus * MEMORY_MB_PER_VCPU, vcpus });
 		}
 		if (wasRunning) {
 			const remaining = (sandbox.expiresAt?.getTime() ?? 0) - Date.now();

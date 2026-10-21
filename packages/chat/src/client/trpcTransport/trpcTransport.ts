@@ -12,12 +12,14 @@ type Mutation =
 	| "setMode"
 	| "setConfigOption"
 	| "closeSession"
-	| "forkSession";
+	| "forkSession"
+	| "rewindSession";
 
 type Query =
 	| "getSession"
 	| "getQueue"
 	| "listSessions"
+	| "discoverSessions"
 	| "getItems"
 	| "getOutline"
 	| "getItemBodies";
@@ -44,9 +46,11 @@ export function chatTransportFromTrpc(client: ChatTrpcClient): ChatTransport {
 		setConfigOption: (input) => client.setConfigOption.mutate(input),
 		closeSession: (input) => client.closeSession.mutate(input),
 		forkSession: (input) => client.forkSession.mutate(input),
+		rewindSession: (input) => client.rewindSession.mutate(input),
 		getSession: (input) => client.getSession.query(input),
 		getQueue: (input) => client.getQueue.query(input),
 		listSessions: (input) => client.listSessions.query(input),
+		discoverSessions: (input) => client.discoverSessions.query(input),
 		getItems: (input) => client.getItems.query(input),
 		getOutline: (input) => client.getOutline.query(input),
 		getItemBodies: (input) => client.getItemBodies.query(input),

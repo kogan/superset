@@ -30,6 +30,7 @@ export type AcpContentBlock = z.infer<typeof acpContentBlockSchema>;
  */
 export const acpInitializeResponseSchema = z.looseObject({
 	protocolVersion: z.number().optional(),
+	agentInfo: z.looseObject({ name: z.string().optional() }).optional(),
 	agentCapabilities: z.looseObject({}).optional(),
 	capabilities: z.looseObject({}).optional(),
 	authMethods: z.array(z.unknown()).optional(),
@@ -40,6 +41,18 @@ export const acpInitializeResponseSchema = z.looseObject({
 		.optional(),
 });
 export type AcpInitializeResponse = z.infer<typeof acpInitializeResponseSchema>;
+
+export const acpListSessionsResponseSchema = z.looseObject({
+	sessions: z.array(
+		z.looseObject({
+			sessionId: z.string().min(1),
+			cwd: z.string().min(1),
+			title: z.string().nullable().optional(),
+			updatedAt: z.string().nullable().optional(),
+		}),
+	),
+	nextCursor: z.string().nullable().optional(),
+});
 
 export const acpNewSessionResponseSchema = z.looseObject({
 	sessionId: z.string().min(1),

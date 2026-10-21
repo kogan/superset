@@ -1,10 +1,14 @@
 import { describe, expect, test } from "bun:test";
 import {
 	autumnProPlanId,
+	defaultMachineSize,
 	isCloudUsageRefusal,
+	machineSpec,
+	offeredMachineSizes,
 	planAllowsAutomations,
 	planAllowsTriggerKind,
 	planTierFromSubscription,
+	proSeatPricePerMonth,
 	requiredPlanForTriggerKind,
 	resolveCurrentPlan,
 } from "./billing";
@@ -158,5 +162,38 @@ describe("autumnProPlanId", () => {
 	test("annual picks the annual Pro plan", () => {
 		expect(autumnProPlanId({ annual: true })).toBe("pro_annual");
 		expect(autumnProPlanId({ annual: false })).toBe("pro");
+	});
+});
+
+describe("proSeatPricePerMonth", () => {
+	test("yearly is the annual price spread over twelve months", () => {
+		expect(proSeatPricePerMonth({ annual: false })).toBe(20);
+		expect(proSeatPricePerMonth({ annual: true })).toBe(15);
+	});
+});
+
+describe("machine sizes", () => {
+	test("small, medium and large are open to all; bigger sizes only when their feature is on", () => {
+		expect(offeredMachineSizes([])).toEqual(["small", "medium", "large"]);
+		expect(offeredMachineSizes(["2xlarge"])).toEqual([
+			"small",
+			"medium",
+			"large",
+			"2xlarge",
+		]);
+	});
+
+	test("the default is medium when offered, else the smallest offered size", () => {
+		expect(defaultMachineSize(["small", "medium", "large"])).toBe("medium");
+		expect(defaultMachineSize(["large", "xlarge"])).toBe("large");
+	});
+
+	test("each size costs twice the size below it, measured against medium", () => {
+		expect(machineSpec("small")).toEqual({
+			vcpus: 2,
+			memoryGb: 4,
+			costVsDefault: 0.5,
+		});
+		expect(machineSpec("2xlarge").costVsDefault).toBe(8);
 	});
 });

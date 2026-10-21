@@ -48,11 +48,17 @@ export async function ensureAutumnCustomer(organizationId: string) {
 	return customer;
 }
 
-export function getAutumnCustomer(organizationId: string) {
-	return autumnClient.customers.get({
-		customerId: organizationId,
-		expand: ["flags.feature", "subscriptions.plan", "invoices"],
-	});
+export function getAutumnCustomer(
+	organizationId: string,
+	options?: { timeoutMs?: number },
+) {
+	return autumnClient.customers.get(
+		{
+			customerId: organizationId,
+			expand: ["flags.feature", "subscriptions.plan", "invoices"],
+		},
+		options,
+	);
 }
 
 export async function paidAutumnPlanId(

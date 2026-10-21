@@ -279,6 +279,13 @@ export const serverErrorMessages: Record<
 					"Your organization has reached its cloud usage limit. Raise the limit or upgrade in Settings, Billing to start this workspace.",
 			}),
 		),
+	"serverError.cloudWorkspace.machineSizeNotAvailable": () =>
+		i18n._(
+			msg({
+				message:
+					"This machine size is not available for your organization. Pick another size",
+			}),
+		),
 	"serverError.cloudWorkspace.environmentHasNoRepositories": () =>
 		i18n._(
 			msg({
@@ -629,6 +636,12 @@ export const serverErrorMessages: Record<
 				message: "You don't have permission to remove this member",
 			}),
 		),
+	"serverError.page.cannotComment": () =>
+		i18n._(
+			msg({
+				message: "You can view this page but not comment on it",
+			}),
+		),
 	"serverError.page.failedToCreatePage": () =>
 		i18n._(
 			msg({
@@ -743,6 +756,24 @@ export const serverErrorMessages: Record<
 		i18n._(
 			msg({
 				message: "Failed to post reply",
+			}),
+		),
+	"serverError.pageComment.imageExpired": () =>
+		i18n._(
+			msg({
+				message: "The image upload expired — attach it again",
+			}),
+		),
+	"serverError.pageComment.imageNotFound": () =>
+		i18n._(
+			msg({
+				message: "Image not found — upload it first",
+			}),
+		),
+	"serverError.pageComment.onlyImages": () =>
+		i18n._(
+			msg({
+				message: "Only images can be attached to a comment",
 			}),
 		),
 	"serverError.pageComment.onlyTheAuthorCanEdit": () =>
@@ -862,6 +893,25 @@ export const serverErrorMessages: Record<
 			message: "Unknown plugin {plugin}",
 			values: params,
 		}),
+	"serverError.sharing.invitationNotPending": () =>
+		i18n._(
+			msg({
+				message: "That invitation is no longer pending",
+			}),
+		),
+	"serverError.sharing.notInOrganization": () =>
+		i18n._(
+			msg({
+				message:
+					"You can only share with people and teams in this organization",
+			}),
+		),
+	"serverError.sharing.onlyOwner": () =>
+		i18n._(
+			msg({
+				message: "Only the owner can change who this is shared with",
+			}),
+		),
 	"serverError.support.failedToSavePrompt": () =>
 		i18n._(
 			msg({

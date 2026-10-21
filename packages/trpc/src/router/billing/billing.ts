@@ -1,5 +1,5 @@
 import { billingUsesAutumn } from "@superset/auth/autumn";
-import { organizationBilling } from "@superset/auth/billing";
+import { type CloudUsage, organizationBilling } from "@superset/auth/billing";
 import { stripeClient } from "@superset/auth/stripe";
 import { db } from "@superset/db/client";
 import { members, organizations, subscriptions } from "@superset/db/schema";
@@ -195,6 +195,15 @@ export const billingRouter = {
 			billingProvider,
 		};
 	}),
+
+	cloudUsage: protectedProcedure.query(
+		async ({ ctx }): Promise<CloudUsage | null> => {
+			const activeOrgId = ctx.activeOrganizationId;
+			if (!billingUsesAutumn || !activeOrgId) return null;
+			const billing = await organizationBilling(activeOrgId);
+			return billing.cloudUsage ?? null;
+		},
+	),
 
 	invoices: protectedProcedure.query(async ({ ctx }) => {
 		const activeOrgId = ctx.activeOrganizationId;

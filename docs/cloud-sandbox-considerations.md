@@ -33,7 +33,7 @@ filesystem and boots fresh).
 organization may run boxes; every box start or wake takes a short Autumn
 balance lock first, recorded in `cloud_workspace_boots`, and is refused with
 "needs a paid plan" (free organizations) or "usage limit reached". A QStash
-schedule (`/api/cloud-workspaces/jobs/reconcile-usage`, every 10 minutes, set
+schedule (`/api/cloud-workspaces/jobs/reconcile-usage`, every 30 minutes, set
 in the Upstash console and watched by a Sentry cron monitor) finalizes each
 running box's memory GB-minutes and takes the next lock; a box whose next lock
 is refused is stopped. Stopping, archiving or deleting a box settles the rest.

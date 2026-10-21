@@ -117,6 +117,10 @@ export const PERSISTED_KEY_REGISTRY: ReadonlyArray<
 	["src/renderer/stores/hiring-banner/store.ts", ["hiring-banner-v1"]],
 	["src/renderer/stores/star-nag/store.ts", ["star-nag-v1"]],
 	[
+		"src/renderer/stores/release-notes-card/store.ts",
+		["release-notes-card-v1"],
+	],
+	[
 		"src/renderer/stores/terminal-close-confirm/store.ts",
 		["terminal-close-confirm-v1"],
 	],
@@ -137,6 +141,7 @@ export const PERSISTED_KEY_REGISTRY: ReadonlyArray<
 		],
 	],
 	["src/renderer/stores/workspace-agents-row.ts", ["workspace-agents-row"]],
+	["src/renderer/stores/new-dashboard-sidebar.ts", ["new-dashboard-sidebar"]],
 	[
 		"src/renderer/stores/feature-preferences.ts",
 		["superestset-feature-preferences"],
@@ -182,6 +187,10 @@ export const PERSISTED_KEY_REGISTRY: ReadonlyArray<
 	[
 		"src/renderer/routes/_authenticated/_dashboard/v2-workspace/$workspaceId/hooks/usePaneRegistry/components/ChatPane/utils/savedChatMode/savedChatMode.ts",
 		["chatModeByAgent"],
+	],
+	[
+		"src/renderer/routes/_authenticated/_dashboard/v2-workspace/$workspaceId/utils/lastChatAgent/lastChatAgent.ts",
+		["chatLastAgent"],
 	],
 	[
 		"src/renderer/hooks/useAgentModelPreference/useAgentModelPreference.ts",

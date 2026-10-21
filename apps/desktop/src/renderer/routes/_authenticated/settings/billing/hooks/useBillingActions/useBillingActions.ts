@@ -124,18 +124,6 @@ export function useBillingActions() {
 
 		setIsCanceling(true);
 		try {
-			if (await usesAutumn()) {
-				await authClient.$fetch("/autumn/updateSubscription", {
-					method: "POST",
-					body: {
-						organizationId: activeOrgId,
-						planId: currentAutumnPlanId(),
-						cancelAction: "cancel_end_of_cycle",
-					},
-				});
-				return;
-			}
-
 			await authClient.subscription.cancel(
 				{
 					referenceId: activeOrgId,

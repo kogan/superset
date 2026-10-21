@@ -35,6 +35,7 @@ function customer(overrides: {
 				]
 			: [],
 		invoices: overrides.invoices ?? [],
+		balances: {},
 	} as Customer;
 }
 
@@ -77,6 +78,8 @@ describe("activePlan read from Autumn keeps the shape released clients read", ()
 			billingInterval: "month",
 			lapsed: false,
 			paymentState: { kind: "ok" },
+			cloudUsage: null,
+			gatedMachineSizes: [],
 		});
 	});
 

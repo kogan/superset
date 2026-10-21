@@ -1,5 +1,6 @@
 import { randomUUID } from "node:crypto";
 import {
+	deriveTimeline,
 	emptySnapshot,
 	outlineSnapshot,
 	reduceMany,
@@ -8,9 +9,13 @@ import {
 	type StoredItem,
 } from "@superset/chat/core";
 import type {
+	AgentMessage,
+	ApprovalRequest,
 	CancelTurnInput,
 	CloseSessionInput,
 	Cursor,
+	DiscoverSessionsResult,
+	DurableEvent,
 	GetItemsInput,
 	GetSessionInput,
 	PromptInput,
@@ -25,6 +30,7 @@ import {
 	cancelTurnInputSchema,
 	closeSessionInputSchema,
 	createSessionInputSchema,
+	discoverSessionsInputSchema,
 	forkSessionInputSchema,
 	getItemBodiesInputSchema,
 	getItemsInputSchema,
@@ -35,6 +41,7 @@ import {
 	queuedPromptInputSchema,
 	respondToApprovalInputSchema,
 	resumeQueueInputSchema,
+	rewindSessionInputSchema,
 	setConfigOptionInputSchema,
 	setModeInputSchema,
 	stopBackgroundTaskInputSchema,
@@ -53,7 +60,16 @@ import type {
 
 export const createSessionCommandSchema = createSessionInputSchema
 	.omit({ workspaceId: true })
-	.extend({ scopeId: z.string().min(1), cwd: z.string().min(1) });
+	.extend({
+		scopeId: z.string().min(1),
+		cwd: z.string().min(1),
+		resume: z
+			.object({
+				harnessSessionId: z.string().min(1),
+				quiet: z.boolean().optional(),
+			})
+			.optional(),
+	});
 export type CreateSessionCommandInput = z.input<
 	typeof createSessionCommandSchema
 >;
@@ -63,11 +79,68 @@ export const forkSessionCommandSchema = forkSessionInputSchema.extend({
 });
 export type ForkSessionCommandInput = z.input<typeof forkSessionCommandSchema>;
 
+export const rewindSessionCommandSchema = rewindSessionInputSchema.extend({
+	cwd: z.string().min(1),
+});
+export type RewindSessionCommandInput = z.input<
+	typeof rewindSessionCommandSchema
+>;
+
+function lastAgentMessageId(events: DurableEvent[]): string | null {
+	for (let i = events.length - 1; i >= 0; i--) {
+		const event = events[i];
+		if (event?.type !== "item" || event.item.kind !== "agent_message") continue;
+		const id = (event.item as AgentMessage).agentMessageId;
+		if (id) return id;
+	}
+	return null;
+}
+
+/**
+ * The finished turns and items shown before `itemId`, or null when it is not
+ * there. `midTurn` is set when `itemId` was sent into a turn already running.
+ */
+function transcriptBefore(
+	snapshot: SessionSnapshot,
+	itemId: string,
+): { events: DurableEvent[]; midTurn: boolean } | null {
+	const events: DurableEvent[] = [];
+	for (const group of deriveTimeline(snapshot)) {
+		const items = group.entries.flatMap((entry) =>
+			entry.kind === "item" ? [entry.item] : entry.items,
+		);
+		const index = items.findIndex((item) => item.id === itemId);
+		const kept = (index === -1 ? items : items.slice(0, index)).filter(
+			(item) =>
+				item.kind !== "approval_request" ||
+				(item as ApprovalRequest).status !== "pending",
+		);
+		if (kept.length > 0) {
+			if (group.turn) events.push({ type: "turn", turn: group.turn });
+			for (const item of kept) {
+				events.push({ type: "item", item, turnId: group.turnId });
+			}
+		}
+		if (index !== -1) return { events, midTurn: index > 0 };
+	}
+	return null;
+}
+
 export const listSessionsCommandSchema = listSessionsInputSchema
 	.omit({ workspaceId: true })
 	.extend({ scopeId: z.string().min(1).optional() });
 export type ListSessionsCommandInput = z.input<
 	typeof listSessionsCommandSchema
+>;
+
+export const discoverSessionsCommandSchema = discoverSessionsInputSchema
+	.omit({ workspaceId: true })
+	.extend({
+		scopeId: z.string().min(1),
+		cwd: z.string().min(1),
+	});
+export type DiscoverSessionsCommandInput = z.input<
+	typeof discoverSessionsCommandSchema
 >;
 
 export type CreateSessionResult = {
@@ -84,6 +157,8 @@ export type GetSessionResult = {
 	 * caller that wants to prompt has to ask this, not the status.
 	 */
 	live: boolean;
+	/** For a dead session, why it died, when the journal says. */
+	lastError?: string;
 };
 
 export type GetQueueResult = QueueState & { live: boolean };
@@ -109,9 +184,13 @@ export type ChatCommands = {
 	forkSession(
 		input: ForkSessionCommandInput,
 	): Promise<CreateSessionResult | null>;
+	rewindSession(input: RewindSessionCommandInput): Promise<CreateSessionResult>;
 	getSession(input: GetSessionInput): GetSessionResult;
 	getQueue(input: GetSessionInput): GetQueueResult;
 	listSessions(input: ListSessionsCommandInput): ChatSessionListEntry[];
+	discoverSessions(
+		input: DiscoverSessionsCommandInput,
+	): Promise<DiscoverSessionsResult>;
 	getItems(input: z.input<typeof getItemsInputSchema>): PageResult;
 	getOutline(input: z.input<typeof getOutlineInputSchema>): OutlineResult;
 	getItemBodies(
@@ -185,6 +264,21 @@ export function createCommands(options: CommandsOptions): ChatCommands {
 		}
 		if (cachedEvents > MAX_CACHED_REPLAY_EVENTS) replays.delete(sessionId);
 		return { ok: true, snapshot };
+	};
+
+	const lastErrorNotice = (sessionId: string): string | null => {
+		const replay = replaySession(sessionId);
+		if (!replay.ok) return null;
+		let latest: { at: number; text: string } | null = null;
+		for (const { item } of replay.snapshot.items.values()) {
+			if (item.kind !== "notice") continue;
+			const notice = item as { noticeKind?: string; text?: string };
+			if (notice.noticeKind !== "error" || !notice.text) continue;
+			if (!latest || item.startedAtMs >= latest.at) {
+				latest = { at: item.startedAtMs, text: notice.text };
+			}
+		}
+		return latest?.text ?? null;
 	};
 
 	const listSessions = (
@@ -338,6 +432,86 @@ export function createCommands(options: CommandsOptions): ChatCommands {
 			});
 		},
 
+		/**
+		 * A rewind continues in a new session with the transcript before the
+		 * chosen message copied in, so the chat reads the same. An agent that can
+		 * fork at a message resumes its own history cut there; any other is told
+		 * that conversation in a hidden part of the edited prompt.
+		 */
+		async rewindSession(input) {
+			const parsed = rewindSessionCommandSchema.parse(input);
+			return options.dedupe.run(
+				`rewindSession:${parsed.commandId}`,
+				async () => {
+					const source = options.sessions.get(parsed.sessionId);
+					const replay = replaySession(parsed.sessionId);
+					if (!source || !replay.ok) {
+						throw new Error(`chat session ${parsed.sessionId} is not running`);
+					}
+					const before = transcriptBefore(replay.snapshot, parsed.itemId);
+					if (!before) {
+						throw new Error(
+							`message ${parsed.itemId} is not in chat session ${parsed.sessionId}`,
+						);
+					}
+					const sourceLive = options.live.get(parsed.sessionId);
+					// Some agents fork a whole turn, so a cut inside one would keep what came after it.
+					const cutAt = before.midTurn
+						? null
+						: lastAgentMessageId(before.events);
+					const forked =
+						cutAt && sourceLive
+							? await sourceLive
+									.fork({ upToMessageId: cutAt })
+									.catch((error: unknown) => {
+										console.warn(
+											"[chat-runtime] could not fork the agent at the rewind point",
+											error,
+										);
+										return null;
+									})
+							: null;
+					const created = this.createSession({
+						commandId: parsed.commandId,
+						scopeId: source.scopeId,
+						cwd: parsed.cwd,
+						harness: source.harness,
+						modeId: sourceLive?.state.modeId ?? parsed.modeId,
+						modelId: parsed.modelId,
+						terminalId: sourceLive?.terminalId,
+						...(forked
+							? { resume: { harnessSessionId: forked, quiet: true } }
+							: {}),
+					});
+					try {
+						const live = options.live.require(created.sessionId);
+						live.seed(before.events);
+						live.prompt(
+							[
+								...(parsed.handoffPrompt && !forked
+									? [
+											{
+												type: "text" as const,
+												text: parsed.handoffPrompt,
+												hidden: true,
+											},
+										]
+									: []),
+								{ type: "text", text: parsed.prompt },
+							],
+							`rewind-${parsed.commandId}`,
+						);
+					} catch (error) {
+						await this.closeSession({ sessionId: created.sessionId }).catch(
+							() => undefined,
+						);
+						throw error;
+					}
+					return created;
+				},
+			);
+		},
+
 		async closeSession(input) {
 			const parsed: CloseSessionInput = closeSessionInputSchema.parse(input);
 			const wasLive = options.live.get(parsed.sessionId) !== null;
@@ -364,10 +538,13 @@ export function createCommands(options: CommandsOptions): ChatCommands {
 				: null;
 			// Reading the cursor can backfill the row, so read the row after it.
 			const session = options.sessions.get(parsed.sessionId);
+			const lastError =
+				session?.status === "dead" ? lastErrorNotice(parsed.sessionId) : null;
 			return {
 				live: options.live.get(parsed.sessionId) !== null,
 				session,
 				cursor: session && seq !== null ? { epoch: session.epoch, seq } : null,
+				...(lastError ? { lastError } : {}),
 			};
 		},
 
@@ -379,6 +556,16 @@ export function createCommands(options: CommandsOptions): ChatCommands {
 		},
 
 		listSessions,
+
+		discoverSessions(input) {
+			const parsed = discoverSessionsCommandSchema.parse(input);
+			return options.live.discoverSessions({
+				harness: parsed.harness,
+				scopeId: parsed.scopeId,
+				cwd: parsed.cwd,
+				...(parsed.cursor ? { cursor: parsed.cursor } : {}),
+			});
+		},
 
 		getItems(input) {
 			const parsed: GetItemsInput = getItemsInputSchema.parse(input);

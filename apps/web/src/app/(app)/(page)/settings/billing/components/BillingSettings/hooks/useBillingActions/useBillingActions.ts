@@ -38,7 +38,6 @@ export function useBillingActions({
 	const [isUpgrading, setIsUpgrading] = useState(false);
 	const [isCanceling, setIsCanceling] = useState(false);
 	const [isRestoring, setIsRestoring] = useState(false);
-	const [isOpeningAutumnPortal, setIsOpeningAutumnPortal] = useState(false);
 
 	const usesAutumn = activePlan?.billingProvider === "autumn";
 	const billingUrl = `${env.NEXT_PUBLIC_WEB_URL}/settings/billing`;
@@ -134,18 +133,6 @@ export function useBillingActions({
 		if (!activeOrganizationId) return;
 		setIsCanceling(true);
 		try {
-			if (usesAutumn) {
-				await authClient.$fetch("/autumn/updateSubscription", {
-					method: "POST",
-					body: {
-						organizationId: activeOrganizationId,
-						planId: currentAutumnPlanId,
-						cancelAction: "cancel_end_of_cycle",
-					},
-				});
-				return;
-			}
-
 			await authClient.subscription.cancel(
 				{
 					referenceId: activeOrganizationId,
@@ -196,32 +183,14 @@ export function useBillingActions({
 		toast.error(t({ message: "Could not open billing. Please try again." }));
 	};
 
-	const openPortal = async (flowType: PortalFlowType) => {
-		if (!usesAutumn) {
-			portal.mutate(
-				{ flowType },
-				{
-					onSuccess: ({ url }) => window.location.assign(url),
-					onError: showPortalError,
-				},
-			);
-			return;
-		}
-
-		setIsOpeningAutumnPortal(true);
-		try {
-			await authClient.$fetch<{ url: string }>("/autumn/openCustomerPortal", {
-				method: "POST",
-				body: {
-					organizationId: activeOrganizationId ?? undefined,
-					returnUrl: billingUrl,
-				},
-				onSuccess: (ctx) => window.location.assign(ctx.data.url),
+	const openPortal = (flowType: PortalFlowType) => {
+		portal.mutate(
+			{ flowType },
+			{
+				onSuccess: ({ url }) => window.location.assign(url),
 				onError: showPortalError,
-			});
-		} finally {
-			setIsOpeningAutumnPortal(false);
-		}
+			},
+		);
 	};
 
 	return {
@@ -232,6 +201,6 @@ export function useBillingActions({
 		isUpgrading,
 		isCanceling,
 		isRestoring,
-		isOpeningPortal: portal.isPending || isOpeningAutumnPortal,
+		isOpeningPortal: portal.isPending,
 	};
 }

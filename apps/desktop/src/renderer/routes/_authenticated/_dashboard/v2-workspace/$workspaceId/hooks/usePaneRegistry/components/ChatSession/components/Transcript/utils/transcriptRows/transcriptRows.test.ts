@@ -1,7 +1,12 @@
 import { describe, expect, test } from "bun:test";
-import type { OutboxEntry, TurnGroup } from "@superset/chat/core";
+import {
+	collapseWorkLog,
+	type OutboxEntry,
+	type TurnGroup,
+} from "@superset/chat/core";
 import type {
 	ApprovalRequest,
+	Item,
 	ToolCall,
 	UserMessage,
 } from "@superset/chat/protocol";
@@ -122,6 +127,71 @@ describe("transcriptRows", () => {
 		expect(rows[0]?.groupStart).toBe(true);
 	});
 
+	test("a message sent mid-turn moves the clock under it", () => {
+		const steer = { ...prompt, id: "u2", clientId: "c2" };
+		const rows = transcriptRows(
+			[
+				{
+					turnId: "t1",
+					turn: { id: "t1", status: "running", startedAtMs: 2 },
+					entries: [
+						{ kind: "item", item: prompt },
+						{ kind: "item", item: publish("b1", 3) },
+						{ kind: "item", item: steer },
+					],
+				},
+			],
+			[],
+			new Set(),
+			find,
+		);
+		expect(rows.map((row) => row.kind)).toEqual([
+			"item",
+			"item",
+			"item",
+			"working",
+		]);
+	});
+
+	test("thinking between tool calls folds into one run, and a lone call stays a row", () => {
+		const thought = (id: string, startedAtMs: number) => ({
+			id,
+			kind: "reasoning" as const,
+			text: "thinking",
+			startedAtMs,
+		});
+		const steps = (items: Item[]) =>
+			transcriptRows(
+				[
+					{
+						turnId: "t1",
+						turn: { id: "t1", status: "completed", startedAtMs: 1 },
+						entries: collapseWorkLog(items),
+					},
+				],
+				[],
+				new Set(),
+				find,
+			).flatMap((row) =>
+				row.kind === "tool_run"
+					? [row.steps.map((step) => step.id).join(" ")]
+					: row.kind === "item"
+						? [row.item.id]
+						: [],
+			);
+
+		expect(
+			steps([
+				thought("r1", 2),
+				publish("b1", 3),
+				thought("r2", 4),
+				publish("b2", 5),
+				thought("r3", 6),
+			]),
+		).toEqual(["r1", "b1 r2 b2 r3"]);
+		expect(steps([publish("b1", 3)])).toEqual(["b1"]);
+	});
+
 	test("a tool run starts collapsed unless it waits on an approval", () => {
 		const running = { id: "t1", status: "running" as const, startedAtMs: 2 };
 		const collapsedFlags = (pendingApprovalTargets: ReadonlySet<string>) =>
@@ -144,6 +214,7 @@ describe("transcriptRows", () => {
 										content: [],
 										startedAtMs: 3,
 									},
+									publish("b2", 4),
 								],
 							},
 						],

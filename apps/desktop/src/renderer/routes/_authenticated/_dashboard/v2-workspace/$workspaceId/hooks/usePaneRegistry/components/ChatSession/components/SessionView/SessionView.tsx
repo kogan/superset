@@ -4,6 +4,7 @@ import {
 	deriveQueuedPrompts,
 	runningTurnId as findRunningTurnId,
 	launchConfigSelections,
+	userMessageText,
 } from "@superset/chat/core";
 import type {
 	AvailableCommand,
@@ -30,9 +31,10 @@ import {
 	type OpenLink,
 	type OpenPage,
 } from "../../providers/ChatPaneActionsProvider";
-import type { ChatForkTarget } from "../../types";
+import type { ChatEditRequest, ChatForkTarget } from "../../types";
 import { buildChatHandoffTranscript } from "../../utils/chatHandoffTranscript";
 import { heldPromptQueue } from "../../utils/heldPromptQueue";
+import { editableMessageIds, rewindTranscript } from "../../utils/messageEdit";
 import { promptHistory } from "../../utils/promptHistory";
 import { railMessages } from "../../utils/railMessages";
 import {
@@ -45,6 +47,7 @@ import { ConnectionNotice } from "../ConnectionNotice";
 import { SessionHeader } from "../SessionHeader";
 import { Transcript } from "../Transcript";
 import { useStableList } from "./hooks/useStableList";
+import { composerAnswer } from "./utils/composerAnswer";
 
 const RESUME_FOLLOW_PX = 24;
 const NO_COMMANDS: AvailableCommand[] = [];
@@ -53,12 +56,11 @@ const NO_CONFIG_OPTIONS: SessionConfigOption[] = [];
 const MODEL_OPTIONS_GRACE_MS = 1000;
 
 function contentText(content: UserContent[]): string {
-	return content
-		.flatMap((part) => (part.type === "text" ? [part.text] : []))
-		.join("\n");
+	return userMessageText({ content });
 }
 
 export function SessionView({
+	presetId,
 	agentLabel,
 	agentSwitch,
 	canForkToWorktree,
@@ -72,6 +74,8 @@ export function SessionView({
 	preferredModelLabel,
 	onPendingPromptsSent,
 	onFork,
+	onEditMessage,
+	onUserPrompt,
 	onSessionState,
 	openFile,
 	openPage,
@@ -79,6 +83,7 @@ export function SessionView({
 	workspaceId,
 }: {
 	client: SessionClient;
+	presetId?: string;
 	draftKey: string;
 	workspaceId: string;
 	headerLeft?: ReactNode;
@@ -102,6 +107,9 @@ export function SessionView({
 	 */
 	onFork?: ((target: ChatForkTarget, transcript: string) => void) | undefined;
 	canForkToWorktree?: boolean;
+	onEditMessage?: (request: ChatEditRequest) => void;
+	/** Called when the user sends a message, as opposed to anything sent for them. */
+	onUserPrompt?: () => void;
 	/** Names the speaker in a handed-over transcript. */
 	agentLabel?: string;
 	/** The transcript goes with the switch: the next agent cannot load this session. */
@@ -152,7 +160,7 @@ export function SessionView({
 				)
 				.map((entry) => contentText(entry.content))
 				.filter(Boolean);
-			if (unsent.length > 0) prependToDraft(draftKey, unsent.join("\n\n"));
+			if (unsent.length > 0) prependToDraft(draftKey, unsent);
 		},
 		[draftKey],
 	);
@@ -230,6 +238,8 @@ export function SessionView({
 	);
 
 	const focusComposer = useCallback(() => composerRef.current?.focus(), []);
+	const [revealMessageId, setRevealMessageId] = useState<string | null>(null);
+	const clearRevealMessage = useCallback(() => setRevealMessageId(null), []);
 	const timelineRef = useRef(timeline);
 	timelineRef.current = timeline;
 	const snapshotRef = useRef(session.snapshot);
@@ -273,10 +283,12 @@ export function SessionView({
 		setConfigOption,
 		setMode,
 	} = session;
+	const loaded = session.status === "ready";
 	const onRespond = useCallback(
-		(approvalId: string, decision: Decision) =>
-			void respondToApproval(approvalId, decision),
-		[respondToApproval],
+		(approvalId: string, decision: Decision) => {
+			if (loaded) void respondToApproval(approvalId, decision);
+		},
+		[respondToApproval, loaded],
 	);
 	const onSetConfigOption = useCallback(
 		(configId: string, value: string) => void setConfigOption(configId, value),
@@ -289,27 +301,86 @@ export function SessionView({
 		},
 		[onModeChange, setMode],
 	);
+	const editableIds = useMemo(
+		() => editableMessageIds(timeline, harness),
+		[timeline, harness],
+	);
+	const editable = onEditMessage !== undefined && held === undefined;
+	const editMessage = useMemo(
+		() =>
+			editable && onEditMessage
+				? (itemId: string, text: string) => {
+						if (runningTurnId) {
+							toast.error(
+								t({ message: "Stop the agent before you edit a message" }),
+							);
+							return;
+						}
+						onEditMessage({
+							itemId,
+							messageText: text,
+							transcript: rewindTranscript(
+								timelineRef.current,
+								itemId,
+								snapshotRef.current,
+								agentLabel ?? "Agent",
+							),
+						});
+					}
+				: undefined,
+		[editable, onEditMessage, runningTurnId, agentLabel, t],
+	);
 	const holdPrompt = held?.onQueue;
 	const onSend = useCallback(
 		(content: UserContent[], { steer }: { steer: boolean }) => {
+			onUserPrompt?.();
 			if (holdPrompt) return holdPrompt(content);
-			for (const approval of approvals) {
+			const pending = loaded ? approvals : [];
+			const [question] = pending;
+			const answer =
+				pending.length === 1 && question
+					? composerAnswer(question, content)
+					: null;
+			if (question && answer) {
+				return respondToApproval(question.id, answer).catch(() => {
+					composerRef.current?.appendText(contentText(content));
+					composerRef.current?.focus();
+					toast.error(
+						t({
+							message: "Couldn't send your message. It's back in the composer.",
+						}),
+					);
+				});
+			}
+			for (const approval of pending) {
 				void respondToApproval(approval.id, { type: "cancel" });
 			}
+			const steerTurn = steer || pending.length > 0;
 			return sendPrompt(
 				content,
-				steer && runningTurnId ? { expectedTurnId: runningTurnId } : undefined,
+				steerTurn && runningTurnId
+					? { expectedTurnId: runningTurnId }
+					: undefined,
 			);
 		},
-		[holdPrompt, approvals, respondToApproval, sendPrompt, runningTurnId],
+		[
+			holdPrompt,
+			loaded,
+			approvals,
+			respondToApproval,
+			sendPrompt,
+			runningTurnId,
+			t,
+			onUserPrompt,
+		],
 	);
 	const awaitingBackground = sessionState?.awaitingBackground === true;
 	const onCancelTurn = useMemo(
 		() =>
-			runningTurnId && !awaitingBackground && !held
+			loaded && runningTurnId && !awaitingBackground && !held
 				? () => void cancelTurn(runningTurnId, { pauseQueue: true })
 				: null,
-		[runningTurnId, awaitingBackground, cancelTurn, held],
+		[loaded, runningTurnId, awaitingBackground, cancelTurn, held],
 	);
 	const promptQueue = useMemo(
 		() => ({
@@ -335,15 +406,14 @@ export function SessionView({
 		() => (heldQueued ? heldPromptQueue(heldQueued) : undefined),
 		[heldQueued],
 	);
-	const connecting =
-		session.unreachable ||
-		(session.status === "ready" && session.connection === "closed");
 	const booting = sessionState?.status === "starting";
 
 	// w-full because the pane lays its children out in a row: without it this
 	// sizes to its content and leaves the right of the pane empty.
 	return (
 		<ChatPaneActionsProvider
+			editMessage={editMessage}
+			editableMessageIds={editableIds}
 			openFile={openFile}
 			openPage={openPage}
 			openLink={openLink}
@@ -379,14 +449,18 @@ export function SessionView({
 							onLoadOlder={loadOlder}
 							onRequestItemBodies={session.requestItemBodies}
 							onRespond={onRespond}
+							onMessageRevealed={clearRevealMessage}
 							onRetryPrompt={session.retryPrompt}
 							outbox={session.outbox}
+							revealMessageId={revealMessageId}
+							sessionId={client.sessionId}
 							snapshot={session.snapshot}
 						/>
 						{rail.length > 1 && (
 							<ChatHistorySidebarScroller
 								className="absolute inset-y-0 left-0 my-auto hidden h-fit max-h-full flex-col pl-3 @[56rem]:flex"
 								messages={rail}
+								onMessageSelect={setRevealMessageId}
 							/>
 						)}
 					</div>
@@ -394,17 +468,14 @@ export function SessionView({
 				{held ? (
 					<ConnectionNotice>{held.notice}</ConnectionNotice>
 				) : (
-					(connecting || booting) && (
+					booting && (
 						<ConnectionNotice>
-							{connecting ? (
-								<Trans>Connecting to the host service…</Trans>
-							) : (
-								<Trans>Starting the agent…</Trans>
-							)}
+							<Trans>Starting the agent…</Trans>
 						</ConnectionNotice>
 					)
 				)}
 				<Composer
+					presetId={presetId}
 					agentSwitcher={agentSwitcher}
 					availableCommands={sessionState?.availableCommands ?? NO_COMMANDS}
 					configOptions={sessionState?.configOptions ?? NO_CONFIG_OPTIONS}

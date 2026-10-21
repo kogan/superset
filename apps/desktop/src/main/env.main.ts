@@ -6,9 +6,14 @@
  *
  * For renderer process env vars, use src/renderer/env.renderer.ts instead.
  */
+
+import { FORK, publicLocalEnvironment } from "@superset/shared/standalone";
 import { createEnv } from "@t3-oss/env-core";
 import { z } from "zod/v4";
-import { publicLocalEnvironment } from "@superset/shared/standalone";
+
+// electron.vite.config.ts loads this file in Node, which cannot resolve
+// @superset/shared's extensionless imports, so derive the defaults here.
+const rootDomain = process.env.NEXT_PUBLIC_ROOT_DOMAIN || "superset.sh";
 
 export const env = createEnv({
 	server: {
@@ -16,15 +21,18 @@ export const env = createEnv({
 			.enum(["development", "production", "test"])
 			.default("development"),
 		NEXT_PUBLIC_API_URL: z.url().default("https://api.superset.sh"),
-		NEXT_PUBLIC_STREAMS_URL: z.url().default("https://streams.superset.sh"),
-		NEXT_PUBLIC_WEB_URL: z.url().default("https://app.superset.sh"),
-		NEXT_PUBLIC_MARKETING_URL: z.url().default("https://superset.sh"),
+		NEXT_PUBLIC_STREAMS_URL: z.url().default(`https://streams.${rootDomain}`),
+		NEXT_PUBLIC_WEB_URL: z.url().default(`https://app.${rootDomain}`),
+		NEXT_PUBLIC_MARKETING_URL: z.url().default(`https://${rootDomain}`),
 		NEXT_PUBLIC_POSTHOG_KEY: z.string().optional(),
 		NEXT_PUBLIC_POSTHOG_HOST: z.string().default("https://us.i.posthog.com"),
 		SENTRY_DSN_DESKTOP: z.string().optional(),
 		SENTRY_DSN_HOST_SERVICE: z.string().optional(),
 		STREAMS_URL: z.url().default("https://superset-stream.fly.dev"),
 		RELAY_URL: z.url().default("https://relay.superset.sh"),
+		// Upstream defaults this to its own brand; the labels this feeds are
+		// user-facing, so a personal installation has to name itself.
+		DESKTOP_DISPLAY_NAME: z.string().default(FORK.name),
 	},
 
 	runtimeEnv: {
@@ -42,6 +50,7 @@ export const env = createEnv({
 		SENTRY_DSN_HOST_SERVICE: process.env.SENTRY_DSN_HOST_SERVICE,
 		STREAMS_URL: process.env.STREAMS_URL,
 		RELAY_URL: process.env.RELAY_URL,
+		DESKTOP_DISPLAY_NAME: process.env.DESKTOP_DISPLAY_NAME,
 		...(process.env.SUPERESTSET_API_ORIGIN &&
 		process.env.SUPERESTSET_CONTENT_ORIGIN
 			? publicLocalEnvironment({

@@ -1,4 +1,5 @@
 export type { OrganizationBilling, PaymentState } from "./autumn/billing-state";
+export type { CloudUsage } from "./autumn/cloud-usage";
 export {
 	ensureAutumnCustomer,
 	organizationForStripeCustomer,
@@ -13,6 +14,7 @@ export {
 export {
 	invalidateOrganizationBilling,
 	organizationBilling,
+	organizationGatedMachineSizesFromAutumn,
 	organizationPlanFromAutumn,
 } from "./autumn/plan-state";
 export {

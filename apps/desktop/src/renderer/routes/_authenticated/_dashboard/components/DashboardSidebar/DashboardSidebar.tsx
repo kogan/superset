@@ -365,6 +365,10 @@ export function DashboardSidebar({
 												<DashboardSidebarWorkspacesHeader
 													sortMode={sortMode}
 													onSortModeChange={setSidebarProjectSortMode}
+													// A personal installation has no cloud rows, and
+													// null is what hides the host filter.
+													hostFilter={null}
+													onHostFilterChange={() => {}}
 													filterQuery={projectFilterQuery}
 													onFilterQueryChange={setProjectFilterQuery}
 												/>
@@ -372,7 +376,10 @@ export function DashboardSidebar({
 										</div>
 									)}
 									{!isCollapsed && !workspacesListCollapsed && (
-										<DashboardSidebarGithubNotice status={githubStatus} />
+										<DashboardSidebarGithubNotice
+											status={githubStatus}
+											isCollapsed={isCollapsed}
+										/>
 									)}
 									{(isCollapsed || !workspacesListCollapsed) && (
 										<SortableContext

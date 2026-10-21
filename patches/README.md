@@ -401,6 +401,35 @@ Verify in the simulator: open a workspace with two PRs, tap the PR chip, tap a
 row, go back, reopen the sheet, tap the other row. The second PR must show its
 description and the Files row without scrolling.
 
+### Interactive push (same patch)
+
+**Why:** Home's right-edge swipe returns to the last workspace, and the pushed
+screen follows the finger like the back swipe does. react-native-screens can
+only drive a *pop* interactively; UIKit asks for an interaction controller only
+when the stack returns a custom animator, and the stack returns none for a
+default push.
+
+**What it changes:** `RNSScreenStackView` gets `armInteractivePush`,
+`updateInteractivePush:` and `endInteractivePush:`, called by
+`apps/mobile/modules/forward-swipe`. The next push after `arm` (JS performs it)
+gets `RNSScreenStackAnimator` and an `RNSPercentDrivenInteractiveTransition`.
+Progress and the release that arrive before UIKit starts the transition are
+kept and applied from the new `onStart` hook. The simple-push animator starts
+paused and linear when interactive, like its pop branch. A cancelled push
+leaves UIKit's stack, and `RNSScreen` sends `onDismissed`, so JS drops the
+route. An arm with no push in 1 s expires. `arm` does not call
+`cancelTouchesInParent`: the forward-swipe module resets
+`RCTSurfaceTouchHandler` itself when its pan begins, so the row under the
+finger does not press on release. A second reset from `arm` throws
+"Inconsistency between local and UIKit touch registries".
+
+**Guard test:** `apps/mobile/react-native-screens-interactive-push-patch.test.ts`.
+
+**Regenerating:** re-apply the hunks in `ios/RNSScreenStack.h`,
+`ios/RNSScreenStack.mm`, `ios/RNSPercentDrivenInteractiveTransition.{h,mm}` and
+`ios/RNSScreenStackAnimator.mm`. Verify in the simulator: open a workspace, go
+back, swipe in from Home's right edge, let go past half way and short of it.
+
 ## @pierre/trees (`@pierre%2Ftrees@<version>.patch`)
 
 **Why:** DESKTOP-19G, DESKTOP-KR, DESKTOP-P5, DESKTOP-P4 (and DESKTOP-11E's
@@ -479,3 +508,32 @@ version's files, write the diff to
 package root), update the key in `patchedDependencies`, run `bun install`, then
 `bun test apps/mobile/react-native-enriched-markdown-list-patch.test.ts`. It is
 a native change: rebuild the app to see it.
+
+## @better-auth/oauth-provider (`@better-auth%2Foauth-provider@<version>.patch`)
+
+**Why:** the token endpoint rotates the refresh token on every refresh. When a
+rotated token is sent again, it treats that as theft and deletes every refresh
+and access token the user holds for that client, on every machine. Several CLI
+processes on one machine, or the CLI and a host-service, refresh at the same
+moment as a matter of course, and a client that loses a response retries it.
+Both send the rotated token again within seconds, and the user is logged out
+everywhere (GH #8426). A check in a `before` hook cannot fix this: between the
+hook's read and the provider's read, another request can rotate the token.
+
+**What it changes** (`dist/index.mjs`, `handleRefreshTokenGrant`): when the
+token was revoked less than 10 minutes ago, the request still fails with
+`invalid_grant` but the token family is kept, and the server logs a
+`[oauth-refresh-reuse-grace]` warning so a stolen-token reuse stays visible.
+Reuse after 10 minutes still deletes it. The CLI and the host-service retry a refresh with an unknown
+outcome only within 5 minutes (`REFRESH_TIMINGS.retryWindowMs` in
+`packages/shared/src/oauth-refresh.ts`), so keep that below this window. The
+guard test checks it.
+
+**Guard test:** `packages/auth/src/oauth-provider-refresh-grace-patch.test.ts`.
+It runs the installed provider against an in-memory database.
+
+**Regenerating after a version bump:** `bun patch @better-auth/oauth-provider`,
+make the same change in `handleRefreshTokenGrant` (keep the
+`superset-patch: refresh-reuse-grace` comment), `bun patch --commit
+'node_modules/@better-auth/oauth-provider'`, then
+`bun test packages/auth/src/oauth-provider-refresh-grace-patch.test.ts`.
