@@ -91,6 +91,7 @@ import {
 	findVisibleChangesPane,
 	openChangesPaneInStore,
 } from "./utils/openChangesPaneInStore";
+import { openIdePaneInStore } from "./utils/openIdePaneInStore";
 import { openSubagentPaneInStore } from "./utils/openSubagentPaneInStore";
 import type { V2WorkspaceUrlOpenTarget } from "./utils/openUrlInV2Workspace";
 
@@ -463,6 +464,10 @@ function V2WorkspaceContent() {
 			panes: [{ kind: "desktop", data: { kind: "desktop" } }],
 		});
 	}, [viewerTarget]);
+	const openIdeTab = useCallback(() => {
+		viewerTarget.reveal();
+		openIdePaneInStore(viewerTarget.store, workspaceId);
+	}, [viewerTarget, workspaceId]);
 	useRunPendingChatHandoff({
 		workspaceId,
 		isLayoutReady,
@@ -747,6 +752,7 @@ function V2WorkspaceContent() {
 											onAddBrowser={
 												isRightPaneAreaEnabled ? undefined : addBrowserTab
 											}
+											onOpenIde={openIdeTab}
 											onAddChanges={
 												isRightPaneAreaEnabled ? undefined : openChanges
 											}

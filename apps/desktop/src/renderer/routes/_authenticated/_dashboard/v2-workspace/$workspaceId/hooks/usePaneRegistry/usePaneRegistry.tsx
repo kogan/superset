@@ -12,6 +12,7 @@ import { cn } from "@superset/ui/utils";
 import { workspaceTrpc } from "@superset/workspace-client";
 import {
 	Circle,
+	CodeXml,
 	Files,
 	FileText,
 	FolderTree,
@@ -92,6 +93,8 @@ import { DiffPaneHeaderExtras } from "./components/DiffPane/components/DiffPaneH
 import { FilePane } from "./components/FilePane";
 import { FilePaneHeaderExtras } from "./components/FilePane/components/FilePaneHeaderExtras";
 import { FilesTreePane } from "./components/FilesTreePane";
+import { IdePane } from "./components/IdePane";
+import { ideRuntimeRegistry } from "./components/IdePane/ideRuntimeRegistry";
 import { MobilePane } from "./components/MobilePane";
 import { PagePane } from "./components/PagePane";
 import { PagePaneHeaderExtras } from "./components/PagePaneHeaderExtras";
@@ -241,6 +244,39 @@ export function usePaneRegistry({
 
 	return useMemo<PaneRegistry<PaneViewerData>>(
 		() => ({
+			ide: {
+				getIcon: () => <CodeXml className="size-3.5" />,
+				getTitle: () => t({ message: "IDE" }),
+				renderPane: (ctx: RendererContext<PaneViewerData>) => {
+					const data = ctx.pane.data;
+					if (!("kind" in data) || data.kind !== "ide") return null;
+					return (
+						<IdePane
+							paneId={ctx.pane.id}
+							workspaceId={data.workspaceId}
+							onFocus={ctx.actions.focus}
+						/>
+					);
+				},
+				onBeforeClose: async (pane) => {
+					try {
+						const allowed = await ideRuntimeRegistry.canClose(pane.id);
+						if (!allowed)
+							toast.error(
+								t({ message: "Save your files before closing the IDE." }),
+							);
+						return allowed;
+					} catch (error) {
+						toast.error(errorMessage(error));
+						return false;
+					}
+				},
+				onAfterRemove: (pane) => {
+					void ideRuntimeRegistry
+						.close(pane.id)
+						.catch((error) => toast.error(errorMessage(error)));
+				},
+			},
 			file: {
 				getIcon: (ctx: RendererContext<PaneViewerData>) => {
 					const data = ctx.pane.data as FilePaneData;
