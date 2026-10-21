@@ -5,12 +5,14 @@ import { i18n } from "@superset/i18n";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@superset/ui/tooltip";
 import { cn } from "@superset/ui/utils";
 import { useNavigate } from "@tanstack/react-router";
+import { ChevronDown, ChevronRight } from "lucide-react";
 import {
 	type ComponentPropsWithoutRef,
 	forwardRef,
 	type KeyboardEventHandler,
 	type MouseEventHandler,
 	useEffect,
+	useId,
 	useRef,
 } from "react";
 import { HiCheck, HiMiniXMark } from "react-icons/hi2";
@@ -26,6 +28,8 @@ import { ProjectThumbnail } from "renderer/routes/_authenticated/components/Proj
 import { RenameInput } from "renderer/screens/main/components/WorkspaceSidebar/RenameInput";
 import { useInlineWorkspacePortsEnabled } from "renderer/stores/inline-workspace-ports";
 import { usePullRequestPaneIntent } from "renderer/stores/pull-request-pane-intent";
+import { useSidebarAgentExpansion } from "renderer/stores/sidebar-agent-expansion";
+import { useWorkspaceAgentsRowEnabled } from "renderer/stores/workspace-agents-row";
 import type { ActivePaneStatus } from "shared/tabs-types";
 import type {
 	DashboardSidebarWorkspace,
@@ -35,6 +39,7 @@ import type {
 import { DashboardSidebarPortsChip } from "../DashboardSidebarExpandedWorkspaceRow/components/DashboardSidebarPortsChip";
 import { DashboardSidebarRowEventBoundary } from "../DashboardSidebarExpandedWorkspaceRow/components/DashboardSidebarRowEventBoundary";
 import { DashboardSidebarWorkspaceChips } from "../DashboardSidebarExpandedWorkspaceRow/components/DashboardSidebarWorkspaceChips";
+import { useDashboardSidebarWorkspaceRunningAgents } from "../DashboardSidebarExpandedWorkspaceRow/components/DashboardSidebarWorkspaceChips/hooks/useDashboardSidebarWorkspaceRunningAgents";
 import { DashboardSidebarWorkspaceIcon } from "../DashboardSidebarWorkspaceIcon";
 import { DashboardSidebarWorkspaceQueuedBadge } from "../DashboardSidebarWorkspaceQueuedBadge";
 import { DashboardSidebarWorkspaceDiffStats } from "./components/DashboardSidebarWorkspaceDiffStats";
@@ -124,6 +129,18 @@ export const DashboardSidebarLegacyExpandedWorkspaceRow = forwardRef<
 		const { t } = useLingui();
 		const resolvedIndentation =
 			indentation ?? (isInSection ? "grouped" : "workspace");
+		// Agents tree, mirrored from the new row: the feature lives behind the
+		// "Workspace agents" experiment and the new sidebar is dark-wired on this
+		// release, so surface the same tree in the legacy row that actually renders.
+		const { expanded: agentsExpanded, toggle: toggleAgents } =
+			useSidebarAgentExpansion([workspace.id, "workspace"]);
+		const agentsRegionId = useId();
+		const agentsEnabled = useWorkspaceAgentsRowEnabled();
+		const runningAgents = useDashboardSidebarWorkspaceRunningAgents(
+			workspace.id,
+		);
+		const agents = agentsEnabled ? runningAgents : [];
+		const hasAgents = agents.length > 0;
 		const {
 			hostType,
 			hostIsOnline,
@@ -203,13 +220,46 @@ export const DashboardSidebarLegacyExpandedWorkspaceRow = forwardRef<
 					className={cn(
 						"group relative flex h-7 w-full items-center pr-2",
 						resolvedIndentation === "top-level"
-							? "pl-2"
+							? hasAgents && !isPending
+								? "pl-6"
+								: "pl-2"
 							: resolvedIndentation === "grouped"
 								? "pl-10"
 								: "pl-6",
 						onClick && "cursor-pointer",
 					)}
 				>
+					{hasAgents && !isPending && (
+						<button
+							type="button"
+							aria-label={
+								agentsExpanded
+									? t({ message: "Collapse agents" })
+									: t({ message: "Expand agents" })
+							}
+							aria-expanded={agentsExpanded}
+							aria-controls={agentsRegionId}
+							onPointerDown={(event) => event.stopPropagation()}
+							onMouseDown={(event) => event.stopPropagation()}
+							onTouchStart={(event) => event.stopPropagation()}
+							onKeyDown={(event) => event.stopPropagation()}
+							onDoubleClick={(event) => event.stopPropagation()}
+							onClick={(event) => {
+								event.stopPropagation();
+								toggleAgents();
+							}}
+							className={cn(
+								"absolute flex size-4 items-center justify-center rounded-sm text-muted-foreground hover:bg-foreground/10 hover:text-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring",
+								resolvedIndentation === "grouped" ? "left-5" : "left-1",
+							)}
+						>
+							{agentsExpanded ? (
+								<ChevronDown className="size-3" aria-hidden />
+							) : (
+								<ChevronRight className="size-3" aria-hidden />
+							)}
+						</button>
+					)}
 					{isSelected ? (
 						<span className="mr-2 flex size-4 shrink-0 items-center justify-center text-foreground">
 							<HiCheck className="size-3.5" />
@@ -473,6 +523,9 @@ export const DashboardSidebarLegacyExpandedWorkspaceRow = forwardRef<
 				{!isPending && (
 					<DashboardSidebarWorkspaceChips
 						workspaceId={workspace.id}
+						agents={agents}
+						agentsExpanded={agentsExpanded}
+						agentsRegionId={agentsRegionId}
 						isInSection={isInSection}
 						indentation={resolvedIndentation}
 						onClick={onWorkspaceChipsClick}
