@@ -161,7 +161,13 @@ export interface PaneTarget {
 	reveal: () => void;
 }
 
+export interface IdePaneData {
+	kind: "ide";
+	workspaceId: string;
+}
+
 export type PaneViewerData =
+	| IdePaneData
 	| FilePaneData
 	| TerminalPaneData
 	| ChatPaneData

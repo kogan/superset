@@ -5,15 +5,17 @@ import {
 	DropdownMenuSeparator,
 } from "@superset/ui/dropdown-menu";
 import { BsTerminalPlus } from "react-icons/bs";
-import { LuGitCompareArrows, LuMessageSquare } from "react-icons/lu";
+import { LuCodeXml, LuGitCompareArrows, LuMessageSquare } from "react-icons/lu";
 import { TbDeviceDesktop, TbWorld } from "react-icons/tb";
 import { HotkeyMenuShortcut } from "renderer/components/HotkeyMenuShortcut";
+import { useFeaturePreferences } from "renderer/stores/feature-preferences";
 
 interface AddTabMenuProps {
 	onAddTerminal: () => void;
 	runAfterClose: (action: () => void) => void;
 	onAddChat?: (() => void) | undefined;
 	onAddBrowser?: (() => void) | undefined;
+	onOpenIde?: (() => void) | undefined;
 	onAddChanges?: (() => void) | undefined;
 	onAddDesktop?: (() => void) | undefined;
 	showPresetsBar: boolean;
@@ -25,11 +27,13 @@ export function AddTabMenu({
 	runAfterClose,
 	onAddChat,
 	onAddBrowser,
+	onOpenIde,
 	onAddChanges,
 	onAddDesktop,
 	showPresetsBar,
 	onToggleShowPresetsBar,
 }: AddTabMenuProps) {
+	const ideEnabled = useFeaturePreferences((state) => state.embeddedIde);
 	return (
 		<>
 			<DropdownMenuItem
@@ -58,6 +62,14 @@ export function AddTabMenu({
 						<Trans>Browser</Trans>
 					</span>
 					<HotkeyMenuShortcut hotkeyId="NEW_BROWSER" />
+				</DropdownMenuItem>
+			)}
+			{onOpenIde && ideEnabled && (
+				<DropdownMenuItem className="gap-2" onClick={onOpenIde}>
+					<LuCodeXml className="size-4" />
+					<span>
+						<Trans>IDE</Trans>
+					</span>
 				</DropdownMenuItem>
 			)}
 			{onAddChanges && (
