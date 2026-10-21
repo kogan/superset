@@ -40,7 +40,11 @@ set +a
 [ -n "${HOST_SERVICE_SECRET:-}" ] || refuse "HOST_SERVICE_SECRET missing from the boot env"
 
 # A wake that races a wake, or a re-delivered provision, must not stack a
-# second host-service on a live one.
+# second host-service on a live one, nor on one still being booted: the pid
+# file below is written only after the passes. The lock is held until it is.
+# A reexec inherits fd 9 with the lock still on it.
+[ -e "/proc/$$/fd/9" ] || exec 9> /run/superset-boot.lock
+flock -n -E 75 9 || { [ $? -eq 75 ] && exit 0; refuse "cannot take the boot lock"; }
 if [ -f "${SUPERSET_RUN_DIR}/host-service.pid" ] && kill -0 "$(cat "${SUPERSET_RUN_DIR}/host-service.pid")" 2>/dev/null; then
 	exit 0
 fi
@@ -160,7 +164,7 @@ stamp "host.exec $(cat "${SUPERSET_HOST_ROOT}/current.version" 2>/dev/null)"
 # setpriv execs in place, so the pid recorded is node's own and the process
 # that answers kill -0 is the one that serves.
 (cd "$SUPERSET_USER_HOME" && exec setpriv --reuid="$SUPERSET_USER" --regid="$SUPERSET_USER" --init-groups \
-	env -i "${host_env[@]}" node "${HOST}/host-service.js") >> "${SUPERSET_LOG_DIR}/host-service.log" 2>&1 &
+	env -i "${host_env[@]}" node "${HOST}/host-service.js") >> "${SUPERSET_LOG_DIR}/host-service.log" 2>&1 9>&- &
 echo $! > "${SUPERSET_RUN_DIR}/host-service.pid"
 (
 	for _ in $(seq 1 600); do
@@ -170,9 +174,10 @@ echo $! > "${SUPERSET_RUN_DIR}/host-service.pid"
 		sleep 0.1
 	done
 	stamp "host.timeout after 60s"
-) &
+) 9>&- &
 }
 start_host_service
+exec 9>&-
 
 # --- the desktop and the checkout: side effects of being up.
 as_user env "DISPLAY=${SUPERSET_DISPLAY}" "HOME=${SUPERSET_USER_HOME}" "USER=${SUPERSET_USER}" \

@@ -863,7 +863,7 @@ superset workspaces create --project prj_… --name "perf-spike" --branch perf/s
 		{ flag: "--host <id>", description: "Host the workspaces live on." },
 		{ flag: "--local", description: "Target this machine." },
 	]}
-	output={`{ deleted: string[]; warnings: string[] }`}
+	output={`{ deleted: string[]; notFound: string[]; failed: { id: string; reason: string }[]; warnings: string[] }`}
 >
 Archive one or more workspaces. Without `--host` or `--local`, this targets
 cloud workspaces if your account has them, else this machine. The old name
@@ -877,7 +877,9 @@ cloud workspaces if your account has them, else this machine. The old name
   workspace that shares the project's own checkout keeps that folder.
 
 `deleted` lists the archived IDs; the field keeps its old name so existing
-scripts still work.
+scripts still work. Each ID is reported on its own: unknown IDs land in
+`notFound`, errors land in `failed` with a reason, and the rest of the batch
+still runs. The command exits non-zero if either list is not empty.
 
 ```bash
 superset workspaces archive ws_a ws_b ws_c

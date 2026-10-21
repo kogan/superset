@@ -301,6 +301,19 @@ describe("adoptLocalRepo", () => {
 		expect(head).toMatch(/^[0-9a-f]{40}$/);
 	});
 
+	test("rejects a HEAD that names an invalid ref without committing", async () => {
+		const repo = join(workRoot, "invalid-head-ref");
+		await initRepoAt(repo);
+		writeFileSync(join(repo, ".git", "HEAD"), "ref: refs/heads/.invalid\n");
+
+		await expect(adoptLocalRepo(repo)).rejects.toMatchObject({
+			code: "BAD_REQUEST",
+		});
+		expect(existsSync(join(repo, ".git", "refs", "heads", ".invalid"))).toBe(
+			false,
+		);
+	});
+
 	test("is a no-op when the repo already has commits", async () => {
 		const repo = join(workRoot, "already-committed");
 		const git = await initRepoAt(repo);

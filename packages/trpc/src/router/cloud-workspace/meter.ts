@@ -77,6 +77,19 @@ function reservation(memoryMb: number): number {
 	return gbMinutes({ ms: LOCK_WINDOW_MS, memoryMb });
 }
 
+function usageProperties(
+	boot: Pick<Boot, "id" | "lockSeq" | "cloudWorkspaceId">,
+	userId: string | null,
+) {
+	return {
+		bootId: boot.id,
+		lockSeq: boot.lockSeq,
+		meteringVersion: 1,
+		workspaceId: boot.cloudWorkspaceId,
+		userId: userId ?? "unattributed",
+	};
+}
+
 const OPEN_BOOT = or(
 	isNull(cloudWorkspaceBoots.stoppedAt),
 	isNull(cloudWorkspaceBoots.finalizedThrough),
@@ -119,19 +132,27 @@ export async function assertMayBoot(
 	if (refusal) throw refusalError(refusal);
 }
 
-export async function authorizeBoot(args: {
-	organizationId: string;
-	cloudWorkspaceId: string;
-	memoryMb: number;
-	vcpus: number;
-}): Promise<{ bootId: string | null }> {
-	if (!billingUsesAutumn) return { bootId: null };
+export async function authorizeBoot(
+	args: {
+		organizationId: string;
+		cloudWorkspaceId: string;
+		createdByUserId: string | null;
+		memoryMb: number;
+		vcpus: number;
+	},
+	{ billingEnabled = billingUsesAutumn }: { billingEnabled?: boolean } = {},
+): Promise<{ bootId: string | null }> {
+	if (!billingEnabled) return { bootId: null };
 	const bootId = `boot_${randomUUID()}`;
 	const result = await checkOrFailOpen(args.organizationId, () =>
 		autumnClient.check({
 			customerId: args.organizationId,
 			featureId: BOX_GB_MINUTES_FEATURE_ID,
 			requiredBalance: reservation(args.memoryMb),
+			properties: usageProperties(
+				{ id: bootId, lockSeq: 0, cloudWorkspaceId: args.cloudWorkspaceId },
+				args.createdByUserId,
+			),
 			lock: {
 				enabled: true,
 				lockId: lockIdFor(bootId, 0),
@@ -219,16 +240,13 @@ async function recordUsage(
 	window: { from: number; amount: number; userId: string | null },
 ): Promise<void> {
 	const { amount } = window;
-	const properties = {
-		bootId: boot.id,
-		lockSeq: boot.lockSeq,
-		...(window.userId ? { userId: window.userId } : {}),
-	};
+	const properties = usageProperties(boot, window.userId);
 	const lockId = lockIdFor(boot.id, boot.lockSeq);
 	if (boot.lockOpen) {
 		try {
 			await autumnClient.balances.finalize(
-				{ lockId, action: "confirm", overrideValue: amount, properties },
+				// Finalization inherits the original reservation's attribution, including on expiry.
+				{ lockId, action: "confirm", overrideValue: amount },
 				{ headers: { "Idempotency-Key": `${lockId}:confirm` } },
 			);
 			return;
@@ -289,24 +307,26 @@ function clearLease(bootId: string) {
 		.where(eq(cloudWorkspaceBoots.id, bootId));
 }
 
-async function recordActiveCpu(boot: Boot, activeCpuMs: number) {
-	await autumnClient
-		.track(
+async function recordActiveCpu(
+	boot: Boot,
+	activeCpuMs: number,
+	userId: string | null,
+) {
+	try {
+		await autumnClient.track(
 			{
 				customerId: boot.organizationId,
 				featureId: ACTIVE_CPU_MINUTES_FEATURE_ID,
 				value: activeCpuMs / 60_000,
 				async: false,
-				properties: { bootId: boot.id },
+				properties: usageProperties(boot, userId),
 			},
 			{ headers: { "Idempotency-Key": `${boot.id}:active-cpu` } },
-		)
-		.catch((error) =>
-			console.error(
-				`[cloud-workspace/meter] CPU for ${boot.id} not recorded`,
-				error,
-			),
 		);
+	} catch (error) {
+		if (error instanceof AutumnError && error.statusCode === 409) return;
+		throw error;
+	}
 }
 
 /**
@@ -374,7 +394,13 @@ export async function settleBoot(
 			.where(eq(cloudWorkspaceBoots.id, bootId));
 
 		if (session.endedAt !== null) {
-			if (session.activeCpuMs) await recordActiveCpu(boot, session.activeCpuMs);
+			if (session.activeCpuMs) {
+				await recordActiveCpu(
+					boot,
+					session.activeCpuMs,
+					workspace?.createdByUserId ?? null,
+				);
+			}
 			await db
 				.update(cloudWorkspaceBoots)
 				.set({ stoppedAt: new Date(end), settleLeaseUntil: null })
@@ -390,6 +416,10 @@ export async function settleBoot(
 			customerId: boot.organizationId,
 			featureId: BOX_GB_MINUTES_FEATURE_ID,
 			requiredBalance: reservation(session.memoryMb),
+			properties: usageProperties(
+				{ ...boot, lockSeq: nextSeq },
+				workspace?.createdByUserId ?? null,
+			),
 			lock: {
 				enabled: true,
 				lockId: lockIdFor(bootId, nextSeq),
@@ -550,6 +580,7 @@ async function adoptRunningBoxes(): Promise<number> {
 			id: cloudWorkspaces.id,
 			organizationId: cloudWorkspaces.organizationId,
 			providerSandboxId: cloudWorkspaces.providerSandboxId,
+			createdByUserId: cloudWorkspaces.createdByUserId,
 		})
 		.from(cloudWorkspaces)
 		.where(
@@ -575,6 +606,7 @@ async function adoptRunningBoxes(): Promise<number> {
 			({ bootId } = await authorizeBoot({
 				organizationId: workspace.organizationId,
 				cloudWorkspaceId: workspace.id,
+				createdByUserId: workspace.createdByUserId,
 				memoryMb: session.memoryMb,
 				vcpus: session.vcpus,
 			}));

@@ -29,6 +29,7 @@ export const SANDBOX_ALLOWED_PROCEDURES: ReadonlySet<string> = new Set([
 	"cloudWorkspace.list",
 	"cloudWorkspace.create",
 	"cloudWorkspace.rename",
+	"cloudWorkspace.reportPullRequests",
 	"cloudWorkspace.delete",
 	"cloudWorkspace.access",
 	"cloudWorkspace.hostTicket",

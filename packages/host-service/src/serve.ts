@@ -16,6 +16,7 @@ import { resolveBrowserBridgeFromEnv } from "./runtime/browser-bridge/env";
 import { applyLoginShellEnvToProcess } from "./runtime/login-shell-env";
 import { startSandboxAgentStatusReporter } from "./runtime/sandbox-agent-status";
 import { startSandboxCredentialRefresh } from "./runtime/sandbox-credential-refresh";
+import { startSandboxPullRequestReporter } from "./runtime/sandbox-pull-requests";
 import { startVitalsLog } from "./runtime/vitals";
 import { detachFromLaunchDirectory } from "./runtime/working-directory";
 import { installProcessSafetyNet, installUpgradeSocketGuard } from "./safety";
@@ -90,6 +91,8 @@ async function main(): Promise<void> {
 		db,
 		launchSandboxAgent,
 		resumeCrashedAgents,
+		readLinkedPullRequests,
+		onPullRequestLinked,
 		terminalAgentStore,
 	} = createApp({
 		config: {
@@ -174,6 +177,15 @@ async function main(): Promise<void> {
 				workspaceId: sandboxWorkspaceId,
 				hostSecret: env.HOST_SERVICE_SECRET,
 				store: terminalAgentStore,
+			});
+			startSandboxPullRequestReporter({
+				read: readLinkedPullRequests,
+				report: (pullRequests) =>
+					api.cloudWorkspace.reportPullRequests.mutate({
+						id: sandboxWorkspaceId,
+						pullRequests,
+					}),
+				onLinked: onPullRequestLinked,
 			});
 		}
 

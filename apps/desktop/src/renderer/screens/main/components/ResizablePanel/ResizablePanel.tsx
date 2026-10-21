@@ -8,10 +8,8 @@ interface ResizablePanelProps {
 	width: number;
 	/** Callback when width changes */
 	onWidthChange: (width: number) => void;
-	/** Whether the panel is currently being resized */
-	isResizing: boolean;
-	/** Callback when resizing state changes */
-	onResizingChange: (isResizing: boolean) => void;
+	/** Called when a drag starts and ends. */
+	onResizingChange?: (isResizing: boolean) => void;
 	/** Minimum allowed width (used for clamping and aria) */
 	minWidth: number;
 	/** Maximum allowed width (used for clamping and aria) */
@@ -29,6 +27,8 @@ interface ResizablePanelProps {
 	clampWidth?: boolean;
 	/** Callback when the resize handle is double-clicked */
 	onDoubleClickHandle?: () => void;
+	/** How long the width eases to the value set by a double-click. */
+	resetDurationMs?: number;
 	/** Call `onWidthChange` once on release instead of on every drag frame. */
 	commitOnRelease?: boolean;
 	/**
@@ -45,7 +45,6 @@ export function ResizablePanel({
 	children,
 	width,
 	onWidthChange,
-	isResizing,
 	onResizingChange,
 	minWidth,
 	maxWidth,
@@ -53,9 +52,19 @@ export function ResizablePanel({
 	className,
 	clampWidth = true,
 	onDoubleClickHandle,
+	resetDurationMs = 300,
 	disabled = false,
 	commitOnRelease = false,
 }: ResizablePanelProps) {
+	// Owned here rather than by the consumer: a drag start or end that set
+	// state in a large parent re-rendered the whole page on every click.
+	const [isResizing, setIsResizing] = useState(false);
+	const onResizingChangeRef = useRef(onResizingChange);
+	onResizingChangeRef.current = onResizingChange;
+	const setResizing = useCallback((next: boolean) => {
+		setIsResizing(next);
+		onResizingChangeRef.current?.(next);
+	}, []);
 	const [draftWidth, setDraftWidth] = useState<number | null>(null);
 	const [committedWidth, setCommittedWidth] = useState(width);
 	const draftWidthRef = useRef<number | null>(null);
@@ -69,6 +78,17 @@ export function ResizablePanel({
 		if (draftWidth === null) draftWidthRef.current = null;
 	}, [draftWidth]);
 	const shownWidth = draftWidth ?? width;
+	const [resetting, setResetting] = useState(false);
+	useEffect(() => {
+		if (!resetting) return;
+		const timer = setTimeout(() => setResetting(false), resetDurationMs);
+		return () => clearTimeout(timer);
+	}, [resetting, resetDurationMs]);
+	const handleDoubleClick = useCallback(() => {
+		if (!onDoubleClickHandle) return;
+		setResetting(true);
+		onDoubleClickHandle();
+	}, [onDoubleClickHandle]);
 	const startXRef = useRef(0);
 	const startWidthRef = useRef(0);
 	const pendingWidthRef = useRef<number | null>(null);
@@ -89,9 +109,9 @@ export function ResizablePanel({
 			e.preventDefault();
 			startXRef.current = e.clientX;
 			startWidthRef.current = shownWidth;
-			onResizingChange(true);
+			setResizing(true);
 		},
-		[shownWidth, onResizingChange],
+		[shownWidth, setResizing],
 	);
 
 	const handleMouseMove = useCallback(
@@ -128,10 +148,10 @@ export function ResizablePanel({
 		if (commitOnRelease && draftWidthRef.current !== null) {
 			onWidthChange(draftWidthRef.current);
 		}
-		onResizingChange(false);
+		setResizing(false);
 	}, [
 		isResizing,
-		onResizingChange,
+		setResizing,
 		flushPendingWidth,
 		commitOnRelease,
 		onWidthChange,
@@ -139,6 +159,7 @@ export function ResizablePanel({
 
 	useEffect(() => {
 		if (isResizing) {
+			setResetting(false);
 			document.addEventListener("mousemove", handleMouseMove);
 			document.addEventListener("mouseup", handleMouseUp);
 			document.body.style.userSelect = "none";
@@ -164,9 +185,20 @@ export function ResizablePanel({
 				"relative h-full overflow-hidden border-border",
 				disabled ? "flex-1" : "shrink-0",
 				!disabled && (handleSide === "right" ? "border-r" : "border-l"),
+				resetting &&
+					"transition-[width] ease-[ease] motion-reduce:transition-none",
 				className,
 			)}
-			style={disabled ? undefined : { width: shownWidth }}
+			style={
+				disabled
+					? undefined
+					: {
+							width: shownWidth,
+							transitionDuration: resetting
+								? `${resetDurationMs}ms`
+								: undefined,
+						}
+			}
 		>
 			{children}
 			{!disabled && (
@@ -179,7 +211,7 @@ export function ResizablePanel({
 					aria-valuemax={maxWidth}
 					tabIndex={0}
 					onMouseDown={handleMouseDown}
-					onDoubleClick={onDoubleClickHandle}
+					onDoubleClick={handleDoubleClick}
 					className={cn(
 						"absolute top-0 w-5 h-full cursor-col-resize z-10",
 						"after:absolute after:top-0 after:w-1 after:h-full after:transition-colors",

@@ -75,10 +75,6 @@ function PullRequestsLayout() {
 	const isListCollapsed = selectedPrNumber !== null && storedListCollapsed;
 	const isDetailCollapsed = selectedPrNumber === null || storedDetailCollapsed;
 	const setListWidth = usePullRequestsSplitViewStore((s) => s.setWidth);
-	const isResizingList = usePullRequestsSplitViewStore((s) => s.isResizing);
-	const setIsResizingList = usePullRequestsSplitViewStore(
-		(s) => s.setIsResizing,
-	);
 	// Stable identity: effects downstream key off this array.
 	const initialProjects = useMemo(
 		() => resolveProjectFilterParams(projects, project, undefined),
@@ -132,8 +128,6 @@ function PullRequestsLayout() {
 					disabled={isDetailCollapsed}
 					width={displayListWidth}
 					onWidthChange={setListWidth}
-					isResizing={isResizingList}
-					onResizingChange={setIsResizingList}
 					minWidth={MIN_PULL_REQUESTS_LIST_WIDTH}
 					maxWidth={MAX_PULL_REQUESTS_LIST_WIDTH}
 					handleSide="right"

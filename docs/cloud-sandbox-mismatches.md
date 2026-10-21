@@ -86,6 +86,23 @@ A closed box's dot is therefore at most a few seconds behind; the open box's
 own subscribers stay live as before. Reaches a box only through a
 host-service release.
 
+**A closed box's pull requests are not on its creation branch.**
+`cloud_workspaces.branch` is the branch the box was cut on, and an agent
+moves on from it: new branches, one PR each. Looking PRs up by that branch
+showed a stale or missing PR for every box but the open one, which the host
+fan-out reaches. The box's PR runtime already keeps every PR it has linked
+(`workspace_pull_requests` in host.db), so the box reports each one once to
+`cloudWorkspace.reportPullRequests` (`sandbox-pull-requests` in
+host-service: everything on boot, then each new link as the runtime records
+it), and the API records it in `cloud_workspace_pull_requests` for the
+repositories the workspace checked out. State still comes from
+`github_pull_requests`. After a successful send, a PR reaches the table at
+most a sweep of the PR runtime (5 minutes) after it is opened; a failed send
+retries with back-off up to 5 minutes more. Reaches a box only through a host-service release.
+**Open:** no client reads the table yet. A repository renamed or transferred
+after the box linked a PR is reported under its old name; the API answers with
+it in `ignored` and the link is lost.
+
 **Nobody on the box knows who is in it.** A host is one person's machine, so
 a workspace row implies its owner and the sidebar never had to say. A cloud
 workspace is opened by any member of the organization, and host-service inside
@@ -314,6 +331,14 @@ installs each adapter at host-service's pinned version and fails if one is
 missing. The CLI bundle has the same gap.
 
 ## Lifecycle
+
+**A tag-filtered sandbox list is not sorted by status time. Fixed.** The usage
+reconciler scans by `statusUpdatedAt` and stops at entries older than the maximum
+session length. Vercel's server-side tag filter uses creation-order pagination
+even when that sort is requested. An old stopped entry therefore hid older
+workspaces that had resumed recently, leaving them running without meter records.
+`listActiveWorkspaceSandboxes` now lists without the tag filter and checks
+`kind: workspace` locally, so the status-time cutoff is safe.
 
 **Delete was not wired.** The generic delete routed to the owning host, which
 for a cloud workspace deleted the row *inside* the sandbox and left the

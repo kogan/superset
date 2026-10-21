@@ -556,7 +556,7 @@ export interface BoxSession {
 }
 
 const LIVE_STATUSES = new Set(["pending", "running"]);
-const SESSION_SEARCH_LIMIT = 20;
+const SESSION_PAGE_SIZE = 20;
 
 export function sessionEndedAt(session: {
 	status: string;
@@ -606,17 +606,14 @@ export async function findSandboxSession(
 ): Promise<{ session: BoxSession | null } | null> {
 	const sandbox = await getSandbox(providerSandboxId);
 	if (!sandbox) return null;
-	let seen = 0;
 	for await (const raw of await sandbox.listSessions({
 		sortOrder: "desc",
-		limit: SESSION_SEARCH_LIMIT,
+		limit: SESSION_PAGE_SIZE,
 	})) {
 		const session = toBoxSession(raw);
 		if (session && (sessionId === null || session.id === sessionId)) {
 			return { session };
 		}
-		seen += 1;
-		if (seen >= SESSION_SEARCH_LIMIT) break;
 	}
 	return { session: null };
 }
@@ -634,14 +631,15 @@ export async function listActiveWorkspaceSandboxes(
 ): Promise<string[]> {
 	const names: string[] = [];
 	const oldestRunning = Date.now() - SESSION_MAX_MS;
+	// Vercel's tag filter uses creation-order pagination instead of statusUpdatedAt.
 	for await (const sandbox of await Sandbox.list({
 		...credentials(),
-		tags: { kind: "workspace" },
 		sortBy: "statusUpdatedAt",
 		sortOrder: "desc",
 	})) {
 		const updatedAt = sandbox.statusUpdatedAt ?? sandbox.updatedAt;
 		if (updatedAt < oldestRunning) break;
+		if (sandbox.tags?.kind !== "workspace") continue;
 		if (UNSETTLED_SANDBOX_STATUSES.has(sandbox.status) || updatedAt >= since) {
 			names.push(sandbox.name);
 		}

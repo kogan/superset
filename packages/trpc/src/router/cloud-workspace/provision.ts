@@ -113,6 +113,7 @@ async function provision(
 		({ bootId } = await authorizeBoot({
 			organizationId: row.organizationId,
 			cloudWorkspaceId: row.id,
+			createdByUserId: row.createdByUserId,
 			...boxFor(claim.vcpus),
 		}));
 		const sandbox = await Sentry.startSpan(
