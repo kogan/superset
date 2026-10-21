@@ -3,27 +3,11 @@ import { afterEach, expect, mock, test } from "bun:test";
 const { createPortal } = await import("react-dom");
 const { cleanup, fireEvent, render } = await import("@testing-library/react");
 
-mock.module("renderer/stores/inline-workspace-ports", () => ({
-	useInlineWorkspacePortsEnabled: () => true,
-}));
-mock.module(
-	"renderer/routes/_authenticated/_dashboard/components/DashboardSidebar/providers/DashboardSidebarPortsProvider",
-	() => ({
-		useDashboardSidebarWorkspacePorts: () => ({ ports: [{ port: 3000 }] }),
-	}),
-);
 mock.module("../components/DashboardSidebarAgentsList", () => ({
 	DashboardSidebarAgentsList: () => (
 		<button type="button">
 			<span>Agents</span>
 			{createPortal(<span>Agent details</span>, document.body)}
-		</button>
-	),
-}));
-mock.module("../components/DashboardSidebarPortsChip", () => ({
-	DashboardSidebarPortsChip: () => (
-		<button type="button" disabled>
-			<span>Ports</span>
 		</button>
 	),
 }));
@@ -81,7 +65,7 @@ for (const eventType of ["mouseDown", "touchStart"] as const) {
 		expect(dragStart).not.toHaveBeenCalled();
 	});
 
-	for (const label of ["Agents", "Ports"]) {
+	for (const label of ["Agents"]) {
 		test(`${eventType} on ${label} content does not start dragging`, () => {
 			const { getByText, dragStart } = setup();
 			fireEvent[eventType](getByText(label));

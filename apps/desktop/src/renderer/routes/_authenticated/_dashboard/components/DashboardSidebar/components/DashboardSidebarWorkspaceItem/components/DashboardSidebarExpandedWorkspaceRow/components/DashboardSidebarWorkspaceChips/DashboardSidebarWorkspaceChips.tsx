@@ -1,9 +1,6 @@
 import { cn } from "@superset/ui/utils";
 import type { MouseEventHandler, SyntheticEvent } from "react";
-import { useDashboardSidebarWorkspacePorts } from "renderer/routes/_authenticated/_dashboard/components/DashboardSidebar/providers/DashboardSidebarPortsProvider";
-import { useInlineWorkspacePortsEnabled } from "renderer/stores/inline-workspace-ports";
 import type { DashboardSidebarWorkspaceIndentation } from "../../../../../../types";
-import { DashboardSidebarPortsChip } from "./components/DashboardSidebarPortsChip";
 import { DashboardSidebarAgentsList } from "./components/DashboardSidebarAgentsList";
 import type { DashboardSidebarRunningAgent } from "./hooks/useDashboardSidebarWorkspaceRunningAgents";
 
@@ -38,12 +35,7 @@ export function DashboardSidebarWorkspaceChips({
 	indentation,
 	onClick,
 }: DashboardSidebarWorkspaceChipsProps) {
-	const inlineWorkspacePortsEnabled = useInlineWorkspacePortsEnabled();
-
-	const portGroup = useDashboardSidebarWorkspacePorts(workspaceId);
-	const ports = inlineWorkspacePortsEnabled ? (portGroup?.ports ?? []) : [];
-
-	if (ports.length === 0 && agents.length === 0) {
+	if (agents.length === 0) {
 		return null;
 	}
 
@@ -53,7 +45,7 @@ export function DashboardSidebarWorkspaceChips({
 		<div
 			className={cn(
 				"flex min-w-0 flex-col gap-0.5 pr-2",
-				(ports.length > 0 || agentsExpanded) && "pb-1",
+				agentsExpanded && "pb-1",
 				indentation === "top-level"
 					? agents.length > 0
 						? "pl-[42px]"
@@ -88,11 +80,6 @@ export function DashboardSidebarWorkspaceChips({
 						workspaceId={workspaceId}
 						agents={agents}
 					/>
-				</div>
-			)}
-			{ports.length > 0 && (
-				<div className="flex h-6 items-center">
-					<DashboardSidebarPortsChip ports={ports} />
 				</div>
 			)}
 		</div>
