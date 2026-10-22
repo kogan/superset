@@ -10000,6 +10000,9 @@ msgstr "리포지토리를 불러오는 중..."
 msgid "Loading review..."
 msgstr "리뷰를 불러오는 중..."
 
+msgid "Loading stack…"
+msgstr "Loading stack…"
+
 msgid "Loading terminal scripts..."
 msgstr "터미널 스크립트를 불러오는 중..."
 
@@ -11437,6 +11440,9 @@ msgstr "프롬프트를 찾을 수 없습니다."
 
 msgid "No public agent configs yet. This route is ready for future agent config listings."
 msgstr "아직 공개된 에이전트 설정이 없습니다. 이 경로는 앞으로 에이전트 설정 목록을 받을 준비가 되어 있습니다."
+
+msgid "No pull request for this branch yet."
+msgstr "No pull request for this branch yet."
 
 msgid "No pull requests found."
 msgstr "풀 리퀘스트를 찾을 수 없습니다."
@@ -16489,6 +16495,9 @@ msgstr "SSO/SAML"
 msgid "Stability improvements"
 msgstr "안정성 개선"
 
+msgid "Stack"
+msgstr "Stack"
+
 msgid "Stacked"
 msgstr "스택"
 
@@ -17970,6 +17979,9 @@ msgstr "이 자동화에는 아직 지시문이 없습니다. 실행하기 전�
 
 msgid "This automation is in another organization"
 msgstr "이 자동화는 다른 조직에 있습니다"
+
+msgid "This branch targets trunk directly — not a stack."
+msgstr "This branch targets trunk directly — not a stack."
 
 msgid "This cannot be undone."
 msgstr "되돌릴 수 없습니다."

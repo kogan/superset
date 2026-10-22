@@ -10000,6 +10000,9 @@ msgstr "Repository's laden..."
 msgid "Loading review..."
 msgstr "Review laden..."
 
+msgid "Loading stack…"
+msgstr "Loading stack…"
+
 msgid "Loading terminal scripts..."
 msgstr "Terminalscripts laden..."
 
@@ -11437,6 +11440,9 @@ msgstr "Geen prompts gevonden."
 
 msgid "No public agent configs yet. This route is ready for future agent config listings."
 msgstr "Nog geen publieke agentconfiguraties. Deze route is klaar voor toekomstige vermeldingen."
+
+msgid "No pull request for this branch yet."
+msgstr "No pull request for this branch yet."
 
 msgid "No pull requests found."
 msgstr "Geen pull requests gevonden."
@@ -16489,6 +16495,9 @@ msgstr "SSO/SAML"
 msgid "Stability improvements"
 msgstr "Stabiliteitsverbeteringen"
 
+msgid "Stack"
+msgstr "Stack"
+
 msgid "Stacked"
 msgstr "Gestapeld"
 
@@ -17970,6 +17979,9 @@ msgstr "Deze automatisering heeft nog geen instructies. Schrijf een prompt in de
 
 msgid "This automation is in another organization"
 msgstr "Deze automatisering staat in een andere organisatie"
+
+msgid "This branch targets trunk directly — not a stack."
+msgstr "This branch targets trunk directly — not a stack."
 
 msgid "This cannot be undone."
 msgstr "Dit kan niet ongedaan worden gemaakt."

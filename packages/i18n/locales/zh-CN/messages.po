@@ -10000,6 +10000,9 @@ msgstr "正在加载仓库..."
 msgid "Loading review..."
 msgstr "正在加载评审..."
 
+msgid "Loading stack…"
+msgstr "Loading stack…"
+
 msgid "Loading terminal scripts..."
 msgstr "正在加载终端脚本..."
 
@@ -11437,6 +11440,9 @@ msgstr "未找到提示词。"
 
 msgid "No public agent configs yet. This route is ready for future agent config listings."
 msgstr "暂无公开的智能体配置。此页面已为将来的智能体配置列表准备就绪。"
+
+msgid "No pull request for this branch yet."
+msgstr "No pull request for this branch yet."
 
 msgid "No pull requests found."
 msgstr "未找到拉取请求。"
@@ -16489,6 +16495,9 @@ msgstr "SSO/SAML"
 msgid "Stability improvements"
 msgstr "稳定性改进"
 
+msgid "Stack"
+msgstr "Stack"
+
 msgid "Stacked"
 msgstr "堆叠"
 
@@ -17970,6 +17979,9 @@ msgstr "此自动化尚无指令。请先在设置中编写提示词，然后再
 
 msgid "This automation is in another organization"
 msgstr "此自动化位于其他组织"
+
+msgid "This branch targets trunk directly — not a stack."
+msgstr "This branch targets trunk directly — not a stack."
 
 msgid "This cannot be undone."
 msgstr "此操作无法撤销。"
