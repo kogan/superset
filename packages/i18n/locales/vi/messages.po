@@ -10000,6 +10000,9 @@ msgstr "Đang tải repository..."
 msgid "Loading review..."
 msgstr "Đang tải review..."
 
+msgid "Loading stack…"
+msgstr "Loading stack…"
+
 msgid "Loading terminal scripts..."
 msgstr "Đang tải script terminal..."
 
@@ -11437,6 +11440,9 @@ msgstr "Không tìm thấy prompt nào."
 
 msgid "No public agent configs yet. This route is ready for future agent config listings."
 msgstr "Chưa có cấu hình agent công khai nào. Đường dẫn này đã sẵn sàng cho danh sách cấu hình agent sau này."
+
+msgid "No pull request for this branch yet."
+msgstr "No pull request for this branch yet."
 
 msgid "No pull requests found."
 msgstr "Không tìm thấy pull request nào."
@@ -16489,6 +16495,9 @@ msgstr "SSO/SAML"
 msgid "Stability improvements"
 msgstr "Cải thiện độ ổn định"
 
+msgid "Stack"
+msgstr "Stack"
+
 msgid "Stacked"
 msgstr "Xếp chồng"
 
@@ -17970,6 +17979,9 @@ msgstr "Tự động hóa này chưa có hướng dẫn. Hãy viết một promp
 
 msgid "This automation is in another organization"
 msgstr "Tự động hóa này nằm trong một tổ chức khác"
+
+msgid "This branch targets trunk directly — not a stack."
+msgstr "This branch targets trunk directly — not a stack."
 
 msgid "This cannot be undone."
 msgstr "Không thể hoàn tác."

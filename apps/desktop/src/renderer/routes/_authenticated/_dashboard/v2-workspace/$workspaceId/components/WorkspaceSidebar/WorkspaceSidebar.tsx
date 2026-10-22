@@ -22,6 +22,7 @@ import { PRActionHeader } from "./components/PRActionHeader";
 import { SidebarHeader } from "./components/SidebarHeader";
 import { type SelectedDiffTarget, useChangesTab } from "./hooks/useChangesTab";
 import { useReviewTab } from "./hooks/useReviewTab";
+import { useStackTab } from "./hooks/useStackTab";
 import type { SidebarTabDefinition } from "./types";
 
 const LABELLED_TAB_WIDTH = 88;
@@ -149,7 +150,14 @@ export function WorkspaceSidebar({
 		),
 	};
 
-	const tabs: SidebarTabDefinition[] = [filesTab, changesTab, reviewTab];
+	const stackTab = useStackTab({ workspaceId });
+
+	const tabs: SidebarTabDefinition[] = [
+		filesTab,
+		changesTab,
+		reviewTab,
+		stackTab,
+	];
 	const activeTabDef = tabs.find((t) => t.id === activeTab) ?? tabs[0];
 
 	const tabCount = tabs.length;

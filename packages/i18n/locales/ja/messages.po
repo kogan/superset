@@ -10000,6 +10000,9 @@ msgstr "リポジトリを読み込み中..."
 msgid "Loading review..."
 msgstr "レビューを読み込み中..."
 
+msgid "Loading stack…"
+msgstr "Loading stack…"
+
 msgid "Loading terminal scripts..."
 msgstr "ターミナルスクリプトを読み込み中..."
 
@@ -11437,6 +11440,9 @@ msgstr "プロンプトが見つかりません。"
 
 msgid "No public agent configs yet. This route is ready for future agent config listings."
 msgstr "公開されているエージェント設定はまだありません。今後の掲載に備えたページです。"
+
+msgid "No pull request for this branch yet."
+msgstr "No pull request for this branch yet."
 
 msgid "No pull requests found."
 msgstr "プルリクエストが見つかりません。"
@@ -16489,6 +16495,9 @@ msgstr "SSO/SAML"
 msgid "Stability improvements"
 msgstr "安定性の改善"
 
+msgid "Stack"
+msgstr "Stack"
+
 msgid "Stacked"
 msgstr "積み重ね"
 
@@ -17970,6 +17979,9 @@ msgstr "このオートメーションにはまだ指示がありません。実
 
 msgid "This automation is in another organization"
 msgstr "このオートメーションは別の組織にあります"
+
+msgid "This branch targets trunk directly — not a stack."
+msgstr "This branch targets trunk directly — not a stack."
 
 msgid "This cannot be undone."
 msgstr "この操作は元に戻せません。"

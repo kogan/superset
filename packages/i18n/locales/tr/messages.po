@@ -10000,6 +10000,9 @@ msgstr "Depolar yükleniyor..."
 msgid "Loading review..."
 msgstr "İnceleme yükleniyor..."
 
+msgid "Loading stack…"
+msgstr "Loading stack…"
+
 msgid "Loading terminal scripts..."
 msgstr "Terminal betikleri yükleniyor..."
 
@@ -11437,6 +11440,9 @@ msgstr "İstem bulunamadı."
 
 msgid "No public agent configs yet. This route is ready for future agent config listings."
 msgstr "Henüz herkese açık ajan yapılandırması yok. Bu bölüm gelecekteki ajan yapılandırma listeleri için hazır."
+
+msgid "No pull request for this branch yet."
+msgstr "No pull request for this branch yet."
 
 msgid "No pull requests found."
 msgstr "Pull request bulunamadı."
@@ -16489,6 +16495,9 @@ msgstr "SSO/SAML"
 msgid "Stability improvements"
 msgstr "Kararlılık iyileştirmeleri"
 
+msgid "Stack"
+msgstr "Stack"
+
 msgid "Stacked"
 msgstr "Üst üste"
 
@@ -17970,6 +17979,9 @@ msgstr "Bu otomasyonun henüz talimatı yok. Çalıştırmadan önce ayarlarınd
 
 msgid "This automation is in another organization"
 msgstr "Bu otomasyon başka bir kuruluşta"
+
+msgid "This branch targets trunk directly — not a stack."
+msgstr "This branch targets trunk directly — not a stack."
 
 msgid "This cannot be undone."
 msgstr "Bu geri alınamaz."

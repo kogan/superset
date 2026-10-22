@@ -10000,6 +10000,9 @@ msgstr "Memuat repositori..."
 msgid "Loading review..."
 msgstr "Memuat review..."
 
+msgid "Loading stack…"
+msgstr "Loading stack…"
+
 msgid "Loading terminal scripts..."
 msgstr "Memuat skrip terminal..."
 
@@ -11437,6 +11440,9 @@ msgstr "Tidak ada prompt ditemukan."
 
 msgid "No public agent configs yet. This route is ready for future agent config listings."
 msgstr "Belum ada konfigurasi agen publik. Rute ini siap untuk daftar konfigurasi agen di masa depan."
+
+msgid "No pull request for this branch yet."
+msgstr "No pull request for this branch yet."
 
 msgid "No pull requests found."
 msgstr "Tidak ada pull request ditemukan."
@@ -16489,6 +16495,9 @@ msgstr "SSO/SAML"
 msgid "Stability improvements"
 msgstr "Peningkatan stabilitas"
 
+msgid "Stack"
+msgstr "Stack"
+
 msgid "Stacked"
 msgstr "Bertumpuk"
 
@@ -17970,6 +17979,9 @@ msgstr "Otomatisasi ini belum memiliki instruksi. Tulis prompt di pengaturannya 
 
 msgid "This automation is in another organization"
 msgstr "Otomatisasi ini berada di organisasi lain"
+
+msgid "This branch targets trunk directly — not a stack."
+msgstr "This branch targets trunk directly — not a stack."
 
 msgid "This cannot be undone."
 msgstr "Ini tidak bisa dibatalkan."

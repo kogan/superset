@@ -10000,6 +10000,9 @@ msgstr "Caricamento dei repository..."
 msgid "Loading review..."
 msgstr "Caricamento della revisione..."
 
+msgid "Loading stack…"
+msgstr "Loading stack…"
+
 msgid "Loading terminal scripts..."
 msgstr "Caricamento degli script del terminale..."
 
@@ -11437,6 +11440,9 @@ msgstr "Nessun prompt trovato."
 
 msgid "No public agent configs yet. This route is ready for future agent config listings."
 msgstr "Ancora nessuna configurazione di agente pubblica. Questa sezione è pronta per i futuri elenchi di configurazioni."
+
+msgid "No pull request for this branch yet."
+msgstr "No pull request for this branch yet."
 
 msgid "No pull requests found."
 msgstr "Nessuna pull request trovata."
@@ -16489,6 +16495,9 @@ msgstr "SSO/SAML"
 msgid "Stability improvements"
 msgstr "Miglioramenti di stabilità"
 
+msgid "Stack"
+msgstr "Stack"
+
 msgid "Stacked"
 msgstr "Impilato"
 
@@ -17970,6 +17979,9 @@ msgstr "Questa automazione non ha ancora istruzioni. Scrivi un prompt nelle sue 
 
 msgid "This automation is in another organization"
 msgstr "Questa automazione si trova in un'altra organizzazione"
+
+msgid "This branch targets trunk directly — not a stack."
+msgstr "This branch targets trunk directly — not a stack."
 
 msgid "This cannot be undone."
 msgstr "L'operazione non può essere annullata."
