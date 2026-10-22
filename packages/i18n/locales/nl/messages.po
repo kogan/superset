@@ -9946,6 +9946,9 @@ msgstr "Omgevingen laden…"
 msgid "Loading files..."
 msgstr "Bestanden laden..."
 
+msgid "Loading files…"
+msgstr "Loading files…"
+
 msgid "Loading fonts..."
 msgstr "Lettertypen laden..."
 
@@ -11190,6 +11193,9 @@ msgstr "Geen mislukte uitvoeringen."
 
 msgid "No favorite models"
 msgstr "Geen favoriete modellen"
+
+msgid "No file changes."
+msgstr "No file changes."
 
 msgid "No files found"
 msgstr "Geen bestanden gevonden"
@@ -18595,6 +18601,9 @@ msgstr "Triggers"
 
 msgid "True for routine work, not yet for gnarly refactors."
 msgstr "Waar voor routinewerk, nog niet voor lastige refactors."
+
+msgid "trunk"
+msgstr "trunk"
 
 msgid "Trusted by builders from"
 msgstr "Vertrouwd door bouwers van"

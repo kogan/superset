@@ -1,26 +1,44 @@
 import { Trans } from "@lingui/react/macro";
 import { cn } from "@superset/ui/utils";
-import { electronTrpc } from "renderer/lib/electron-trpc";
+import { ChevronUp, GitBranch, RotateCw } from "lucide-react";
+import { useState } from "react";
 import type { StackNode } from "../../buildStack";
+import { StackNodeRow } from "../StackNodeRow";
 
 interface StackTabContentProps {
 	nodes: StackNode[];
 	isLoading: boolean;
 	/** The checked-out branch has an open PR (vs. no PR at all). */
 	hasPr: boolean;
+	owner: string;
+	repo: string;
+	onRefresh: () => void;
 }
 
 /**
  * Renders the PR stack as a single spine — current branch at the top, trunk
- * below the last node. Each node opens its PR. One PR (or none) is not a
- * stack, so the view explains that instead of drawing a lone dot.
+ * below the last node. A header names the trunk and offers refresh /
+ * collapse-all; each node opens its PR and expands to the files it changes.
+ * One PR (or none) is not a stack, so the view says so instead of a lone dot.
  */
 export function StackTabContent({
 	nodes,
 	isLoading,
 	hasPr,
+	owner,
+	repo,
+	onRefresh,
 }: StackTabContentProps) {
-	const openUrl = electronTrpc.external.openUrl.useMutation();
+	const [expanded, setExpanded] = useState<ReadonlySet<number>>(
+		() => new Set(),
+	);
+	const toggle = (prNumber: number) =>
+		setExpanded((prev) => {
+			const next = new Set(prev);
+			if (next.has(prNumber)) next.delete(prNumber);
+			else next.add(prNumber);
+			return next;
+		});
 
 	if (isLoading && nodes.length === 0) {
 		return (
@@ -42,18 +60,48 @@ export function StackTabContent({
 		);
 	}
 
+	const trunkRef = nodes[nodes.length - 1]?.baseRef ?? null;
+
 	return (
-		<ul aria-label="PR stack" className="flex flex-col py-1 pr-2">
-			{nodes.map((node, index) => {
-				const isFirst = index === 0;
-				const isLast = index === nodes.length - 1;
-				return (
+		<div className="flex flex-col">
+			<div className="flex items-center gap-2 border-b border-border px-2 py-1.5">
+				<span className="text-xs font-semibold">
+					<Trans>Stack</Trans>
+				</span>
+				{trunkRef && (
+					<span className="flex min-w-0 items-center gap-1 rounded-full border border-border px-1.5 py-0.5 font-mono text-[10px] text-muted-foreground">
+						<GitBranch className="size-2.5 shrink-0" aria-hidden />
+						<span className="truncate">{trunkRef}</span>
+					</span>
+				)}
+				<span className="flex-1" />
+				<button
+					type="button"
+					aria-label="Refresh"
+					onClick={onRefresh}
+					className="flex size-5 items-center justify-center rounded text-muted-foreground hover:bg-muted focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
+				>
+					<RotateCw className="size-3" aria-hidden />
+				</button>
+				<button
+					type="button"
+					aria-label="Collapse all"
+					onClick={() => setExpanded(new Set())}
+					className="flex size-5 items-center justify-center rounded text-muted-foreground hover:bg-muted focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
+				>
+					<ChevronUp className="size-3.5" aria-hidden />
+				</button>
+			</div>
+
+			<ul aria-label="PR stack" className="flex flex-col py-1 pr-2">
+				{nodes.map((node, index) => (
 					<li key={node.number} className="relative pl-6">
+						{/* Trunk always follows, so every PR node's spine runs downward. */}
 						<span
 							aria-hidden
 							className={cn(
 								"absolute left-[11px] w-px bg-border",
-								isFirst ? "top-4 bottom-0" : isLast ? "top-0 h-4" : "inset-y-0",
+								index === 0 ? "top-4 bottom-0" : "inset-y-0",
 							)}
 						/>
 						<span
@@ -67,38 +115,37 @@ export function StackTabContent({
 										: "border-emerald-500",
 							)}
 						/>
-						<button
-							type="button"
-							onClick={() => openUrl.mutate(node.url)}
-							className="flex w-full items-center gap-2 rounded-md px-2 py-1.5 text-left hover:bg-muted focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
-						>
-							<span className="flex min-w-0 flex-1 flex-col gap-0.5">
-								<span className="flex items-center gap-1.5">
-									<span className="shrink-0 font-mono text-[11px] tabular-nums text-muted-foreground">
-										#{node.number}
-									</span>
-									<span className="min-w-0 truncate text-xs">{node.title}</span>
-								</span>
-								<span className="flex items-center gap-1.5">
-									<span className="min-w-0 truncate font-mono text-[10px] text-muted-foreground">
-										{node.headRef}
-									</span>
-									{node.isDraft && (
-										<span className="shrink-0 rounded bg-muted px-1 text-[9px] font-medium uppercase tracking-wide text-muted-foreground">
-											<Trans>Draft</Trans>
-										</span>
-									)}
-								</span>
-							</span>
-							{node.isCurrent && (
-								<span className="shrink-0 rounded border border-emerald-500/40 px-1 font-mono text-[9px] uppercase tracking-wide text-emerald-500">
-									<Trans>You</Trans>
-								</span>
-							)}
-						</button>
+						<StackNodeRow
+							node={node}
+							isOpen={expanded.has(node.number)}
+							onToggle={() => toggle(node.number)}
+							owner={owner}
+							repo={repo}
+						/>
 					</li>
-				);
-			})}
-		</ul>
+				))}
+
+				{trunkRef && (
+					<li className="relative pl-6">
+						<span
+							aria-hidden
+							className="absolute left-[11px] top-0 h-[13px] w-px bg-border"
+						/>
+						<span
+							aria-hidden
+							className="absolute left-[9px] top-[11px] size-2 rounded-full bg-muted-foreground"
+						/>
+						<div className="flex items-center gap-1 py-1 pl-[26px]">
+							<span className="min-w-0 truncate font-mono text-[11px] text-muted-foreground">
+								{trunkRef}
+							</span>
+							<span className="shrink-0 rounded bg-muted px-1 text-[9px] font-medium uppercase tracking-wide text-muted-foreground">
+								<Trans>trunk</Trans>
+							</span>
+						</div>
+					</li>
+				)}
+			</ul>
+		</div>
 	);
 }

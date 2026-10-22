@@ -9946,6 +9946,9 @@ msgstr "Ortamlar yükleniyor…"
 msgid "Loading files..."
 msgstr "Dosyalar yükleniyor..."
 
+msgid "Loading files…"
+msgstr "Loading files…"
+
 msgid "Loading fonts..."
 msgstr "Yazı tipleri yükleniyor..."
 
@@ -11190,6 +11193,9 @@ msgstr "Başarısız çalıştırma yok."
 
 msgid "No favorite models"
 msgstr "Favori model yok"
+
+msgid "No file changes."
+msgstr "No file changes."
 
 msgid "No files found"
 msgstr "Dosya bulunamadı"
@@ -18595,6 +18601,9 @@ msgstr "Tetikleyiciler"
 
 msgid "True for routine work, not yet for gnarly refactors."
 msgstr "Rutin işler için doğru, çetrefilli yeniden düzenlemeler için henüz değil."
+
+msgid "trunk"
+msgstr "trunk"
 
 msgid "Trusted by builders from"
 msgstr "Şu şirketlerin geliştiricileri güveniyor"

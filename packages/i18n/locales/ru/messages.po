@@ -9946,6 +9946,9 @@ msgstr "Загрузка окружений…"
 msgid "Loading files..."
 msgstr "Загрузка файлов..."
 
+msgid "Loading files…"
+msgstr "Loading files…"
+
 msgid "Loading fonts..."
 msgstr "Загрузка шрифтов..."
 
@@ -11190,6 +11193,9 @@ msgstr "Неудачных запусков нет."
 
 msgid "No favorite models"
 msgstr "Нет избранных моделей"
+
+msgid "No file changes."
+msgstr "No file changes."
 
 msgid "No files found"
 msgstr "Файлы не найдены"
@@ -18595,6 +18601,9 @@ msgstr "Триггеры"
 
 msgid "True for routine work, not yet for gnarly refactors."
 msgstr "Верно для рутины, но пока не для сложных рефакторингов."
+
+msgid "trunk"
+msgstr "trunk"
 
 msgid "Trusted by builders from"
 msgstr "Нам доверяют разработчики из"

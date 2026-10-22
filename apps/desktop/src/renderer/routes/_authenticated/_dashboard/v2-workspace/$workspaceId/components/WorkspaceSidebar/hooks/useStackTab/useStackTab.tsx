@@ -57,7 +57,17 @@ export function useStackTab({
 		icon: LuLayers,
 		badge: nodes.length > 1 ? nodes.length : undefined,
 		content: (
-			<StackTabContent nodes={nodes} isLoading={isLoading} hasPr={!!current} />
+			<StackTabContent
+				nodes={nodes}
+				isLoading={isLoading}
+				hasPr={!!current}
+				owner={owner}
+				repo={repo}
+				onRefresh={() => {
+					void currentPrQuery.refetch();
+					void listQuery.refetch();
+				}}
+			/>
 		),
 	};
 }
