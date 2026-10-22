@@ -9946,6 +9946,9 @@ msgstr "環境を読み込み中…"
 msgid "Loading files..."
 msgstr "ファイルを読み込み中..."
 
+msgid "Loading files…"
+msgstr "Loading files…"
+
 msgid "Loading fonts..."
 msgstr "フォントを読み込み中..."
 
@@ -11190,6 +11193,9 @@ msgstr "失敗した実行はありません。"
 
 msgid "No favorite models"
 msgstr "お気に入りのモデルはありません"
+
+msgid "No file changes."
+msgstr "No file changes."
 
 msgid "No files found"
 msgstr "ファイルが見つかりません"
@@ -18595,6 +18601,9 @@ msgstr "トリガー"
 
 msgid "True for routine work, not yet for gnarly refactors."
 msgstr "定型作業では成立しますが、厄介なリファクタリングではまだです。"
+
+msgid "trunk"
+msgstr "trunk"
 
 msgid "Trusted by builders from"
 msgstr "以下の企業のビルダーが使っています"

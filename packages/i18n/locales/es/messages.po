@@ -9946,6 +9946,9 @@ msgstr "Cargando entornos…"
 msgid "Loading files..."
 msgstr "Cargando los archivos..."
 
+msgid "Loading files…"
+msgstr "Loading files…"
+
 msgid "Loading fonts..."
 msgstr "Cargando fuentes..."
 
@@ -11190,6 +11193,9 @@ msgstr "Sin ejecuciones fallidas."
 
 msgid "No favorite models"
 msgstr "No hay modelos favoritos"
+
+msgid "No file changes."
+msgstr "No file changes."
 
 msgid "No files found"
 msgstr "No se encontraron archivos"
@@ -18595,6 +18601,9 @@ msgstr "Disparadores"
 
 msgid "True for routine work, not yet for gnarly refactors."
 msgstr "Cierto para el trabajo rutinario, todavía no para las refactorizaciones espinosas."
+
+msgid "trunk"
+msgstr "trunk"
 
 msgid "Trusted by builders from"
 msgstr "Con la confianza de creadores de"

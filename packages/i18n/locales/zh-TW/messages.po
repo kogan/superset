@@ -9946,6 +9946,9 @@ msgstr "正在載入環境…"
 msgid "Loading files..."
 msgstr "正在載入檔案..."
 
+msgid "Loading files…"
+msgstr "Loading files…"
+
 msgid "Loading fonts..."
 msgstr "正在載入字型..."
 
@@ -11190,6 +11193,9 @@ msgstr "沒有失敗的執行。"
 
 msgid "No favorite models"
 msgstr "沒有最愛的模型"
+
+msgid "No file changes."
+msgstr "No file changes."
 
 msgid "No files found"
 msgstr "未找到檔案"
@@ -18595,6 +18601,9 @@ msgstr "觸發器"
 
 msgid "True for routine work, not yet for gnarly refactors."
 msgstr "常規工作成立，棘手的重構還不行。"
+
+msgid "trunk"
+msgstr "trunk"
 
 msgid "Trusted by builders from"
 msgstr "以下公司的開發者都在用"

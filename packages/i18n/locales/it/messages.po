@@ -9946,6 +9946,9 @@ msgstr "Caricamento degli ambienti…"
 msgid "Loading files..."
 msgstr "Caricamento dei file..."
 
+msgid "Loading files…"
+msgstr "Loading files…"
+
 msgid "Loading fonts..."
 msgstr "Caricamento dei font..."
 
@@ -11190,6 +11193,9 @@ msgstr "Nessuna esecuzione fallita."
 
 msgid "No favorite models"
 msgstr "Nessun modello preferito"
+
+msgid "No file changes."
+msgstr "No file changes."
 
 msgid "No files found"
 msgstr "Nessun file trovato"
@@ -18595,6 +18601,9 @@ msgstr "Trigger"
 
 msgid "True for routine work, not yet for gnarly refactors."
 msgstr "Vero per il lavoro di routine, non ancora per i refactor complicati."
+
+msgid "trunk"
+msgstr "trunk"
 
 msgid "Trusted by builders from"
 msgstr "Scelto da chi costruisce in"

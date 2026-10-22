@@ -9946,6 +9946,9 @@ msgstr "Carregando ambientes…"
 msgid "Loading files..."
 msgstr "Carregando os arquivos..."
 
+msgid "Loading files…"
+msgstr "Loading files…"
+
 msgid "Loading fonts..."
 msgstr "Carregando as fontes..."
 
@@ -11190,6 +11193,9 @@ msgstr "Nenhuma execução com falha."
 
 msgid "No favorite models"
 msgstr "Nenhum modelo favorito"
+
+msgid "No file changes."
+msgstr "No file changes."
 
 msgid "No files found"
 msgstr "Nenhum arquivo encontrado"
@@ -18595,6 +18601,9 @@ msgstr "Gatilhos"
 
 msgid "True for routine work, not yet for gnarly refactors."
 msgstr "Verdade para trabalho rotineiro, ainda não para refatorações cabeludas."
+
+msgid "trunk"
+msgstr "trunk"
 
 msgid "Trusted by builders from"
 msgstr "Usado por quem constrói em"

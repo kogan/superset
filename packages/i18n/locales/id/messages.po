@@ -9946,6 +9946,9 @@ msgstr "Memuat lingkungan…"
 msgid "Loading files..."
 msgstr "Memuat file..."
 
+msgid "Loading files…"
+msgstr "Loading files…"
+
 msgid "Loading fonts..."
 msgstr "Memuat font..."
 
@@ -11190,6 +11193,9 @@ msgstr "Tidak ada eksekusi yang gagal."
 
 msgid "No favorite models"
 msgstr "Tidak ada model favorit"
+
+msgid "No file changes."
+msgstr "No file changes."
 
 msgid "No files found"
 msgstr "File tidak ditemukan"
@@ -18595,6 +18601,9 @@ msgstr "Pemicu"
 
 msgid "True for routine work, not yet for gnarly refactors."
 msgstr "Berlaku untuk pekerjaan rutin, belum untuk refactor yang rumit."
+
+msgid "trunk"
+msgstr "trunk"
 
 msgid "Trusted by builders from"
 msgstr "Dipercaya oleh builder dari"

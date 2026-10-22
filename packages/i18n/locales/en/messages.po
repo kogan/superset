@@ -9946,6 +9946,9 @@ msgstr "Loading environments…"
 msgid "Loading files..."
 msgstr "Loading files..."
 
+msgid "Loading files…"
+msgstr "Loading files…"
+
 msgid "Loading fonts..."
 msgstr "Loading fonts..."
 
@@ -11190,6 +11193,9 @@ msgstr "No failed runs."
 
 msgid "No favorite models"
 msgstr "No favorite models"
+
+msgid "No file changes."
+msgstr "No file changes."
 
 msgid "No files found"
 msgstr "No files found"
@@ -18595,6 +18601,9 @@ msgstr "Triggers"
 
 msgid "True for routine work, not yet for gnarly refactors."
 msgstr "True for routine work, not yet for gnarly refactors."
+
+msgid "trunk"
+msgstr "trunk"
 
 msgid "Trusted by builders from"
 msgstr "Trusted by builders from"

@@ -9946,6 +9946,9 @@ msgstr "Chargement des environnements…"
 msgid "Loading files..."
 msgstr "Chargement des fichiers..."
 
+msgid "Loading files…"
+msgstr "Loading files…"
+
 msgid "Loading fonts..."
 msgstr "Chargement des polices..."
 
@@ -11190,6 +11193,9 @@ msgstr "Aucune exécution en échec."
 
 msgid "No favorite models"
 msgstr "Aucun modèle favori"
+
+msgid "No file changes."
+msgstr "No file changes."
 
 msgid "No files found"
 msgstr "Aucun fichier trouvé"
@@ -18595,6 +18601,9 @@ msgstr "Déclencheurs"
 
 msgid "True for routine work, not yet for gnarly refactors."
 msgstr "Vrai pour le travail courant, pas encore pour les refactorisations épineuses."
+
+msgid "trunk"
+msgstr "trunk"
 
 msgid "Trusted by builders from"
 msgstr "La confiance de créateurs venus de"

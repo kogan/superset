@@ -9946,6 +9946,9 @@ msgstr "Načítání prostředí…"
 msgid "Loading files..."
 msgstr "Načítám soubory..."
 
+msgid "Loading files…"
+msgstr "Loading files…"
+
 msgid "Loading fonts..."
 msgstr "Načítám fonty..."
 
@@ -11190,6 +11193,9 @@ msgstr "Žádná neúspěšná spuštění."
 
 msgid "No favorite models"
 msgstr "Žádné oblíbené modely"
+
+msgid "No file changes."
+msgstr "No file changes."
 
 msgid "No files found"
 msgstr "Nenalezeny žádné soubory"
@@ -18595,6 +18601,9 @@ msgstr "Spouštěče"
 
 msgid "True for routine work, not yet for gnarly refactors."
 msgstr "Platí pro rutinní práci, zatím ne pro ošklivé refaktory."
+
+msgid "trunk"
+msgstr "trunk"
 
 msgid "Trusted by builders from"
 msgstr "Důvěřují nám tvůrci z"

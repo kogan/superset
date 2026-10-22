@@ -9946,6 +9946,9 @@ msgstr "Đang tải môi trường…"
 msgid "Loading files..."
 msgstr "Đang tải tệp..."
 
+msgid "Loading files…"
+msgstr "Loading files…"
+
 msgid "Loading fonts..."
 msgstr "Đang tải font..."
 
@@ -11190,6 +11193,9 @@ msgstr "Không có lần chạy thất bại."
 
 msgid "No favorite models"
 msgstr "Không có mô hình yêu thích"
+
+msgid "No file changes."
+msgstr "No file changes."
 
 msgid "No files found"
 msgstr "Không tìm thấy tệp nào"
@@ -18595,6 +18601,9 @@ msgstr "Trigger"
 
 msgid "True for routine work, not yet for gnarly refactors."
 msgstr "Đúng với việc thường ngày, chưa đúng với các đợt refactor gai góc."
+
+msgid "trunk"
+msgstr "trunk"
 
 msgid "Trusted by builders from"
 msgstr "Được tin dùng bởi các nhà phát triển từ"

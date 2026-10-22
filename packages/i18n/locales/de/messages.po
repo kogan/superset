@@ -9946,6 +9946,9 @@ msgstr "Umgebungen werden geladen…"
 msgid "Loading files..."
 msgstr "Dateien werden geladen..."
 
+msgid "Loading files…"
+msgstr "Loading files…"
+
 msgid "Loading fonts..."
 msgstr "Schriften werden geladen..."
 
@@ -11190,6 +11193,9 @@ msgstr "Keine fehlgeschlagenen Läufe."
 
 msgid "No favorite models"
 msgstr "Keine Favoritenmodelle"
+
+msgid "No file changes."
+msgstr "No file changes."
 
 msgid "No files found"
 msgstr "Keine Dateien gefunden"
@@ -18595,6 +18601,9 @@ msgstr "Auslöser"
 
 msgid "True for routine work, not yet for gnarly refactors."
 msgstr "Gilt für Routinearbeit, noch nicht für knifflige Refactorings."
+
+msgid "trunk"
+msgstr "trunk"
 
 msgid "Trusted by builders from"
 msgstr "Genutzt von Entwicklern bei"

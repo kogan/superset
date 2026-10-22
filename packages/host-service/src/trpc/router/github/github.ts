@@ -83,6 +83,74 @@ export const githubRouter = router({
 			return data;
 		}),
 
+	/** Files changed in one PR — for the sidebar Stack tab's per-node expansion. */
+	listPullRequestFiles: protectedProcedure
+		.input(
+			z.object({
+				owner: z.string(),
+				repo: z.string(),
+				number: z.number().int().positive(),
+				perPage: z.number().min(1).max(100).default(100),
+			}),
+		)
+		.query(async ({ ctx, input }) => {
+			const octokit = await ctx.github();
+			const { data } = await octokit.pulls.listFiles({
+				owner: input.owner,
+				repo: input.repo,
+				pull_number: input.number,
+				per_page: input.perPage,
+			});
+			return data.map((file) => ({
+				filename: file.filename,
+				additions: file.additions,
+				deletions: file.deletions,
+				status: file.status,
+			}));
+		}),
+
+	/**
+	 * Diff size + check-run states for one PR — the Stack tab's per-node
+	 * diffstat and checks badge. `pulls.get` carries additions/deletions (the
+	 * list endpoint does not); checks come from the head commit's check-runs.
+	 */
+	getPullRequestStats: protectedProcedure
+		.input(
+			z.object({
+				owner: z.string(),
+				repo: z.string(),
+				number: z.number().int().positive(),
+			}),
+		)
+		.query(async ({ ctx, input }) => {
+			const octokit = await ctx.github();
+			const { data: pr } = await octokit.pulls.get({
+				owner: input.owner,
+				repo: input.repo,
+				pull_number: input.number,
+			});
+			let checks: Array<{ status: string; conclusion: string | null }> = [];
+			try {
+				const { data } = await octokit.checks.listForRef({
+					owner: input.owner,
+					repo: input.repo,
+					ref: pr.head.sha,
+					per_page: 100,
+				});
+				checks = data.check_runs.map((run) => ({
+					status: run.status,
+					conclusion: run.conclusion,
+				}));
+			} catch {
+				// Checks are best-effort; the badge hides when they can't be read.
+			}
+			return {
+				additions: pr.additions,
+				deletions: pr.deletions,
+				checks,
+			};
+		}),
+
 	getRepo: protectedProcedure
 		.input(
 			z.object({

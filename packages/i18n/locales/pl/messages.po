@@ -9946,6 +9946,9 @@ msgstr "Wczytywanie środowisk…"
 msgid "Loading files..."
 msgstr "Wczytywanie plików..."
 
+msgid "Loading files…"
+msgstr "Loading files…"
+
 msgid "Loading fonts..."
 msgstr "Wczytywanie czcionek..."
 
@@ -11190,6 +11193,9 @@ msgstr "Brak nieudanych uruchomień."
 
 msgid "No favorite models"
 msgstr "Brak ulubionych modeli"
+
+msgid "No file changes."
+msgstr "No file changes."
 
 msgid "No files found"
 msgstr "Nie znaleziono plików"
@@ -18595,6 +18601,9 @@ msgstr "Wyzwalacze"
 
 msgid "True for routine work, not yet for gnarly refactors."
 msgstr "Prawda dla rutynowej pracy, jeszcze nie dla trudnych refaktoryzacji."
+
+msgid "trunk"
+msgstr "trunk"
 
 msgid "Trusted by builders from"
 msgstr "Zaufali nam twórcy z"
