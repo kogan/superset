@@ -177,7 +177,12 @@ export const workspaceRunTerminalStateSchema = z.object({
 });
 
 // "pages" is a retired tab; persisted rows on it heal to "changes" below.
-export const WORKSPACE_SIDEBAR_TABS = ["changes", "files", "review"] as const;
+export const WORKSPACE_SIDEBAR_TABS = [
+	"changes",
+	"files",
+	"review",
+	"stack",
+] as const;
 
 const WORKSPACE_SIDEBAR_TAB_SCHEMA = z.enum(WORKSPACE_SIDEBAR_TABS);
 
