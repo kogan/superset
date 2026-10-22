@@ -2,15 +2,17 @@ import { useLingui } from "@lingui/react/macro";
 import { useMemo } from "react";
 import type { IconType } from "react-icons";
 import { BsTerminalPlus } from "react-icons/bs";
-import { LuGitCompareArrows, LuSearch } from "react-icons/lu";
+import { LuCodeXml, LuGitCompareArrows, LuSearch } from "react-icons/lu";
 import { TbWorld } from "react-icons/tb";
 import { GitHubStarPill } from "renderer/components/GitHubStarPill";
 import { useHotkeyDisplay } from "renderer/hotkeys";
 import supersetEmptyStateWordmark from "renderer/screens/main/components/WorkspaceView/ContentView/TabsContent/assets/superset-empty-state-wordmark.svg";
 import { EmptyTabActionButton } from "renderer/screens/main/components/WorkspaceView/ContentView/TabsContent/components/EmptyTabActionButton";
+import { useFeaturePreferences } from "renderer/stores/feature-preferences";
 import { useTheme } from "renderer/stores/theme";
 
 interface WorkspaceEmptyStateProps {
+	onOpenIde: () => void;
 	onOpenBrowser: () => void;
 	onOpenChanges: () => void;
 	onOpenQuickOpen: () => void;
@@ -26,6 +28,7 @@ interface WorkspaceEmptyStateAction {
 }
 
 export function WorkspaceEmptyState({
+	onOpenIde,
 	onOpenBrowser,
 	onOpenChanges,
 	onOpenQuickOpen,
@@ -33,6 +36,7 @@ export function WorkspaceEmptyState({
 }: WorkspaceEmptyStateProps) {
 	const { t } = useLingui();
 	const activeTheme = useTheme();
+	const ideEnabled = useFeaturePreferences((state) => state.embeddedIde);
 	const { keys: newGroupDisplay } = useHotkeyDisplay("NEW_GROUP");
 	const { keys: newBrowserDisplay } = useHotkeyDisplay("NEW_BROWSER");
 	const { keys: quickOpenDisplay } = useHotkeyDisplay("QUICK_OPEN");
@@ -40,6 +44,17 @@ export function WorkspaceEmptyState({
 
 	const actions = useMemo<Array<WorkspaceEmptyStateAction>>(
 		() => [
+			...(ideEnabled
+				? [
+						{
+							id: "ide",
+							label: t({ message: "Open IDE" }),
+							display: [],
+							icon: LuCodeXml,
+							onClick: onOpenIde,
+						},
+					]
+				: []),
 			{
 				id: "terminal",
 				label: t({
@@ -78,8 +93,10 @@ export function WorkspaceEmptyState({
 			},
 		],
 		[
+			ideEnabled,
 			newBrowserDisplay,
 			newGroupDisplay,
+			onOpenIde,
 			onOpenBrowser,
 			onOpenChanges,
 			onOpenQuickOpen,

@@ -42,6 +42,7 @@ import { RightPaneArea, type RightPaneKind } from "./components/RightPaneArea";
 import { SidebarSlide } from "./components/SidebarSlide";
 import { V2NotificationStatusIndicator } from "./components/V2NotificationStatusIndicator";
 import { V2PresetsBar } from "./components/V2PresetsBar";
+import { V2WorkspaceIdeButton } from "./components/V2WorkspaceIdeButton";
 import { V2WorkspaceOpenInButton } from "./components/V2WorkspaceOpenInButton";
 import { V2WorkspaceRunButton } from "./components/V2WorkspaceRunButton";
 import { WorkspaceActivityMenu } from "./components/WorkspaceActivityMenu";
@@ -779,6 +780,7 @@ function V2WorkspaceContent() {
 										>
 											<CloudWorkspaceTabBarControls workspaceId={workspaceId} />
 											{activityMenu}
+											<V2WorkspaceIdeButton onOpenIde={openIdeTab} />
 											{isRightPaneAreaEnabled ? (
 												!sidebarOpen && (
 													<>
@@ -809,6 +811,7 @@ function V2WorkspaceContent() {
 									)}
 									renderEmptyState={() => (
 										<WorkspaceEmptyState
+											onOpenIde={openIdeTab}
 											onOpenBrowser={addBrowserTab}
 											onOpenChanges={openChanges}
 											onOpenQuickOpen={handleQuickOpen}
