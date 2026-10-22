@@ -27,7 +27,15 @@ export function useStackTab({
 	const current = currentPrQuery.data ?? null;
 	const owner = current?.repoOwner ?? "";
 	const repo = current?.repoName ?? "";
-	const headRef = current?.headRefName ?? "";
+
+	// The checked-out branch, read live from git — NOT the workspace's linked
+	// PR — so the "you are here" marker tracks branch switches in the worktree.
+	const branchesQuery = workspaceTrpc.git.listBranches.useQuery(
+		{ workspaceId },
+		{ enabled: !!workspaceId, refetchInterval: 15_000, staleTime: 5_000 },
+	);
+	const headRef =
+		branchesQuery.data?.branches.find((branch) => branch.isHead)?.name ?? "";
 
 	const listQuery = workspaceTrpc.github.listPRs.useQuery(
 		{ owner, repo, state: "open", perPage: 100 },
@@ -49,7 +57,9 @@ export function useStackTab({
 	}, [listQuery.data, headRef]);
 
 	const isLoading =
-		currentPrQuery.isLoading || (!!owner && !!repo && listQuery.isLoading);
+		currentPrQuery.isLoading ||
+		branchesQuery.isLoading ||
+		(!!owner && !!repo && listQuery.isLoading);
 
 	return {
 		id: "stack",
@@ -63,9 +73,11 @@ export function useStackTab({
 				hasPr={!!current}
 				owner={owner}
 				repo={repo}
+				workspaceId={workspaceId}
 				onRefresh={() => {
 					void currentPrQuery.refetch();
 					void listQuery.refetch();
+					void branchesQuery.refetch();
 				}}
 			/>
 		),

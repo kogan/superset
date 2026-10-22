@@ -12,6 +12,7 @@ interface StackTabContentProps {
 	hasPr: boolean;
 	owner: string;
 	repo: string;
+	workspaceId: string;
 	onRefresh: () => void;
 }
 
@@ -27,6 +28,7 @@ export function StackTabContent({
 	hasPr,
 	owner,
 	repo,
+	workspaceId,
 	onRefresh,
 }: StackTabContentProps) {
 	const [expanded, setExpanded] = useState<ReadonlySet<number>>(
@@ -121,6 +123,7 @@ export function StackTabContent({
 							onToggle={() => toggle(node.number)}
 							owner={owner}
 							repo={repo}
+							workspaceId={workspaceId}
 						/>
 					</li>
 				))}

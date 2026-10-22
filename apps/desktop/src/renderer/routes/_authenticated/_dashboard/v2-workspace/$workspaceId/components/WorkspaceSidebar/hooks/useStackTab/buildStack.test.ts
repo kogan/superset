@@ -30,9 +30,21 @@ describe("buildStack", () => {
 		]);
 	});
 
-	test("starts from the current branch mid-stack, not the tip", () => {
+	test("shows the full chain from a mid-stack branch, marking it current", () => {
 		const prs = [pr("a", "develop", 1), pr("b", "a", 2), pr("c", "b", 3)];
-		expect(buildStack(prs, "b").map((n) => n.headRef)).toEqual(["b", "a"]);
+		const stack = buildStack(prs, "b");
+		// Full tip→trunk, not just "b" and below.
+		expect(stack.map((n) => n.headRef)).toEqual(["c", "b", "a"]);
+		expect(stack.filter((n) => n.isCurrent).map((n) => n.headRef)).toEqual([
+			"b",
+		]);
+	});
+
+	test("shows the full chain from the base branch too", () => {
+		const prs = [pr("a", "develop", 1), pr("b", "a", 2), pr("c", "b", 3)];
+		const stack = buildStack(prs, "a");
+		expect(stack.map((n) => n.headRef)).toEqual(["c", "b", "a"]);
+		expect(stack.find((n) => n.isCurrent)?.headRef).toBe("a");
 	});
 
 	test("a lone PR targeting trunk is length 1 (the view treats it as no stack)", () => {

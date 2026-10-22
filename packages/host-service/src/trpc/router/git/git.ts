@@ -498,6 +498,30 @@ export const gitRouter = router({
 			return { baseBranch: input.baseBranch };
 		}),
 
+	/**
+	 * Switch the worktree to another branch — used by the sidebar Stack tab to
+	 * move between PRs in the stack. Fails (reported to the caller) when the
+	 * working tree is dirty enough that git refuses the checkout.
+	 */
+	checkoutBranch: protectedProcedure
+		.input(z.object({ workspaceId: z.string(), branch: z.string().min(1) }))
+		.mutation(async ({ ctx, input }) => {
+			const worktreePath = resolveWorktreePath(ctx, input.workspaceId);
+			const git = await ctx.git(worktreePath);
+			try {
+				await git.raw(["checkout", input.branch]);
+			} catch (error) {
+				throw new TRPCError({
+					code: "PRECONDITION_FAILED",
+					message:
+						error instanceof Error
+							? error.message
+							: `Could not switch to ${input.branch}`,
+				});
+			}
+			return { branch: input.branch };
+		}),
+
 	renameBranch: protectedProcedure
 		.input(
 			z.object({

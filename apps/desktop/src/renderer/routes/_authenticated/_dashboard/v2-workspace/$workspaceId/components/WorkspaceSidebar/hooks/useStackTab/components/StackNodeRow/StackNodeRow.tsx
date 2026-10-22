@@ -1,6 +1,15 @@
 import { Trans } from "@lingui/react/macro";
+import { errorMessage } from "@superset/i18n/errors";
+import { toast } from "@superset/ui/sonner";
+import { cn } from "@superset/ui/utils";
 import { workspaceTrpc } from "@superset/workspace-client";
-import { Check, ChevronDown, ChevronRight, Loader2 } from "lucide-react";
+import {
+	Check,
+	ChevronDown,
+	ChevronRight,
+	ExternalLink,
+	Loader2,
+} from "lucide-react";
 import { electronTrpc } from "renderer/lib/electron-trpc";
 import type { StackNode } from "../../buildStack";
 import { StackNodeFiles } from "../StackNodeFiles";
@@ -11,6 +20,7 @@ interface StackNodeRowProps {
 	onToggle: () => void;
 	owner: string;
 	repo: string;
+	workspaceId: string;
 }
 
 /** Collapse GitHub's status × conclusion into pass vs still-running. */
@@ -28,8 +38,9 @@ function isPassed(check: {
 
 /**
  * One PR in the stack: diffstat + state chip + checks badge in the header, its
- * changed files on expand. Diffstat/checks come from a per-node stats query and
- * simply stay hidden until they load (or if they can't be read).
+ * changed files on expand. Clicking the row switches the worktree to that
+ * branch (so "you are here" moves); a trailing link opens the PR. Diffstat and
+ * checks come from a per-node stats query and stay hidden until they load.
  */
 export function StackNodeRow({
 	node,
@@ -37,8 +48,17 @@ export function StackNodeRow({
 	onToggle,
 	owner,
 	repo,
+	workspaceId,
 }: StackNodeRowProps) {
+	const utils = workspaceTrpc.useUtils();
 	const openUrl = electronTrpc.external.openUrl.useMutation();
+	const checkout = workspaceTrpc.git.checkoutBranch.useMutation({
+		onSuccess: () => {
+			// The checked-out branch changed; refresh so "you" moves to it.
+			void utils.git.listBranches.invalidate({ workspaceId });
+		},
+		onError: (error) => toast.error(errorMessage(error)),
+	});
 	const statsQuery = workspaceTrpc.github.getPullRequestStats.useQuery(
 		{ owner, repo, number: node.number },
 		{ enabled: !!owner && !!repo, staleTime: 30_000 },
@@ -67,8 +87,13 @@ export function StackNodeRow({
 				</button>
 				<button
 					type="button"
-					onClick={() => openUrl.mutate(node.url)}
-					className="flex min-w-0 flex-1 items-center gap-2 rounded-md px-1.5 py-1 text-left hover:bg-muted focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
+					aria-label={`Switch to ${node.headRef}`}
+					disabled={node.isCurrent || checkout.isPending}
+					onClick={() => checkout.mutate({ workspaceId, branch: node.headRef })}
+					className={cn(
+						"flex min-w-0 flex-1 items-center gap-2 rounded-md px-1.5 py-1 text-left hover:bg-muted focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring",
+						node.isCurrent && "cursor-default",
+					)}
 				>
 					<span className="flex min-w-0 flex-1 flex-col gap-0.5">
 						<span className="flex items-center gap-1.5">
@@ -113,6 +138,14 @@ export function StackNodeRow({
 							)}
 						</span>
 					)}
+				</button>
+				<button
+					type="button"
+					aria-label="Open pull request"
+					onClick={() => openUrl.mutate(node.url)}
+					className="flex size-5 shrink-0 items-center justify-center rounded text-muted-foreground hover:bg-muted focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
+				>
+					<ExternalLink className="size-3" aria-hidden />
 				</button>
 			</div>
 			{isOpen && (
