@@ -6,11 +6,16 @@ import { i18n, initI18n, initI18nAsync, resolveLocale } from "@superset/i18n";
 import { FORK } from "@superset/shared/standalone";
 import { app, dialog, ipcMain, protocol } from "electron";
 import { startLocalServices, stopLocalServices } from "./lib/local-runtime";
+import { installEmudhraCaDistrust } from "./lib/security/emudhra-ca-distrust";
 
 // Establish identity before any module opens SQLite, reads auth, or owns a host.
 // Electron selects the macOS Keychain service before ready. Keep existing keys.
 app.setName(FORK.storageName);
 initI18n();
+// Refuse TLS chains anchored in the compromised emSign ECC Root CA - G3 before
+// any session makes a network request (the auto-updater included). Registered
+// first so its session-created handler precedes every session's creation.
+installEmudhraCaDistrust();
 // Closing the import progress window must not quit before the main window exists.
 const holdStartupOpen = () => {};
 app.on("window-all-closed", holdStartupOpen);
