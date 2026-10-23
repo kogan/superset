@@ -52,13 +52,23 @@ export function StackNodeRow({
 }: StackNodeRowProps) {
 	const utils = workspaceTrpc.useUtils();
 	const openUrl = electronTrpc.external.openUrl.useMutation();
-	const checkout = workspaceTrpc.git.checkoutBranch.useMutation({
-		onSuccess: () => {
-			// The checked-out branch changed; refresh so "you" moves to it.
-			void utils.git.listBranches.invalidate({ workspaceId });
-		},
-		onError: (error) => toast.error(errorMessage(error)),
-	});
+	const checkout = workspaceTrpc.git.checkoutBranch.useMutation();
+	const setBase = workspaceTrpc.git.setBaseBranch.useMutation();
+	const switching = checkout.isPending || setBase.isPending;
+
+	// Clicking a node switches the worktree to that PR's branch, points the
+	// comparison base at the PR's parent, then refreshes the git queries so
+	// both the Stack ("you") and the Changes tab reflect the switched-to PR.
+	const switchToNode = async () => {
+		if (node.isCurrent) return;
+		try {
+			await checkout.mutateAsync({ workspaceId, branch: node.headRef });
+			await setBase.mutateAsync({ workspaceId, baseBranch: node.baseRef });
+			await utils.git.invalidate();
+		} catch (error) {
+			toast.error(errorMessage(error));
+		}
+	};
 	const statsQuery = workspaceTrpc.github.getPullRequestStats.useQuery(
 		{ owner, repo, number: node.number },
 		{ enabled: !!owner && !!repo, staleTime: 30_000 },
@@ -88,8 +98,8 @@ export function StackNodeRow({
 				<button
 					type="button"
 					aria-label={`Switch to ${node.headRef}`}
-					disabled={node.isCurrent || checkout.isPending}
-					onClick={() => checkout.mutate({ workspaceId, branch: node.headRef })}
+					disabled={node.isCurrent || switching}
+					onClick={switchToNode}
 					className={cn(
 						"flex min-w-0 flex-1 items-center gap-2 rounded-md px-1.5 py-1 text-left hover:bg-muted focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring",
 						node.isCurrent && "cursor-default",
