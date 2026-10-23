@@ -2,6 +2,7 @@ import { useLingui } from "@lingui/react/macro";
 import { workspaceTrpc } from "@superset/workspace-client";
 import { useMemo } from "react";
 import { LuLayers } from "react-icons/lu";
+import { useHostProjects } from "renderer/hooks/host-projects/useHostProjects";
 import type { SidebarTabDefinition } from "../../types";
 import { buildStack, type StackPullRequest } from "./buildStack";
 import { StackTabContent } from "./components/StackTabContent";
@@ -12,24 +13,38 @@ interface UseStackTabParams {
 
 /**
  * "Stack" tab: the chain of dependent PRs built on the checked-out branch.
- * The current PR gives the repo + head branch; the repo's open PRs give the
- * head/base links that {@link buildStack} walks into a chain.
+ *
+ * The repo is read from the workspace's project (NOT its linked PR) so a
+ * worktree with a stack but no linked PR still works; the current branch is
+ * read live from git; and the workspace's linked PR — if any — is surfaced as
+ * a marker on the matching node.
  */
 export function useStackTab({
 	workspaceId,
 }: UseStackTabParams): SidebarTabDefinition {
 	const { t } = useLingui();
 
-	const currentPrQuery = workspaceTrpc.git.getPullRequest.useQuery(
-		{ workspaceId },
-		{ enabled: !!workspaceId, refetchInterval: 15_000, staleTime: 10_000 },
+	const workspaceQuery = workspaceTrpc.workspace.get.useQuery(
+		{ id: workspaceId },
+		{ enabled: !!workspaceId, staleTime: 30_000 },
 	);
-	const current = currentPrQuery.data ?? null;
-	const owner = current?.repoOwner ?? "";
-	const repo = current?.repoName ?? "";
+	const { projects } = useHostProjects();
+	const project = projects.find(
+		(candidate) => candidate.id === workspaceQuery.data?.projectId,
+	);
+	const owner = project?.repoOwner ?? "";
+	const repo = project?.repoName ?? "";
 
-	// The checked-out branch, read live from git — NOT the workspace's linked
-	// PR — so the "you are here" marker tracks branch switches in the worktree.
+	// The PR linked to the workspace record (if any) — marked on its node so you
+	// can see at a glance which stack PR this worktree is wired to.
+	const linkedPrQuery = workspaceTrpc.git.getPullRequest.useQuery(
+		{ workspaceId },
+		{ enabled: !!workspaceId, staleTime: 15_000 },
+	);
+	const linkedPrNumber = linkedPrQuery.data?.number ?? null;
+
+	// The checked-out branch, read live from git — so the chain re-roots and the
+	// "you are here" marker follows branch switches in the worktree.
 	const branchesQuery = workspaceTrpc.git.listBranches.useQuery(
 		{ workspaceId },
 		{ enabled: !!workspaceId, refetchInterval: 15_000, staleTime: 5_000 },
@@ -57,7 +72,7 @@ export function useStackTab({
 	}, [listQuery.data, headRef]);
 
 	const isLoading =
-		currentPrQuery.isLoading ||
+		workspaceQuery.isLoading ||
 		branchesQuery.isLoading ||
 		(!!owner && !!repo && listQuery.isLoading);
 
@@ -70,14 +85,15 @@ export function useStackTab({
 			<StackTabContent
 				nodes={nodes}
 				isLoading={isLoading}
-				hasPr={!!current}
+				hasPr={nodes.length >= 1}
 				owner={owner}
 				repo={repo}
 				workspaceId={workspaceId}
+				linkedPrNumber={linkedPrNumber}
 				onRefresh={() => {
-					void currentPrQuery.refetch();
 					void listQuery.refetch();
 					void branchesQuery.refetch();
+					void linkedPrQuery.refetch();
 				}}
 			/>
 		),

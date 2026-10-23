@@ -13,6 +13,8 @@ interface StackTabContentProps {
 	owner: string;
 	repo: string;
 	workspaceId: string;
+	/** The PR number linked to the workspace record, or null if none. */
+	linkedPrNumber: number | null;
 	onRefresh: () => void;
 }
 
@@ -29,6 +31,7 @@ export function StackTabContent({
 	owner,
 	repo,
 	workspaceId,
+	linkedPrNumber,
 	onRefresh,
 }: StackTabContentProps) {
 	const [expanded, setExpanded] = useState<ReadonlySet<number>>(
@@ -65,8 +68,8 @@ export function StackTabContent({
 	const trunkRef = nodes[nodes.length - 1]?.baseRef ?? null;
 
 	return (
-		<div className="flex flex-col">
-			<div className="flex items-center gap-2 border-b border-border px-2 py-1.5">
+		<div className="flex h-full min-h-0 flex-col">
+			<div className="flex shrink-0 items-center gap-2 border-b border-border px-2 py-1.5">
 				<span className="text-xs font-semibold">
 					<Trans>Stack</Trans>
 				</span>
@@ -95,7 +98,10 @@ export function StackTabContent({
 				</button>
 			</div>
 
-			<ul aria-label="PR stack" className="flex flex-col py-1 pr-2">
+			<ul
+				aria-label="PR stack"
+				className="flex min-h-0 flex-1 flex-col overflow-y-auto py-1 pr-2"
+			>
 				{nodes.map((node, index) => (
 					<li key={node.number} className="relative pl-6">
 						{/* Trunk always follows, so every PR node's spine runs downward. */}
@@ -124,6 +130,7 @@ export function StackTabContent({
 							owner={owner}
 							repo={repo}
 							workspaceId={workspaceId}
+							isLinked={node.number === linkedPrNumber}
 						/>
 					</li>
 				))}
