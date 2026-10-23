@@ -8,6 +8,7 @@ import {
 	ChevronDown,
 	ChevronRight,
 	ExternalLink,
+	Link2,
 	Loader2,
 } from "lucide-react";
 import { electronTrpc } from "renderer/lib/electron-trpc";
@@ -21,6 +22,8 @@ interface StackNodeRowProps {
 	owner: string;
 	repo: string;
 	workspaceId: string;
+	/** This PR is the one linked to the workspace record. */
+	isLinked: boolean;
 }
 
 /** Collapse GitHub's status × conclusion into pass vs still-running. */
@@ -49,6 +52,7 @@ export function StackNodeRow({
 	owner,
 	repo,
 	workspaceId,
+	isLinked,
 }: StackNodeRowProps) {
 	const utils = workspaceTrpc.useUtils();
 	const openUrl = electronTrpc.external.openUrl.useMutation();
@@ -110,6 +114,12 @@ export function StackNodeRow({
 							<span className="shrink-0 font-mono text-[11px] tabular-nums text-muted-foreground">
 								#{node.number}
 							</span>
+							{isLinked && (
+								<Link2
+									className="size-3 shrink-0 text-sky-500"
+									aria-label="Linked to this workspace"
+								/>
+							)}
 							<span className="min-w-0 truncate text-xs">{node.title}</span>
 							{node.isCurrent && (
 								<span className="shrink-0 rounded border border-emerald-500/40 px-1 font-mono text-[9px] uppercase tracking-wide text-emerald-500">
