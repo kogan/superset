@@ -1,6 +1,6 @@
 import { describe, expect, test } from "bun:test";
 import type { Certificate } from "electron";
-import { chainIsDistrusted } from "./emudhra-ca-distrust";
+import { chainIsDistrusted } from "./emudhra-ca-distrust-rules";
 
 // Minimal Certificate-shaped nodes; only the fields the walk reads are set.
 type Node = {
