@@ -1,5 +1,6 @@
 import { Trans, useLingui } from "@lingui/react/macro";
 import {
+	approvalAsker,
 	deriveQueuedPrompts,
 	displayText,
 	launchConfigSelections,
@@ -368,10 +369,18 @@ export const ChatSessionView = forwardRef<
 	const renderRow = useCallback(
 		({ item: row, index }: { item: ChatRow; index: number }) => {
 			const position = positions[index] ?? "single";
+			const parent =
+				row.kind === "item"
+					? approvalAsker(chat.snapshot.items, row.item)
+					: undefined;
+			const asker = parent
+				? parent.title || t({ message: "Subagent" })
+				: undefined;
 			const endsGroup = position === "single" || position === "last";
 			return (
 				<View className={endsGroup ? "pb-5" : "pb-2.5"}>
 					<ChatRowView
+						asker={asker}
 						harness={harness}
 						hostUrl={hostUrl}
 						onDiscardPrompt={chat.discardPrompt}
@@ -401,6 +410,7 @@ export const ChatSessionView = forwardRef<
 			positions,
 			replyEnds,
 			openActivity,
+			t,
 		],
 	);
 

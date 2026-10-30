@@ -24,17 +24,23 @@ import {
 	type SandboxRegion,
 } from "@vercel/sandbox";
 import { env } from "../../env";
+import {
+	CODEX_AUTH_PATH,
+	CODEX_SYSTEM_CONFIG_PATH,
+	type SandboxFile,
+} from "./credentials";
 
 export const HOST_SERVICE_PORT = SANDBOX_PORTS.hostService;
 /**
  * A session ends after this long; the workspace's files survive and the next
- * open resumes it. A workspace someone has open is extended before it gets
- * there (`wakeSandbox`), so this is really the idle stop, and how long an
- * unattended agent run can last.
+ * open resumes it. A workspace someone has open (`wakeSandbox`) or whose agent
+ * is active (`topUpSandboxSession`) is extended before it gets there, so this
+ * is really the idle stop.
  */
-const SESSION_TIMEOUT_MS = 4 * 60 * 60 * 1000;
-/** Extend an open workspace's session when it has less than this left. */
-const EXTEND_BELOW_MS = 60 * 60 * 1000;
+export const SESSION_TIMEOUT_MS = 60 * 60 * 1000;
+/** Above the 10-minute client keepalive, so an open workspace is always extended in time. */
+const EXTEND_BELOW_MS = 30 * 60 * 1000;
+const MIN_TOP_UP_MS = 60 * 1000;
 const WORKSPACE_SNAPSHOT_EXPIRATION_MS = 30 * 24 * 60 * 60 * 1000;
 /** 2 GB of memory per vCPU; disk is 64 GB regardless. */
 export const MEMORY_MB_PER_VCPU = 2048;
@@ -97,6 +103,8 @@ export interface SandboxClaim {
 	hostSecret: string;
 	managedEnv: Record<string, string>;
 	networkPolicy: NetworkPolicy;
+	/** The creator's agent login files; a golden under construction has none. */
+	files?: SandboxFile[];
 	/** Ports the workspace's repository asks to publish, beside the platform's. */
 	ports?: readonly number[];
 	vcpus: number;
@@ -139,6 +147,19 @@ async function writeIdentity(
 			mode: 0o644,
 		},
 	]);
+}
+
+/**
+ * The agents' login files, on every wake including one that finds the box
+ * serving: a sign-in made since the last boot has to reach the next agent
+ * started there. They hold placeholders only.
+ */
+async function writeSignInFiles(
+	sandbox: Sandbox,
+	files: SandboxFile[] = [],
+): Promise<void> {
+	if (files.length === 0) return;
+	await sandbox.writeFiles(files.map((file) => ({ ...file, mode: 0o644 })));
 }
 
 /**
@@ -210,6 +231,7 @@ export async function provisionSandbox(args: {
 					resources: { vcpus: args.claim.vcpus },
 				}));
 	await writeIdentity(sandbox, args.claim.identity);
+	await writeSignInFiles(sandbox, args.claim.files);
 	await runBoot(sandbox, args.claim.hostSecret);
 	return {
 		providerSandboxId: args.name,
@@ -331,6 +353,24 @@ export async function describeSandbox(providerSandboxId: string): Promise<{
 	}
 }
 
+/**
+ * Extends a running session so it ends `SESSION_TIMEOUT_MS` from now; never
+ * wakes a stopped one. The provider only extends by a duration, and refuses
+ * past the plan's 24h session cap. Goes through the session:
+ * `Sandbox.extendTimeout` resumes a session that stopped meanwhile.
+ */
+export async function topUpSandboxSession(
+	providerSandboxId: string,
+): Promise<void> {
+	const sandbox = await getSandbox(providerSandboxId);
+	if (sandbox?.status !== "running" || !sandbox.expiresAt) return;
+	const extension =
+		Date.now() + SESSION_TIMEOUT_MS - sandbox.expiresAt.getTime();
+	if (extension > MIN_TOP_UP_MS) {
+		await sandbox.currentSession().extendTimeout(extension);
+	}
+}
+
 /** Whether host-service is already serving, so a wake can skip the boot. */
 async function hostServiceAnswers(hostTarget: string): Promise<boolean> {
 	try {
@@ -408,6 +448,7 @@ export async function wakeSandbox(args: {
 					),
 				),
 			serving ? null : writeIdentity(sandbox, args.claim.identity),
+			writeSignInFiles(sandbox, args.claim.files),
 		]);
 		if (!serving) await runBoot(sandbox, args.claim.hostSecret);
 		await settleSandbox({
@@ -440,6 +481,8 @@ const INHERITED_IDENTITY = [
 	`${SANDBOX_PATHS.home}/.superset/host`,
 	`${SANDBOX_PATHS.home}/.gitconfig`,
 	`${SANDBOX_PATHS.workspace}/.env`,
+	CODEX_AUTH_PATH,
+	CODEX_SYSTEM_CONFIG_PATH,
 ];
 
 /** Removes what a box wrote for the workspace it was, so a fork starts clean. */
@@ -502,6 +545,7 @@ export async function promoteSandboxToEnvironment(args: {
 	await waitForStopSnapshot(args.goldenName, created);
 	if (wasRunning) {
 		await writeIdentity(source, args.claim.identity);
+		await writeSignInFiles(source, args.claim.files);
 		await runBoot(source, args.claim.hostSecret);
 	}
 	return { goldenName: args.goldenName, region: source.region };

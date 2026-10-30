@@ -6,6 +6,10 @@
  * stays baked: it is this build's identity, not an address.
  */
 
+// The superset-cli OAuth client registers its paste redirect on this host only.
+// Keep it until the web/API migration moves the CLI to the new root domain.
+export const LEGACY_WEB_URL = "https://app.superset.sh";
+
 export const env = {
 	RELAY_URL: process.env.RELAY_URL || "http://127.0.0.1:1",
 	REALTIME_URL: process.env.REALTIME_URL || "http://127.0.0.1:1",

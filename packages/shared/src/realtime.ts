@@ -5,6 +5,8 @@ export const REALTIME_NUDGE_KINDS = [
 	"hosts",
 	"cloud_workspaces",
 	"automation_runs",
+	"pull_requests",
+	"plugins",
 ] as const;
 
 export type RealtimeNudgeKind = (typeof REALTIME_NUDGE_KINDS)[number];

@@ -14,6 +14,8 @@ import { app } from "electron";
 
 export const BUNDLED_CLI_SHIM_MARKER = "# SuperestSet bundled CLI shim v1";
 const SHIM_HEADER_BYTES = 2048;
+/** `paradev` is an alias of `superset`; both shims exec the same binary. */
+const _BUNDLED_CLI_COMMANDS = ["superset", "paradev"] as const;
 
 export type BundledCliInstallStatus = "installed" | "missing" | "skipped";
 

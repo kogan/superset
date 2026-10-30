@@ -1,5 +1,6 @@
+import { useLingui } from "@lingui/react/macro";
 import type { OutboxEntry, SessionSnapshot } from "@superset/chat/core";
-import { displayText } from "@superset/chat/core";
+import { approvalAsker, displayText } from "@superset/chat/core";
 import type {
 	ApprovalRequest,
 	AvailableCommand,
@@ -15,8 +16,10 @@ import type { PageLink } from "../../../../utils/pageLinks";
 import { PageLinkCard } from "../../../PageLinkCard";
 import type { TranscriptRow } from "../../utils/transcriptRows";
 import { AttachmentRail, type RailImage } from "../AttachmentRail";
+import { ReplyFooter } from "../ReplyFooter";
 import { ItemRow } from "./components/ItemRow";
 import { ToolRunRow } from "./components/ToolRunRow";
+import { TurnChangesCard } from "./components/TurnChangesCard";
 import { TurnStatusRow } from "./components/TurnStatusRow";
 import { WorkingFor } from "./components/WorkingFor";
 
@@ -69,6 +72,7 @@ export type TurnGroupSectionProps = {
 	row: TranscriptRow;
 	lastReply: boolean;
 	snapshot: SessionSnapshot;
+	childrenByParent: ReadonlyMap<string, readonly Item[]>;
 	isEntryCollapsed: (entryKey: string, defaultCollapsed: boolean) => boolean;
 	onToggleEntry: (entryKey: string, collapsed: boolean) => void;
 	onRespond: (approvalId: string, decision: Decision) => void;
@@ -87,6 +91,7 @@ export type TurnGroupSectionProps = {
  */
 export function TurnGroupSection({
 	canForkToWorktree,
+	childrenByParent,
 	commands,
 	lastReply,
 	isEntryCollapsed,
@@ -98,6 +103,7 @@ export function TurnGroupSection({
 	row,
 	snapshot,
 }: TurnGroupSectionProps) {
+	const { t } = useLingui();
 	const harness = snapshot.session?.harness;
 	switch (row.kind) {
 		case "working":
@@ -107,13 +113,18 @@ export function TurnGroupSection({
 					startedAtMs={row.startedAtMs}
 				/>
 			);
-		case "item":
+		case "item": {
+			const asker = approvalAsker(snapshot.items, row.item);
 			return (
 				<>
 					<ItemRow
 						afterTarget={row.afterTarget}
 						approvalTarget={approvalTarget(snapshot, row.item)}
+						asker={
+							asker ? asker.title || t({ message: "Subagent" }) : undefined
+						}
 						canForkToWorktree={canForkToWorktree}
+						childItems={childrenByParent.get(row.item.id)}
 						commands={commands}
 						lastReply={lastReply}
 						harness={harness}
@@ -127,6 +138,7 @@ export function TurnGroupSection({
 					{pageCards(row.pages)}
 				</>
 			);
+		}
 		case "outbox":
 			return (
 				<ItemRow
@@ -146,6 +158,8 @@ export function TurnGroupSection({
 			return (
 				<>
 					<ToolRunRow
+						active={row.active === true}
+						childLists={row.items.map((tool) => childrenByParent.get(tool.id))}
 						collapsed={isEntryCollapsed(row.key, row.defaultCollapsed)}
 						items={row.items}
 						onToggle={onToggleEntry}
@@ -160,6 +174,32 @@ export function TurnGroupSection({
 				</>
 			);
 		case "turn_status":
-			return <TurnStatusRow message={row.message} status={row.status} />;
+			return (
+				<TurnStatusRow
+					error={row.error}
+					latest={row.latest}
+					status={row.status}
+					turnId={row.turnId}
+				/>
+			);
+		case "changed_files":
+			return (
+				<TurnChangesCard
+					files={row.files}
+					newest={row.newest}
+					toolCallIds={row.toolCallIds}
+					turnId={row.turnId}
+				/>
+			);
+		case "reply_footer":
+			return (
+				<ReplyFooter
+					canForkToWorktree={canForkToWorktree}
+					className="hover:opacity-100"
+					item={row.item}
+					onFork={onFork}
+					text={displayText(snapshot, row.item.id)}
+				/>
+			);
 	}
 }

@@ -8,11 +8,19 @@
 			"types": "./src/worktree-deletion.ts",
 			"default": "./src/worktree-deletion.ts"
 		},
+		"./project-config": {
+			"types": "./src/project-config/index.ts",
+			"default": "./src/project-config/index.ts"
+		},
 		"./oauth-refresh": {
 			"types": "./src/oauth-refresh.ts",
 			"default": "./src/oauth-refresh.ts"
 		},
 		"./terminal-colors": "./src/terminal-colors.ts",
+		"./slack-links": {
+			"types": "./src/slack-links.ts",
+			"default": "./src/slack-links.ts"
+		},
 		"./voice": {
 			"types": "./src/voice/index.ts",
 			"default": "./src/voice/index.ts"
@@ -24,6 +32,10 @@
 		"./account-labels": {
 			"types": "./src/account-labels.ts",
 			"default": "./src/account-labels.ts"
+		},
+		"./html-preview": {
+			"types": "./src/html-preview.ts",
+			"default": "./src/html-preview.ts"
 		},
 		"./page-zoom": {
 			"types": "./src/page-zoom.ts",
@@ -137,6 +149,10 @@
 			"types": "./src/constants.ts",
 			"default": "./src/constants.ts"
 		},
+		"./own-domains": {
+			"types": "./src/own-domains.ts",
+			"default": "./src/own-domains.ts"
+		},
 		"./legacy-host-redirects": {
 			"types": "./src/legacy-host-redirects.ts",
 			"default": "./src/legacy-host-redirects.ts"
@@ -180,6 +196,18 @@
 		"./pull-request": {
 			"types": "./src/pull-request.ts",
 			"default": "./src/pull-request.ts"
+		},
+		"./pull-request-github": {
+			"types": "./src/pull-request-github/index.ts",
+			"default": "./src/pull-request-github/index.ts"
+		},
+		"./pull-request-detail": {
+			"types": "./src/pull-request-detail/index.ts",
+			"default": "./src/pull-request-detail/index.ts"
+		},
+		"./pull-request-threads": {
+			"types": "./src/pull-request-threads/index.ts",
+			"default": "./src/pull-request-threads/index.ts"
 		},
 		"./sandbox-gate": {
 			"types": "./src/sandbox-gate.ts",
@@ -385,6 +413,18 @@
 			"types": "./src/host-routing.ts",
 			"default": "./src/host-routing.ts"
 		},
+		"./channels": {
+			"types": "./src/channels.ts",
+			"default": "./src/channels.ts"
+		},
+		"./dev-avatar": {
+			"types": "./src/dev-avatar.ts",
+			"default": "./src/dev-avatar.ts"
+		},
+		"./org-presence": {
+			"types": "./src/org-presence.ts",
+			"default": "./src/org-presence.ts"
+		},
 		"./realtime": {
 			"types": "./src/realtime.ts",
 			"default": "./src/realtime.ts"
@@ -437,6 +477,10 @@
 			"types": "./src/standalone.ts",
 			"default": "./src/standalone.ts"
 		},
+		"./plugins/bundle": {
+			"types": "./src/plugins/bundle.ts",
+			"default": "./src/plugins/bundle.ts"
+		},
 		"./plugins/manifest-schema": {
 			"types": "./src/plugins/manifest-schema.ts",
 			"default": "./src/plugins/manifest-schema.ts"
@@ -456,6 +500,10 @@
 		"./page-storage-ticket": {
 			"types": "./src/page-storage-ticket.ts",
 			"default": "./src/page-storage-ticket.ts"
+		},
+		"./missing-procedure-error": {
+			"types": "./src/missing-procedure-error.ts",
+			"default": "./src/missing-procedure-error.ts"
 		}
 	},
 	"scripts": {
@@ -470,9 +518,10 @@
 		"culori": "4.0.2",
 		"drizzle-orm": "0.45.2",
 		"friendly-words": "1.3.1",
-		"jose": "6.2.2",
+		"jose": "6.2.13",
 		"rrule": "2.8.1",
 		"semver": "7.7.4",
+		"smol-toml": "1.9.1",
 		"zod": "4.6.5"
 	},
 	"devDependencies": {
