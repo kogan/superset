@@ -1,7 +1,8 @@
-import { Trans } from "@lingui/react/macro";
+import { Trans, useLingui } from "@lingui/react/macro";
 import {
 	DropdownMenuCheckboxItem,
 	DropdownMenuItem,
+	DropdownMenuLabel,
 	DropdownMenuSeparator,
 } from "@superset/ui/dropdown-menu";
 import { BsTerminalPlus } from "react-icons/bs";
@@ -9,6 +10,7 @@ import { LuCodeXml, LuGitCompareArrows, LuMessageSquare } from "react-icons/lu";
 import { TbDeviceDesktop, TbWorld } from "react-icons/tb";
 import { HotkeyMenuShortcut } from "renderer/components/HotkeyMenuShortcut";
 import { useFeaturePreferences } from "renderer/stores/feature-preferences";
+import type { RightPaneKind, RightPaneOption } from "../RightPaneNewTab";
 
 interface AddTabMenuProps {
 	onAddTerminal: () => void;
@@ -18,6 +20,8 @@ interface AddTabMenuProps {
 	onOpenIde?: (() => void) | undefined;
 	onAddChanges?: (() => void) | undefined;
 	onAddDesktop?: (() => void) | undefined;
+	rightPaneOptions?: RightPaneOption[];
+	onOpenInRightPane?: (kind: RightPaneKind) => void;
 	showPresetsBar: boolean;
 	onToggleShowPresetsBar: (enabled: boolean) => void;
 }
@@ -30,10 +34,13 @@ export function AddTabMenu({
 	onOpenIde,
 	onAddChanges,
 	onAddDesktop,
+	rightPaneOptions = [],
+	onOpenInRightPane,
 	showPresetsBar,
 	onToggleShowPresetsBar,
 }: AddTabMenuProps) {
 	const ideEnabled = useFeaturePreferences((state) => state.embeddedIde);
+	const { i18n } = useLingui();
 	return (
 		<>
 			<DropdownMenuItem
@@ -89,6 +96,27 @@ export function AddTabMenu({
 					</span>
 					<HotkeyMenuShortcut hotkeyId="SPLIT_WITH_DESKTOP" />
 				</DropdownMenuItem>
+			)}
+			{onOpenInRightPane && rightPaneOptions.length > 0 && (
+				<>
+					<DropdownMenuSeparator />
+					<DropdownMenuLabel className="text-xs font-normal text-muted-foreground">
+						<Trans>Open in right pane</Trans>
+					</DropdownMenuLabel>
+					{rightPaneOptions.map((option) => (
+						<DropdownMenuItem
+							key={option.kind}
+							className="gap-2"
+							onClick={() => onOpenInRightPane(option.kind)}
+						>
+							<option.Icon className="size-4" />
+							<span>{i18n._(option.label)}</span>
+							{option.hotkeyId && (
+								<HotkeyMenuShortcut hotkeyId={option.hotkeyId} />
+							)}
+						</DropdownMenuItem>
+					))}
+				</>
 			)}
 			<DropdownMenuSeparator />
 			<DropdownMenuCheckboxItem

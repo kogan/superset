@@ -5,3 +5,7 @@ export {
 	cloudPullRequestRefKey,
 	useCloudPullRequests,
 } from "./useCloudPullRequests";
+export {
+	type CloudWorkspacePullRequestRecord,
+	useCloudWorkspacePullRequests,
+} from "./useCloudWorkspacePullRequests";

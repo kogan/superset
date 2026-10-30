@@ -4,6 +4,7 @@ import type {
 	FileDiffMetadata,
 	LineAnnotation,
 } from "@pierre/diffs";
+import { isMissingProcedureError } from "@superset/shared/missing-procedure-error";
 import { workspaceTrpc } from "@superset/workspace-client";
 import { useQueries } from "@tanstack/react-query";
 import { getQueryKey } from "@trpc/react-query";
@@ -19,14 +20,13 @@ import type {
 	DiffPatchScope,
 	GetDiffPatchInput,
 } from "renderer/lib/diffPatchQuery";
-import { isMissingProcedureError } from "renderer/lib/isMissingProcedureError";
+import { hashString } from "renderer/routes/_authenticated/_dashboard/utils/hashString";
 import {
 	type ChangesetFile,
 	getChangesetFileKey,
 } from "../../../../../useChangeset";
 import { createGetDiffInput } from "../../utils/createGetDiffInput";
 import { isGeneratedDiffFile } from "../../utils/diffLoadingGuards";
-import { hashString } from "../../utils/hashString";
 import type {
 	DeferredDiffReason,
 	DiffAnnotationMetadata,
@@ -39,10 +39,11 @@ import {
 
 interface UseDiffCodeViewItemsOptions {
 	workspaceId: string;
+	/** False pauses patch fetches, also the refetch after a git change. */
+	enabled?: boolean;
 	files: ChangesetFile[];
 	collapsedSet: ReadonlySet<string>;
 	editingSet: ReadonlySet<string>;
-	editorRevisionByItemId: ReadonlyMap<string, number>;
 	annotationsByPath: ReadonlyMap<
 		string,
 		DiffLineAnnotation<DiffAnnotationMetadata>[]
@@ -161,10 +162,10 @@ function groupKeyFor(input: DiffPatchScope): string {
 
 export function useDiffCodeViewItems({
 	workspaceId,
+	enabled = true,
 	files,
 	collapsedSet,
 	editingSet,
-	editorRevisionByItemId,
 	annotationsByPath,
 	extraAnnotationsByItemId,
 }: UseDiffCodeViewItemsOptions): UseDiffCodeViewItemsResult {
@@ -309,6 +310,7 @@ export function useDiffCodeViewItems({
 				}
 			},
 			staleTime: Number.POSITIVE_INFINITY,
+			enabled,
 		})),
 	});
 
@@ -328,6 +330,7 @@ export function useDiffCodeViewItems({
 		new Map<string, { signature: string; data: PatchGroupResult }>(),
 	);
 	useEffect(() => {
+		if (!enabled) return;
 		patchGroups.forEach((group, index) => {
 			const query = patchQueries[index];
 			if (!query?.data || query.isFetching || query.isError) return;
@@ -346,7 +349,7 @@ export function useDiffCodeViewItems({
 			});
 			void query.refetch();
 		});
-	}, [patchGroups, patchQueries]);
+	}, [enabled, patchGroups, patchQueries]);
 
 	// Parsed in an effect, per section, reusing unchanged sections' objects:
 	// @pierre/diffs hydrates a partial diff in place, so a new object per
@@ -419,8 +422,19 @@ export function useDiffCodeViewItems({
 		return map;
 	}, [patchGroups, patchQueries, parsedGroups]);
 
+	// Pierre replaces an open edit session's document when its fileDiff
+	// changes, so a refetch mid-edit (the one a save triggers) would drop
+	// text typed while the write was in flight.
+	const editingDiffsRef = useRef(new Map<string, FileDiffMetadata>());
+
 	const items = useMemo<CodeViewItem<DiffAnnotationMetadata>[]>(() => {
 		const nextItems: CodeViewItem<DiffAnnotationMetadata>[] = [];
+		const editingDiffs = editingDiffsRef.current;
+		for (const itemId of editingDiffs.keys()) {
+			if (!files.some((file) => getDiffItemId(file) === itemId)) {
+				editingDiffs.delete(itemId);
+			}
+		}
 
 		for (const file of files) {
 			const itemId = getDiffItemId(file);
@@ -436,7 +450,13 @@ export function useDiffCodeViewItems({
 				continue;
 			}
 
-			const fileDiff = diffByItemId.get(itemId);
+			const latestDiff = diffByItemId.get(itemId);
+			const fileDiff =
+				editing && latestDiff
+					? (editingDiffs.get(itemId) ?? latestDiff)
+					: latestDiff;
+			if (editing && fileDiff) editingDiffs.set(itemId, fileDiff);
+			else editingDiffs.delete(itemId);
 			if (!fileDiff) {
 				const heldBack =
 					isGeneratedDiffFile(file.path) && !requestedItemIds.has(itemId);
@@ -475,7 +495,6 @@ export function useDiffCodeViewItems({
 					file.deletions,
 					collapsed ? "1" : "0",
 					editing ? "editing" : "readonly",
-					editorRevisionByItemId.get(itemId) ?? 0,
 					getAnnotationsVersion(annotations),
 				].join("\0"),
 			);
@@ -500,7 +519,6 @@ export function useDiffCodeViewItems({
 		annotationsByPath,
 		collapsedSet,
 		editingSet,
-		editorRevisionByItemId,
 		extraAnnotationsByItemId,
 	]);
 

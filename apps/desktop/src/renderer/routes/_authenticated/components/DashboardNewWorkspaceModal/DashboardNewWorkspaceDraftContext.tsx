@@ -11,11 +11,7 @@ import {
 } from "renderer/stores/new-workspace-draft";
 import { useShallow } from "zustand/react/shallow";
 
-export type {
-	BaseBranchSource,
-	LinkedIssue,
-	LinkedPR,
-} from "renderer/stores/new-workspace-draft";
+export type { BaseBranchSource } from "renderer/stores/new-workspace-draft";
 export type DashboardNewWorkspaceDraft = NewWorkspaceDraft;
 
 interface DraftContextValue {
@@ -61,6 +57,8 @@ export function useDashboardNewWorkspaceDraft() {
 			environmentId: store.environmentId,
 			machineSize: store.machineSize,
 			prompt: store.prompt,
+			promptDraft: store.promptDraft,
+			promptAttachments: store.promptAttachments,
 			baseBranch: store.baseBranch,
 			baseBranchSource: store.baseBranchSource,
 			workspaceName: store.workspaceName,

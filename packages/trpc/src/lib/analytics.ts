@@ -11,5 +11,6 @@ export const posthog = new PostHog(
 		host: env.NEXT_PUBLIC_POSTHOG_HOST,
 		flushAt: 1,
 		flushInterval: 0,
+		featureFlagsRequestTimeoutMs: 10_000,
 	},
 );

@@ -3,6 +3,7 @@ import { homedir } from "node:os";
 import { isAbsolute, join } from "node:path";
 import { msg } from "@lingui/core/macro";
 import { i18n, initI18n, initI18nAsync, resolveLocale } from "@superset/i18n";
+import { HTML_PREVIEW_SCHEME } from "@superset/shared/html-preview";
 import { FORK } from "@superset/shared/standalone";
 import { app, dialog, ipcMain, protocol } from "electron";
 import { startLocalServices, stopLocalServices } from "./lib/local-runtime";
@@ -50,6 +51,13 @@ protocol.registerSchemesAsPrivileged([
 			secure: true,
 			bypassCSP: true,
 			supportFetchAPI: true,
+		},
+	},
+	{
+		scheme: HTML_PREVIEW_SCHEME,
+		privileges: {
+			standard: true,
+			secure: true,
 		},
 	},
 ]);

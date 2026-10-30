@@ -83,9 +83,7 @@ export const PERSISTED_KEY_REGISTRY: ReadonlyArray<
 		"src/renderer/stores/markdown-preferences/store.ts",
 		["markdown-preferences"],
 	],
-	["src/renderer/stores/file-explorer.ts", ["file-explorer-store"]],
 	["src/renderer/stores/ports/store.ts", ["ports-store"]],
-	["src/renderer/stores/search-dialog-state.ts", ["search-dialog-store"]],
 	["src/renderer/stores/sidebar-state.ts", ["sidebar-store"]],
 	["src/renderer/stores/new-workspace-width.ts", ["new-workspace-width"]],
 	[
@@ -99,6 +97,14 @@ export const PERSISTED_KEY_REGISTRY: ReadonlyArray<
 	[
 		"src/renderer/routes/_authenticated/_dashboard/stores/listDisplayStore/listDisplayStore.ts",
 		["list-display"],
+	],
+	[
+		"src/renderer/routes/_authenticated/_dashboard/channels/$channelId/stores/channelPanelStore/channelPanelStore.ts",
+		["channel-panels-v1"],
+	],
+	[
+		"src/renderer/routes/_authenticated/_dashboard/channels/$channelId/components/ChannelMessageRow/components/EmojiPicker/hooks/useSkinTone/useSkinTone.ts",
+		["channels-emoji-skin-tone"],
 	],
 	[
 		"src/renderer/stores/sidebar-sections-collapse.ts",
@@ -141,7 +147,8 @@ export const PERSISTED_KEY_REGISTRY: ReadonlyArray<
 		],
 	],
 	["src/renderer/stores/workspace-agents-row.ts", ["workspace-agents-row"]],
-	["src/renderer/stores/new-dashboard-sidebar.ts", ["new-dashboard-sidebar"]],
+	["src/renderer/stores/acp-chat.ts", ["acp-chat"]],
+	["src/renderer/stores/chat-turn-snapshots.ts", ["chat-turn-snapshots"]],
 	[
 		"src/renderer/stores/feature-preferences.ts",
 		["superestset-feature-preferences"],
@@ -181,7 +188,7 @@ export const PERSISTED_KEY_REGISTRY: ReadonlyArray<
 		["leaderboard-auto-publish-v2"],
 	],
 	[
-		"src/renderer/routes/_authenticated/_dashboard/v2-workspace/$workspaceId/hooks/usePaneRegistry/components/ChatSession/components/Composer/components/ModelPicker/hooks/useFavoriteModels/useFavoriteModels.ts",
+		"src/renderer/routes/_authenticated/components/AgentComposer/components/ModelPicker/hooks/useFavoriteModels/useFavoriteModels.ts",
 		["chatFavoriteModels"],
 	],
 	[
