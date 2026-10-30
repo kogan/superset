@@ -11,6 +11,7 @@ import {
 import { i18n, initI18nAsync } from "@superset/i18n";
 import { settings } from "@superset/local-db";
 import { workspaceDevAppProfileDirName } from "@superset/shared/dev-app-profile";
+import { HTML_PREVIEW_SCHEME } from "@superset/shared/html-preview";
 import { app, dialog, Notification, net, protocol, session } from "electron";
 import { makeAppSetup } from "lib/electron-app/factories/app/setup";
 import {
@@ -31,7 +32,11 @@ import { sweepDevAppProfiles } from "./dev-app-profile-sweep";
 import { getAppDisplayName } from "./lib/app-display-name";
 import { initAppState } from "./lib/app-state";
 import { requestAppleEventsAccess } from "./lib/apple-events-permission";
-import { isUpdateReadyToInstall, setupAutoUpdater } from "./lib/auto-updater";
+import {
+	isInstallingUpdate,
+	isUpdateReadyToInstall,
+	setupAutoUpdater,
+} from "./lib/auto-updater";
 import { startBrowserBridge } from "./lib/browser/browser-bridge";
 import { browserManager } from "./lib/browser/browser-manager";
 import { downloadManager } from "./lib/browser/download-manager";
@@ -43,6 +48,7 @@ import { installDevRunnerExit } from "./lib/dev-runner-exit";
 import { setWorkspaceDockIcon } from "./lib/dock-icon";
 import { loadWebviewBrowserExtension } from "./lib/extensions";
 import { getHostServiceCoordinator } from "./lib/host-service-coordinator";
+import { htmlPreviewProtocolHandler } from "./lib/html-preview-protocol";
 import { allowIdeClose } from "./lib/ide/close-guard";
 import { resolveAppLocale } from "./lib/language";
 import { localDb } from "./lib/local-db";
@@ -51,7 +57,10 @@ import { stopLocalServices } from "./lib/local-runtime";
 import { menuEmitter } from "./lib/menu-events";
 import { allowRendererToReachDeviceHub } from "./lib/mobile-hub-origin";
 
-import { syncInstalledPluginMcpServers } from "./lib/plugin-installs";
+import {
+	finishPendingOrganizationForget,
+	syncInstalledPluginMcpServers,
+} from "./lib/plugin-installs";
 import { portForwardManager } from "./lib/port-forward";
 import { ensureProjectIconsDir, getProjectIconPath } from "./lib/project-icons";
 import { runQuitCleanup } from "./lib/quit-sequence";
@@ -134,7 +143,7 @@ async function processDeepLink(url: string): Promise<void> {
 							i18n._(
 								msg({
 									message:
-										"Superset could not complete sign-in. Please try again.",
+										"Paradev could not complete sign-in. Please try again.",
 								}),
 							))
 					: i18n._(
@@ -225,7 +234,6 @@ let isQuitting = false;
 let skipQuitConfirmation = false;
 let quitAttemptPending = false;
 let forceFullCleanup = false;
-const holdingQuitForCleanup = false;
 
 export function setSkipQuitConfirmation(): void {
 	skipQuitConfirmation = true;
@@ -304,11 +312,13 @@ app.on("before-quit", async (event) => {
 		markAppQuitting();
 		persistOpenWindows();
 		const isUpdateInstalling = isUpdateReadyToInstall();
+		const resumeChats = isInstallingUpdate();
 		await runQuitCleanup({
 			isDev,
 			forceFullCleanup,
 			isUpdateInstalling,
-			stopHostServices: () => getHostServiceCoordinator().stopAll(),
+			stopHostServices: () =>
+				getHostServiceCoordinator().stopAll({ resumeChats }),
 			teardownTerminalHost,
 			stopPtyDaemons,
 			disposeTerminalHostClient,
@@ -472,6 +482,11 @@ if (!gotTheLock) {
 				.protocol.handle("superset-font", fontProtocolHandler);
 		}
 
+		protocol.handle(HTML_PREVIEW_SCHEME, htmlPreviewProtocolHandler);
+		session
+			.fromPartition("persist:superset")
+			.protocol.handle(HTML_PREVIEW_SCHEME, htmlPreviewProtocolHandler);
+
 		ensureProjectIconsDir();
 		setWorkspaceDockIcon();
 		initSentry();
@@ -568,6 +583,9 @@ if (!gotTheLock) {
 		} catch (error) {
 			console.error("[main] Failed to sync installed plugins:", error);
 		}
+		void finishPendingOrganizationForget().catch((error) =>
+			console.error("[main] Failed to remove organization plugins:", error),
+		);
 		try {
 			installBundledCliShim();
 		} catch (error) {

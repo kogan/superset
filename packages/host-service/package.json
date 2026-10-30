@@ -40,6 +40,10 @@
 			"types": "./src/workers/host-worker.ts",
 			"default": "./src/workers/host-worker.ts"
 		},
+		"./git-credentials": {
+			"types": "./src/providers/git/LocalGitCredentialProvider/index.ts",
+			"default": "./src/providers/git/LocalGitCredentialProvider/index.ts"
+		},
 		"./terminal-env": {
 			"types": "./src/terminal/env.ts",
 			"default": "./src/terminal/env.ts"
@@ -101,6 +105,7 @@
 		"better-sqlite3": "12.11.1",
 		"drizzle-orm": "0.45.2",
 		"entities": "7.0.1",
+		"expo-device-hub": "0.18.0",
 		"fflate": "0.8.3",
 		"hono": "4.13.7",
 		"jsonc-parser": "3.3.1",

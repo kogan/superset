@@ -1,4 +1,5 @@
 import { ORGANIZATION_HEADER } from "@superset/shared/constants";
+import { withOwnDomainTwins } from "@superset/shared/own-domains";
 import { getTrustedVercelPreviewOrigins } from "@superset/shared/vercel-preview-origins";
 import { type NextRequest, NextResponse } from "next/server";
 
@@ -16,13 +17,15 @@ const desktopDevOrigins =
 function getAllowedOrigins(deploymentOrigin: string) {
 	return [
 		...(process.env.SUPERESTSET_LOCAL === "1" ? ["null"] : []),
-		env.NEXT_PUBLIC_WEB_URL,
-		env.NEXT_PUBLIC_ADMIN_URL,
-		env.NEXT_PUBLIC_MARKETING_URL,
-		env.NEXT_PUBLIC_DESKTOP_URL,
+		...withOwnDomainTwins([
+			env.NEXT_PUBLIC_WEB_URL,
+			env.NEXT_PUBLIC_ADMIN_URL,
+			env.NEXT_PUBLIC_MARKETING_URL,
+			env.NEXT_PUBLIC_DESKTOP_URL,
+		]),
 		...getTrustedVercelPreviewOrigins(deploymentOrigin),
 		...desktopDevOrigins,
-	].filter(Boolean);
+	];
 }
 
 function getCorsHeaders(origin: string | null, deploymentOrigin: string) {

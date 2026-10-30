@@ -211,15 +211,9 @@ export async function runTeardown({
 }
 
 /**
- * Resolve the teardown command for a workspace, if any. Uses the shared
- * lifecycle-script posture (see `resolveScript`): configured `teardown`
- * commands — joined with ` && ` so a failing command short-circuits, worktree
- * config overriding the main repo's — then a `teardown.sh` script, worktree
- * first (state generated during the session must win) and main repo second
- * (gitignored scripts don't exist in worktrees).
- *
- * Returns null when no source resolves to anything runnable, which the
- * caller treats as a skipped (successful) teardown.
+ * The local `[archive]` command for a workspace, if any (a v1 project's
+ * `teardown`, or `teardown.sh`). Null means a skipped, successful archive; so
+ * does an invalid config, as archive must never block on a broken file.
  *
  * Exported for tests.
  */
@@ -249,11 +243,9 @@ export function buildTeardownInitialCommand(scriptPath: string): string {
 }
 
 /**
- * Build the initial command for configured `teardown` commands. The joined
- * command runs via `bash -c` so multiple `&&`-chained entries execute in one
- * shell; `exec` still replaces the login shell so the hidden PTY exits with
- * the teardown status (and avoids fish `$?` breakage), matching the script
- * form above.
+ * The teardown terminal's initial command. It runs via `bash -c` so `&&`
+ * chains work in any login shell, and `exec` replaces that shell so the
+ * hidden PTY exits with the teardown status (no fish `$?` breakage).
  */
 export function buildTeardownCommandFromShell(shellCommand: string): string {
 	return `exec bash -c ${shellSingleQuote(shellCommand)}`;

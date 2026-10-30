@@ -46,8 +46,10 @@ export function UserMessageRow({
 	harness,
 	item,
 	pending,
+	sender,
 }: {
 	item: UserMessage;
+	sender?: string | undefined;
 	commands?: ReadonlyMap<string, AvailableCommand> | undefined;
 	/** Which harness spelled this turn; its reader decides what is bookkeeping. */
 	harness: string | undefined;
@@ -112,6 +114,11 @@ export function UserMessageRow({
 			className={cn("group/message pt-1.5 pl-10", copyable ? "pb-0" : "pb-5")}
 			from="user"
 		>
+			{sender && (
+				<span className="self-end font-sans text-foreground/45 text-xs">
+					{sender}
+				</span>
+			)}
 			{images.length > 0 && (
 				<div
 					className={cn(

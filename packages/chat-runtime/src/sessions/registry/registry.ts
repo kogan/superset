@@ -1,10 +1,12 @@
 import { randomUUID } from "node:crypto";
 import type { DiscoverSessionsResult, Envelope } from "@superset/chat/protocol";
+import type { ChatCheckpoints, SessionCheckpoints } from "../../checkpoints";
 import type {
 	DiscoverNativeSessionsInput,
 	HarnessAdapter,
 } from "../../harness";
 import type { ChatJournal } from "../../journal";
+import type { UnfinishedSession } from "../liveSession";
 import { LiveSession } from "../liveSession";
 
 export type HarnessFactoryOptions = {
@@ -33,9 +35,40 @@ export type LiveSessionRegistryOptions = {
 	publish: (envelope: Envelope) => void;
 	harnesses: HarnessRegistry;
 	observer?: LiveSessionObserver;
+	checkpoints?: ChatCheckpoints;
 	mintId?: () => string;
 	now?: () => number;
+	usageLimitGraceMs?: number;
 };
+
+function warnOnFailure(work: Promise<unknown>): void {
+	work.catch((error: unknown) =>
+		console.warn("[chat-runtime] checkpoint failed", error),
+	);
+}
+
+function sessionCheckpoints(
+	checkpoints: ChatCheckpoints,
+	cwd: string,
+	sessionId: string,
+): SessionCheckpoints {
+	return {
+		capture: () => checkpoints.capture({ cwd, sessionId }),
+		turnStarted: (turnId, before) =>
+			warnOnFailure(
+				checkpoints.turnStarted({ cwd, sessionId, turnId, before }),
+			),
+		turnSettled: (turnId, anchor) =>
+			warnOnFailure(
+				checkpoints.turnSettled({
+					cwd,
+					sessionId,
+					turnId,
+					...(anchor ? { anchor } : {}),
+				}),
+			),
+	};
+}
 
 export class LiveSessionRegistry {
 	private readonly live = new Map<string, LiveSession>();
@@ -105,6 +138,7 @@ export class LiveSessionRegistry {
 		const session = new LiveSession({
 			sessionId: options.sessionId,
 			scopeId: options.scopeId,
+			cwd: options.cwd,
 			harness: options.harness,
 			terminalId: options.terminalId,
 			journal: this.options.journal,
@@ -113,8 +147,18 @@ export class LiveSessionRegistry {
 				this.observe(() => observer?.published(envelope, session));
 			},
 			adapter: factory(options),
+			...(this.options.checkpoints
+				? {
+						checkpoints: sessionCheckpoints(
+							this.options.checkpoints,
+							options.cwd,
+							options.sessionId,
+						),
+					}
+				: {}),
 			mintId: this.options.mintId,
 			now: this.options.now,
+			usageLimitGraceMs: this.options.usageLimitGraceMs,
 		});
 		this.live.set(options.sessionId, session);
 		this.observe(() => observer?.started(options));
@@ -142,6 +186,14 @@ export class LiveSessionRegistry {
 		}
 	}
 
+	/** Whether any chat working in `cwd` has a turn running or about to. */
+	busyIn(cwd: string): boolean {
+		for (const session of this.live.values()) {
+			if (session.cwd === cwd && session.busy) return true;
+		}
+		return false;
+	}
+
 	get(sessionId: string): LiveSession | null {
 		return this.live.get(sessionId) ?? null;
 	}
@@ -150,6 +202,13 @@ export class LiveSessionRegistry {
 		const session = this.live.get(sessionId);
 		if (!session) throw new Error(`chat session ${sessionId} is not running`);
 		return session;
+	}
+
+	unfinished(): UnfinishedSession[] {
+		return [...this.live.values()].flatMap((session) => {
+			const unfinished = session.unfinished();
+			return unfinished ? [unfinished] : [];
+		});
 	}
 
 	async dispose(sessionId: string): Promise<void> {

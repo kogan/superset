@@ -250,6 +250,12 @@ export class TerminalAgentStore extends EventEmitter {
 		this.byTerminal.set(terminalId, next);
 		this.persistence?.upsert(next);
 		this.emit("change", workspaceId);
+		this.noteActivity(workspaceId);
+	}
+
+	/** An agent did something; the sandbox keepalive listens for this. */
+	noteActivity(workspaceId: string): void {
+		this.emit("activity", workspaceId);
 	}
 
 	recordChatEvent(
@@ -287,6 +293,7 @@ export class TerminalAgentStore extends EventEmitter {
 				: {}),
 		});
 		this.emit("change", input.workspaceId);
+		this.noteActivity(input.workspaceId);
 	}
 
 	updateChat(
@@ -348,6 +355,7 @@ export class TerminalAgentStore extends EventEmitter {
 				needsInput: undefined,
 			});
 			this.emit("change", workspaceId);
+			this.noteActivity(workspaceId);
 			return;
 		}
 
@@ -386,6 +394,7 @@ export class TerminalAgentStore extends EventEmitter {
 			this.subagentsByTerminal.set(terminalId, new Map([[subagentId, next]]));
 		}
 		this.emit("change", workspaceId);
+		this.noteActivity(workspaceId);
 	}
 
 	/**
