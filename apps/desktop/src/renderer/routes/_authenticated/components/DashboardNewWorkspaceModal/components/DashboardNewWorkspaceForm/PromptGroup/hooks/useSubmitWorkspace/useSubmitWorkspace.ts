@@ -11,7 +11,7 @@ import { CLOUD_HOST_ID } from "@superset/shared/host-routing";
 import { toast } from "@superset/ui/sonner";
 import { useMatchRoute, useNavigate } from "@tanstack/react-router";
 import { useCallback, useMemo, useRef, useState } from "react";
-import { useAwaitAcpChatEnabled } from "renderer/hooks/useAcpChatEnabled";
+import { useResolveAcpChatEnabled } from "renderer/hooks/useAcpChatEnabled";
 import { useActiveOrganizationId } from "renderer/hooks/useActiveOrganizationId";
 import { cloudTrpc, cloudTrpcClient } from "renderer/lib/cloud-trpc";
 import { electronTrpc } from "renderer/lib/electron-trpc";
@@ -60,7 +60,7 @@ export function useSubmitWorkspace(
 	const collections = useCollections();
 	const { machineId } = useLocalHostService();
 	const activeOrganizationId = useActiveOrganizationId();
-	const awaitAcpChatEnabled = useAwaitAcpChatEnabled();
+	const resolveAcpChatEnabled = useResolveAcpChatEnabled();
 	const createCloudWorkspace = cloudTrpc.cloudWorkspace.create.useMutation();
 	const utils = cloudTrpc.useUtils();
 	const electronUtils = electronTrpc.useUtils();
@@ -230,7 +230,6 @@ export function useSubmitWorkspace(
 						workspaceId: created.id,
 						launch: initialLaunch,
 						prompt: prompt.trim(),
-						chatEnabled: await awaitAcpChatEnabled(),
 						modelId: selectedModel,
 						modeId: selectedMode,
 					});
@@ -316,7 +315,7 @@ export function useSubmitWorkspace(
 		const openAsChat =
 			wantAgent &&
 			Boolean(acpHarnessForPreset(selectedPresetId)) &&
-			(await awaitAcpChatEnabled());
+			(await resolveAcpChatEnabled());
 		const agents = wantAgent
 			? [
 					{
@@ -430,7 +429,7 @@ export function useSubmitWorkspace(
 		});
 	}, [
 		activeOrganizationId,
-		awaitAcpChatEnabled,
+		resolveAcpChatEnabled,
 		selectedPresetId,
 		closeAndResetDraft,
 		collections,

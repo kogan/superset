@@ -481,6 +481,8 @@ export const connections = pgTable(
 
 		issuer: text(),
 		resource: text(),
+		/** The dynamic client the grant was issued to; its refresh token is bound to it. */
+		oauthClientId: text("oauth_client_id"),
 
 		externalAccountId: text("external_account_id").notNull(),
 		externalAccountLabel: text("external_account_label"),
@@ -1727,6 +1729,9 @@ export const automations = pgTable(
 		// ["automation"] so every automation groups its runs out of the box;
 		// clearing the set in the editor is the opt-out.
 		tags: jsonb().$type<string[]>().notNull().default(["automation"]),
+
+		// Groups the automation in the automations list. Null = ungrouped.
+		group: text("group_name"),
 
 		// Deliver each run's prompt into the agent session the previous run
 		// left behind, rather than starting another beside it. Needs a pinned

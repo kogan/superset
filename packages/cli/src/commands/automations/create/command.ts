@@ -4,6 +4,7 @@ import { MACHINE_SIZES } from "@superset/shared/billing";
 import { command } from "../../../lib/command";
 import { resolveHostFilter } from "../../../lib/host-target";
 import { formatAutomationDate } from "../format";
+import { assertTriggersConnected } from "../missingConnectionError";
 import { resolveAutomationTarget } from "../resolveAutomationTarget";
 import {
 	refuseHostFlagsForCloud,
@@ -63,6 +64,9 @@ export default command({
 			.desc(
 				"Workspace tag applied to each run's created workspace. Repeatable. Each tag files the workspace into a sidebar folder of the same name",
 			),
+		group: string().desc(
+			"Group the automation is listed under in the automations table",
+		),
 	},
 	run: async ({ ctx, options }) => {
 		const prompt = options.prompt
@@ -123,6 +127,8 @@ export default command({
 					v2WorkspaceId: options.workspace ?? undefined,
 				};
 
+		await assertTriggersConnected(ctx.api, organizationId, triggers);
+
 		const result = await ctx.api.automation.create.mutate({
 			name: options.name,
 			prompt,
@@ -135,6 +141,7 @@ export default command({
 			timezone: options.timezone ?? DEFAULT_TIMEZONE,
 			...(triggers ? { triggers } : {}),
 			...(options.tag?.length ? { tags: options.tag } : {}),
+			...(options.group ? { group: options.group } : {}),
 		});
 
 		const schedule = result.nextRunAt

@@ -3,6 +3,7 @@ import { MACHINE_SIZES } from "@superset/shared/billing";
 import { CLOUD_HOST_ID } from "@superset/shared/host-routing";
 import { command } from "../../../lib/command";
 import { resolveHostFilter } from "../../../lib/host-target";
+import { assertTriggersConnected } from "../missingConnectionError";
 import { resolveAutomationTarget } from "../resolveAutomationTarget";
 import {
 	refuseHostFlagsForCloud,
@@ -57,6 +58,10 @@ export default command({
 				"Replace the tag set applied to each run's created workspace. Repeatable",
 			),
 		clearTags: boolean().desc("Remove every tag from the automation"),
+		group: string().desc(
+			"Move the automation to this group in the automations table",
+		),
+		clearGroup: boolean().desc("Remove the automation from its group"),
 	},
 	run: async ({ ctx, args, options }) => {
 		const id = args.id as string;
@@ -71,6 +76,13 @@ export default command({
 		if (options.tag?.length && options.clearTags) {
 			throw new CLIError(
 				"Cannot combine --tag and --clear-tags",
+				"Pass one or the other",
+			);
+		}
+
+		if (options.group && options.clearGroup) {
+			throw new CLIError(
+				"Cannot combine --group and --clear-group",
 				"Pass one or the other",
 			);
 		}
@@ -91,6 +103,12 @@ export default command({
 		}
 
 		const triggers = resolveTriggers(options);
+
+		await assertTriggersConnected(
+			ctx.api,
+			ctx.config.organizationId ?? undefined,
+			triggers,
+		);
 
 		const targetHostId = resolveHostFilter({
 			host: options.host ?? undefined,
@@ -205,6 +223,11 @@ export default command({
 				? { tags: [] }
 				: options.tag?.length
 					? { tags: options.tag }
+					: {}),
+			...(options.clearGroup
+				? { group: null }
+				: options.group
+					? { group: options.group }
 					: {}),
 			...target,
 			...cloudTarget,

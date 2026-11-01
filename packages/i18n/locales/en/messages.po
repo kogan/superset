@@ -42,6 +42,7 @@ msgid "“{0}” and its filters are removed. The workspaces are not affected."
 msgstr "“{0}” and its filters are removed. The workspaces are not affected."
 
 #. placeholder {0}: automation.name
+#. placeholder {0}: only.name
 msgid "\"{0}\" deleted"
 msgstr "\"{0}\" deleted"
 
@@ -62,12 +63,9 @@ msgid "\"{0}\" will be merged into {1} via {2}. This can't be undone from here."
 msgstr "\"{0}\" will be merged into {1} via {2}. This can't be undone from here."
 
 #. placeholder {0}: automation.name
-#. placeholder {0}: pendingDelete.name
+#. placeholder {0}: pendingDeleteOnly.name
 msgid "\"{0}\" will stop firing and its run history will be removed. This can't be undone."
 msgstr "\"{0}\" will stop firing and its run history will be removed. This can't be undone."
-
-msgid "\"{name}\" deleted"
-msgstr "\"{name}\" deleted"
 
 msgid "\"{name}\" paused"
 msgstr "\"{name}\" paused"
@@ -114,6 +112,18 @@ msgstr "{0, plural, one {# agent} other {# agents}}"
 #. placeholder {0}: rejected.length
 msgid "{0, plural, one {# automation couldn't be started} other {# automations couldn't be started}}"
 msgstr "{0, plural, one {# automation couldn't be started} other {# automations couldn't be started}}"
+
+#. placeholder {0}: targets.length
+msgid "{0, plural, one {# automation deleted} other {# automations deleted}}"
+msgstr "{0, plural, one {# automation deleted} other {# automations deleted}}"
+
+#. placeholder {0}: ids.length
+msgid "{0, plural, one {# automation paused} other {# automations paused}}"
+msgstr "{0, plural, one {# automation paused} other {# automations paused}}"
+
+#. placeholder {0}: ids.length
+msgid "{0, plural, one {# automation resumed} other {# automations resumed}}"
+msgstr "{0, plural, one {# automation resumed} other {# automations resumed}}"
 
 #. placeholder {0}: workspace.diffStats.fileCount
 msgid "{0, plural, one {# changed file} other {# changed files}}"
@@ -283,6 +293,10 @@ msgstr "{0, plural, one {Couldn’t delete # workspace} other {Couldn’t delete
 msgid "{0, plural, one {Creating # workspace...} other {Creating # workspaces...}}"
 msgstr "{0, plural, one {Creating # workspace...} other {Creating # workspaces...}}"
 
+#. placeholder {0}: pendingDelete.length
+msgid "{0, plural, one {Delete # automation?} other {Delete # automations?}}"
+msgstr "{0, plural, one {Delete # automation?} other {Delete # automations?}}"
+
 #. placeholder {0}: workspaces.length
 msgid "{0, plural, one {Delete # workspace?} other {Delete # workspaces?}}"
 msgstr "{0, plural, one {Delete # workspace?} other {Delete # workspaces?}}"
@@ -310,6 +324,10 @@ msgstr "{0, plural, one {Failed to close # port} other {Failed to close # ports}
 #. placeholder {0}: result.imported
 msgid "{0, plural, one {Imported # workspace} other {Imported # workspaces}}"
 msgstr "{0, plural, one {Imported # workspace} other {Imported # workspaces}}"
+
+#. placeholder {0}: pendingGroupDelete?.ids.length ?? 0
+msgid "{0, plural, one {Its # automation moves to No group. The automation itself is kept.} other {Its # automations move to No group. The automations themselves are kept.}}"
+msgstr "{0, plural, one {Its # automation moves to No group. The automation itself is kept.} other {Its # automations move to No group. The automations themselves are kept.}}"
 
 #. placeholder {0}: issues.length
 msgid "{0, plural, one {Linear issue} other {Linear issues}}"
@@ -795,6 +813,9 @@ msgstr "{cookieCount} cookies — forget this site"
 msgid "{count, plural, one {# active port — show details} other {# active ports — show details}}"
 msgstr "{count, plural, one {# active port — show details} other {# active ports — show details}}"
 
+msgid "{count, plural, one {# automation} other {# automations}}"
+msgstr "{count, plural, one {# automation} other {# automations}}"
+
 msgid "{count, plural, one {# Check Failed} other {# Checks Failed}}"
 msgstr "{count, plural, one {# Check Failed} other {# Checks Failed}}"
 
@@ -858,6 +879,9 @@ msgstr "{count, plural, one {fetched # page} other {fetched # pages}}"
 msgid "{count, plural, one {Import # worktree} other {Import # worktrees}}"
 msgstr "{count, plural, one {Import # worktree} other {Import # worktrees}}"
 
+msgid "{count, plural, one {Moved # automation to {group}} other {Moved # automations to {group}}}"
+msgstr "{count, plural, one {Moved # automation to {group}} other {Moved # automations to {group}}}"
+
 msgid "{count, plural, one {Project opened} other {# projects opened}}"
 msgstr "{count, plural, one {Project opened} other {# projects opened}}"
 
@@ -866,6 +890,9 @@ msgstr "{count, plural, one {ran # command} other {ran # commands}}"
 
 msgid "{count, plural, one {read # file} other {read # files}}"
 msgstr "{count, plural, one {read # file} other {read # files}}"
+
+msgid "{count, plural, one {Removed # automation from its group} other {Removed # automations from their groups}}"
+msgstr "{count, plural, one {Removed # automation from its group} other {Removed # automations from their groups}}"
 
 msgid "{count, plural, one {Used # source} other {Used # sources}}"
 msgstr "{count, plural, one {Used # source} other {Used # sources}}"
@@ -878,6 +905,9 @@ msgstr "{count} GitHub stars"
 
 msgid "{count} hosts run an older host service than this app"
 msgstr "{count} hosts run an older host service than this app"
+
+msgid "{count} selected"
+msgstr "{count} selected"
 
 msgid "{count}/day"
 msgstr "{count}/day"
@@ -1711,6 +1741,12 @@ msgstr "A rebuilt chat surface for driving agents: richer tool output, smoother 
 msgid "A repository is not connected to this organization, or the repositories come from different GitHub installations"
 msgstr "A repository is not connected to this organization, or the repositories come from different GitHub installations"
 
+msgid "A routine can run at most once an hour."
+msgstr "A routine can run at most once an hour."
+
+msgid "A routine needs a schedule or something to watch."
+msgstr "A routine needs a schedule or something to watch."
+
 msgid "A run for this automation is already in progress."
 msgstr "A run for this automation is already in progress."
 
@@ -1729,6 +1765,10 @@ msgstr "A task key is 1 to 5 letters or numbers and starts with a letter."
 
 msgid "a teammate"
 msgstr "a teammate"
+
+#. placeholder {0}: routine.room.name
+msgid "A thread in #{0}"
+msgstr "A thread in #{0}"
 
 msgid "A unique identifier for your organization (auto-generated from name)"
 msgstr "A unique identifier for your organization (auto-generated from name)"
@@ -3225,6 +3265,9 @@ msgstr "Avatar (atom)"
 msgid "Avatar updated!"
 msgstr "Avatar updated!"
 
+msgid "Avi Peltz, Satya Patel, and Kiet Ho at YC Demo Day"
+msgstr "Avi Peltz, Satya Patel, and Kiet Ho at YC Demo Day"
+
 #. placeholder {0}: requestedReviewers.join(", ")
 msgid "Awaiting {0}"
 msgstr "Awaiting {0}"
@@ -3537,6 +3580,9 @@ msgstr "Bring a link to something you built recently."
 msgid "Bring Any Agent"
 msgstr "Bring Any Agent"
 
+msgid "Bring Claude Code, Codex, OpenCode, or any coding agent into one workspace. Run tasks in parallel on separate branches, and review everything in one place."
+msgstr "Bring Claude Code, Codex, OpenCode, or any coding agent into one workspace. Run tasks in parallel on separate branches, and review everything in one place."
+
 msgid "Bring over your projects"
 msgstr "Bring over your projects"
 
@@ -3548,9 +3594,6 @@ msgstr "Bring over your workspaces"
 
 msgid "Bring v1 projects, workspaces, and terminal scripts over to v2. Each item is imported individually and can be retried."
 msgstr "Bring v1 projects, workspaces, and terminal scripts over to v2. Each item is imported individually and can be retried."
-
-msgid "Bring your agents together."
-msgstr "Bring your agents together."
 
 msgid "Bringing over your v1 projects"
 msgstr "Bringing over your v1 projects"
@@ -3963,9 +4006,6 @@ msgstr "Changelog"
 msgid "Changes"
 msgstr "Changes"
 
-msgid "Changes are isolated"
-msgstr "Changes are isolated"
-
 msgid "Changes open target"
 msgstr "Changes open target"
 
@@ -4234,8 +4274,8 @@ msgstr "CI failed"
 msgid "Clarify this"
 msgstr "Clarify this"
 
-msgid "Claude Code, Codex, and OpenCode are the agents; Paradev is where you run many of them at once. Each task gets its own isolated Git worktree, so ten agents can work on ten branches simultaneously while you monitor, review, and merge from one place."
-msgstr "Claude Code, Codex, and OpenCode are the agents; Paradev is where you run many of them at once. Each task gets its own isolated Git worktree, so ten agents can work on ten branches simultaneously while you monitor, review, and merge from one place."
+msgid "Claude Code, Codex, and OpenCode are the agents; Paradev is where you run many of them at once. Each task gets its own Git worktree and branch, so ten agents can work on ten branches simultaneously while you monitor, review, and merge from one place."
+msgstr "Claude Code, Codex, and OpenCode are the agents; Paradev is where you run many of them at once. Each task gets its own Git worktree and branch, so ten agents can work on ten branches simultaneously while you monitor, review, and merge from one place."
 
 msgid "Claude Code, Codex, Cursor, OpenCode and more. No setup per agent."
 msgstr "Claude Code, Codex, Cursor, OpenCode and more. No setup per agent."
@@ -4663,6 +4703,9 @@ msgstr "Collapse all files"
 
 msgid "Collapse file"
 msgstr "Collapse file"
+
+msgid "Collapse group"
+msgstr "Collapse group"
 
 msgid "Collapse project"
 msgstr "Collapse project"
@@ -5800,6 +5843,9 @@ msgstr "Couldn't branch into a new worktree"
 msgid "Couldn't branch the conversation"
 msgstr "Couldn't branch the conversation"
 
+msgid "Couldn't change the routine"
+msgstr "Couldn't change the routine"
+
 msgid "Couldn't check"
 msgstr "Couldn't check"
 
@@ -5982,6 +6028,9 @@ msgstr "Couldn't save the change"
 msgid "Couldn't save the Dev"
 msgstr "Couldn't save the Dev"
 
+msgid "Couldn't save the routine"
+msgstr "Couldn't save the routine"
+
 msgid "Couldn't send comment"
 msgstr "Couldn't send comment"
 
@@ -6053,6 +6102,9 @@ msgstr "Couldn't unstage file"
 
 msgid "Couldn't update pull request"
 msgstr "Couldn't update pull request"
+
+msgid "Couldn't update the Chat setting"
+msgstr "Couldn't update the Chat setting"
 
 msgid "Couldn't update the queue"
 msgstr "Couldn't update the queue"
@@ -6137,6 +6189,9 @@ msgstr "Create environment"
 
 msgid "Create failed: {message}"
 msgstr "Create failed: {message}"
+
+msgid "Create group <0>\"{name}\"</0>"
+msgstr "Create group <0>\"{name}\"</0>"
 
 msgid "Create issue"
 msgstr "Create issue"
@@ -6495,6 +6550,9 @@ msgstr "Data & APIs"
 msgid "Data display"
 msgstr "Data display"
 
+msgid "Date"
+msgstr "Date"
+
 msgid "Date created"
 msgstr "Date created"
 
@@ -6503,6 +6561,9 @@ msgstr "Date range"
 
 msgid "Day"
 msgstr "Day"
+
+msgid "Day of the month"
+msgstr "Day of the month"
 
 msgid "Day One"
 msgstr "Day One"
@@ -6590,6 +6651,7 @@ msgid "Delete “{title}”?"
 msgstr "Delete “{title}”?"
 
 #. placeholder {0}: organization.name
+#. placeholder {0}: routine.title
 #. placeholder {0}: secret.key
 msgid "Delete {0}?"
 msgstr "Delete {0}?"
@@ -6634,6 +6696,13 @@ msgstr "Delete file"
 msgid "Delete group"
 msgstr "Delete group"
 
+#. placeholder {0}: pendingGroupDelete?.group
+msgid "Delete group \"{0}\"?"
+msgstr "Delete group \"{0}\"?"
+
+msgid "Delete group…"
+msgstr "Delete group…"
+
 msgid "Delete host"
 msgstr "Delete host"
 
@@ -6660,6 +6729,9 @@ msgstr "Delete project"
 
 msgid "Delete Project…"
 msgstr "Delete Project…"
+
+msgid "Delete routine"
+msgstr "Delete routine"
 
 msgid "Delete script"
 msgstr "Delete script"
@@ -6746,6 +6818,9 @@ msgstr "Deleted {name}"
 msgid "Deleted by {deletedBy} {deletedWhen} · {deviceNames}"
 msgstr "Deleted by {deletedBy} {deletedWhen} · {deviceNames}"
 
+msgid "Deleted group \"{group}\""
+msgstr "Deleted group \"{group}\""
+
 msgid "deleted or unavailable — pick another"
 msgstr "deleted or unavailable — pick another"
 
@@ -6826,8 +6901,8 @@ msgstr "Describe the task for the agent…"
 msgid "Describe the work to your agent"
 msgstr "Describe the work to your agent"
 
-msgid "Describe what you need. Paradev creates an isolated workspace and clean branch for the task."
-msgstr "Describe what you need. Paradev creates an isolated workspace and clean branch for the task."
+msgid "Describe what you need. Paradev creates a workspace with its own worktree and branch for the task."
+msgstr "Describe what you need. Paradev creates a workspace with its own worktree and branch for the task."
 
 msgid "Describe what you'd like to see built…"
 msgstr "Describe what you'd like to see built…"
@@ -7364,8 +7439,8 @@ msgstr "e.g. My cloud reviews"
 msgid "e.g. plan-budget"
 msgstr "e.g. plan-budget"
 
-msgid "Each agent runs in its own isolated Git worktree. No overwriting each other's files. Review and merge work when you're ready."
-msgstr "Each agent runs in its own isolated Git worktree. No overwriting each other's files. Review and merge work when you're ready."
+msgid "Each agent works in its own Git worktree and branch, so agents don't overwrite each other's files. Review and merge work when you're ready."
+msgstr "Each agent works in its own Git worktree and branch, so agents don't overwrite each other's files. Review and merge work when you're ready."
 
 #. placeholder {0}: formatNumber(MAX_ATTACHMENT_BYTES / 1024 / 1024)
 msgid "Each attachment is at most {0} MB."
@@ -7385,6 +7460,9 @@ msgstr "Each session resumes where it left off."
 
 msgid "Each surface has its own typography. Changes appear immediately in the live previews."
 msgstr "Each surface has its own typography. Changes appear immediately in the live previews."
+
+msgid "Each task on its own branch"
+msgstr "Each task on its own branch"
 
 msgid "Early 2024"
 msgstr "Early 2024"
@@ -7443,6 +7521,9 @@ msgstr "Edit on GitHub"
 
 msgid "Edit queued message"
 msgstr "Edit queued message"
+
+msgid "Edit routine"
+msgstr "Edit routine"
 
 msgid "Edit Run Script"
 msgstr "Edit Run Script"
@@ -7582,6 +7663,9 @@ msgstr "Enable Remote Access and keep this computer awake with Paradev running."
 msgid "Enable skill"
 msgstr "Enable skill"
 
+msgid "End repeat"
+msgstr "End repeat"
+
 msgid "End voice session"
 msgstr "End voice session"
 
@@ -7677,6 +7761,9 @@ msgstr "esc to dismiss"
 
 msgid "esc to exit"
 msgstr "esc to exit"
+
+msgid "Event"
+msgstr "Event"
 
 msgid "Event log"
 msgstr "Event log"
@@ -7832,6 +7919,9 @@ msgstr "Expand diagram"
 
 msgid "Expand file"
 msgstr "Expand file"
+
+msgid "Expand group"
+msgstr "Expand group"
 
 msgid "Expand project"
 msgstr "Expand project"
@@ -8145,6 +8235,9 @@ msgstr "Failed to load repositories. Please try again."
 
 msgid "Failed to log out. Please try again."
 msgstr "Failed to log out. Please try again."
+
+msgid "Failed to move automation"
+msgstr "Failed to move automation"
 
 #. placeholder {0}: error.message
 msgid "Failed to move workspace: {0}"
@@ -8559,6 +8652,9 @@ msgstr "Filter hosts..."
 
 msgid "Filter logs"
 msgstr "Filter logs"
+
+msgid "Filter or name a group"
+msgstr "Filter or name a group"
 
 msgid "Filter pages"
 msgstr "Filter pages"
@@ -9539,6 +9635,9 @@ msgstr "Hours are shared across your team. They assume a standard {vcpus} vCPU /
 msgid "Hours assume a standard {vcpus} vCPU / {memoryGb} GB workspace. We meter GB-hours, the memory of the machine times the hours it runs, so a machine with twice the memory uses hours twice as fast."
 msgstr "Hours assume a standard {vcpus} vCPU / {memoryGb} GB workspace. We meter GB-hours, the memory of the machine times the hours it runs, so a machine with twice the memory uses hours twice as fast."
 
+msgid "Hours between runs"
+msgstr "Hours between runs"
+
 msgid "Hover Card"
 msgstr "Hover Card"
 
@@ -10058,6 +10157,9 @@ msgstr "Internet Disconnected"
 msgid "Interrupt"
 msgstr "Interrupt"
 
+msgid "Interval"
+msgstr "Interval"
+
 msgid "Intro call"
 msgstr "Intro call"
 
@@ -10093,6 +10195,9 @@ msgstr "Invalid Request"
 
 msgid "Invalid state parameter. Please try again."
 msgstr "Invalid state parameter. Please try again."
+
+msgid "Investigate production logs and issues"
+msgstr "Investigate production logs and issues"
 
 msgid "Invitation canceled"
 msgstr "Invitation canceled"
@@ -10180,9 +10285,6 @@ msgstr "is signed in."
 
 msgid "Is there a free plan?"
 msgstr "Is there a free plan?"
-
-msgid "Isolation"
-msgstr "Isolation"
 
 msgid "Issue"
 msgstr "Issue"
@@ -10448,6 +10550,9 @@ msgstr "Keyboard shortcuts"
 
 msgid "Keyboard Shortcuts"
 msgstr "Keyboard Shortcuts"
+
+msgid "Kiet Ho, Satya Patel, and Avi Peltz presenting at YC"
+msgstr "Kiet Ho, Satya Patel, and Avi Peltz presenting at YC"
 
 msgid "Kill"
 msgstr "Kill"
@@ -10723,9 +10828,6 @@ msgstr "Left organization"
 
 msgid "Left team"
 msgstr "Left team"
-
-msgid "Legal"
-msgstr "Legal"
 
 msgid "Less"
 msgstr "Less"
@@ -11733,11 +11835,17 @@ msgstr "Move to background"
 msgid "Move to group"
 msgstr "Move to group"
 
+msgid "Move to group…"
+msgstr "Move to group…"
+
 msgid "Move to Right Side"
 msgstr "Move to Right Side"
 
 msgid "Move to Tab"
 msgstr "Move to Tab"
+
+msgid "Moved \"{name}\" to {group}"
+msgstr "Moved \"{name}\" to {group}"
 
 msgid "Moving issue…"
 msgstr "Moving issue…"
@@ -11912,6 +12020,9 @@ msgstr "New agent sessions"
 msgid "New automation"
 msgstr "New automation"
 
+msgid "New automation in {group}"
+msgstr "New automation in {group}"
+
 msgid "New Browser"
 msgstr "New Browser"
 
@@ -11944,6 +12055,12 @@ msgstr "New group"
 
 msgid "New group from workspace"
 msgstr "New group from workspace"
+
+msgid "New group name…"
+msgstr "New group name…"
+
+msgid "New group…"
+msgstr "New group…"
 
 msgid "New issue"
 msgstr "New issue"
@@ -12310,6 +12427,9 @@ msgstr "No fonts found."
 
 msgid "No git remote detected"
 msgstr "No git remote detected"
+
+msgid "No group"
+msgstr "No group"
 
 msgid "No grouping"
 msgstr "No grouping"
@@ -12759,8 +12879,8 @@ msgstr "No workspaces yet"
 msgid "No-Prompt Launch"
 msgstr "No-Prompt Launch"
 
-msgid "No. Your agents stay independent; Paradev is the orchestration layer around them. Each task gets an isolated Git worktree, persistent sessions, diff review, and automations that run on events or a schedule, without tying the workflow to one provider."
-msgstr "No. Your agents stay independent; Paradev is the orchestration layer around them. Each task gets an isolated Git worktree, persistent sessions, diff review, and automations that run on events or a schedule, without tying the workflow to one provider."
+msgid "No. Your agents stay independent; Paradev is the orchestration layer around them. Each task gets its own Git worktree and branch, persistent sessions, diff review, and automations that run on events or a schedule, without tying the workflow to one provider."
+msgstr "No. Your agents stay independent; Paradev is the orchestration layer around them. Each task gets its own Git worktree and branch, persistent sessions, diff review, and automations that run on events or a schedule, without tying the workflow to one provider."
 
 msgid "Nobody has joined the board yet."
 msgstr "Nobody has joined the board yet."
@@ -13024,6 +13144,9 @@ msgstr "On"
 
 msgid "on {offScopeHostName} — won't run here"
 msgstr "on {offScopeHostName} — won't run here"
+
+msgid "On a date"
+msgstr "On a date"
 
 msgid "On focus change"
 msgstr "On focus change"
@@ -13340,6 +13463,9 @@ msgstr "Open ChatGPT admin settings"
 
 msgid "Open ChatGPT settings"
 msgstr "Open ChatGPT settings"
+
+msgid "Open Claude and Codex sessions as chats"
+msgstr "Open Claude and Codex sessions as chats"
 
 msgid "Open Claude and Codex sessions in a chat pane instead of a terminal."
 msgstr "Open Claude and Codex sessions in a chat pane instead of a terminal."
@@ -13755,9 +13881,6 @@ msgstr "Optional. Helps us learn what works."
 msgid "Options"
 msgstr "Options"
 
-msgid "Or ask your coding agent to install the Paradev CLI."
-msgstr "Or ask your coding agent to install the Paradev CLI."
-
 msgid "Orange"
 msgstr "Orange"
 
@@ -14099,8 +14222,8 @@ msgstr "Paradev is source-available: the code is public on GitHub under Elastic 
 msgid "Paradev is source-available. Every pull request, review and bug is public on GitHub."
 msgstr "Paradev is source-available. Every pull request, review and bug is public on GitHub."
 
-msgid "Paradev is the workbench for the F3 to F4 transition: parallel agents in isolated workspaces, fleets you can actually supervise, and a review surface for code you did not write."
-msgstr "Paradev is the workbench for the F3 to F4 transition: parallel agents in isolated workspaces, fleets you can actually supervise, and a review surface for code you did not write."
+msgid "Paradev is the workbench for the F3 to F4 transition: parallel agents on separate branches, fleets you can actually supervise, and a review surface for code you did not write."
+msgstr "Paradev is the workbench for the F3 to F4 transition: parallel agents on separate branches, fleets you can actually supervise, and a review surface for code you did not write."
 
 msgid "Paradev isn't on Windows yet"
 msgstr "Paradev isn't on Windows yet"
@@ -15590,6 +15713,9 @@ msgstr "Remove from channel"
 msgid "Remove from favorites"
 msgstr "Remove from favorites"
 
+msgid "Remove from group"
+msgstr "Remove from group"
+
 msgid "Remove from Queue"
 msgstr "Remove from Queue"
 
@@ -15658,6 +15784,9 @@ msgstr "Remove workspace"
 
 msgid "Remove…"
 msgstr "Remove…"
+
+msgid "Removed \"{name}\" from its group"
+msgstr "Removed \"{name}\" from its group"
 
 msgid "Removed {credential} for {agentLabel}."
 msgstr "Removed {credential} for {agentLabel}."
@@ -15769,6 +15898,12 @@ msgstr "Reopening…"
 
 msgid "reorder agents"
 msgstr "reorder agents"
+
+msgid "Repeat"
+msgstr "Repeat"
+
+msgid "Repeat routine"
+msgstr "Repeat routine"
 
 msgid "Replace"
 msgstr "Replace"
@@ -16339,14 +16474,26 @@ msgstr "Roundups"
 msgid "Route {label} through a provider you run, with the credentials you hold. Saved values are handed to the agent at launch."
 msgstr "Route {label} through a provider you run, with the credentials you hold. Saved values are handed to the agent at launch."
 
+msgid "Routine not found"
+msgstr "Routine not found"
+
+msgid "Routine options"
+msgstr "Routine options"
+
 msgid "Routine tickets with no mid-task intervention"
 msgstr "Routine tickets with no mid-task intervention"
+
+msgid "Routines"
+msgstr "Routines"
 
 msgid "Row actions"
 msgstr "Row actions"
 
 msgid "Rows changed"
 msgstr "Rows changed"
+
+msgid "Rule"
+msgstr "Rule"
 
 msgid "Run"
 msgstr "Run"
@@ -16502,6 +16649,9 @@ msgstr "Runs appear here once an automation fires."
 
 msgid "Runs before deletion using a copy of the latest session for this agent, when available. Skills have up to 10 minutes to finish."
 msgstr "Runs before deletion using a copy of the latest session for this agent, when available. Skills have up to 10 minutes to finish."
+
+msgid "Runs in"
+msgstr "Runs in"
 
 msgid "Runs inside the Paradev app on that device, so updating it means updating the app there."
 msgstr "Runs inside the Paradev app on that device, so updating it means updating the app there."
@@ -16991,6 +17141,10 @@ msgstr "See where your last 30 days land on the public leaderboard. Token counts
 msgid "Select"
 msgstr "Select"
 
+#. placeholder {0}: automation.name
+msgid "Select {0}"
+msgstr "Select {0}"
+
 msgid "Select a file to view it here"
 msgstr "Select a file to view it here"
 
@@ -17020,6 +17174,9 @@ msgstr "Select a workspace from the sidebar to get started."
 
 msgid "Select agent"
 msgstr "Select agent"
+
+msgid "Select all"
+msgstr "Select all"
 
 msgid "Select All"
 msgstr "Select All"
@@ -17137,6 +17294,9 @@ msgstr "Selected agent is not available on this host"
 
 msgid "Selected agent isn't a terminal agent"
 msgstr "Selected agent isn't a terminal agent"
+
+msgid "Selected automations"
+msgstr "Selected automations"
 
 msgid "Selected issues span multiple repositories. Select issues from a single repository to run them."
 msgstr "Selected issues span multiple repositories. Select issues from a single repository to run them."
@@ -17561,9 +17721,6 @@ msgstr "Show in chart"
 msgid "Show in folder"
 msgstr "Show in folder"
 
-msgid "Show in text field"
-msgstr "Show in text field"
-
 msgid "Show items in all states"
 msgstr "Show items in all states"
 
@@ -17910,6 +18067,10 @@ msgstr "Small"
 msgctxt "machine size"
 msgid "Small"
 msgstr "Small"
+
+#. Footer call to action. Use the natural idiom for clearing a work backlog fast, not a literal translation of “smash”.
+msgid "Smash your backlog."
+msgstr "Smash your backlog."
 
 msgid "Smileys & People"
 msgstr "Smileys & People"
@@ -19190,6 +19351,9 @@ msgstr "The desktop app runs on macOS and Linux today. Drop your email and we'll
 msgid "The desktop app runs on macOS, with an experimental Linux AppImage; Windows is not yet available. Beyond the desktop app there's a CLI, a TypeScript SDK, and an MCP server, so you can drive Paradev from scripts, terminals, and other agents. An app for iPhone and iPad on the App Store lets you check on agents and review their diffs away from your desk."
 msgstr "The desktop app runs on macOS, with an experimental Linux AppImage; Windows is not yet available. Beyond the desktop app there's a CLI, a TypeScript SDK, and an MCP server, so you can drive Paradev from scripts, terminals, and other agents. An app for iPhone and iPad on the App Store lets you check on agents and review their diffs away from your desk."
 
+msgid "The Dev can't post there."
+msgstr "The Dev can't post there."
+
 msgid "The device that hosts this project is unavailable."
 msgstr "The device that hosts this project is unavailable."
 
@@ -19507,6 +19671,9 @@ msgstr "These folders still have your files, but they did not come over to the n
 msgid "These ports are still in use"
 msgstr "These ports are still in use"
 
+msgid "They will stop firing and their run history will be removed. This can't be undone."
+msgstr "They will stop firing and their run history will be removed. This can't be undone."
+
 msgid "Thinking"
 msgstr "Thinking"
 
@@ -19820,6 +19987,12 @@ msgstr "This replaces its label, command, arguments, prompt and resume settings,
 msgid "This repository does not allow merging from here."
 msgstr "This repository does not allow merging from here."
 
+msgid "This schedule has no runs left."
+msgstr "This schedule has no runs left."
+
+msgid "This schedule isn't valid."
+msgstr "This schedule isn't valid."
+
 msgid "This screen doesn't exist"
 msgstr "This screen doesn't exist"
 
@@ -19892,6 +20065,9 @@ msgstr "This will disconnect GitHub from your organization. The GitHub App will 
 
 msgid "This will kill all running sessions and restart the terminal daemon. The app will restart terminals with a fresh daemon."
 msgstr "This will kill all running sessions and restart the terminal daemon. The app will restart terminals with a fresh daemon."
+
+msgid "This will permanently delete the routine and stop future runs."
+msgstr "This will permanently delete the routine and stop future runs."
 
 msgid "This will permanently delete this file. This action cannot be undone."
 msgstr "This will permanently delete this file. This action cannot be undone."
@@ -19979,6 +20155,9 @@ msgstr "Tier"
 
 msgid "Time"
 msgstr "Time"
+
+msgid "Time zone"
+msgstr "Time zone"
 
 msgid "Tinted"
 msgstr "Tinted"
@@ -20336,6 +20515,9 @@ msgstr "Type a command or search…"
 
 msgid "Type a message..."
 msgstr "Type a message..."
+
+msgid "Type a name, then press Enter"
+msgstr "Type a name, then press Enter"
 
 msgid "Type a task for Claude…"
 msgstr "Type a task for Claude…"

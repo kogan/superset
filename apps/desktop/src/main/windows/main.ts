@@ -543,6 +543,7 @@ export async function createPlatformWindow({
 
 	window.webContents.on("did-finish-load", () => {
 		console.log("[main-window] Renderer loaded successfully");
+		if (window.isDestroyed()) return;
 
 		if (persistedZoomLevel !== undefined) {
 			window.webContents.setZoomLevel(persistedZoomLevel);
@@ -565,6 +566,7 @@ export async function createPlatformWindow({
 			console.error(`  Error code: ${errorCode}`);
 			console.error(`  Description: ${errorDescription}`);
 			console.error(`  URL: ${validatedURL}`);
+			if (window.isDestroyed()) return;
 			// Show the window anyway so user can see something is wrong
 			window.show();
 		},
