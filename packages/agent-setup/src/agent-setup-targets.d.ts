@@ -54,7 +54,10 @@ export declare const AGENT_SETUP_TARGETS: readonly [{
 }, {
     readonly id: "ufo";
     readonly managedBinary: true;
+}, {
+    readonly id: "agy";
+    readonly managedBinary: true;
 }];
 export type AgentSetupTargetId = (typeof AGENT_SETUP_TARGETS)[number]["id"];
-export declare const SUPERSET_MANAGED_BINARIES: ("amp" | "claude" | "codex" | "copilot" | "cursor-agent" | "devin" | "droid" | "gemini" | "grok" | "kimi" | "mastracode" | "muse" | "omp" | "opencode" | "pi" | "ufo" | "vibe")[];
+export declare const SUPERSET_MANAGED_BINARIES: ("agy" | "amp" | "claude" | "codex" | "copilot" | "cursor-agent" | "devin" | "droid" | "gemini" | "grok" | "kimi" | "mastracode" | "muse" | "omp" | "opencode" | "pi" | "ufo" | "vibe")[];
 //# sourceMappingURL=agent-setup-targets.d.ts.map

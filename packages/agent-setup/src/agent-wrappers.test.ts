@@ -526,7 +526,7 @@ describe("agent-wrappers copilot", () => {
 		expect(wrapper).toContain(execLine);
 	});
 
-	it("trusts the Superset workspace codex project config without replacing CODEX_HOME", () => {
+	it("trusts the Paradev workspace codex project config without replacing CODEX_HOME", () => {
 		const realBinDir = path.join(TEST_ROOT, "real-bin");
 		const realCodex = path.join(realBinDir, "codex");
 		const wrapperPath = path.join(TEST_BIN_DIR, "codex");
@@ -1493,7 +1493,7 @@ describe("agent-wrappers claude settings.json", () => {
 		expect(fresh.schema_version).toBe(1);
 	});
 
-	it("never replaces a managed_hooks_path Superset does not own", () => {
+	it("never replaces a managed_hooks_path Paradev does not own", () => {
 		expect(
 			getMuseSettingsJsonContent(
 				JSON.stringify({
@@ -1515,7 +1515,7 @@ describe("agent-wrappers claude settings.json", () => {
 		).not.toBeNull();
 	});
 
-	it("removes only Superset's pointer and env names from Muse settings.json", () => {
+	it("removes only Paradev's pointer and env names from Muse settings.json", () => {
 		const after = getMuseSettingsJsonWithoutManagedHooks(
 			JSON.stringify({
 				schema_version: 1,
@@ -2945,7 +2945,7 @@ describe("agent-wrappers omp", () => {
 		expect(content).toContain("export default function");
 	});
 
-	it("maps OMP lifecycle events to Superset lifecycle hooks", () => {
+	it("maps OMP lifecycle events to Paradev lifecycle hooks", () => {
 		const content = getOmpExtensionContent();
 		expect(content).toContain('["session_start", "SessionStart"]');
 		expect(content).toContain('["agent_start", "UserPromptSubmit"]');
@@ -3026,7 +3026,7 @@ describe("agent-wrappers omp", () => {
 		expect(getOmpExtensionPath()).not.toBe(getPiExtensionPath());
 	});
 
-	it("removes the Superset-owned Oh My Pi extension on teardown", () => {
+	it("removes the Paradev-owned Oh My Pi extension on teardown", () => {
 		createOmpExtension();
 		const extensionPath = getOmpExtensionPath();
 		expect(existsSync(extensionPath)).toBe(true);

@@ -15,12 +15,12 @@ import {
 import { and, desc, eq } from "drizzle-orm";
 import type { HostDb } from "../../db";
 import { terminalAgentBindings } from "../../db/schema";
+import { resolveHostAgentConfig } from "../../terminal-agents/agent-config";
 import { scanClaudeSlashCommands } from "../../trpc/router/agent-tooling/scan-claude";
 import {
 	dedupeFirstWins,
 	scanSkillsDir,
 } from "../../trpc/router/agent-tooling/scan-fs";
-import { resolveHostAgentConfig } from "../../terminal-agents/agent-config";
 import { resolveDefaultAccountEnv } from "../../trpc/router/usage/default-account";
 import { getProjectConfigPath } from "../setup/config";
 

@@ -13,14 +13,18 @@ import {
 	FAQPageJsonLd,
 	ItemListJsonLd,
 } from "@/components/JsonLd";
-import { getComparisonPage, getComparisonPages } from "@/lib/compare";
+import { extractCompareToc, getComparisonPages } from "@/lib/compare";
+import { getPricedComparisonPage } from "@/lib/compare-prices";
 import {
 	extractComparisonFaqItems,
 	extractRoundupItems,
 	getComparisonPageTypeLabel,
+	splitComparisonFaq,
 } from "@/lib/compare-utils";
 import { slugify } from "@/lib/content-utils";
 import { CompareLayout } from "./components/CompareLayout";
+
+const mdxOptions = { mdxOptions: { remarkPlugins: [remarkGfm] } };
 
 interface PageProps {
 	params: Promise<{ slug: string }>;
@@ -30,13 +34,14 @@ export default async function ComparePageRoute({ params }: PageProps) {
 	await initServerI18n();
 
 	const { slug } = await params;
-	const page = getComparisonPage(slug);
+	const page = await getPricedComparisonPage(slug);
 
 	if (!page) {
 		notFound();
 	}
 
 	const url = `${COMPANY.MARKETING_URL}/compare/${slug}`;
+	const { body, faq } = splitComparisonFaq(page.content);
 	const faqItems = extractComparisonFaqItems(page.content);
 	const roundupItems =
 		page.type === "roundup"
@@ -73,11 +78,23 @@ export default async function ComparePageRoute({ params }: PageProps) {
 				]}
 			/>
 			{faqItems.length > 0 && <FAQPageJsonLd items={faqItems} />}
-			<CompareLayout page={page}>
+			<CompareLayout
+				page={page}
+				toc={extractCompareToc(page.content)}
+				faq={
+					faq && (
+						<MDXRemote
+							source={faq}
+							components={mdxComponents}
+							options={mdxOptions}
+						/>
+					)
+				}
+			>
 				<MDXRemote
-					source={page.content}
+					source={body}
 					components={mdxComponents}
-					options={{ mdxOptions: { remarkPlugins: [remarkGfm] } }}
+					options={mdxOptions}
 				/>
 			</CompareLayout>
 		</main>
@@ -95,7 +112,7 @@ export async function generateMetadata({
 }: PageProps): Promise<Metadata> {
 	const lang = await initServerI18n();
 	const { slug } = await params;
-	const page = getComparisonPage(slug);
+	const page = await getPricedComparisonPage(slug);
 
 	if (!page) {
 		return {};

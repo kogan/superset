@@ -37,7 +37,8 @@ export interface HarnessAdapter {
 	steer?(content: UserContent[]): Promise<boolean>;
 	respondToApproval(approvalId: string, decision: Decision): void;
 	setMode(modeId: string): void;
-	setConfigOption?(configId: string, value: string): void;
+	/** Resolves false when the agent refused the change. */
+	setConfigOption?(configId: string, value: string): Promise<boolean>;
 	/**
 	 * Branch this session, returning the harness id of the copy. Absent, or
 	 * null, when the harness cannot: the agent has to advertise it.
@@ -45,6 +46,8 @@ export interface HarnessAdapter {
 	/** With `upToMessageId`, keeps the conversation only through that message, or returns null when it cannot. */
 	fork?(cut?: { upToMessageId: string }): Promise<string | null>;
 	stopBackgroundTask?(taskId: string): Promise<boolean>;
+	steerSubagent?(taskId: string, content: UserContent[]): Promise<boolean>;
+	backgroundSubagent?(taskId: string): Promise<boolean>;
 	/**
 	 * Lists the harness's own sessions. Absent when this harness has no native
 	 * history. `supported: false` means the process answered but cannot list.

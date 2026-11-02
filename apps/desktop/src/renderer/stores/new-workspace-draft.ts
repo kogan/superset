@@ -1,3 +1,7 @@
+import type {
+	ComposerDraftSegment,
+	PromptInputAttachment,
+} from "@superset/chat-ui/PromptInput";
 import type { MachineSize } from "@superset/shared/billing";
 import { create } from "zustand";
 
@@ -46,6 +50,11 @@ export interface NewWorkspaceDraft {
 	machineSize: MachineSize | null;
 	/** Cloud only, for an environment without repositories of its own: primary first. */
 	prompt: string;
+	/** Upstream composer model (promptDraft/promptAttachments), kept alongside
+	 * the fork's plain `prompt` so both the composer surfaces and the fork's
+	 * prefill paths (Jira, setup script) compile against one draft. */
+	promptDraft: ComposerDraftSegment[];
+	promptAttachments: PromptInputAttachment[];
 	baseBranch: string | null;
 	baseBranchSource: BaseBranchSource | null;
 	workspaceName: string;
@@ -84,6 +93,8 @@ function buildInitialDraft(): NewWorkspaceDraft {
 		environmentId: null,
 		machineSize: null,
 		prompt: "",
+		promptDraft: [],
+		promptAttachments: [],
 		baseBranch: null,
 		baseBranchSource: null,
 		workspaceName: "",

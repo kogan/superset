@@ -13,7 +13,7 @@ import { currentBundleSha } from "./current-bundle";
 interface CarryingEnvironment {
 	id: string;
 	repositoryCount: number;
-	hooksRepositoryId: string | null;
+	primaryRepositoryId: string | null;
 }
 
 /**
@@ -28,8 +28,8 @@ export function pickDefaultEnvironment<T extends CarryingEnvironment>(
 ): T | undefined {
 	return carrying.find(
 		(row) =>
-			row.hooksRepositoryId === repositoryId ||
-			(row.repositoryCount === 1 && row.hooksRepositoryId === null),
+			row.primaryRepositoryId === repositoryId ||
+			(row.repositoryCount === 1 && row.primaryRepositoryId === null),
 	);
 }
 
@@ -55,7 +55,7 @@ export async function ensureDefaultEnvironment(args: {
 		const carrying = await tx
 			.select({
 				id: environments.id,
-				hooksRepositoryId: environments.hooksRepositoryId,
+				primaryRepositoryId: environments.primaryRepositoryId,
 				repositoryCount: sql<number>`(
 					select count(*)::int from ${environmentRepositories}
 					where ${environmentRepositories.environmentId} = ${environments.id}
@@ -109,7 +109,7 @@ export async function ensureDefaultEnvironment(args: {
 				region: args.region,
 				bundleSha: await currentBundleSha(),
 				scope: "organization",
-				hooksRepositoryId: repository.id,
+				primaryRepositoryId: repository.id,
 				createdByUserId: args.userId,
 			})
 			.returning({ id: environments.id });

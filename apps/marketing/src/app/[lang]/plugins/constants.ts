@@ -106,6 +106,16 @@ export const CATALOG: {
 				displayName: "Vercel",
 				description: msg({ message: "Read deployment and build logs" }),
 			},
+			{
+				name: "resend",
+				displayName: "Resend",
+				description: msg({ message: "Send email and debug delivery" }),
+			},
+			{
+				name: "sazabi",
+				displayName: "Sazabi",
+				description: msg({ message: "Investigate production logs and issues" }),
+			},
 		],
 	},
 	{
@@ -136,6 +146,11 @@ export const CATALOG: {
 				displayName: "Exa",
 				description: msg({ message: "Search the web" }),
 			},
+			{
+				name: "peec",
+				displayName: "Peec AI",
+				description: msg({ message: "Track your brand in AI search" }),
+			},
 		],
 	},
 ];
@@ -145,14 +160,14 @@ export const STEPS: (PluginsItem & { id: StepId })[] = [
 		id: "install",
 		title: msg({ message: "Install." }),
 		description: msg({
-			message: "Pick one in the Superset app. It's saved to your account.",
+			message: "Pick one in the Paradev app. It's saved to your account.",
 		}),
 	},
 	{
 		id: "connect",
 		title: msg({ message: "Connect." }),
 		description: msg({
-			message: "Sign in once. Superset keeps the connection.",
+			message: "Sign in once. Paradev keeps the connection.",
 		}),
 	},
 	{
@@ -184,7 +199,7 @@ export const FEATURES: PluginsItem[] = [
 		title: msg({ message: "Tokens stay off your machine" }),
 		description: msg({
 			message:
-				"Superset holds the token and makes the calls. Agents never see it.",
+				"Paradev holds the token and makes the calls. Agents never see it.",
 		}),
 	},
 	{

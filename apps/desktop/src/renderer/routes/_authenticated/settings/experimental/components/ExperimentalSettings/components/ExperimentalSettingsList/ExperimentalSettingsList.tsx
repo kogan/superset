@@ -1,16 +1,12 @@
 import { Trans, useLingui } from "@lingui/react/macro";
-import { FEATURE_FLAGS } from "@superset/shared/constants";
 import { Button } from "@superset/ui/button";
 import { Label } from "@superset/ui/label";
 import { Switch } from "@superset/ui/switch";
-import { useFeatureFlagEnabled } from "posthog-js/react";
-import { useNewDashboardSidebarEnabled } from "renderer/routes/_authenticated/_dashboard/components/DashboardSidebar/hooks/useNewDashboardSidebarEnabled";
 import { HighlightText } from "renderer/routes/_authenticated/settings/components/HighlightText";
 import {
 	useInlineWorkspacePortsStore,
 	usePortsDisplayMode,
 } from "renderer/stores/inline-workspace-ports";
-import { useNewDashboardSidebarStore } from "renderer/stores/new-dashboard-sidebar";
 import { useSettingsSearchQuery } from "renderer/stores/settings-state";
 import { useOpenV1ImportModal } from "renderer/stores/v1-import-modal";
 import {
@@ -22,6 +18,8 @@ import {
 	SETTING_ITEM_ID,
 	type SettingItemId,
 } from "../../../../../utils/settings-search";
+import { AcpChatSetting } from "../AcpChatSetting";
+import { ChatTurnSnapshotsSetting } from "../ChatTurnSnapshotsSetting";
 import { WaitForSetupBeforeAgentSetting } from "../WaitForSetupBeforeAgentSetting";
 
 interface ExperimentalSettingsListProps {
@@ -47,14 +45,13 @@ export function ExperimentalSettingsList({
 		SETTING_ITEM_ID.EXPERIMENTAL_WORKSPACE_AGENTS,
 		visibleItems,
 	);
-	const cloudWorkspacesEnabled =
-		useFeatureFlagEnabled(FEATURE_FLAGS.CLOUD_WORKSPACES) === true;
-	const showNewSidebar =
-		cloudWorkspacesEnabled &&
-		isItemVisible(SETTING_ITEM_ID.EXPERIMENTAL_NEW_SIDEBAR, visibleItems);
-	const newSidebarEnabled = useNewDashboardSidebarEnabled();
-	const setNewSidebarEnabled = useNewDashboardSidebarStore(
-		(state) => state.setEnabled,
+	const showAcpChat = isItemVisible(
+		SETTING_ITEM_ID.EXPERIMENTAL_ACP_CHAT,
+		visibleItems,
+	);
+	const showChatTurnSnapshots = isItemVisible(
+		SETTING_ITEM_ID.EXPERIMENTAL_CHAT_TURN_SNAPSHOTS,
+		visibleItems,
 	);
 	const showWaitForSetupBeforeAgent = isItemVisible(
 		SETTING_ITEM_ID.EXPERIMENTAL_WAIT_FOR_SETUP_BEFORE_AGENT,
@@ -175,34 +172,8 @@ export function ExperimentalSettingsList({
 						/>
 					</div>
 				)}
-				{showNewSidebar && (
-					<div className="flex items-center justify-between gap-6">
-						<div className="min-w-0 flex-1 space-y-0.5">
-							<Label htmlFor="new-sidebar" className="text-sm font-medium">
-								<HighlightText
-									text={t({
-										message: "New sidebar",
-									})}
-									query={searchQuery}
-								/>
-							</Label>
-							<p className="text-xs text-muted-foreground">
-								<HighlightText
-									text={t({
-										message:
-											"Cloud workspaces under their projects, a local and cloud filter, and the redesigned workspace row.",
-									})}
-									query={searchQuery}
-								/>
-							</p>
-						</div>
-						<Switch
-							id="new-sidebar"
-							checked={newSidebarEnabled}
-							onCheckedChange={setNewSidebarEnabled}
-						/>
-					</div>
-				)}
+				{showAcpChat && <AcpChatSetting />}
+				{showChatTurnSnapshots && <ChatTurnSnapshotsSetting />}
 				{showWaitForSetupBeforeAgent && <WaitForSetupBeforeAgentSetting />}
 			</div>
 		</div>

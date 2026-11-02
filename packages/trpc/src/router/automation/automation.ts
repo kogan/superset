@@ -70,6 +70,7 @@ import {
 	recordPromptVersion,
 	refreshScheduleNextRuns,
 	requireAutomationDeleteAccess,
+	resolveAutomationGroup,
 	scheduleSummariesFor,
 	summarizeSchedules,
 	syncScheduleTrigger,
@@ -80,6 +81,7 @@ import {
 	listRunsSchema,
 	parseRruleSchema,
 	runPayloadSchema,
+	setAutomationGroupSchema,
 	setAutomationPromptSchema,
 	updateAutomationSchema,
 } from "./schema";
@@ -296,7 +298,7 @@ async function resolveTarget(
 		await verifyHostAccess(userId, organizationId, hostId);
 	}
 	if (plan.cloud) {
-		await assertCloudAccess({ userId, session: ctx.session });
+		await assertCloudAccess({ userId, session: ctx.session }, organizationId);
 		if (!isCloudAgentId(agent)) {
 			throw userError({
 				code: "BAD_REQUEST",
@@ -595,6 +597,10 @@ export const automationRouter = {
 						// Every automation groups its runs out of the box; explicit
 						// tags (including []) override the default.
 						tags: input.tags ?? ["automation"],
+						group: await resolveAutomationGroup(
+							organizationId,
+							input.group ?? null,
+						),
 					})
 					.returning();
 
@@ -711,6 +717,14 @@ export const automationRouter = {
 							? { machineSize: input.machineSize }
 							: {}),
 						tags: input.tags ?? existing.tags,
+						...(input.group !== undefined
+							? {
+									group: await resolveAutomationGroup(
+										organizationId,
+										input.group,
+									),
+								}
+							: {}),
 						prompt: input.prompt ?? existing.prompt,
 					})
 					.where(eq(automations.id, input.id))
@@ -740,7 +754,14 @@ export const automationRouter = {
 						organizationId,
 						triggers: input.triggers,
 					});
-				} else if (nextRrule && nextDtstart && nextTimezone) {
+				} else if (
+					recurrenceChanged &&
+					nextRrule &&
+					nextDtstart &&
+					nextTimezone
+				) {
+					// Rewriting through the single-schedule shape keeps only one
+					// schedule, so an edit that leaves the schedule alone skips it.
 					await syncScheduleTrigger(tx, {
 						automationId: row.id,
 						organizationId,
@@ -796,6 +817,21 @@ export const automationRouter = {
 				throw await automationNotFound(input.id, ctx.session.user.id);
 			}
 			return existing;
+		}),
+
+	setGroup: protectedProcedure
+		.input(setAutomationGroupSchema)
+		.mutation(async ({ ctx, input }) => {
+			const organizationId = await requireActiveOrgMembership(ctx);
+			await getAutomationForUser(ctx.session.user.id, organizationId, input.id);
+
+			const group = await resolveAutomationGroup(organizationId, input.group);
+			await db
+				.update(automations)
+				.set({ group })
+				.where(eq(automations.id, input.id));
+
+			return { id: input.id, group };
 		}),
 
 	setPrompt: protectedProcedure

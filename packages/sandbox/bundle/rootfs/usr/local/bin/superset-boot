@@ -179,6 +179,24 @@ echo $! > "${SUPERSET_RUN_DIR}/host-service.pid"
 start_host_service
 exec 9>&-
 
+# What the box has, for anything that sizes itself: the cgroup's ceiling,
+# not the VM's, is what the kernel enforces. Login shells source this.
+mem_bytes="$(cat /sys/fs/cgroup/memory.max 2>/dev/null || true)"
+case "$mem_bytes" in ''|max) mem_bytes=$(( $(awk '/MemTotal/ {print $2}' /proc/meminfo) * 1024 )) ;; esac
+printf 'export SUPERSET_SANDBOX_MEMORY_MB=%s SUPERSET_SANDBOX_VCPUS=%s\n' "$(( mem_bytes / 1048576 ))" "$(nproc)" > "${SUPERSET_RUN_DIR}/resources.env"
+stamp "resources.written memory_mb=$(( mem_bytes / 1048576 )) vcpus=$(nproc)"
+
+# Ranks every process for the OOM killer and reaps the largest one before the
+# kernel has to; see the script. Root, because lowering a score needs it.
+if [ -x /usr/local/bin/superset-memguard ]; then
+	/usr/local/bin/superset-memguard >> "${SUPERSET_LOG_DIR}/memguard.log" 2>&1 9>&- &
+	echo $! > "${SUPERSET_RUN_DIR}/memguard.pid"
+	stamp "memguard.start pid=$!"
+fi
+
+# The fixed swapfile of an earlier bundle; memguard adds swap on demand now.
+[ -f /swapfile ] && ! grep -q "^/swapfile " /proc/swaps && rm -f /swapfile
+
 # --- the desktop and the checkout: side effects of being up.
 as_user env "DISPLAY=${SUPERSET_DISPLAY}" "HOME=${SUPERSET_USER_HOME}" "USER=${SUPERSET_USER}" \
 	"SUPERSET_SANDBOX_WORKSPACE_ID=${SUPERSET_SANDBOX_WORKSPACE_ID}" \

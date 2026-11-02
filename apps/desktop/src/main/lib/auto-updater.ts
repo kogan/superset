@@ -191,6 +191,10 @@ export function isUpdateReadyToInstall(): boolean {
 	return isInstalling || currentStatus === AUTO_UPDATE_STATUS.READY;
 }
 
+export function isInstallingUpdate(): boolean {
+	return isInstalling;
+}
+
 export async function installUpdate(): Promise<void> {
 	if (env.NODE_ENV === "development") {
 		// Simulate the real lifecycle so the renderer can be previewed with the

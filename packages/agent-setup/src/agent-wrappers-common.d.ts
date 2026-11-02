@@ -21,8 +21,11 @@ export declare const DYNAMIC_NOTIFY_PATH_MARKER = "$SUPERSET_HOME_DIR/hooks/supe
  * `~/.claude/settings.json`, and an agent's tool call can launch a second CLI
  * whose config fires under the terminal's agent — and the notify script uses
  * the disagreement to drop those events instead of relabeling the terminal.
+ *
+ * `eventType` sets `SUPERSET_HOOK_EVENT` for harnesses whose payload does not
+ * name the event (Antigravity); the notify script prefers it over the payload.
  */
-export declare function getManagedNotifyHookCommand(agentId: string): string;
+export declare function getManagedNotifyHookCommand(agentId: string, eventType?: string): string;
 export declare const MANAGED_ARTIFACT_GUARD_RELATIVE_PATH = "hooks/superestset-artifact-guard.sh";
 export declare const DYNAMIC_ARTIFACT_GUARD_PATH_MARKER = "$SUPERSET_HOME_DIR/hooks/superestset-artifact-guard.sh";
 export declare function getManagedArtifactGuardHookCommand(): string;
