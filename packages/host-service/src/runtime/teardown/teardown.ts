@@ -6,7 +6,12 @@ import {
 	createTerminalSessionInternal,
 	disposeSession,
 } from "../../terminal/terminal";
-import { resolveScript, shellSingleQuote } from "../setup/config";
+import {
+	chainPhases,
+	loadProjectConfig,
+	resolveScript,
+	shellSingleQuote,
+} from "../setup/config";
 
 import {
 	DELETION_SKILL_TIMEOUT_MS,
@@ -225,14 +230,27 @@ export function resolveTeardownCommand(args: {
 	/** Override $HOME for tests. */
 	homeDir?: string;
 }): { initialCommand: string; cwd?: string } | null {
-	const resolved = resolveScript(args.script ?? "teardown", args);
-	if (!resolved) return null;
-
-	const initialCommand =
-		resolved.kind === "commands"
-			? buildTeardownCommandFromShell(resolved.commands.join(" && "))
-			: buildTeardownInitialCommand(resolved.scriptPath);
-	return { initialCommand, ...(resolved.cwd && { cwd: resolved.cwd }) };
+	// The fork's "close" action resolves its own script/commands; upstream has no
+	// close phase. The default teardown path uses upstream's `[archive]` model
+	// (config.toml [archive], a v1 config.json `teardown`, and the
+	// `.superset/teardown.sh` fallback — worktree first, then main repo).
+	if (args.script === "close") {
+		const resolved = resolveScript("close", args);
+		if (!resolved) return null;
+		const initialCommand =
+			resolved.kind === "commands"
+				? buildTeardownCommandFromShell(resolved.commands.join(" && "))
+				: buildTeardownInitialCommand(resolved.scriptPath);
+		return { initialCommand, ...(resolved.cwd && { cwd: resolved.cwd }) };
+	}
+	const config = loadProjectConfig(args);
+	if (config?.kind !== "ok") return null;
+	const archive = chainPhases([config.resolved.archive], args.worktreePath);
+	if (!archive) return null;
+	return {
+		initialCommand: buildTeardownCommandFromShell(archive.command),
+		...(archive.cwd && { cwd: archive.cwd }),
+	};
 }
 
 export function buildTeardownInitialCommand(scriptPath: string): string {
