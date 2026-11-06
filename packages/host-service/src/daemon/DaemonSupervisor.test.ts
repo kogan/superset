@@ -1487,7 +1487,7 @@ describe("ptyDaemonSocketPath", () => {
 		expect(() =>
 			ptyDaemonSocketPath(ORG, {
 				NODE_ENV: "test",
-				SUPERSET_HOME_DIR: path.join(os.homedir(), ".superset"),
+				SUPERSET_HOME_DIR: path.join(os.homedir(), ".paradev"),
 			}),
 		).toThrow(/isolated temp dir/);
 		expect(() =>

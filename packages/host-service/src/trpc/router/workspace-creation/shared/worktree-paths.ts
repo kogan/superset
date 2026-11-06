@@ -9,6 +9,7 @@ import {
 	resolve,
 	sep,
 } from "node:path";
+import { resolveAppHomeDir } from "@superset/agent-setup/paths";
 import { TRPCError } from "@trpc/server";
 import { defaultWorkspaceFilesHomeDir } from "../../../../superset-home.ts";
 

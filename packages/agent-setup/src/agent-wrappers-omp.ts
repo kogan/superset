@@ -5,7 +5,7 @@ import {
 	writeFileIfChanged,
 } from "./agent-wrappers-common";
 import { getTemplatePath } from "./config";
-import { resolveUserHomeDir } from "./paths";
+import { APP_HOME_DIR_NAME, resolveUserHomeDir } from "./paths";
 
 export const OMP_EXTENSION_FILE = "superestset-hooks.ts";
 
@@ -47,7 +47,8 @@ export function getOmpExtensionContent(): string {
 		.replaceAll("notify.sh", "superestset-notify.sh")
 		.replaceAll(".superset", ".superestset")
 		.replaceAll("__superset", "__superestset")
-		.replace("{{MARKER}}", OMP_EXTENSION_MARKER);
+		.replace("{{MARKER}}", OMP_EXTENSION_MARKER)
+		.replaceAll("{{APP_HOME_DIR_NAME}}", APP_HOME_DIR_NAME);
 }
 
 /**

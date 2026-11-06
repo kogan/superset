@@ -10,6 +10,7 @@ import { useCloudWorkspaces } from "renderer/hooks/useCloudWorkspaces";
 import { useRelayUrl } from "renderer/hooks/useRelayUrl";
 import { authClient } from "renderer/lib/auth-client";
 import { getHostServiceClientByUrl } from "renderer/lib/host-service-client";
+import { hostQueryFn } from "renderer/lib/hostQueryFn";
 import {
 	type CloudPullRequestRef,
 	useCloudPullRequests,
@@ -712,13 +713,11 @@ export function useDashboardSidebarData({
 			// Unreachable host: keep the query mounted so cached chips stay
 			// rendered through the outage; fetches resume when the URL returns.
 			enabled: target.hostUrl !== null,
-			queryFn: async () => {
-				if (!target.hostUrl) return { workspaces: [], github: null };
-				const client = getHostServiceClientByUrl(target.hostUrl);
-				return client.pullRequests.getByWorkspaces.query({
+			queryFn: hostQueryFn(target.hostUrl, (hostUrl) =>
+				getHostServiceClientByUrl(hostUrl).pullRequests.getByWorkspaces.query({
 					workspaceIds: target.workspaceIds,
-				});
-			},
+				}),
+			),
 		})),
 	});
 

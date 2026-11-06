@@ -1,6 +1,6 @@
 import { existsSync, readFileSync } from "node:fs";
-import { homedir } from "node:os";
 import { join, resolve } from "node:path";
+import { resolveAppHomeDir } from "@superset/agent-setup/paths";
 import {
 	type ConfigError,
 	fromV1Json,
@@ -8,11 +8,8 @@ import {
 	type ResolvedProjectConfig,
 	resolveProjectConfig,
 } from "@superset/shared/project-config";
+import { resolveProjectConfigDir } from "@superset/shared/project-config/dir";
 import type { WorktreeDeletionAction } from "@superset/shared/worktree-deletion";
-import {
-	defaultSupersetHomeDir,
-	SUPERSET_HOME_DIR_NAME,
-} from "../../superset-home.ts";
 import {
 	configEnvironment,
 	findTomlConfigPath,
@@ -20,7 +17,6 @@ import {
 	loadTomlConfig,
 } from "./project-config-toml";
 
-const PROJECT_SUPERSET_DIR_NAME = ".superset";
 const CONFIG_FILE_NAME = "config.json";
 const LOCAL_CONFIG_FILE_NAME = "config.local.json";
 const PROJECTS_DIR_NAME = "projects";
@@ -197,7 +193,7 @@ function applyLocalOverlay(
 }
 
 export function getProjectConfigPath(repoPath: string): string {
-	return join(repoPath, PROJECT_SUPERSET_DIR_NAME, CONFIG_FILE_NAME);
+	return join(resolveProjectConfigDir(repoPath), CONFIG_FILE_NAME);
 }
 
 /**
@@ -210,9 +206,9 @@ export function getProjectConfigPath(repoPath: string): string {
 function getUserOverridePaths(args: {
 	repoPath: string;
 	projectId: string;
-	supersetHomeDir: string;
+	appHomeDir: string;
 }): string[] {
-	const projectsDir = join(args.supersetHomeDir, PROJECTS_DIR_NAME);
+	const projectsDir = join(args.appHomeDir, PROJECTS_DIR_NAME);
 	const paths = [join(projectsDir, args.repoPath, CONFIG_FILE_NAME)];
 	if (!args.projectId.includes("/") && !args.projectId.includes("\\")) {
 		paths.push(join(projectsDir, args.projectId, CONFIG_FILE_NAME));
@@ -220,23 +216,16 @@ function getUserOverridePaths(args: {
 	return paths;
 }
 
-function machineSupersetHomeDir(homeDir?: string): string {
-	const envHome = process.env.SUPERSET_HOME_DIR?.trim();
-	if (envHome) return envHome;
-	if (homeDir) return join(homeDir, SUPERSET_HOME_DIR_NAME);
-	return defaultSupersetHomeDir();
-}
-
 function getLocalOverlayPath(repoPath: string): string {
-	return join(repoPath, PROJECT_SUPERSET_DIR_NAME, LOCAL_CONFIG_FILE_NAME);
+	return join(resolveProjectConfigDir(repoPath), LOCAL_CONFIG_FILE_NAME);
 }
 
 /**
  * Resolve setup/teardown/run config for a v2 project. Base merge, per key,
  * later wins:
  *
- *   1. <repoPath>/.superset/config.json      — canonical project config
- *   2. <worktreePath>/.superset/config.json  — workspace/branch override
+ *   1. <repoPath>/<config dir>/config.json      — canonical project config
+ *   2. <worktreePath>/<config dir>/config.json  — workspace/branch override
  *      (only when a worktree is in scope: setup at create, teardown at delete)
  *   3. ~/.superestset/projects/<repoPath>/config.json — per-machine user
  *      override (falls back to the legacy <project-id> key)
@@ -251,8 +240,7 @@ export function loadSetupConfig(args: {
 	projectId: string;
 	/** Workspace worktree; when set, its config overrides the main repo's. */
 	worktreePath?: string;
-	/** Override $HOME for tests; ignored when SUPERSET_HOME_DIR is set. */
-	homeDir?: string;
+	appHomeDir?: string;
 }): SetupConfig | null {
 	const projectConfig = readSetupConfigAt(getProjectConfigPath(args.repoPath));
 	const worktreeConfig = args.worktreePath
@@ -263,7 +251,7 @@ export function loadSetupConfig(args: {
 	for (const overridePath of getUserOverridePaths({
 		repoPath: args.repoPath,
 		projectId: args.projectId,
-		supersetHomeDir: machineSupersetHomeDir(args.homeDir),
+		appHomeDir: args.appHomeDir ?? resolveAppHomeDir(),
 	})) {
 		userConfig = readSetupConfigAt(overridePath);
 		if (userConfig) break;
@@ -325,8 +313,8 @@ export function resolveScript(
 		projectId: string;
 		/** Workspace worktree; its config and script win over the main repo. */
 		worktreePath?: string;
-		/** Override $HOME for tests; ignored when SUPERSET_HOME_DIR is set. */
-		homeDir?: string;
+		/** Override the app home dir for tests; ignored when SUPERSET_HOME_DIR is set. */
+		appHomeDir?: string;
 	},
 ): ResolvedScript | null {
 	if (
@@ -366,8 +354,7 @@ export function loadProjectConfig(args: {
 	repoPath: string;
 	projectId: string;
 	worktreePath?: string;
-	/** Override $HOME for tests. Defaults to `os.homedir()`. */
-	homeDir?: string;
+	appHomeDir?: string;
 }): ProjectConfigLoad | null {
 	const toml = loadTomlConfig(args);
 	if (toml?.kind === "invalid") return toml;
@@ -386,7 +373,7 @@ export function loadProjectConfig(args: {
 	};
 }
 
-/** v1 runs `.superset/<key>.sh` for a key with no commands, worktree first. */
+/** v1 runs `<config dir>/<key>.sh` for a key with no commands, worktree first. */
 function withScriptFallbacks(
 	config: SetupConfig,
 	args: { repoPath: string; worktreePath?: string },
@@ -398,7 +385,7 @@ function withScriptFallbacks(
 	for (const key of SCRIPT_KEYS) {
 		if (nonEmptyStrings(config[key]).length > 0) continue;
 		const script = roots
-			.map((root) => join(root, PROJECT_SUPERSET_DIR_NAME, `${key}.sh`))
+			.map((root) => join(resolveProjectConfigDir(root), `${key}.sh`))
 			.find((path) => existsSync(path));
 		if (script) result[key] = [`bash ${shellSingleQuote(script)}`];
 	}
@@ -451,7 +438,7 @@ export function invalidConfigCommand(
 export function hasProjectConfig(args: {
 	repoPath: string;
 	projectId: string;
-	homeDir?: string;
+	appHomeDir?: string;
 }): boolean {
 	if (findTomlConfigPath(args)) return true;
 	return hasConfiguredScripts(loadSetupConfig(args));
@@ -473,7 +460,7 @@ export function describeProjectConfigSources(args: {
 	repoPath: string;
 	projectId: string;
 	worktreePath?: string;
-	homeDir?: string;
+	appHomeDir?: string;
 }): { format: "toml" | "json" | "none"; legacySources: LegacyConfigSource[] } {
 	if (findTomlConfigPath(args)) return { format: "toml", legacySources: [] };
 
@@ -500,13 +487,11 @@ export function describeProjectConfigSources(args: {
 			sources.add("before_after");
 		}
 	}
-	const homeDir = args.homeDir ?? homedir();
+	const appHomeDir = args.appHomeDir ?? resolveAppHomeDir();
 	if (
-		getUserOverridePaths({
-			repoPath: args.repoPath,
-			projectId: args.projectId,
-			supersetHomeDir: machineSupersetHomeDir(homeDir),
-		}).some((path) => existsSync(path))
+		getUserOverridePaths({ ...args, appHomeDir }).some((path) =>
+			existsSync(path),
+		)
 	) {
 		sources.add("user_projects_override");
 	}
@@ -515,7 +500,7 @@ export function describeProjectConfigSources(args: {
 		if (nonEmptyStrings(config?.[key]).length > 0) continue;
 		if (
 			roots.some((root) =>
-				existsSync(join(root, PROJECT_SUPERSET_DIR_NAME, `${key}.sh`)),
+				existsSync(join(resolveProjectConfigDir(root), `${key}.sh`)),
 			)
 		) {
 			sources.add("script_fallback");

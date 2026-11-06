@@ -35,6 +35,7 @@ import { DashboardSidebarPinnedSection } from "./components/DashboardSidebarPinn
 import { DashboardSidebarProjectSection } from "./components/DashboardSidebarProjectSection";
 import { DashboardSidebarSectionRenameProvider } from "./components/DashboardSidebarSectionRenameContext";
 import { DashboardSidebarSessionsSection } from "./components/DashboardSidebarSessionsSection";
+import { DashboardSidebarShellHeader } from "./components/DashboardSidebarShellHeader";
 import { DashboardSidebarWorkspacesHeader } from "./components/DashboardSidebarWorkspacesHeader";
 import { useGettingStartedCard } from "./components/GettingStartedCard";
 import { useV2SetupScriptCard } from "./components/V2SetupScriptCard";
@@ -167,6 +168,8 @@ export function DashboardSidebar({
 	const { activeHostUrl } = useLocalHostService();
 	const v2RouteMatch = matchRoute({ to: "/v2-workspace/$workspaceId" });
 	const activeV2WorkspaceId = v2RouteMatch ? v2RouteMatch.workspaceId : null;
+	const isParadevShell = useParadevShell();
+	const isChatSection = useIsChatSection();
 	const workspacesListCollapsed = useSidebarSectionsCollapseStore(
 		(s) => s.collapsed.workspaces,
 	);
@@ -309,6 +312,89 @@ export function DashboardSidebar({
 			reorderProjects(reordered);
 		},
 		[reorderProjects],
+	);
+
+	const workspaceList = (
+		<>
+			{(isCollapsed || !workspacesListCollapsed) && (
+				<DashboardSidebarPinnedSection
+					pinnedWorkspaces={displayedPinnedWorkspaces}
+					isCollapsed={isCollapsed}
+					onWorkspaceHover={refreshWorkspacePullRequest}
+				/>
+			)}
+			<DashboardSidebarSessionsSection
+				sessionWorkspaces={displayedSessionWorkspaces}
+				isCollapsed={isCollapsed}
+				workspaceShortcutLabels={workspaceShortcutLabels}
+				onWorkspaceHover={refreshWorkspacePullRequest}
+				onDeleteSection={deleteSection}
+				onRenameSection={renameSection}
+				onToggleSectionCollapse={toggleSectionCollapsed}
+			/>
+			{!isCollapsed && (
+				<div className="mt-3 first:mt-0">
+					<DashboardSidebarBulkActions projects={orderedGroups}>
+						<DashboardSidebarWorkspacesHeader
+							sortMode={sortMode}
+							onSortModeChange={setSidebarProjectSortMode}
+							hostFilter={isCloudEnabled ? hostFilter : null}
+							onHostFilterChange={setSidebarProjectHostFilter}
+							filterQuery={projectFilterQuery}
+							onFilterQueryChange={setProjectFilterQuery}
+						/>
+					</DashboardSidebarBulkActions>
+				</div>
+			)}
+			{(isCollapsed || !workspacesListCollapsed) && (
+				<SortableContext
+					items={displayedProjectIds}
+					strategy={verticalListSortingStrategy}
+				>
+					{displayedGroups.map((project) => (
+						<SortableProjectWrapper
+							key={project.id}
+							project={project}
+							isCollapsed={isCollapsed}
+							isDragDisabled={isProjectDragDisabled}
+							workspaceShortcutLabels={workspaceShortcutLabels}
+							onWorkspaceHover={refreshWorkspacePullRequest}
+							onToggleCollapse={toggleProjectCollapsed}
+						/>
+					))}
+				</SortableContext>
+			)}
+			{!isCollapsed && !workspacesListCollapsed && (
+				<DashboardSidebarHiddenProjects
+					projects={hiddenProjects}
+					onShow={showHiddenProject}
+				/>
+			)}
+			{!isCollapsed && isFilterActive && displayedGroups.length === 0 && (
+				<div className="select-text cursor-text px-4 py-2 text-xs text-muted-foreground">
+					{trimmedFilterQuery !== ""
+						? t({
+								message: `No projects match "${trimmedFilterQuery}"`,
+							})
+						: hostFilter === "cloud"
+							? t({ message: "No cloud workspaces" })
+							: t({ message: "No local workspaces" })}
+				</div>
+			)}
+		</>
+	);
+	const cardSlot = (
+		<SidebarCardSlot
+			isCollapsed={isCollapsed}
+			entries={[
+				isPreviewingReleaseNotes ? releaseNotesCard : null,
+				paymentFailedCard,
+				setupScriptCard,
+				gettingStartedCard,
+				releaseNotesCard,
+				hiringCard,
+			]}
+		/>
 	);
 
 	return (

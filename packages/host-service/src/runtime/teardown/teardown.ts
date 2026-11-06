@@ -42,12 +42,11 @@ interface RunTeardownOptions {
 	db: HostDb;
 	workspaceId: string;
 	worktreePath: string;
-	/** Main repo path — source of truth for `.superset/config.json`. */
+	/** Main repo path — source of truth for the repo's config. */
 	repoPath: string;
 	projectId: string;
 	timeoutMs?: number;
-	/** Override $HOME for tests. Defaults to `os.homedir()`. */
-	homeDir?: string;
+	appHomeDir?: string;
 }
 
 /**
@@ -57,8 +56,8 @@ interface RunTeardownOptions {
  * setup runs.
  *
  * The teardown to run is resolved by {@link resolveTeardownCommand}: the
- * configured `teardown` commands from `.superset/config.json` take precedence,
- * falling back to a `.superset/teardown.sh` script (worktree first, then main
+ * configured `teardown` commands from the repo's config take precedence,
+ * falling back to a `teardown.sh` script in the config dir (worktree first, then main
  * repo). Skipped (as a success) when no source resolves to anything runnable.
  *
  * Silent by design — the PTY session is transient and not surfaced as a
@@ -72,7 +71,7 @@ export async function runTeardown({
 	repoPath,
 	projectId,
 	timeoutMs,
-	homeDir,
+	appHomeDir,
 }: RunTeardownOptions): Promise<TeardownResult> {
 	let completionPath: string | undefined;
 	let resolved: { initialCommand: string; cwd?: string } | null;
@@ -88,7 +87,7 @@ export async function runTeardown({
 				repoPath,
 				worktreePath,
 				action: settings.closeAction,
-				homeDir,
+				homeDir: appHomeDir,
 			});
 			resolved = skill
 				? { initialCommand: buildTeardownCommandFromShell(skill.command) }
@@ -101,7 +100,7 @@ export async function runTeardown({
 				repoPath,
 				projectId,
 				worktreePath,
-				homeDir,
+				appHomeDir,
 			});
 		}
 	} catch (error) {
@@ -227,8 +226,7 @@ export function resolveTeardownCommand(args: {
 	repoPath: string;
 	projectId: string;
 	worktreePath: string;
-	/** Override $HOME for tests. */
-	homeDir?: string;
+	appHomeDir?: string;
 }): { initialCommand: string; cwd?: string } | null {
 	// The fork's "close" action resolves its own script/commands; upstream has no
 	// close phase. The default teardown path uses upstream's `[archive]` model

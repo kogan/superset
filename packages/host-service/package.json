@@ -8,6 +8,10 @@
 			"types": "./src/index.ts",
 			"default": "./src/index.ts"
 		},
+		"./acp-catalogue": {
+			"types": "./src/chat-v3/acpCatalogue.ts",
+			"default": "./src/chat-v3/acpCatalogue.ts"
+		},
 		"./db": {
 			"types": "./src/db/index.ts",
 			"default": "./src/db/index.ts"
@@ -51,6 +55,10 @@
 		"./settings": {
 			"types": "./src/trpc/router/settings/index.ts",
 			"default": "./src/trpc/router/settings/index.ts"
+		},
+		"./cloud-api-error": {
+			"types": "./src/trpc/router/host/cloud-api-error.ts",
+			"default": "./src/trpc/router/host/cloud-api-error.ts"
 		},
 		"./attachments": {
 			"types": "./src/trpc/router/attachments/index.ts",

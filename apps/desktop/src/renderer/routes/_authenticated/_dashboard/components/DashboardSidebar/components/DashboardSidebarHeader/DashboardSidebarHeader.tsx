@@ -2,10 +2,8 @@ import { Trans, useLingui } from "@lingui/react/macro";
 import {
 	DropdownMenu,
 	DropdownMenuContent,
-	DropdownMenuItem,
 	DropdownMenuTrigger,
 } from "@superset/ui/dropdown-menu";
-import { toast } from "@superset/ui/sonner";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@superset/ui/tooltip";
 import { cn } from "@superset/ui/utils";
 import { useMatchRoute, useNavigate } from "@tanstack/react-router";
@@ -38,9 +36,8 @@ import { usePagesEnabled } from "renderer/hooks/usePagesEnabled";
 import { usePluginsEnabled } from "renderer/hooks/usePluginsEnabled";
 import { useZoomFactor } from "renderer/hooks/useZoomFactor";
 import { useHotkeyDisplay } from "renderer/hotkeys";
-import { cloudTrpc } from "renderer/lib/cloud-trpc";
 import { electronTrpc } from "renderer/lib/electron-trpc";
-import { useFolderFirstImport } from "renderer/routes/_authenticated/_dashboard/components/AddRepositoryModals/hooks/useFolderFirstImport";
+import { AddProjectMenuItems } from "renderer/routes/_authenticated/_dashboard/components/AddProjectMenuItems";
 import { AppMenuButton } from "renderer/routes/_authenticated/_dashboard/components/AppMenuButton";
 import { NavigationControls } from "renderer/routes/_authenticated/_dashboard/components/NavigationControls";
 import { OfflineBadge } from "renderer/routes/_authenticated/_dashboard/components/OfflineBadge";
@@ -51,21 +48,10 @@ import {
 	WINDOW_CONTROLS_ROW_HEIGHT,
 	WINDOW_CONTROLS_ROW_TOP,
 } from "renderer/routes/_authenticated/_dashboard/components/WindowChrome";
+import { useDashboardNavigation } from "renderer/routes/_authenticated/_dashboard/hooks/useDashboardNavigation";
 import { useFailedAutomations } from "renderer/routes/_authenticated/_dashboard/hooks/useFailedAutomations";
+import { useOpenNewWorkspaceInViewedProject } from "renderer/routes/_authenticated/_dashboard/hooks/useOpenNewWorkspaceInViewedProject";
 import { useShowsAppTopBar } from "renderer/routes/_authenticated/_dashboard/hooks/useShowsAppTopBar";
-import {
-	pullRequestsSearchFromFilters,
-	usePullRequestsFilterStore,
-} from "renderer/routes/_authenticated/_dashboard/pull-requests/stores/pullRequestsFilterStore";
-import {
-	tasksSearchFromFilters,
-	useTasksFilterStore,
-} from "renderer/routes/_authenticated/_dashboard/tasks/stores/tasks-filter-state";
-import { useHostWorkspaces } from "renderer/routes/_authenticated/providers/HostWorkspacesProvider";
-import {
-	getUsageLastSection,
-	usageSectionPath,
-} from "renderer/routes/_authenticated/settings/usage/utils/usageLastSection";
 import { STROKE_WIDTH_THICK } from "renderer/screens/main/components/WorkspaceSidebar/constants";
 import {
 	useOpenEmptyProjectModal,
@@ -85,66 +71,11 @@ export function DashboardSidebarHeader({
 	isCollapsed = false,
 }: DashboardSidebarHeaderProps) {
 	const { t } = useLingui();
-	const openNewWorkspace = useOpenNewWorkspace();
-	const openProjectWorkspace = useOpenNewWorkspaceForLocalProject();
-	const openEmptyProject = useOpenEmptyProjectModal();
-	const openNewProject = useOpenNewProjectModal();
-	const openTemplateGallery = useOpenTemplateGalleryModal();
-	const navigate = useNavigate();
-	const folderImport = useFolderFirstImport({
-		onError: (message) => {
-			toast.error(
-				t({
-					message: `Import failed: ${message}`,
-				}),
-			);
-		},
-		onMultipleProjects: ({ candidates }) => {
-			toast.error(
-				t({
-					message: "Import failed",
-				}),
-				{
-					description: t({
-						message: `Multiple projects use this repository (${candidates.length}). Choose the project in settings to set it up on this device.`,
-					}),
-					action: {
-						label: t({
-							message: "Open Projects",
-						}),
-						onClick: () => navigate({ to: "/settings/projects" }),
-					},
-				},
-			);
-		},
-	});
-
-	const handleImportFolder = async () => {
-		const result = await folderImport.start();
-		if (result) {
-			openProjectWorkspace(result.projectId);
-			toast.success(
-				t({
-					message: "Project imported and selected.",
-				}),
-			);
-		}
-	};
-
+	const navigation = useDashboardNavigation();
+	const openNewWorkspace = useOpenNewWorkspaceInViewedProject();
+	const paletteToggle = useCommandPaletteToggle();
 	const shortcutText = useHotkeyDisplay("NEW_WORKSPACE").text;
 	const searchShortcutText = useHotkeyDisplay("OPEN_COMMAND_PALETTE").text;
-	const openCommandPalette = useFrameStackStore((s) => s.setOpen);
-	// The palette dialog dismisses on outside pointerdown before our click fires,
-	// so a live-state toggle would always reopen it. Capture the state at
-	// pointerdown to make clicking the button close an open palette.
-	const paletteWasOpenRef = useRef(false);
-	const handleSearchPointerDown = () => {
-		paletteWasOpenRef.current = useFrameStackStore.getState().open;
-	};
-	const handleSearchClick = () => {
-		openCommandPalette(!paletteWasOpenRef.current);
-		paletteWasOpenRef.current = false;
-	};
 	const { data: platform } = electronTrpc.window.getPlatform.useQuery();
 	// Default to Mac while loading so we don't briefly cover the traffic lights.
 	const isMac = platform === undefined || platform === "darwin";
@@ -316,7 +247,7 @@ export function DashboardSidebarHeader({
 						<TooltipTrigger asChild>
 							<button
 								type="button"
-								onClick={() => openNewWorkspace(activeProjectId)}
+								onClick={() => openNewWorkspace()}
 								className="flex size-7 items-center justify-center rounded-md bg-fill-hover/60 [.light_&]:bg-fill-hover text-muted-foreground transition-colors hover:bg-fill-selected [.light_&]:hover:bg-fill-selected"
 							>
 								<div className="flex size-5 items-center justify-center rounded bg-fill-selected">
@@ -333,8 +264,8 @@ export function DashboardSidebarHeader({
 						<TooltipTrigger asChild>
 							<button
 								type="button"
-								onPointerDown={handleSearchPointerDown}
-								onClick={handleSearchClick}
+								onPointerDown={paletteToggle.onPointerDown}
+								onClick={paletteToggle.onClick}
 								className="flex size-7 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-fill-hover"
 							>
 								<LuSearch className="size-3.5" strokeWidth={1.5} />
@@ -367,7 +298,7 @@ export function DashboardSidebarHeader({
 								}
 								className={cn(
 									"relative flex size-7 items-center justify-center rounded-md transition-colors",
-									isAutomationsOpen
+									navigation.isAutomationsOpen
 										? "bg-fill-selected text-muted-foreground"
 										: "text-muted-foreground hover:bg-fill-hover",
 								)}
@@ -447,7 +378,7 @@ export function DashboardSidebarHeader({
 							<TooltipTrigger asChild>
 								<button
 									type="button"
-									onClick={handleUsageClick}
+									onClick={navigation.openUsage}
 									aria-label={t({
 										message: "Usage",
 									})}
@@ -493,14 +424,14 @@ export function DashboardSidebarHeader({
 							<TooltipTrigger asChild>
 								<button
 									type="button"
-									onClick={handlePluginsClick}
+									onClick={navigation.openPlugins}
 									aria-label={t({
 										message: "Plugins",
 									})}
-									aria-current={isPluginsOpen ? "page" : undefined}
+									aria-current={navigation.isPluginsOpen ? "page" : undefined}
 									className={cn(
 										"flex size-7 items-center justify-center rounded-md transition-colors",
-										isPluginsOpen
+										navigation.isPluginsOpen
 											? "bg-fill-selected text-muted-foreground"
 											: "text-muted-foreground hover:bg-fill-hover",
 									)}
@@ -538,22 +469,7 @@ export function DashboardSidebarHeader({
 							align="start"
 							onCloseAutoFocus={(event) => event.preventDefault()}
 						>
-							<DropdownMenuItem onSelect={handleImportFolder}>
-								<VscFolderOpened className="size-4" />
-								<Trans>Open project</Trans>
-							</DropdownMenuItem>
-							<DropdownMenuItem onSelect={() => openNewProject()}>
-								<VscGithubAlt className="size-4" />
-								<Trans>Clone from URL</Trans>
-							</DropdownMenuItem>
-							<DropdownMenuItem onSelect={() => openEmptyProject()}>
-								<VscNewFolder className="size-4" />
-								<Trans>Create new project</Trans>
-							</DropdownMenuItem>
-							<DropdownMenuItem onSelect={() => openTemplateGallery()}>
-								<VscLayout className="size-4" />
-								<Trans>Start from a template</Trans>
-							</DropdownMenuItem>
+							<AddProjectMenuItems />
 						</DropdownMenuContent>
 					</DropdownMenu>
 				</div>
@@ -613,19 +529,8 @@ export function DashboardSidebarHeader({
 				<div className="drag h-full min-w-0 flex-1" />
 			</div>
 
-			<button
-				type="button"
-				onClick={() => openNewWorkspace(activeProjectId)}
-				className="group flex h-7 w-full items-center gap-2 rounded-md bg-fill-hover/60 [.light_&]:bg-fill-hover px-1.5 text-[13px] font-medium text-muted-foreground transition-colors hover:bg-fill-selected [.light_&]:hover:bg-fill-selected hover:text-foreground"
-			>
-				<div className="flex size-5 shrink-0 items-center justify-center rounded bg-fill-selected">
-					<LuPlus className="size-3" strokeWidth={STROKE_WIDTH_THICK} />
-				</div>
-				<span className="flex-1 truncate text-left whitespace-nowrap">
-					<Trans>New Workspace</Trans>
-				</span>
-				<SidebarKbdHint label={shortcutText} />
-			</button>
+			<SidebarNewWorkspaceButton />
+			<SidebarSearchButton />
 
 			<button
 				type="button"
@@ -720,7 +625,7 @@ export function DashboardSidebarHeader({
 			{isUsageInSidebarEnabled && (
 				<button
 					type="button"
-					onClick={handleUsageClick}
+					onClick={navigation.openUsage}
 					aria-label={t({
 						message: "Usage",
 					})}
@@ -764,14 +669,14 @@ export function DashboardSidebarHeader({
 			{isPluginsEnabled && (
 				<button
 					type="button"
-					onClick={handlePluginsClick}
+					onClick={navigation.openPlugins}
 					aria-label={t({
 						message: "Plugins",
 					})}
-					aria-current={isPluginsOpen ? "page" : undefined}
+					aria-current={navigation.isPluginsOpen ? "page" : undefined}
 					className={cn(
 						"flex h-7 w-full items-center gap-2 rounded-md px-2 text-[13px] font-medium transition-colors",
-						isPluginsOpen
+						navigation.isPluginsOpen
 							? "bg-fill-selected text-foreground"
 							: "text-muted-foreground hover:bg-fill-hover hover:text-foreground",
 					)}

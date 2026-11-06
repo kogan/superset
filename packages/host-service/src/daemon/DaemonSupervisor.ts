@@ -14,6 +14,7 @@ import * as fs from "node:fs";
 import * as net from "node:net";
 import * as os from "node:os";
 import * as path from "node:path";
+import { isDefaultAppHomeDir } from "@superset/agent-setup/paths";
 import {
 	isPositiveInteger,
 	signalProcessTreeAndGroups,
@@ -189,9 +190,10 @@ export function ptyDaemonSocketPath(
 	const isDefaultHome = isDefaultSupersetHomeDir(home);
 	// Hash the RESOLVED home so equivalent spellings of one custom home
 	// (trailing slash, relative segments) land on the same socket.
-	const key = isDefaultHome
-		? organizationId
-		: `${organizationId}:${path.resolve(home)}`;
+	const key =
+		!home || isDefaultAppHomeDir(home)
+			? organizationId
+			: `${organizationId}:${path.resolve(home)}`;
 	const shortId = createHash("sha256").update(key).digest("hex").slice(0, 12);
 	return path.join(os.tmpdir(), `superestset-ptyd-${shortId}.sock`);
 }
