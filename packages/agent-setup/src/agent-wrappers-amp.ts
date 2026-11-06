@@ -7,7 +7,7 @@ import {
 	writeFileIfChanged,
 } from "./agent-wrappers-common";
 import { getTemplatePath } from "./config";
-import { resolveUserHomeDir } from "./paths";
+import { APP_HOME_DIR_NAME, resolveUserHomeDir } from "./paths";
 
 /**
  * Creates the Amp wrapper that preserves Superset's terminal environment.
@@ -55,7 +55,8 @@ export function getAmpPluginContent(): string {
 		.replaceAll("notify.sh", "superestset-notify.sh")
 		.replaceAll(".superset", ".superestset")
 		.replaceAll("__superset", "__superestset")
-		.replace("{{MARKER}}", AMP_PLUGIN_MARKER);
+		.replace("{{MARKER}}", AMP_PLUGIN_MARKER)
+		.replaceAll("{{APP_HOME_DIR_NAME}}", APP_HOME_DIR_NAME);
 }
 
 export function createAmpPlugin(): void {

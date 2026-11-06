@@ -4,10 +4,10 @@ import tailwindcss from "@tailwindcss/vite";
 import { tanstackRouter } from "@tanstack/router-plugin/vite";
 import reactPlugin from "@vitejs/plugin-react";
 import { config } from "dotenv";
-import { defineConfig, externalizeDepsPlugin } from "electron-vite";
+import { defineConfig } from "electron-vite";
 import injectProcessEnvPlugin from "rollup-plugin-inject-process-env";
 import tsconfigPathsPlugin from "vite-tsconfig-paths";
-import { dependencies, resources, version } from "./package.json";
+import { resources, version } from "./package.json";
 import { mainExternalizedDependencies } from "./runtime-dependencies";
 import {
 	copyResourcesPlugin,
@@ -33,10 +33,6 @@ await import("./src/main/env.main");
 const tsconfigPaths = tsconfigPathsPlugin({
 	projects: [resolve("tsconfig.json")],
 });
-
-const workspaceDependencies = Object.keys(dependencies).filter((dependency) =>
-	dependency.startsWith("@superset/"),
-);
 
 // Sentry plugin for uploading sourcemaps (only in CI with auth token)
 const sentryPlugin = process.env.SENTRY_AUTH_TOKEN
@@ -131,16 +127,7 @@ export default defineConfig({
 		process.env.SUPERESTSET_BUILD_MAIN_ONLY === "1"
 			? undefined
 			: {
-					plugins: [
-						tsconfigPaths,
-						externalizeDepsPlugin({
-							exclude: [
-								"trpc-electron",
-								"@sentry/electron",
-								...workspaceDependencies,
-							],
-						}),
-					],
+					plugins: [tsconfigPaths],
 
 					define: {
 						"process.env.NODE_ENV": defineEnv(
@@ -159,6 +146,9 @@ export default defineConfig({
 						rollupOptions: {
 							input: {
 								index: resolve("src/preload/index.ts"),
+								"browser-extension-shims": resolve(
+									"src/preload/browser-extension-shims.ts",
+								),
 							},
 						},
 					},

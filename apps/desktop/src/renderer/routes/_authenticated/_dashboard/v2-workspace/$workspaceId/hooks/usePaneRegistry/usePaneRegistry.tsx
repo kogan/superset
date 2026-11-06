@@ -15,6 +15,7 @@ import {
 	CodeXml,
 	Files,
 	FileText,
+	Layers,
 	FolderTree,
 	GitCompareArrows,
 	GitPullRequest,
@@ -75,7 +76,6 @@ import {
 	type SubagentPaneData,
 	type TerminalPaneData,
 } from "../../types";
-import { markCloudChatLaunchClosed } from "../../utils/closedChatSessions";
 import {
 	findTerminalPaneLocation,
 	focusOrAddTerminalPane,
@@ -120,6 +120,7 @@ import { PendingCloudChatPane } from "./components/PendingCloudChatPane";
 import { PullRequestPane } from "./components/PullRequestPane";
 import { PullRequestPaneHeaderExtras } from "./components/PullRequestPane/components/PullRequestPaneHeaderExtras";
 import { ReviewPane } from "./components/ReviewPane";
+import { StackPane } from "./components/StackPane";
 import { SubagentPane } from "./components/SubagentPane";
 import { TerminalPaneHeaderExtras } from "./components/TerminalPane/components/TerminalPaneHeaderExtras";
 import { TerminalPaneIcon } from "./components/TerminalPane/components/TerminalPaneIcon";
@@ -927,6 +928,11 @@ export function usePaneRegistry({
 					}),
 				renderPane: () => <MobilePane workspaceId={workspaceId} />,
 			},
+			stack: {
+				getIcon: () => <Layers className="size-3.5" />,
+				getTitle: () => t({ message: "Stack" }),
+				renderPane: () => <StackPane workspaceId={workspaceId} />,
+			},
 			[PENDING_CLOUD_CHAT_PANE_KIND]: {
 				getIcon: (ctx) => {
 					const data = ctx.pane.data as PendingCloudChatPaneData;
@@ -938,10 +944,6 @@ export function usePaneRegistry({
 				},
 				getTitle: () => t({ message: "Chat" }),
 				insetsAside: true,
-				onAfterClose: (pane) => {
-					const data = pane.data as PendingCloudChatPaneData;
-					markCloudChatLaunchClosed(workspaceId, data.promptHash);
-				},
 				renderPane: (ctx: RendererContext<PaneViewerData>) => (
 					<PendingCloudChatPane ctx={ctx} workspaceId={workspaceId} />
 				),

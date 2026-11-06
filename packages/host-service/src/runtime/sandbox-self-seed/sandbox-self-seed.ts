@@ -71,7 +71,7 @@ export interface SandboxIdentity {
 	workspaceRoot: string;
 	/**
 	 * The primary repository's checkout: the one the workspace opens on and
-	 * whose `.superset/config.json` the box acts on.
+	 * whose Paradev config the box acts on.
 	 */
 	worktreePath: string;
 	/** Every checkout on the box, the primary first. */
@@ -332,6 +332,9 @@ export async function launchSandboxAgentOnce(
 	if (!identity.launch) return;
 	const { agent, prompt, model, effort, mode, attachmentFileIds, surface } =
 		identity.launch;
+	const launchedAs = identity.launch.terminalId
+		? { terminalId: identity.launch.terminalId }
+		: {};
 	// The agent needs the environment the control plane pushes after boot and
 	// the branch the boot runner is checking out beside us; both are seconds.
 	const [pushed, checkedOut] = await Promise.all([
@@ -378,27 +381,35 @@ export async function launchSandboxAgentOnce(
 		const useChat =
 			chatTarget && ctx.runtime.chat?.()?.live.supports(chatTarget.harness);
 		const report = useChat
-			? await createChatSessionInWorkspace(ctx, {
-					workspaceId: identity.workspaceId,
-					agent,
-					prompt,
-					model,
-					mode,
-					...(attachmentIds?.length ? { attachmentIds } : {}),
-				}).then((session) => ({
+			? await createChatSessionInWorkspace(
+					ctx,
+					{
+						workspaceId: identity.workspaceId,
+						agent,
+						prompt,
+						model,
+						mode,
+						...(attachmentIds?.length ? { attachmentIds } : {}),
+					},
+					launchedAs,
+				).then((session) => ({
 					kind: "chat" as const,
 					sessionId: session.sessionId,
 					terminalId: session.terminalId,
 				}))
-			: await runAgentInWorkspace(ctx, {
-					workspaceId: identity.workspaceId,
-					agent,
-					prompt,
-					model,
-					effort,
-					mode,
-					...(attachmentIds?.length ? { attachmentIds } : {}),
-				}).then((run) => ({
+			: await runAgentInWorkspace(
+					ctx,
+					{
+						workspaceId: identity.workspaceId,
+						agent,
+						prompt,
+						model,
+						effort,
+						mode,
+						...(attachmentIds?.length ? { attachmentIds } : {}),
+					},
+					launchedAs,
+				).then((run) => ({
 					kind: "terminal" as const,
 					terminalId: run.sessionId,
 				}));

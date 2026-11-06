@@ -85,7 +85,7 @@ Paradev is a desktop app for running CLI coding agents, each task in its own Git
 
 The agent receives the element's DOM, computed styles, React component metadata, and usually a cropped screenshot, with your note. Press **esc** to pick a different element, and **esc** again to leave Design Mode. It works on any page the pane can load, including localhost. The [walkthrough post](/blog/change-ui-with-your-coding-agent) shows a full example.
 
-Paradev's difference is where the element goes. It works with the agent you already use (Claude Code, Codex, OpenCode, Cursor Agent, Gemini CLI, and others), and the change lands in that task's worktree, so two UI experiments don't edit the same files. The same pane can be driven by the agent through `superset browser` commands or a CDP endpoint to check its own work. The tradeoffs: Paradev runs on macOS with an experimental Linux AppImage, has no Windows build, and is source-available under ELv2 rather than open source.
+Paradev's difference is where the element goes. It works with the agent you already use (Claude Code, Codex, OpenCode, Cursor Agent, Gemini CLI, and others), and the change lands in that task's worktree, so two UI experiments don't edit the same files. The same pane can be driven by the agent through `superset browser` commands or a CDP endpoint to check its own work. The tradeoffs: Paradev runs on macOS with an experimental Linux AppImage, and has no Windows build. It is open source under the MIT License.
 
 ## How does a frontend team use Design Mode with Claude Code?
 
@@ -94,7 +94,7 @@ A typical frontend team runs several UI tasks at once: one person tightens the p
 A day with it looks like this:
 
 1. **Create one workspace per UI task**, from the desktop app, from a [Linear issue](/compare/run-claude-code-on-linear-issues) or a GitHub issue (**Add to workspace** in [Tasks](https://docs.paradev.com/tasks)), or with `superset workspaces create --local --project <id> --name pricing-table --branch ui/pricing-table --agent claude --prompt "..."`.
-2. **Start the dev server in each workspace.** Paradev detects the listening port and lists it in the sidebar. It does not assign port ranges, so two workspaces that both start on port 3000 collide. Give each workspace its own port in a [setup script](https://docs.paradev.com/setup-teardown-scripts), and commit `.superset/ports.json` so everyone on the team sees labels such as "Frontend Dev Server" next to the port.
+2. **Start the dev server in each workspace.** Paradev detects the listening port and lists it in the sidebar. It does not assign port ranges, so two workspaces that both start on port 3000 collide. Give each workspace its own port in a [setup script](https://docs.paradev.com/setup-teardown-scripts), and commit `.paradev/ports.json` so everyone on the team sees labels such as "Frontend Dev Server" next to the port.
 3. **Click, describe, send.** Open the port in the browser pane, click **Design**, click the element, and send one change to Claude Code. With hot reload, the result shows in the same pane, so you can click the next element straight away.
 4. **Review the diff before it goes up.** The **Changes** pane shows what Claude Code edited for that task alone. Commit, push, and open the pull request from there, and watch its checks in the PR pane.
 
@@ -111,7 +111,7 @@ Clicking an element covers your own feedback on a running app. When a teammate n
 - **One quick change, no new tools:** paste a screenshot into Claude Code or Codex.
 - **Let the agent check its own UI work:** add Playwright MCP or Chrome DevTools MCP.
 - **You already use Cursor's agent:** Cursor Design Mode, for the drawing and voice input.
-- **You want open source, or need Windows:** Orca.
+- **You need Windows:** Orca.
 - **You want open-weight or local models in one app:** stagewise.
 - **You want to click an element and send it to the CLI agent you already run, in an isolated worktree, with team review on Pages:** [Paradev](/download).
 

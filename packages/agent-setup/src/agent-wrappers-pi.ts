@@ -5,7 +5,7 @@ import {
 	writeFileIfChanged,
 } from "./agent-wrappers-common";
 import { getTemplatePath } from "./config";
-import { resolveUserHomeDir } from "./paths";
+import { APP_HOME_DIR_NAME, resolveUserHomeDir } from "./paths";
 
 export const PI_EXTENSION_FILE = "superestset-hooks.ts";
 
@@ -48,7 +48,8 @@ export function getPiExtensionContent(): string {
 		.replaceAll("notify.sh", "superestset-notify.sh")
 		.replaceAll(".superset", ".superestset")
 		.replaceAll("__superset", "__superestset")
-		.replace("{{MARKER}}", PI_EXTENSION_MARKER);
+		.replace("{{MARKER}}", PI_EXTENSION_MARKER)
+		.replaceAll("{{APP_HOME_DIR_NAME}}", APP_HOME_DIR_NAME);
 }
 
 /**

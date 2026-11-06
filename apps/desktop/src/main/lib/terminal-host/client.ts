@@ -24,13 +24,13 @@ import {
 	writeFileSync,
 } from "node:fs";
 import { connect, type Socket } from "node:net";
-import { homedir } from "node:os";
 import { join } from "node:path";
 import {
 	isPositiveInteger,
 	signalProcessTreeAndGroups,
 } from "@superset/pty-daemon/process-tree";
 import { app } from "electron";
+import { homedir } from "node:os";
 import { SUPERSET_DIR_NAME } from "shared/constants";
 import { terminalHostSocketPath } from "shared/terminal-host-socket";
 import { nodeExecutable } from "../node-executable";
@@ -216,7 +216,6 @@ export class TerminalHostClient extends EventEmitter {
 		super();
 		if (DEBUG_CLIENT) {
 			console.log("[TerminalHostClient] Initialized with paths:", {
-				SUPERSET_DIR_NAME,
 				SUPERSET_HOME_DIR,
 				SOCKET_PATH,
 				NODE_ENV: process.env.NODE_ENV,

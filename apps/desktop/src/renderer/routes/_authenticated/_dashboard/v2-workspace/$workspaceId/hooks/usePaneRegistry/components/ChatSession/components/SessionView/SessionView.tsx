@@ -1,4 +1,4 @@
-import { Trans, useLingui } from "@lingui/react/macro";
+import { useLingui } from "@lingui/react/macro";
 import type { SessionClient } from "@superset/chat/client";
 import {
 	deriveQueuedPrompts,
@@ -46,7 +46,7 @@ import {
 import { TurnFailureActionsProvider } from "../../providers/TurnFailureActionsProvider";
 import type { ChatEditRequest, ChatForkTarget } from "../../types";
 import { buildChatHandoffTranscript } from "../../utils/chatHandoffTranscript";
-import { heldPromptQueue } from "../../utils/heldPromptQueue";
+import { heldOutboxEntries } from "../../utils/heldOutboxEntries";
 import { editableMessageIds, rewindTranscript } from "../../utils/messageEdit";
 import { modelDisplayName } from "../../utils/modelDisplayName";
 import { promptHistory } from "../../utils/promptHistory";
@@ -58,7 +58,6 @@ import {
 	type ComposerHandle,
 	prependToDraft,
 } from "../Composer";
-import { ConnectionNotice } from "../ConnectionNotice";
 import { SessionHeader } from "../SessionHeader";
 import { SetupSessionHeader } from "../SetupSessionHeader";
 import { SubagentView } from "../SubagentView";
@@ -71,14 +70,16 @@ import {
 	WorkDrawer,
 	type WorkDrawerHandle,
 } from "../WorkDrawer";
-import { LiveChangesPill } from "./components/LiveChangesPill";
+import { ComposerChips } from "./components/ComposerChips";
 import {
 	type SwitchAccount,
 	type SwitchableAgent,
 	UsageLimitNotice,
 } from "./components/UsageLimitNotice";
 import { useFailureRecovery } from "./hooks/useFailureRecovery";
+import { useLaunchPromptDelivered } from "./hooks/useLaunchPromptDelivered";
 import { useMainSend } from "./hooks/useMainSend";
+import { useManualSignIn } from "./hooks/useManualSignIn";
 import { useMoveToBackground } from "./hooks/useMoveToBackground";
 import { usePendingPrompts } from "./hooks/usePendingPrompts";
 import { useRestoreUnsentPrompts } from "./hooks/useRestoreUnsentPrompts";
@@ -113,6 +114,7 @@ export function SessionView({
 	pendingPrompts,
 	preferredModelLabel,
 	onPendingPromptsSent,
+	onLaunchPromptDelivered,
 	onFork,
 	onSwitchAccount,
 	sessionAccount,
@@ -125,6 +127,7 @@ export function SessionView({
 	openFile,
 	openPage,
 	openLink,
+	getOpenFilePaths,
 	onOpenHistory,
 	terminalId,
 	onNewChat,
@@ -138,7 +141,6 @@ export function SessionView({
 	terminalId?: string;
 	headerLeft?: ReactNode;
 	held?: {
-		notice: ReactNode;
 		queued: UserContent[][];
 		onQueue: (content: UserContent[]) => void;
 		/** Already sent, so shown only until the transcript has a user message. */
@@ -149,6 +151,7 @@ export function SessionView({
 	/** Selected by name once the agent lists its models, before the first prompt goes out. */
 	preferredModelLabel?: string;
 	onPendingPromptsSent: () => void;
+	onLaunchPromptDelivered?: () => void;
 	onSessionState?: (session: SessionState | null) => void;
 	/** The mode the user picked, so a resumed session can start in it again. */
 	onModeChange?: (modeId: string) => void;
@@ -185,6 +188,7 @@ export function SessionView({
 	openDiff?: OpenDiff;
 	openPage?: OpenPage;
 	openLink?: OpenLink;
+	getOpenFilePaths?: () => ReadonlySet<string>;
 	/** Opens the pane header's chat history picker, as `/resume` does. */
 	onOpenHistory?: () => void;
 	onNewChat?: () => void;
@@ -348,6 +352,7 @@ export function SessionView({
 		}
 		return null;
 	}, [snapshotItems]);
+	useLaunchPromptDelivered(snapshotItems, onLaunchPromptDelivered);
 	const queuedPrompts = useStableList(
 		useMemo(
 			() => deriveQueuedPrompts({ items: snapshotItems }),
@@ -516,7 +521,7 @@ export function SessionView({
 	);
 	const onStopTask = useCallback(
 		(taskId: string) =>
-			void stopBackgroundTask(taskId)
+			stopBackgroundTask(taskId)
 				.then((stopped) => {
 					if (!stopped) throw new Error("the agent did not stop the task");
 				})
@@ -623,21 +628,27 @@ export function SessionView({
 
 	const heldQueued = held?.queued;
 	const heldLaunched = held?.launched;
-	const heldQueue = useMemo(
+	const heldOutbox = useMemo(
 		() =>
-			heldQueued
-				? heldPromptQueue(heldQueued, {
-						launched: heldLaunched,
-						items: snapshotItems,
-					})
-				: undefined,
-		[heldQueued, heldLaunched, snapshotItems],
+			heldOutboxEntries(heldQueued ?? [], {
+				launched: heldLaunched,
+				items: snapshotItems,
+			}),
+		[heldLaunched, heldQueued, snapshotItems],
+	);
+	const transcriptOutbox = useMemo(
+		() =>
+			heldOutbox.length > 0
+				? [...session.outbox, ...heldOutbox]
+				: session.outbox,
+		[session.outbox, heldOutbox],
 	);
 	const booting = sessionState?.status === "starting";
 	const openModelPicker = useCallback(
 		() => composerRef.current?.openModelPicker(),
 		[],
 	);
+	const { manualSignIn, openAgentSettings } = useManualSignIn(presetId);
 	const { failureActions, onSetConfigOption, onModelPickerOpenChange } =
 		useFailureRecovery({
 			blocked:
@@ -648,13 +659,15 @@ export function SessionView({
 				approvals.length > 0 ||
 				outbox.length > 0,
 			configOptions,
+			manualSignIn,
+			openAgentSettings,
 			onRestartAndContinue,
 			onStartNewChat,
 			openModelPicker,
 			sendPrompt,
 			setConfigOption,
 		});
-	const composerQueue = heldQueue ?? (held ? undefined : promptQueue);
+	const composerQueue = held ? undefined : promptQueue;
 	const drawerQueue = subagent.target === undefined ? composerQueue : undefined;
 
 	// w-full because the pane lays its children out in a row: without it this
@@ -668,6 +681,7 @@ export function SessionView({
 			openFile={openFile}
 			openPage={openPage}
 			openLink={openLink}
+			getOpenFilePaths={getOpenFilePaths}
 			workspaceId={workspaceId}
 		>
 			<ComposerDropZone
@@ -718,7 +732,7 @@ export function SessionView({
 											onRespond={onRespond}
 											onMessageRevealed={clearRevealMessage}
 											onRetryPrompt={session.retryPrompt}
-											outbox={session.outbox}
+											outbox={transcriptOutbox}
 											ref={transcriptRef}
 											revealMessageId={revealMessageId}
 											sessionId={client.sessionId}
@@ -737,17 +751,17 @@ export function SessionView({
 						)}
 					</div>
 				</MessageScroller.Provider>
-				{held ? (
-					<ConnectionNotice>{held.notice}</ConnectionNotice>
-				) : (
-					booting && (
-						<ConnectionNotice>
-							<Trans>Starting the agent…</Trans>
-						</ConnectionNotice>
-					)
-				)}
-				{runningTurnId && !focusedSubagentId && (
-					<LiveChangesPill refreshKey={liveRefreshKey} turnId={runningTurnId} />
+				{!focusedSubagentId && (
+					<ComposerChips
+						backgroundTasks={sessionState?.backgroundTasks}
+						liveRefreshKey={liveRefreshKey}
+						onMoveToBackground={onBackgroundSubagent}
+						onOpenSubagent={openSubagent}
+						onStopTask={onStopTask}
+						runningTurnId={runningTurnId}
+						sessionId={client.sessionId}
+						terminalId={terminalId}
+					/>
 				)}
 				<WorkDrawer
 					notice={
@@ -793,6 +807,8 @@ export function SessionView({
 					onOpenHistory={onOpenHistory}
 					sessionUsage={sessionUsage}
 					turnRunning={runningTurnId !== null}
+					promptPending={heldOutbox.length > 0}
+					awaitingBackground={awaitingBackground}
 					terminalId={terminalId}
 					agentLabel={agentLabel}
 					onNewChat={onNewChat}

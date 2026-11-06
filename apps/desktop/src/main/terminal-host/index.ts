@@ -8,8 +8,8 @@
  *
  * IPC Protocol:
  * - Uses NDJSON (newline-delimited JSON) over Unix domain socket
- * - Socket: ~/.superset/terminal-host.sock
- * - Auth token: ~/.superset/terminal-host.token
+ * - Socket: ~/.paradev/terminal-host.sock
+ * - Auth token: ~/.paradev/terminal-host.token
  */
 
 import { randomBytes } from "node:crypto";
@@ -22,8 +22,8 @@ import {
 	writeFileSync,
 } from "node:fs";
 import { createServer, type Server, Socket } from "node:net";
-import { homedir } from "node:os";
 import { join } from "node:path";
+import { homedir } from "node:os";
 import { SUPERSET_DIR_NAME } from "shared/constants";
 import { terminalHostSocketPath } from "shared/terminal-host-socket";
 import { isTerminalSpawnFailedError } from "../lib/terminal/errors";

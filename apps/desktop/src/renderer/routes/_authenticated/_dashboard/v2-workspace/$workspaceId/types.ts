@@ -38,6 +38,8 @@ export interface BrowserPaneData {
 	url: string;
 	pageTitle?: string;
 	faviconUrl?: string | null;
+	/** Opened by an agent: it runs in the agent session, without the user's extensions. */
+	agent?: true;
 }
 
 export interface DevtoolsPaneData {
@@ -93,7 +95,8 @@ export const PENDING_CLOUD_CHAT_PANE_KIND = "pending-cloud-chat";
 export interface PendingCloudChatPaneData {
 	draftId: string;
 	agentId: string;
-	promptHash: string;
+	/** The id the box launches the agent under; the pane opens whatever starts with it. */
+	terminalId?: string;
 	/** What the user typed; shown until the box's transcript has it. */
 	launchPrompt?: string;
 	queuedPrompts?: UserContent[][];
@@ -141,6 +144,10 @@ export interface ChangesListPaneData {
 	kind: "changes-list";
 }
 
+export interface StackPaneData {
+	kind: "stack";
+}
+
 export interface ReviewPaneData {
 	kind: "review";
 }
@@ -179,7 +186,8 @@ export type WorkspaceSearchKey =
 	| "subagentType"
 	| "openUrl"
 	| "openUrlTarget"
-	| "openUrlRequestId";
+	| "openUrlRequestId"
+	| "openUrlAgent";
 
 /**
  * Drops the search params a deep link arrived with, once the hook that owns
@@ -215,6 +223,7 @@ export type PaneViewerData =
 	| MobilePaneData
 	| FilesPaneData
 	| ChangesListPaneData
+	| StackPaneData
 	| ReviewPaneData
 	| PagesListPaneData
 	| NewTabPaneData

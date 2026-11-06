@@ -816,7 +816,7 @@ export const environments = pgTable(
 		/** The sandbox bundle every workspace of this environment boots on: the newest `sandbox_bundles` row at create, moved by every release. */
 		bundleSha: text("bundle_sha").notNull(),
 		/**
-		 * The repository a workspace opens on. Its `.superset` config is the one
+		 * The repository a workspace opens on. Its Paradev config is the one
 		 * the box runs. Null only after the repository is removed from GitHub.
 		 */
 		primaryRepositoryId: uuid("primary_repository_id").references(
@@ -1468,6 +1468,11 @@ export const v2Hosts = pgTable(
 		version: text(),
 		platform: text(),
 		installSource: text("install_source"),
+		// Whether the owner lets their cloud workspaces reach this host through
+		// the relay.
+		allowCloudWorkspaces: boolean("allow_cloud_workspaces")
+			.notNull()
+			.default(false),
 		createdByUserId: uuid("created_by_user_id").references(() => users.id, {
 			onDelete: "set null",
 		}),
@@ -1742,10 +1747,14 @@ export const automations = pgTable(
 		continueAgentSession: boolean("continue_agent_session")
 			.notNull()
 			.default(false),
+		// With no pinned workspace, keep the one the first run creates as the
+		// pin, so later runs reuse it.
+		reuseWorkspace: boolean("reuse_workspace").notNull().default(false),
 		machineSize: text("machine_size"),
 
 		// The schedule lives in the automation's `schedule` trigger.
 		enabled: boolean().notNull().default(true),
+		archivedAt: timestamp("archived_at", { withTimezone: true }),
 
 		createdAt: timestamp("created_at", { withTimezone: true })
 			.notNull()

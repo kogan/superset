@@ -17,7 +17,6 @@ test("seeds editable ticket context through the existing branch sanitizer withou
 	const patch = jiraWorkspaceDraft(issue, context);
 	expect(patch.selectedProjectId).toBeUndefined();
 	expect(patch.checkout).toBeUndefined();
-	expect(patch.hostId).toBeUndefined();
 	expect(patch.prompt).toContain(issue.key);
 	expect(patch.prompt).toContain(issue.url);
 	expect(patch.workspaceName).toBe(issue.summary);

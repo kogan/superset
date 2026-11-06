@@ -41,11 +41,6 @@ msgstr "· обновлено {updatedAgo}"
 msgid "“{0}” and its filters are removed. The workspaces are not affected."
 msgstr "Вид «{0}» и его фильтры будут удалены. Рабочие области не затрагиваются."
 
-#. placeholder {0}: automation.name
-#. placeholder {0}: only.name
-msgid "\"{0}\" deleted"
-msgstr "«{0}» удалена"
-
 #. placeholder {0}: data.title
 msgid "\"{0}\" will be marked closed on GitHub. You can reopen it from here at any time."
 msgstr "«{0}» будет отмечен как закрытый на GitHub. Открыть заново можно отсюда в любой момент."
@@ -62,16 +57,26 @@ msgstr "«{0}» будет объединён в {1} через {2}. Прове�
 msgid "\"{0}\" will be merged into {1} via {2}. This can't be undone from here."
 msgstr "«{0}» будет объединён в {1} через {2}. Отменить отсюда нельзя."
 
-#. placeholder {0}: automation.name
-#. placeholder {0}: pendingDeleteOnly.name
-msgid "\"{0}\" will stop firing and its run history will be removed. This can't be undone."
-msgstr "«{0}» перестанет срабатывать, а история её запусков будет удалена. Это нельзя отменить."
+msgid "\"{name}\" is {size} — files over {limit} can't be attached"
+msgstr "«{name}» занимает {size} — файлы больше {limit} прикрепить нельзя"
+
+msgid "\"{name}\" is {size} — files over {limit} can't be attached to this workspace. If the file is on the workspace's machine, mention its path instead."
+msgstr "«{name}» занимает {size} — к этой рабочей области нельзя прикрепить файлы больше {limit}. Если файл находится на машине рабочей области, укажите вместо этого его путь."
+
+msgid "\"{name}\" is a folder. Attach the files inside it instead."
+msgstr "«{name}» — это папка. Прикрепите файлы из неё."
+
+msgid "\"{name}\" is over {limit}, the most a workspace outside the cloud can take"
+msgstr "«{name}» больше {limit} — это максимум для рабочей области вне облака"
 
 msgid "\"{name}\" paused"
 msgstr "«{name}» приостановлена"
 
 msgid "\"{name}\" resumed"
 msgstr "«{name}» возобновлена"
+
+msgid "\"{name}\" was moved or deleted. Attach it again."
+msgstr "«{name}» перемещён или удалён. Прикрепите его снова."
 
 msgid "\"{title}\" has finished its task"
 msgstr "«{title}» завершил задачу"
@@ -112,10 +117,6 @@ msgstr "{0, plural, one {# агент} few {# агента} many {# агенто
 #. placeholder {0}: rejected.length
 msgid "{0, plural, one {# automation couldn't be started} other {# automations couldn't be started}}"
 msgstr "{0, plural, one {Не удалось запустить # автоматизацию} few {Не удалось запустить # автоматизации} many {Не удалось запустить # автоматизаций} other {Не удалось запустить # автоматизаций}}"
-
-#. placeholder {0}: targets.length
-msgid "{0, plural, one {# automation deleted} other {# automations deleted}}"
-msgstr "{0, plural, one {# автоматизация удалена} few {# автоматизации удалены} many {# автоматизаций удалено} other {# автоматизации удалено}}"
 
 #. placeholder {0}: ids.length
 msgid "{0, plural, one {# automation paused} other {# automations paused}}"
@@ -275,6 +276,10 @@ msgstr "{0, plural, one {# рабочая область} few {# рабочие 
 msgid "{0, plural, one {A running agent still uses the previous account — the switch only reaches new launches.} other {# running agents still use the previous account — the switch only reaches new launches.}}"
 msgstr "{0, plural, one {# работающий агент всё ещё использует прежний аккаунт — переключение действует только для новых запусков.} few {# работающих агента всё ещё используют прежний аккаунт — переключение действует только для новых запусков.} many {# работающих агентов всё ещё используют прежний аккаунт — переключение действует только для новых запусков.} other {# работающего агента всё ещё использует прежний аккаунт — переключение действует только для новых запусков.}}"
 
+#. placeholder {0}: targets.length
+msgid "{0, plural, one {Archived # automation} other {Archived # automations}}"
+msgstr "{0, plural, one {# автоматизация архивирована} few {# автоматизации архивированы} many {# автоматизаций архивировано} other {# автоматизации архивировано}}"
+
 #. placeholder {0}: pages.length
 msgid "{0, plural, one {Asked # question} other {Asked # questions}}"
 msgstr "{0, plural, one {Задан # вопрос} few {Задано # вопроса} many {Задано # вопросов} other {Задано # вопроса}}"
@@ -293,13 +298,17 @@ msgstr "{0, plural, one {Не удалось удалить # рабочую о�
 msgid "{0, plural, one {Creating # workspace...} other {Creating # workspaces...}}"
 msgstr "{0, plural, one {Создание # рабочей области...} few {Создание # рабочих областей...} many {Создание # рабочих областей...} other {Создание # рабочих областей...}}"
 
-#. placeholder {0}: pendingDelete.length
-msgid "{0, plural, one {Delete # automation?} other {Delete # automations?}}"
-msgstr "{0, plural, one {Удалить # автоматизацию?} few {Удалить # автоматизации?} many {Удалить # автоматизаций?} other {Удалить # автоматизации?}}"
+#. placeholder {0}: targets.length
+msgid "{0, plural, one {Delete # automation permanently?} other {Delete # automations permanently?}}"
+msgstr "{0, plural, one {Удалить # автоматизацию навсегда?} few {Удалить # автоматизации навсегда?} many {Удалить # автоматизаций навсегда?} other {Удалить # автоматизации навсегда?}}"
 
 #. placeholder {0}: workspaces.length
 msgid "{0, plural, one {Delete # workspace?} other {Delete # workspaces?}}"
 msgstr "{0, plural, one {Удалить # рабочую область?} few {Удалить # рабочие области?} many {Удалить # рабочих областей?} other {Удалить # рабочих областей?}}"
+
+#. placeholder {0}: targets.length
+msgid "{0, plural, one {Deleted # automation} other {Deleted # automations}}"
+msgstr "{0, plural, one {# автоматизация удалена} few {# автоматизации удалены} many {# автоматизаций удалено} other {# автоматизации удалено}}"
 
 #. placeholder {0}: cleanup.hosts
 msgid "{0, plural, one {Deleted # host with no other owner, along with its workspaces.} other {Deleted # hosts with no other owner, along with their workspaces.}}"
@@ -344,6 +353,14 @@ msgstr "{0, plural, one {Приостановлена # автоматизаци
 #. placeholder {0}: cleanup.automations
 msgid "{0, plural, one {Pauses # automation} other {Pauses # automations}}"
 msgstr "{0, plural, one {Приостанавливает # автоматизацию} few {Приостанавливает # автоматизации} many {Приостанавливает # автоматизаций} other {Приостанавливает # автоматизации}}"
+
+#. placeholder {0}: targets.length
+msgid "{0, plural, one {Restored # automation. Paused ones stay paused.} other {Restored # automations. Paused ones stay paused.}}"
+msgstr "{0, plural, one {# автоматизация восстановлена. Приостановленные остаются приостановленными.} few {# автоматизации восстановлены. Приостановленные остаются приостановленными.} many {# автоматизаций восстановлено. Приостановленные остаются приостановленными.} other {# автоматизации восстановлено. Приостановленные остаются приостановленными.}}"
+
+#. placeholder {0}: targets.length
+msgid "{0, plural, one {Restored # automation} other {Restored # automations}}"
+msgstr "{0, plural, one {# автоматизация восстановлена} few {# автоматизации восстановлены} many {# автоматизаций восстановлено} other {# автоматизации восстановлено}}"
 
 #. placeholder {0}: issues.length
 #. placeholder {0}: tasks.length
@@ -900,6 +917,12 @@ msgstr "{count, plural, one {Использован # источник} few {И�
 msgid "{count, plural, one {used # tool} other {used # tools}}"
 msgstr "{count, plural, one {использован # инструмент} few {использовано # инструмента} many {использовано # инструментов} other {использовано # инструмента}}"
 
+msgid "{count} files are over {limit} and were not added"
+msgstr "Файлы больше {limit} не добавлены: {count}"
+
+msgid "{count} files attached — a message carries at most {max}"
+msgstr "Прикреплено файлов: {count} — в одном сообщении не больше {max}"
+
 msgid "{count} GitHub stars"
 msgstr "{count} звёзд на GitHub"
 
@@ -1036,6 +1059,12 @@ msgstr "{kindLabel} тема"
 msgid "{label} access to {pluginName}"
 msgstr "Доступ роли {label} к {pluginName}"
 
+msgid "{label} goes back to not set up. Nothing changes inside your workspaces: your script and the login it keeps stay until you remove them."
+msgstr "{label} снова станет ненастроенным. В рабочих областях ничего не изменится: ваш скрипт и вход, который он поддерживает, останутся, пока вы их не удалите."
+
+msgid "{label} is set to manual"
+msgstr "Для {label} включён ручной вход"
+
 msgid "{level} · {gate} · {statusLabel}"
 msgstr "{level} · {gate} · {statusLabel}"
 
@@ -1110,6 +1139,9 @@ msgstr "{name} начал работу"
 
 msgid "{name} stopped"
 msgstr "{name} остановлен"
+
+msgid "{name} wants more access"
+msgstr "{name} запрашивает больше доступа"
 
 msgid "{name}: {hours} hours ({gbHours} GB-hours) per seat"
 msgstr "{name}: {hours} часов ({gbHours} ГБ-часов) на место"
@@ -1200,14 +1232,14 @@ msgstr "{price} за пользователя в месяц, {gbHours} обла�
 msgid "{price}/user/mo"
 msgstr "{price}/польз./мес"
 
-msgid "{productName} (formerly {formerName}, YC P26) is the source-available IDE for the AI agents era, where engineers run hundreds of coding agents like Claude Code and Codex in parallel."
-msgstr "{productName} (ранее {formerName}, YC P26) — это IDE с доступным исходным кодом для эпохи ИИ-агентов, в которой инженеры параллельно запускают сотни агентов для программирования, таких как Claude Code и Codex."
+msgid "{productName} (formerly {formerName}, YC P26) is the open-source IDE for the AI agents era, where engineers run hundreds of coding agents like Claude Code and Codex in parallel."
+msgstr "{productName} (ранее {formerName}, YC P26) — это IDE с открытым исходным кодом для эпохи ИИ-агентов, в которой инженеры параллельно запускают сотни агентов для программирования, таких как Claude Code и Codex."
 
 msgid "{productName} (formerly {formerName})"
 msgstr "{productName} (ранее {formerName})"
 
-msgid "{productName} (YC P26) is the source-available IDE for the AI agents era, where engineers run hundreds of coding agents like Claude Code and Codex in parallel."
-msgstr "{productName} (YC P26) — это IDE с доступным исходным кодом для эпохи ИИ-агентов, в которой инженеры параллельно запускают сотни агентов для программирования, таких как Claude Code и Codex."
+msgid "{productName} (YC P26) is the open-source IDE for the AI agents era, where engineers run hundreds of coding agents like Claude Code and Codex in parallel."
+msgstr "{productName} (YC P26) — это IDE с открытым исходным кодом для эпохи ИИ-агентов, в которой инженеры параллельно запускают сотни агентов для программирования, таких как Claude Code и Codex."
 
 msgid "{productName} for press"
 msgstr "{productName} для прессы"
@@ -1226,6 +1258,9 @@ msgstr "{productName} привлёк 11,5 млн долларов в посев�
 
 msgid "{productName} was called {formerName} until October 2026."
 msgstr "До октября 2026 года {productName} назывался {formerName}."
+
+msgid "{prompt} · # to change project, host, and more"
+msgstr "{prompt} · # — сменить проект, хост и другое"
 
 msgid "{pullRequestCount, plural, one {# PR} other {# PRs}}"
 msgstr "{pullRequestCount, plural, one {# PR} few {# PR} many {# PR} other {# PR}}"
@@ -1481,6 +1516,9 @@ msgstr "<0>{who}</0> отреагировал(а) {shortcode}"
 msgid "<0>#{0}</0> <1>of {1} on the leaderboard</1>"
 msgstr "<0>#{0}</0> <1>из {1} в рейтинге</1>"
 
+msgid "<0>~/.claude/.credentials.json</0> or an <1>apiKeyHelper</1>"
+msgstr "<0>~/.claude/.credentials.json</0> или <1>apiKeyHelper</1>"
+
 msgid "<0>Coming soon to</0><1>Google Play</1>"
 msgstr "<0>Скоро в</0><1>Google Play</1>"
 
@@ -1541,6 +1579,9 @@ msgstr "1"
 msgid "1 cookie — forget this site"
 msgstr "1 cookie — забыть этот сайт"
 
+msgid "1 file is over {limit} and was not added"
+msgstr "1 файл больше {limit} и не был добавлен"
+
 msgid "1 hr"
 msgstr "1 ч"
 
@@ -1592,6 +1633,9 @@ msgstr "3 архивные рабочие области"
 
 msgid "3 files changed, 2 tests passing"
 msgstr "Изменено 3 файла, 2 теста проходят"
+
+msgid "3 running"
+msgstr "3 запущено"
 
 msgid "3+ concurrent workstreams per engineer"
 msgstr "3+ параллельных потока работы на инженера"
@@ -1815,6 +1859,9 @@ msgstr "Доступ для добавляемых людей"
 msgid "Access for this person"
 msgstr "Доступ для этого человека"
 
+msgid "Access the page debugger backend"
+msgstr "Получать доступ к серверной части отладчика страницы"
+
 msgid "Access your email address"
 msgstr "получить доступ к вашему адресу email"
 
@@ -1917,6 +1964,9 @@ msgstr "Добавить аккаунт {0}"
 msgid "Add {0} to workspace"
 msgstr "Добавить {0} в рабочую область"
 
+msgid "Add {localizedName}?"
+msgstr "Добавить {localizedName}?"
+
 msgid "Add @{normalizedSearch}"
 msgstr "Добавить @{normalizedSearch}"
 
@@ -1997,6 +2047,9 @@ msgstr "Добавить описание"
 
 msgid "Add description..."
 msgstr "Добавьте описание..."
+
+msgid "Add extension"
+msgstr "Добавить расширение"
 
 msgid "Add file comment"
 msgstr "Добавить комментарий к файлу"
@@ -2258,6 +2311,9 @@ msgstr "Сессия агента запущена"
 msgid "agent settings"
 msgstr "настройки агента"
 
+msgid "Agent settings"
+msgstr "Настройки агентов"
+
 msgid "Agent usage rankings"
 msgstr "Рейтинги использования агентов"
 
@@ -2267,8 +2323,15 @@ msgstr "Превью под управлением агента"
 msgid "Agents"
 msgstr "Агенты"
 
+#. placeholder {0}: displayName(name)
+msgid "Agents cannot reach {0}'s tools"
+msgstr "Агенты не могут получить доступ к инструментам {0}"
+
 msgid "Agents complete routine tickets with no mid-task intervention."
 msgstr "Агенты закрывают рутинные тикеты без вмешательства по ходу задачи."
+
+msgid "Agents keep working in the cloud. Open the workspace again from desktop, iPhone, or iPad."
+msgstr "Агенты продолжают работать в облаке. Снова откройте рабочую область на компьютере, iPhone или iPad."
 
 msgid "Agents load their own preview, drive the UI, and attach screenshot proof before marking work ready for review."
 msgstr "Агенты сами открывают свой предпросмотр, управляют интерфейсом и прикладывают скриншоты как доказательство, прежде чем отметить работу готовой к ревью."
@@ -2284,6 +2347,12 @@ msgstr "Агенты запоминают, что узнали о вашей к�
 
 msgid "Agents running at once"
 msgstr "Агентов запущено одновременно"
+
+msgid "Agents see a placeholder. Paradev adds your sign-in to outgoing requests."
+msgstr "Агенты видят только заглушку. Paradev добавляет ваш вход к исходящим запросам."
+
+msgid "Agents that run while you're away"
+msgstr "Агенты, которые работают, пока вас нет"
 
 msgid "Agents use this account when they call Linear tools."
 msgstr "Агенты используют этот аккаунт, когда вызывают инструменты Linear."
@@ -2609,6 +2678,9 @@ msgstr "Агент пишет целые функции и файлы, а чел
 msgid "An automation can only use a cloud workspace you created"
 msgstr "Автоматизация может использовать только облачную рабочую область, которую создали вы"
 
+msgid "An environment holds your repositories, variables, and region. Start as many workspaces from it as you need."
+msgstr "Окружение хранит репозитории, переменные и регион. Запускайте из него столько рабочих областей, сколько нужно."
+
 msgid "An error occurred"
 msgstr "Произошла ошибка"
 
@@ -2907,6 +2979,9 @@ msgstr "Архивировать {name}?"
 msgid "Archive #{0}?"
 msgstr "Архивировать #{0}?"
 
+msgid "Archive automation"
+msgstr "Архивировать автоматизацию"
+
 msgid "Archive channel"
 msgstr "Архивировать канал"
 
@@ -2915,6 +2990,9 @@ msgstr "Архивировать окружение"
 
 msgid "Archive failed"
 msgstr "Не удалось архивировать"
+
+msgid "Archive this automation before you delete it."
+msgstr "Архивируйте эту автоматизацию, прежде чем удалить её."
 
 msgid "Archive workspace"
 msgstr "Архивировать рабочую область"
@@ -2926,6 +3004,10 @@ msgstr "Архив"
 #. placeholder {0}: formatCompactRelativeTime(cloud.deletedAt)
 msgid "Archived · {0}"
 msgstr "В архиве · {0}"
+
+#. placeholder {0}: only.name
+msgid "Archived \"{0}\""
+msgstr "«{0}» архивирована"
 
 #. placeholder {0}: formatCompactRelativeTime(workspace.deletedAt, now)
 msgid "Archived {0}"
@@ -3059,9 +3141,6 @@ msgstr "Прикрепить к чату"
 
 msgid "Attached"
 msgstr "Подключена"
-
-msgid "Attaching to the running session…"
-msgstr "Подключение к запущенной сессии…"
 
 msgid "attachment"
 msgstr "вложение"
@@ -3333,6 +3412,9 @@ msgstr "Нас поддерживают"
 msgid "Background"
 msgstr "Фон"
 
+msgid "Background · {count}"
+msgstr "В фоне · {count}"
+
 msgid "Background processes"
 msgstr "Фоновые процессы"
 
@@ -3387,9 +3469,6 @@ msgstr "на основе PR #{0}"
 msgid "Based on {0} tokens in the last 30 days, counting {1}."
 msgstr "На основе {0} токенов за последние 30 дней, учитывая {1}."
 
-msgid "Become a design partner"
-msgstr "Стать партнёром по разработке"
-
 msgid "Before"
 msgstr "До"
 
@@ -3443,6 +3522,9 @@ msgstr "О себе"
 
 msgid "Block"
 msgstr "Блок"
+
+msgid "Block content on any page"
+msgstr "Блокировать контент на любой странице"
 
 msgid "blocked"
 msgstr "заблокирован"
@@ -3577,11 +3659,8 @@ msgstr "Подключите {companyName} для своей команды. С�
 msgid "Bring a link to something you built recently."
 msgstr "Принесите ссылку на то, что вы недавно создали."
 
-msgid "Bring Any Agent"
-msgstr "Приводите любого агента"
-
-msgid "Bring Claude Code, Codex, OpenCode, or any coding agent into one workspace. Run tasks in parallel on separate branches, and review everything in one place."
-msgstr "Соберите Claude Code, Codex, OpenCode или любого другого агента для кода в одном рабочем пространстве. Запускайте задачи параллельно в отдельных ветках и проверяйте всё в одном месте."
+msgid "Bring in an agent"
+msgstr "Подключить агента"
 
 msgid "Bring over your projects"
 msgstr "Перенесите проекты"
@@ -3604,11 +3683,14 @@ msgstr "Просматривайте и устанавливайте навык�
 msgid "Browse for directory"
 msgstr "Выбрать папку"
 
+msgid "Browse Paradev plugins, shared themes, and future agent configs."
+msgstr "Просматривайте плагины Paradev, общие темы и будущие конфигурации агентов."
+
 msgid "Browse Paradev theme files shared by the community, including GitHub Dark Colorblind, Catppuccin, Ember, and One Dark Pro."
 msgstr "Смотрите файлы тем Paradev, опубликованные сообществом, включая GitHub Dark Colorblind, Catppuccin, Ember и One Dark Pro."
 
-msgid "Browse shared themes and future agent configs for Paradev."
-msgstr "Смотрите общедоступные темы и будущие конфигурации агентов для Paradev."
+msgid "Browse the plugins every Paradev agent can use, and submit your own."
+msgstr "Просматривайте плагины, которые может использовать любой агент Paradev, и отправляйте свои."
 
 msgid "Browse the repo ↗"
 msgstr "Открыть репозиторий ↗"
@@ -3646,9 +3728,6 @@ msgstr "Отчёты о багах"
 msgid "Build in public"
 msgstr "Работаем открыто"
 
-msgid "Build the future of Paradev in the cloud"
-msgstr "Создайте будущее Paradev в облаке"
-
 msgid "Build your own"
 msgstr "Создайте свой"
 
@@ -3657,6 +3736,9 @@ msgstr "Строим последнюю программу"
 
 msgid "Building the last piece of software."
 msgstr "Строим последнюю программу."
+
+msgid "Built a plugin? Submit it here."
+msgstr "Создали плагин? Отправьте его здесь."
 
 msgid "Built in Paradev"
 msgstr "Создано в Paradev"
@@ -3782,6 +3864,9 @@ msgstr "Камера недоступна"
 msgid "Can comment"
 msgstr "Может комментировать"
 
+msgid "Can edit"
+msgstr "Может редактировать"
+
 msgid "Can I buy more cloud GB-hours?"
 msgstr "Можно ли купить больше облачных ГБ-часов?"
 
@@ -3905,6 +3990,9 @@ msgstr "Канонический markdown-слой для вывода аген�
 msgid "Capabilities"
 msgstr "Возможности"
 
+msgid "Capture content of your screen"
+msgstr "Записывать содержимое экрана"
+
 msgid "Card"
 msgstr "Карточка"
 
@@ -3997,6 +4085,9 @@ msgstr "Перейти на месячную"
 msgid "Change worktree location"
 msgstr "Изменить расположение worktree"
 
+msgid "Change your privacy-related settings"
+msgstr "Изменять настройки конфиденциальности"
+
 msgid "Change-failure rate at or below the human-era baseline for two consecutive quarters."
 msgstr "Доля неудачных изменений на уровне человеческой эпохи или ниже два квартала подряд."
 
@@ -4056,6 +4147,9 @@ msgstr "Чат закрыт"
 
 msgid "Chat history"
 msgstr "История чатов"
+
+msgid "Chat interface"
+msgstr "Интерфейс чата"
 
 msgid "Chat is being reworked"
 msgstr "Чат перерабатывается"
@@ -4267,6 +4361,9 @@ msgstr "Выберите функции, которые будут отобра�
 
 msgid "Choose your default skin tone"
 msgstr "Выберите оттенок кожи по умолчанию"
+
+msgid "Choosing this removes any credential saved here for {label}."
+msgstr "При выборе этого варианта все сохранённые здесь учётные данные {label} будут удалены."
 
 msgid "CI failed"
 msgstr "CI упал"
@@ -4598,6 +4695,9 @@ msgstr "Закрыть рабочую область"
 msgid "Close Workspace"
 msgstr "Закрыть рабочую область"
 
+msgid "Close your laptop"
+msgstr "Закройте ноутбук"
+
 msgid "Closed"
 msgstr "Закрыт"
 
@@ -4620,6 +4720,9 @@ msgstr "Закрытие этого терминала завершит рабо
 msgid "Cloud"
 msgstr "Облако"
 
+msgid "Cloud · us-east"
+msgstr "Облако · us-east"
+
 msgid "Cloud environment setup"
 msgstr "Настройка облачного окружения"
 
@@ -4631,9 +4734,6 @@ msgstr "Облачные окружения получают ваши репоз
 
 msgid "Cloud GB-hours per seat each month"
 msgstr "Облачные ГБ-часы на место в месяц"
-
-msgid "Cloud is coming. Become a design partner"
-msgstr "Облачная версия скоро появится. Станьте партнёром по разработке"
 
 msgid "Cloud sandboxes"
 msgstr "Облачные песочницы"
@@ -4660,8 +4760,8 @@ msgstr "Облачные рабочие пространства игнорир�
 msgid "Cloud workspaces need the Team or Ultra plan. Upgrade in Settings, Billing to start one."
 msgstr "Облачным рабочим пространствам нужен план Team или Ultra. Повысьте план в разделе Настройки, Оплата, чтобы запустить его."
 
-msgid "Cloud workspaces open on it, and its .superset/config.json runs setup. The others are checked out beside it."
-msgstr "Облачные рабочие области открываются в нём, а его .superset/config.json запускает настройку. Остальные извлекаются рядом."
+msgid "Cloud workspaces open on it, and its Paradev config runs setup. The others are checked out beside it."
+msgstr "Облачные рабочие области открываются в нём, а его конфигурация Paradev запускает настройку. Остальные извлекаются рядом."
 
 msgid "Cloud workspaces will stop running {agentLabel} with it."
 msgstr "Облачные рабочие пространства перестанут запускать {agentLabel} с этими данными."
@@ -4745,9 +4845,6 @@ msgstr "Объединять последовательности вроде => 
 
 msgid "Come build it with us."
 msgstr "Приходите создавать его вместе с нами."
-
-msgid "Coming soon"
-msgstr "Скоро"
 
 msgid "Coming Soon"
 msgstr "Скоро"
@@ -4854,6 +4951,9 @@ msgstr "Взяли в работу, скоро начнём."
 
 msgid "Common questions"
 msgstr "Частые вопросы"
+
+msgid "Communicate with cooperating native applications"
+msgstr "Обмениваться данными с совместимыми приложениями на компьютере"
 
 msgid "Communication"
 msgstr "Коммуникация"
@@ -5243,14 +5343,15 @@ msgstr "Контекстное окно: использовано {percent}"
 msgid "Continue"
 msgstr "Продолжить"
 
+msgctxt "automation session mode"
+msgid "Continue"
+msgstr "Продолжить"
+
 msgid "Continue in your browser"
 msgstr "Продолжите в браузере"
 
 msgid "Continue or fork session"
 msgstr "Продолжить или форкнуть сессию"
-
-msgid "Continue the session the last run left"
-msgstr "Продолжить сессию, оставшуюся от прошлого запуска"
 
 msgid "Continue this chat on another login"
 msgstr "Продолжить этот чат под другим аккаунтом"
@@ -5283,9 +5384,6 @@ msgstr "Продолжить с Google"
 
 msgid "Continuing an agent session requires a pinned workspace"
 msgstr "Для продолжения сессии агента нужно закреплённое рабочее пространство"
-
-msgid "continuing the last session"
-msgstr "продолжая последнюю сессию"
 
 msgid "Continuing…"
 msgstr "Продолжаем…"
@@ -5592,6 +5690,9 @@ msgstr "Не удалось отключить плагин"
 msgid "Could not disconnect."
 msgstr "Не удалось отключить."
 
+msgid "Could not download {names}."
+msgstr "Не удалось скачать: {names}."
+
 msgid "Could not forget {domain}"
 msgstr "Не удалось забыть {domain}"
 
@@ -5643,6 +5744,9 @@ msgstr "Не удалось загрузить ваши машины"
 
 msgid "Could not mark ready"
 msgstr "Не удалось отметить готовым"
+
+msgid "Could not open {name}"
+msgstr "Не удалось открыть {name}"
 
 msgid "Could not open billing. Please try again."
 msgstr "Не удалось открыть страницу оплаты. Попробуйте ещё раз."
@@ -5716,6 +5820,12 @@ msgstr "Не удалось записать облачную рабочую о�
 msgid "Could not record environment"
 msgstr "Не удалось сохранить окружение"
 
+msgid "Could not reinstall {name}"
+msgstr "Не удалось переустановить {name}"
+
+msgid "Could not remove {name}"
+msgstr "Не удалось удалить {name}"
+
 msgid "Could not remove access"
 msgstr "Не удалось закрыть доступ"
 
@@ -5757,6 +5867,9 @@ msgstr "Не удалось продолжить чат"
 
 msgid "Could not save Jira preferences."
 msgstr "Не удалось сохранить настройки Jira."
+
+msgid "Could not save the change."
+msgstr "Не удалось сохранить изменение."
 
 msgid "Could not save the Jira connection. Check local storage permissions and try again."
 msgstr "Не удалось сохранить подключение к Jira. Проверьте права доступа к локальному хранилищу и повторите попытку."
@@ -5812,6 +5925,9 @@ msgstr "Не удалось сделать скриншот"
 msgid "Could not undo"
 msgstr "Не удалось отменить"
 
+msgid "Could not update {name}"
+msgstr "Не удалось обновить {name}"
+
 msgid "Could not update plugin"
 msgstr "Не удалось обновить плагин"
 
@@ -5827,6 +5943,9 @@ msgstr "Не удалось проверить учётные данные: {rea
 
 msgid "Couldn't add them to the channel"
 msgstr "Не удалось добавить их в канал"
+
+msgid "Couldn't add this repo"
+msgstr "Не удалось добавить репозиторий"
 
 msgid "Couldn't ask the workspace for a description"
 msgstr "Не удалось запросить описание у рабочего пространства"
@@ -5902,6 +6021,9 @@ msgstr "Не удалось форкнуть в чат"
 
 msgid "Couldn't hand this to an agent"
 msgstr "Не удалось передать агенту"
+
+msgid "Couldn't import"
+msgstr "Не удалось импортировать"
 
 msgid "Couldn't load {filename}"
 msgstr "Не удалось загрузить {filename}"
@@ -6030,6 +6152,9 @@ msgstr "Не удалось сохранить Dev"
 
 msgid "Couldn't save the routine"
 msgstr "Не удалось сохранить рутину"
+
+msgid "Couldn't save your choice. Try again."
+msgstr "Не удалось сохранить выбор. Попробуйте ещё раз."
 
 msgid "Couldn't send comment"
 msgstr "Не удалось отправить комментарий"
@@ -6583,6 +6708,9 @@ msgstr "Не работает"
 msgid "Debug"
 msgstr "Отладка"
 
+msgid "Debug failed runs and rerun functions"
+msgstr "Отладка сбойных запусков и повторный запуск функций"
+
 msgid "Debug with production stack traces"
 msgstr "Отладка по стек-трейсам из продакшена"
 
@@ -6631,6 +6759,10 @@ msgstr "С делегированием"
 msgid "Delete"
 msgstr "Удалить"
 
+#. placeholder {0}: only.name
+msgid "Delete \"{0}\" permanently?"
+msgstr "Удалить «{0}» навсегда?"
+
 #. placeholder {0}: target.name
 msgid "Delete \"{0}\"? This removes its worktree from the host."
 msgstr "Удалить «{0}»? Это удалит её worktree с хоста."
@@ -6676,12 +6808,6 @@ msgstr "Всё равно удалить"
 
 msgid "Delete anyway will skip the teardown script entirely."
 msgstr "«Всё равно удалить» полностью пропустит скрипт очистки."
-
-msgid "Delete automation"
-msgstr "Удалить автоматизацию"
-
-msgid "Delete automation?"
-msgstr "Удалить автоматизацию?"
 
 #. placeholder {0}: index + 1
 msgid "Delete command {0}"
@@ -6795,6 +6921,10 @@ msgctxt "github release action"
 msgid "Deleted"
 msgstr "Удалён"
 
+#. placeholder {0}: only.name
+msgid "Deleted \"{0}\""
+msgstr "«{0}» удалена"
+
 msgid "Deleted \"{deletedName}\""
 msgstr "«{deletedName}» удалена"
 
@@ -6855,9 +6985,6 @@ msgstr "Удаление {0} из {1}…"
 
 msgid "Deleting {name}..."
 msgstr "Удаление {name}..."
-
-msgid "Deleting automation..."
-msgstr "Удаление автоматизации..."
 
 msgid "Deleting organization..."
 msgstr "Удаление организации..."
@@ -6951,6 +7078,9 @@ msgstr "Детали"
 
 msgid "Details are not available here, but the link still opens."
 msgstr "Сведения здесь недоступны, но ссылка всё равно открывается."
+
+msgid "Detect your physical location"
+msgstr "Определять ваше местоположение"
 
 msgid "Dev"
 msgstr "Dev"
@@ -7184,6 +7314,9 @@ msgstr "отклонил(а) своё ревью"
 msgid "Display"
 msgstr "Отображение"
 
+msgid "Display notifications"
+msgstr "Показ уведомлений"
+
 msgid "Display options"
 msgstr "Параметры отображения"
 
@@ -7195,6 +7328,9 @@ msgstr "Показывает мобильную боковую панель."
 
 msgid "Do anything"
 msgstr "Сделайте что угодно"
+
+msgid "Do anything in Paradev"
+msgstr "Сделайте что угодно в Paradev"
 
 msgid "Do I need my own coding agent subscriptions?"
 msgstr "Нужны ли мне собственные подписки на кодовых агентов?"
@@ -7452,6 +7588,12 @@ msgstr "Каждая в своей новой вкладке"
 msgid "Each morning at 8am, look at yesterday's failed CI runs, diagnose the most common failure, and open a fix PR."
 msgstr "Каждое утро в 8:00 смотри вчерашние упавшие запуски CI, определяй самую частую причину и открывай PR с исправлением."
 
+msgid "Each run makes its own"
+msgstr "Каждый запуск создаёт свою"
+
+msgid "Each run starts a new agent conversation"
+msgstr "Каждый запуск начинает новый разговор с агентом"
+
 msgid "Each seat adds its plan's hours to one pool your team shares:"
 msgstr "Каждое место добавляет часы своего тарифа в общий пул всей команды:"
 
@@ -7463,6 +7605,9 @@ msgstr "У каждой поверхности своя типографика. 
 
 msgid "Each task on its own branch"
 msgstr "У каждой задачи своя ветка"
+
+msgid "Each workspace gets its own cloud machine and keeps working when your laptop is closed. Check in from desktop, iPhone, or iPad."
+msgstr "Каждая рабочая область получает свою облачную машину и продолжает работать, когда ноутбук закрыт. Следите за ней с компьютера, iPhone или iPad."
 
 msgid "Early 2024"
 msgstr "Начало 2024"
@@ -7729,6 +7874,9 @@ msgstr "Введите URL..."
 msgid "Enterprise"
 msgstr "Enterprise"
 
+msgid "environment"
+msgstr "Окружение"
+
 msgid "Environment"
 msgstr "Окружение"
 
@@ -7972,6 +8120,9 @@ msgstr "Изучаем"
 msgid "Extended thinking: {activeLabel}"
 msgstr "Расширенное мышление: {activeLabel}"
 
+msgid "Extensions"
+msgstr "Расширения"
+
 msgid "External Application"
 msgstr "Внешнее приложение"
 
@@ -8047,6 +8198,9 @@ msgstr "Не удалось добавить агента"
 
 msgid "Failed to add member"
 msgstr "Не удалось добавить участника"
+
+msgid "Failed to archive automation"
+msgstr "Не удалось архивировать автоматизацию"
 
 msgid "Failed to cancel invitation"
 msgstr "Не удалось отменить приглашение"
@@ -8344,6 +8498,9 @@ msgstr "Не удалось перезапустить демон"
 
 msgid "Failed to restore"
 msgstr "Не удалось восстановить"
+
+msgid "Failed to restore automation"
+msgstr "Не удалось восстановить автоматизацию"
 
 msgid "Failed to restore defaults"
 msgstr "Не удалось восстановить значения по умолчанию"
@@ -9076,8 +9233,8 @@ msgstr "Полноэкранный режим"
 msgid "Full self-driving"
 msgstr "Полная автономность"
 
-msgid "Full source available on GitHub under Elastic License 2.0 (ELv2). Inspect, audit, and contribute to the code. No black boxes, no hidden functionality."
-msgstr "Полный исходный код доступен на GitHub под Elastic License 2.0 (ELv2). Изучайте, проверяйте и вносите вклад. Никаких чёрных ящиков и скрытой функциональности."
+msgid "Full source on GitHub under the MIT License. Inspect, audit, and contribute to the code. No black boxes, no hidden functionality."
+msgstr "Полный исходный код на GitHub под лицензией MIT. Изучайте, проверяйте и вносите вклад. Никаких чёрных ящиков и скрытой функциональности."
 
 msgid "Funding"
 msgstr "Финансирование"
@@ -9147,6 +9304,9 @@ msgstr "Получить ключ API"
 
 msgid "Get channel details"
 msgstr "Открыть сведения о канале"
+
+msgid "Get extensions"
+msgstr "Добавить расширения"
 
 msgid "Get in touch with the {companyName} team."
 msgstr "Свяжитесь с командой {companyName}."
@@ -9294,6 +9454,9 @@ msgstr "Перейти на следующую страницу в истори�
 
 msgid "Go home"
 msgstr "На главную"
+
+msgid "Go through the first-run steps again. Your projects and settings stay as they are."
+msgstr "Пройдите шаги первого запуска ещё раз. Проекты и настройки останутся без изменений."
 
 msgid "Go to home"
 msgstr "На главную"
@@ -9550,6 +9713,9 @@ msgctxt "directory"
 msgid "Home"
 msgstr "Домашняя"
 
+msgid "host"
+msgstr "Хост"
+
 msgid "Host"
 msgstr "Хост"
 
@@ -9641,8 +9807,8 @@ msgstr "Часов между запусками"
 msgid "Hover Card"
 msgstr "Карточка при наведении"
 
-msgid "How {label} signs in when Paradev runs it for you."
-msgstr "Как {label} входит в систему, когда Paradev запускает его за вас."
+msgid "How {label} authenticates in cloud workspaces."
+msgstr "Как {label} проходит аутентификацию в облачных рабочих областях."
 
 msgid "How 2026 plays out"
 msgstr "Как пройдёт 2026-й"
@@ -9664,6 +9830,9 @@ msgstr "Как начать?"
 
 msgid "How do the paid plans work?"
 msgstr "Как работают платные тарифы?"
+
+msgid "How do you want to work?"
+msgstr "Как вы хотите работать?"
 
 msgid "How does pricing work?"
 msgstr "Как устроена цена?"
@@ -9721,6 +9890,9 @@ msgstr "Как мы защищаем код"
 
 msgid "How we work"
 msgstr "Как мы работаем"
+
+msgid "How you run agents"
+msgstr "Как вы запускаете агентов"
 
 msgid "How your agents sign in inside cloud workspaces. Other people connect their own subscriptions or API keys; on this machine each agent keeps using the login already on it."
 msgstr "Как ваши агенты входят внутри облачных рабочих областей. Другие подключают свои подписки или ключи API; на этой машине каждый агент продолжает использовать вход, который уже на ней есть."
@@ -9871,6 +10043,10 @@ msgstr "Не удалось импортировать"
 msgid "Import failed: {message}"
 msgstr "Не удалось импортировать: {message}"
 
+#. placeholder {0}: offer.toolNames
+msgid "Import from {0}"
+msgstr "Импортировать из {0}"
+
 msgid "Import from file"
 msgstr "Импорт из файла"
 
@@ -9900,6 +10076,9 @@ msgstr "Импортировать…"
 
 msgid "Important"
 msgstr "Важно"
+
+msgid "Imported"
+msgstr "Импортировано"
 
 #. placeholder {0}: untracked.length
 #. placeholder {1}: errors[0]
@@ -9931,14 +10110,14 @@ msgstr "Улучшенный просмотр diff"
 msgid "in {0}"
 msgstr "в {0}"
 
-msgid "in a new session"
-msgstr "в новой сессии"
-
 msgid "in a terminal on this host."
 msgstr "в терминале на этом хосте."
 
 msgid "In just a few months, <0>tens of thousands of engineers</0> run Paradev as their primary IDE, at companies like Wix, DoorDash, and Netflix."
 msgstr "Всего за несколько месяцев <0>десятки тысяч инженеров</0> используют Paradev как основную IDE — в таких компаниях, как Wix, DoorDash и Netflix."
+
+msgid "In manual mode, Paradev doesn't sign this agent in. Have your script sign it in again and continue, or turn off manual mode in agent settings."
+msgstr "В ручном режиме Paradev не выполняет вход для этого агента. Пусть ваш скрипт снова выполнит вход, затем продолжите, или отключите ручной режим в настройках агентов."
 
 msgid "In person in San Francisco, five days a week. You work directly with the founders."
 msgstr "Работаем в офисе в Сан-Франциско пять дней в неделю. Вы работаете напрямую с основателями."
@@ -9988,6 +10167,9 @@ msgstr "Входит"
 
 msgid "Included in Enterprise"
 msgstr "Входит в Enterprise"
+
+msgid "Included with Team and Ultra."
+msgstr "Входит в Team и Ultra."
 
 msgid "Includes the Paradev-specific box variant"
 msgstr "Включает специфичный для Paradev вариант box"
@@ -10055,6 +10237,9 @@ msgstr "Мысли команды Paradev о параллельных кодов
 msgid "Inspect branches and run SQL"
 msgstr "Просмотр веток и запуск SQL"
 
+msgid "Inspect tables and apply migrations"
+msgstr "Просмотр таблиц и применение миграций"
+
 #. placeholder {0}: data.targetTitle
 msgid "Inspecting {0}"
 msgstr "Инспектируем {0}"
@@ -10070,6 +10255,9 @@ msgstr "Установить и перезапустить"
 
 msgid "Install & Restart"
 msgstr "Установить и перезапустить"
+
+msgid "Install a plugin in the Paradev app and every agent can use it."
+msgstr "Установите плагин в приложении Paradev, и его сможет использовать любой агент."
 
 msgid "Install failed"
 msgstr "Не удалось установить"
@@ -10325,8 +10513,14 @@ msgstr "URL задачи должен соответствовать {repoMismat
 msgid "Issue…"
 msgstr "Задача…"
 
+msgid "It can:"
+msgstr "Расширение сможет:"
+
 msgid "It can't be brought back."
 msgstr "Его нельзя будет вернуть."
+
+msgid "It copies the cookies from your \"{profileName}\" profile into a browser pane the agent opened. The agent can then act on the sites you are signed in to."
+msgstr "Cookie из вашего профиля «{profileName}» копируются в панель браузера, которую открыл агент. Тогда агент сможет действовать на сайтах, где вы вошли в аккаунт."
 
 msgid "It keeps the title from your prompt."
 msgstr "Останется название из вашего запроса."
@@ -10411,9 +10605,6 @@ msgstr "URL сервера Jira"
 
 msgid "Join"
 msgstr "Присоединиться"
-
-msgid "Join as a design partner"
-msgstr "Стать дизайн-партнёром"
 
 msgid "Join channel"
 msgstr "Присоединиться к каналу"
@@ -10518,6 +10709,9 @@ msgstr "Оставить {planLabel}"
 msgid "Keep {planName}"
 msgstr "Оставить {planName}"
 
+msgid "Keep current version"
+msgstr "Оставить текущую версию"
+
 msgid "Keep docs fresh"
 msgstr "Держать документацию актуальной"
 
@@ -10608,6 +10802,9 @@ msgstr "Язык"
 
 msgid "Language saved on this device, but syncing it to your account failed."
 msgstr "Язык сохранён на этом устройстве, но синхронизировать его с аккаунтом не удалось."
+
+msgid "Laptop closed"
+msgstr "Ноутбук закрыт"
 
 msgid "Large"
 msgstr "Большой"
@@ -10835,6 +11032,9 @@ msgstr "Меньше"
 msgid "less than a minute ago"
 msgstr "меньше минуты назад"
 
+msgid "Let an agent use your {browserName} logins?"
+msgstr "Разрешить агенту использовать ваши входы из {browserName}?"
+
 msgid "Let the agent drive."
 msgstr "Пусть агент управляет."
 
@@ -10926,6 +11126,9 @@ msgstr "Linear ограничивает число запросов. Повто�
 msgid "Linear issues"
 msgstr "Задачи Linear"
 
+msgid "Linear project"
+msgstr "Проект Linear"
+
 #. placeholder {0}: m.startLine
 #. placeholder {0}: metadata.startLine
 #. placeholder {1}: m.endLine
@@ -10959,9 +11162,6 @@ msgstr "Связать рабочее пространство"
 
 msgid "Linked {slug} to workspace"
 msgstr "{slug} привязана к рабочей области"
-
-msgid "Linked to {projectName}"
-msgstr "Связаны с {projectName}"
 
 msgid "Liquid Glass"
 msgstr "Liquid Glass"
@@ -11264,6 +11464,9 @@ msgstr "Низкая серьёзность"
 msgid "Machine resources"
 msgstr "Ресурсы машины"
 
+msgid "Machine size"
+msgstr "Размер машины"
+
 msgid "Machine size: {label}"
 msgstr "Размер машины: {label}"
 
@@ -11358,6 +11561,12 @@ msgstr "Управлять использованием"
 msgid "Manage your account settings"
 msgstr "Управление настройками аккаунта"
 
+msgid "Manage your apps, extensions, and themes"
+msgstr "Управлять приложениями, расширениями и темами"
+
+msgid "Manage your downloads"
+msgstr "Управлять скачанными файлами"
+
 msgid "Manage your organization's branding and members."
 msgstr "Управление брендингом и участниками вашей организации."
 
@@ -11373,8 +11582,17 @@ msgstr "Управляется администратором вашей орг�
 msgid "Manual"
 msgstr "Вручную"
 
+msgid "Manual mode is off for {label}."
+msgstr "Ручной режим для {label} отключён."
+
 msgid "Manual order"
 msgstr "Ручной порядок"
+
+msgid "manual sign-in"
+msgstr "ручной вход"
+
+msgid "Manual sign-in"
+msgstr "Ручной вход"
 
 msgid "Mark all read"
 msgstr "Отметить всё как прочитанное"
@@ -11681,6 +11899,9 @@ msgstr "Заполнены не все обязательные поля."
 #. js-lingui-explicit-id
 msgid "serverError.plugins.missingInput"
 msgstr "Отсутствует обязательное поле {input}"
+
+msgid "MIT License"
+msgstr "Лицензия MIT"
 
 msgid "Mobile"
 msgstr "Мобильные"
@@ -12170,9 +12391,6 @@ msgstr "Следующее изображение"
 msgid "Next match"
 msgstr "Следующее совпадение"
 
-msgid "Next release"
-msgstr "Следующий релиз"
-
 #. placeholder {0}: formatDateTimeInTimezone( new Date(automation.nextRunAt), automation.timezone ?? "UTC", )
 msgid "Next run {0}"
 msgstr "Следующий запуск {0}"
@@ -12262,6 +12480,9 @@ msgstr "Агентов пока нет."
 
 msgid "No API keys yet."
 msgstr "Ключей API пока нет."
+
+msgid "No archived automations"
+msgstr "Нет архивированных автоматизаций"
 
 msgid "No archived workspaces"
 msgstr "Нет архивированных рабочих областей"
@@ -12386,14 +12607,14 @@ msgstr "Загрузок пока нет"
 msgid "No emoji found"
 msgstr "Эмодзи не найдены"
 
-msgid "No environments are linked to this project yet."
-msgstr "С этим проектом пока не связано ни одно окружение."
-
 msgid "No environments available"
 msgstr "Нет доступных окружений"
 
 msgid "No environments found."
 msgstr "Окружения не найдены."
+
+msgid "No environments linked to this project."
+msgstr "С этим проектом не связано ни одно окружение."
 
 msgid "No environments yet."
 msgstr "Окружений пока нет. Создайте окружение, чтобы запускать из него облачную рабочую область."
@@ -12475,6 +12696,9 @@ msgstr "Задачи не найдены."
 
 msgid "No items"
 msgstr "Пусто"
+
+msgid "No keys in the sandbox"
+msgstr "Никаких ключей в песочнице"
 
 msgid "No known creators"
 msgstr "Нет известных создателей"
@@ -13211,6 +13435,9 @@ msgstr "Одной строкой"
 msgid "One line about how you work"
 msgstr "Одна строка о том, как вы работаете"
 
+msgid "One machine per workspace."
+msgstr "Одна машина на рабочую область."
+
 msgid "One of the first hundred on the board"
 msgstr "В числе первых ста в рейтинге"
 
@@ -13228,9 +13455,6 @@ msgstr "Один плагин. Любой агент для программир
 
 msgid "One step left"
 msgstr "Остался один шаг"
-
-msgid "One workspace for Claude Code, Codex, and any coding agent."
-msgstr "Одна рабочая область для Claude Code, Codex и любого кодового агента."
 
 msgid "online"
 msgstr "онлайн"
@@ -13310,6 +13534,9 @@ msgstr "Изменить комментарий может только авто
 msgid "Only the author can edit a comment"
 msgstr "Изменить комментарий может только автор"
 
+msgid "Only the host owner can let cloud workspaces reach it"
+msgstr "Разрешить облачным рабочим областям доступ к хосту может только его владелец"
+
 msgid "Only the host owner can set its wake command"
 msgstr "Задать команду пробуждения может только владелец хоста"
 
@@ -13325,8 +13552,8 @@ msgstr "Запускать эту автоматизацию может толь
 msgid "Only the owner can view prompt history"
 msgstr "Историю промптов может смотреть только владелец"
 
-msgid "Only the owner or an organization owner can delete this automation"
-msgstr "Удалить эту автоматизацию может только владелец или владелец организации"
+msgid "Only the owner or an organization owner can archive this automation"
+msgstr "Только владелец или владелец организации может архивировать эту автоматизацию"
 
 msgid "Only the people listed above can open it"
 msgstr "Открыть могут только люди из списка выше"
@@ -13409,6 +13636,9 @@ msgstr "Открыть многострочный редактор промпт�
 
 msgid "Open a new {label} chat?"
 msgstr "Открыть новый чат {label}?"
+
+msgid "Open a pull request that adds it to the Paradev repository. We review it and add it to the marketplace."
+msgstr "Откройте пул-реквест, который добавляет плагин в репозиторий Paradev. Мы проверим его и добавим в маркетплейс."
 
 msgid "Open a pull request to view review status, checks, and comments."
 msgstr "Откройте пул-реквест, чтобы видеть статус ревью, проверки и комментарии."
@@ -13752,6 +13982,9 @@ msgstr "Открыть панель"
 msgid "Open ship options"
 msgstr "Открыть параметры отправки"
 
+msgid "Open Source"
+msgstr "Открытый исходный код"
+
 msgid "Open System Settings"
 msgstr "Открыть Системные настройки"
 
@@ -13886,9 +14119,6 @@ msgstr "Оранжевый"
 
 msgid "Orchestrate Parallel Agents"
 msgstr "Оркестрируйте параллельных агентов"
-
-msgid "Orchestrate Them All"
-msgstr "Оркестрируйте всех"
 
 msgid "Orchestrated"
 msgstr "С оркестрацией"
@@ -14147,6 +14377,9 @@ msgstr "Paradev Автоматизации"
 msgid "Paradev CLI"
 msgstr "Paradev CLI"
 
+msgid "Paradev cloud workspaces"
+msgstr "Облачные рабочие области Paradev"
+
 msgid "Paradev components"
 msgstr "Компоненты Paradev"
 
@@ -14171,6 +14404,9 @@ msgstr "Дизайн-система Paradev"
 msgid "Paradev desktop app"
 msgstr "Десктопное приложение Paradev"
 
+msgid "Paradev doesn't have permission to read \"{name}\"."
+msgstr "У Paradev нет разрешения на чтение «{name}»."
+
 msgid "Paradev Enterprise is Paradev for teams. Reach out to learn more about what's included and how it can work for your organization."
 msgstr "Paradev Enterprise — это Paradev для команд. Напишите нам, чтобы узнать, что входит и как это подойдёт вашей организации."
 
@@ -14186,11 +14422,14 @@ msgstr "Paradev пробрасывает порты, которые открыв
 msgid "Paradev GitHub App"
 msgstr "Paradev GitHub App"
 
-msgid "Paradev has a free tier. The source code is available on GitHub under Elastic License 2.0 (ELv2), so you can inspect and self-host it subject to the license terms."
-msgstr "У Paradev есть бесплатный тариф. Исходный код доступен на GitHub под Elastic License 2.0 (ELv2), так что его можно изучать и хостить самостоятельно на условиях лицензии."
+msgid "Paradev has a free tier. The source code is on GitHub under the MIT License, so you can inspect, modify, and self-host it."
+msgstr "У Paradev есть бесплатный тариф. Исходный код опубликован на GitHub под лицензией MIT, поэтому его можно изучать, изменять и хостить самостоятельно."
 
 msgid "Paradev hit an unexpected error. Reload to try again."
 msgstr "В Paradev произошла непредвиденная ошибка. Перезагрузите, чтобы повторить."
+
+msgid "Paradev holds no credential for {label} and adds none to your cloud workspaces when they start, restart or wake. A script you run inside the workspace keeps {loginFile} up to date. If it stops, {label} stays signed out until your script signs it in again."
+msgstr "Paradev не хранит учётные данные {label} и не добавляет их в ваши облачные рабочие области при запуске, перезапуске или пробуждении. Скрипт, который вы запускаете в рабочей области, поддерживает {loginFile} в актуальном состоянии. Если он остановится, {label} останется без входа, пока ваш скрипт снова не выполнит вход."
 
 msgid "Paradev holds the token and makes the calls. Agents never see it."
 msgstr "Paradev хранит токен и делает вызовы. Агенты его никогда не видят."
@@ -14216,11 +14455,8 @@ msgstr "Paradev разрабатывается в Paradev, поэтому мы �
 msgid "Paradev is designed to work with your existing tool, we natively support deep-linking to IDEs like Cursor so you can open your workspaces and files in your IDE."
 msgstr "Paradev рассчитан на работу с вашим текущим инструментом: мы нативно поддерживаем переход по ссылкам в IDE вроде Cursor, чтобы открывать рабочие области и файлы прямо там."
 
-msgid "Paradev is source-available: the code is public on GitHub under Elastic License 2.0 (ELv2), which lets you inspect and self-host it subject to the license terms, but is not OSI-approved open source. Paradev is unrelated to Apache Superset, the business-intelligence tool."
-msgstr "Paradev — source-available: код открыт на GitHub под Elastic License 2.0 (ELv2), которая позволяет изучать его и хостить самостоятельно на условиях лицензии, но не является одобренной OSI открытой лицензией. Paradev не связан с Apache Superset — инструментом бизнес-аналитики."
-
-msgid "Paradev is source-available. Every pull request, review and bug is public on GitHub."
-msgstr "Исходный код Paradev доступен публично (source-available). Каждый пул-реквест, ревью и баг открыты на GitHub."
+msgid "Paradev is open source. Every pull request, review and bug is public on GitHub."
+msgstr "У Paradev открытый исходный код. Каждый пул-реквест, ревью и баг открыты на GitHub."
 
 msgid "Paradev is the workbench for the F3 to F4 transition: parallel agents on separate branches, fleets you can actually supervise, and a review surface for code you did not write."
 msgstr "Paradev — это верстак для перехода от F3 к F4: параллельные агенты в отдельных ветках, флоты, за которыми действительно можно следить, и интерфейс проверки для кода, который вы не писали."
@@ -14270,8 +14506,8 @@ msgstr "Демо Paradev Страницы"
 msgid "Paradev Plugins"
 msgstr "Paradev Плагины"
 
-msgid "Paradev runs locally on your developers' machines. We don't store your code or AI conversations, and Paradev has completed a SOC 2 Type II audit with an independent auditor. Request the report and review our security documentation at trust.superset.sh."
-msgstr "Paradev работает локально на машинах ваших разработчиков. Мы не храним ваш код и диалоги с AI, а Paradev прошёл аудит SOC 2 Type II у независимого аудитора. Запросите отчёт и посмотрите документацию по безопасности на trust.superset.sh."
+msgid "Paradev runs locally on your developers' machines. We don't store your code or AI conversations, and Paradev has completed a SOC 2 Type II audit with an independent auditor. Request the report and review our security documentation at {trustHost}."
+msgstr "Paradev работает локально на машинах ваших разработчиков. Мы не храним ваш код и диалоги с AI, а Paradev прошёл аудит SOC 2 Type II у независимого аудитора. Запросите отчёт и посмотрите документацию по безопасности на {trustHost}."
 
 msgid "Paradev started as a hackathon project in November 2025. It was a simple desktop app for managing worktrees."
 msgstr "Paradev начался как проект на хакатоне в ноябре 2025 года. Это было простое десктопное приложение для управления worktree."
@@ -14309,10 +14545,6 @@ msgstr "Параллельные worktree агентов"
 
 msgid "Parallel agents"
 msgstr "Параллельные агенты"
-
-#. Homepage headline, line 2 of 2, after “The IDE for”.
-msgid "Parallel Agents"
-msgstr "Параллельных агентов"
 
 msgid "Parallel agents guide"
 msgstr "Руководство по параллельным агентам"
@@ -14506,6 +14738,9 @@ msgstr "Выберите папку на диске и добавьте её к�
 msgid "Pick a folder…"
 msgstr "Выберите папку…"
 
+msgid "Pick a machine size"
+msgstr "Выберите размер машины"
+
 msgid "Pick a model"
 msgstr "Выберите модель"
 
@@ -14565,6 +14800,9 @@ msgstr "PID"
 
 msgid "Pin"
 msgstr "Закрепить"
+
+msgid "Pin {name}"
+msgstr "Закрепить {name}"
 
 msgid "Pin feedback to a page and let the agent make the change."
 msgstr "Оставьте отзыв на странице, и агент внесёт изменение."
@@ -14663,6 +14901,9 @@ msgstr "Маркетплейс плагинов"
 
 msgid "Plugins"
 msgstr "Плагины"
+
+msgid "Plugins, themes, and agents"
+msgstr "Плагины, темы и агенты"
 
 msgid "Point at the page. Your agent makes the change."
 msgstr "Укажите на страницу. Ваш агент внесёт изменение."
@@ -14856,9 +15097,6 @@ msgstr "Предыдущее совпадение"
 msgid "Previous prompts"
 msgstr "Предыдущие промпты"
 
-msgid "Previous release"
-msgstr "Предыдущий релиз"
-
 msgid "Previous slide"
 msgstr "Предыдущий слайд"
 
@@ -14960,6 +15198,9 @@ msgstr "Прогресс"
 
 msgid "Progress · Spinner"
 msgstr "Прогресс · спиннер"
+
+msgid "project"
+msgstr "Проект"
 
 msgctxt "MCP server scope"
 msgid "project"
@@ -15128,6 +15369,9 @@ msgstr "Публикуйте через Paradev CLI или по MCP."
 
 msgid "Publish from your own repo"
 msgstr "Публикуйте из своего репозитория"
+
+msgid "Publish new versions, rename and share"
+msgstr "Публиковать новые версии, переименовывать и делиться"
 
 msgctxt "github release action"
 msgid "Published"
@@ -15352,6 +15596,21 @@ msgctxt "shell intent"
 msgid "Read"
 msgstr "Прочитан"
 
+msgid "Read a list of your most visited websites"
+msgstr "Читать список самых посещаемых сайтов"
+
+msgid "Read and change all your data on all websites"
+msgstr "Просматривать и изменять все ваши данные на всех сайтах"
+
+msgid "Read and change your bookmarks"
+msgstr "Просматривать и изменять закладки"
+
+msgid "Read and change your data on {count} websites"
+msgstr "Просматривать и изменять ваши данные на сайтах ({count})"
+
+msgid "Read and change your data on {site}"
+msgstr "Просматривать и изменять ваши данные на {site}"
+
 msgid "Read and plan without changing anything"
 msgstr "Читать и планировать, ничего не меняя"
 
@@ -15363,6 +15622,9 @@ msgstr "Чтение и отправка писем"
 
 msgid "Read announcement"
 msgstr "Читать анонс"
+
+msgid "Read data you copy and paste"
+msgstr "Читать данные, которые вы копируете и вставляете"
 
 msgid "Read deployment and build logs"
 msgstr "Чтение логов деплоя и сборки"
@@ -15391,6 +15653,9 @@ msgstr "Читать руководство"
 msgid "Read the guide to parallel coding agents"
 msgstr "Читать руководство по параллельным кодовым агентам"
 
+msgid "Read the MIT License"
+msgstr "Читать лицензию MIT"
+
 msgid "Read the page"
 msgstr "Читать страницу"
 
@@ -15402,6 +15667,9 @@ msgstr "Читать руководство по настройке"
 
 msgid "Read the source and every pull request."
 msgstr "Читайте исходный код и каждый pull request."
+
+msgid "Read your browsing history"
+msgstr "Просматривать историю браузера"
 
 msgctxt "shell intent"
 msgid "Reading"
@@ -15461,6 +15729,9 @@ msgstr "Перебазировать и объединить"
 
 msgid "Rebase and merge"
 msgstr "Перебазировать и объединить"
+
+msgid "Recall what was said in meetings"
+msgstr "Вспомнить, что говорили на встречах"
 
 msgid "Recent Activity"
 msgstr "Недавняя активность"
@@ -15591,6 +15862,9 @@ msgstr "Регион"
 msgid "Registers lifecycle hooks in this agent's global config so Paradev can show status and send notifications. Turning this off removes Paradev's entries everywhere — status and notifications stop for this agent, including inside Paradev."
 msgstr "Регистрирует хуки жизненного цикла в глобальной конфигурации этого агента, чтобы Paradev мог показывать статус и отправлять уведомления. Отключение убирает записи Paradev везде — статус и уведомления для этого агента перестанут работать, в том числе внутри Paradev."
 
+msgid "Reinstall {name}"
+msgstr "Переустановить {name}"
+
 msgid "rejoined {channel} by invitation from {inviter}, along with {others}."
 msgstr "снова присоединился(-ась) к {channel} по приглашению пользователя {inviter}, как и {others}."
 
@@ -15694,6 +15968,9 @@ msgstr "Удалить {label}?"
 
 msgid "Remove {name}"
 msgstr "Удалить {name}"
+
+msgid "Remove {name}?"
+msgstr "Удалить {name}?"
 
 msgid "Remove {repo}? Every plugin synced from it is removed from your organization and from every member who has it installed."
 msgstr "Удалить {repo}? Все синхронизированные из него плагины будут удалены из вашей организации и у всех участников, которые их установили."
@@ -16170,8 +16447,14 @@ msgstr "Перезапустить службу хоста"
 msgid "Restart now to move them to {accountLabel}; each session picks its conversation back up where it left off."
 msgstr "Перезапустите их сейчас, чтобы перевести на {accountLabel}; каждая сессия продолжит разговор с того места, где остановилась."
 
+msgid "Restart onboarding"
+msgstr "Пройти онбординг заново"
+
 msgid "Restart running {providerLabel} agents?"
 msgstr "Перезапустить работающих агентов {providerLabel}?"
+
+msgid "Restart running workspaces so their agents pick up the change."
+msgstr "Перезапустите работающие рабочие области, чтобы их агенты применили изменение."
 
 msgid "Restart terminal daemon?"
 msgstr "Перезапустить демон терминала?"
@@ -16219,6 +16502,9 @@ msgstr "Восстановить"
 msgid "Restore {0} to defaults?"
 msgstr "Восстановить значения по умолчанию для {0}?"
 
+msgid "Restore automation"
+msgstr "Восстановить автоматизацию"
+
 msgid "Restore default"
 msgstr "Восстановить значения по умолчанию"
 
@@ -16231,6 +16517,12 @@ msgstr "Восстановить тариф"
 msgid "restore the agent defaults"
 msgstr "восстановить настройки агента по умолчанию"
 
+msgid "Restore this automation to run it"
+msgstr "Восстановите эту автоматизацию, чтобы запустить её"
+
+msgid "Restore this automation to view prompt history"
+msgstr "Восстановите эту автоматизацию, чтобы посмотреть историю промпта"
+
 msgid "Restore this version?"
 msgstr "Восстановить эту версию?"
 
@@ -16242,6 +16534,14 @@ msgstr "Восстановить рабочую область"
 
 msgid "Restored"
 msgstr "Восстановлено"
+
+#. placeholder {0}: only.name
+msgid "Restored \"{0}\""
+msgstr "«{0}» восстановлена"
+
+#. placeholder {0}: only.name
+msgid "Restored \"{0}\". It is paused."
+msgstr "«{0}» восстановлена. Она приостановлена."
 
 msgid "Restored \"{projectName}\""
 msgstr "«{projectName}» восстановлен"
@@ -16295,9 +16595,6 @@ msgstr "Продолжится после сброса"
 msgid "Resuming in {resumeSeconds}s"
 msgstr "Продолжение через {resumeSeconds} с"
 
-msgid "Resuming the conversation…"
-msgstr "Возобновляем разговор…"
-
 msgid "Retry"
 msgstr "Повторить"
 
@@ -16333,6 +16630,9 @@ msgstr "Переиспользуемые инструкции, которые а
 
 msgid "Reusable terminal launches. Click a script to edit or drag to reorder. Project setup, run, and teardown commands are lifecycle scripts."
 msgstr "Переиспользуемые запуски терминала. Нажмите на скрипт, чтобы изменить, или перетащите, чтобы изменить порядок. Команды настройки, запуска и очистки проекта — это скрипты жизненного цикла."
+
+msgid "Reusing {keptName}"
+msgstr "Используется {keptName}"
 
 msgid "Reveal in Finder"
 msgstr "Показать в Finder"
@@ -16471,8 +16771,8 @@ msgstr "Повернуть устройство"
 msgid "Roundups"
 msgstr "Обзоры"
 
-msgid "Route {label} through a provider you run, with the credentials you hold. Saved values are handed to the agent at launch."
-msgstr "Направьте {label} через провайдера, которого держите вы, с вашими учётными данными. Сохранённые значения передаются агенту при запуске."
+msgid "Route {label} through a provider you run, with the credentials you hold, or leave its sign-in to your own tooling."
+msgstr "Направьте {label} через провайдера, которого держите вы, с вашими учётными данными, или оставьте вход вашим собственным инструментам."
 
 msgid "Routine not found"
 msgstr "Рутина не найдена"
@@ -16505,8 +16805,8 @@ msgstr "Выполните \"gh auth login\" или задайте GITHUB_TOKEN"
 msgid "Run {0} now"
 msgstr "Запустить {0} сейчас"
 
-msgid "Run <0>{tokenCommand}</0><1><2/></1> in a terminal and paste the token here."
-msgstr "Выполните в терминале <0>{tokenCommand}</0><1><2/></1> и вставьте токен сюда."
+msgid "Run <0>{tokenCommand}</0><1><2/></1> in a terminal and paste the token you get back here."
+msgstr "Выполните в терминале <0>{tokenCommand}</0><1><2/></1> и вставьте сюда полученный токен."
 
 msgid "Run 01"
 msgstr "Run 01"
@@ -16548,6 +16848,9 @@ msgstr "Запускайте автоматизации, когда в ваше�
 msgid "Run automations when Sentry issues change."
 msgstr "Запускайте автоматизации при изменении задач в Sentry."
 
+msgid "Run coding agents in cloud workspaces that keep working when your laptop is closed. Included with Team and Ultra."
+msgstr "Запускайте агентов для кода в облачных рабочих областях, которые продолжают работать, когда ноутбук закрыт. Входит в Team и Ultra."
+
 msgid "Run commands and navigate the application."
 msgstr "Выполняйте команды и перемещайтесь по приложению."
 
@@ -16577,6 +16880,9 @@ msgstr "Запускайте параллельных агентов для ко
 
 msgid "Run script"
 msgstr "Запустить скрипт"
+
+msgid "Run scripts you add on websites"
+msgstr "Запускать на сайтах добавленные вами скрипты"
 
 msgid "Run setup script in each imported workspace"
 msgstr "Запускать скрипт установки в каждой импортированной рабочей области"
@@ -16610,6 +16916,9 @@ msgstr "Запускайте агентов с десктопа, из любог
 
 msgid "Run your agents from your phone."
 msgstr "Запускайте агентов с телефона."
+
+msgid "Run your coding agents in the cloud."
+msgstr "Запускайте своих агентов для кода в облаке."
 
 msgid "Run."
 msgstr "Запустите."
@@ -16674,8 +16983,14 @@ msgstr "Выполняется при создании рабочего прос
 msgid "Runs when a workspace is deleted."
 msgstr "Выполняется при удалении рабочего пространства."
 
+msgid "Same session"
+msgstr "Та же сессия"
+
 msgid "Same version as this app."
 msgstr "Та же версия, что и у этого приложения."
+
+msgid "Same workspace"
+msgstr "Та же рабочая область"
 
 msgid "SAML SSO & SCIM provisioning"
 msgstr "SAML SSO и провижининг SCIM"
@@ -16801,6 +17116,9 @@ msgstr "Область"
 #. placeholder {0}: String(MIN_ACTIVE_DAYS)
 msgid "Scoring starts once the board can see {0} days of usage."
 msgstr "Подсчёт очков начнётся, когда наберётся дней с активностью: {0}."
+
+msgid "Scrape and crawl websites"
+msgstr "Парсинг и обход веб-сайтов"
 
 msgid "Screenshot copied"
 msgstr "Снимок экрана скопирован"
@@ -17490,6 +17808,9 @@ msgstr "Настроить хост по SSH"
 msgid "Set up an automation"
 msgstr "Настройте автоматизацию"
 
+msgid "Set up once"
+msgstr "Настройте один раз"
+
 msgid "Set up project on {hostName}"
 msgstr "Настроить проект на {hostName}"
 
@@ -17858,6 +18179,9 @@ msgstr "Войдите один раз. Paradev держит подключен�
 msgid "Sign in to {0}"
 msgstr "Войдите в {0}"
 
+msgid "Sign in to change your organization's plugins."
+msgstr "Войдите, чтобы изменить плагины организации."
+
 msgid "Sign in to continue"
 msgstr "Войдите, чтобы продолжить"
 
@@ -18004,6 +18328,9 @@ msgstr "Шесть уровней автономности фабрики"
 msgid "Six levels of factory autonomy, the gates between them, and our forecast for how far 2026 gets us. Written down now so you can grade us later."
 msgstr "Шесть уровней автономности фабрики, шлюзы между ними и наш прогноз, как далеко нас заведёт 2026 год. Записано сейчас, чтобы потом вы могли выставить нам оценку."
 
+msgid "size"
+msgstr "Размер"
+
 msgid "Size"
 msgstr "Размер"
 
@@ -18015,6 +18342,9 @@ msgstr "Навык"
 
 msgid "Skills"
 msgstr "Навыки"
+
+msgid "Skills and MCP tools for your agents. Submit your own."
+msgstr "Навыки и инструменты MCP для ваших агентов. Отправьте свой плагин."
 
 msgid "Skills ship with the Paradev plugin and are kept up to date automatically in every agent you use. Click one to preview it."
 msgstr "Навыки поставляются с плагином Paradev и автоматически поддерживаются в актуальном состоянии во всех ваших агентах. Нажмите на навык, чтобы посмотреть его."
@@ -18067,6 +18397,9 @@ msgstr "Маленький"
 msgctxt "machine size"
 msgid "Small"
 msgstr "Малая"
+
+msgid "Small, Medium, or Large, up to 8 vCPU and 16 GB. Usage scales with memory."
+msgstr "Малая, Средняя или Большая, до 8 vCPU и 16 ГБ. Расход зависит от памяти."
 
 #. Footer call to action. Use the natural idiom for clearing a work backlog fast, not a literal translation of “smash”.
 msgid "Smash your backlog."
@@ -18209,9 +18542,6 @@ msgstr "Звуки и мелодия для завершённых задач"
 
 msgid "Source"
 msgstr "Источник"
-
-msgid "Source Available"
-msgstr "Исходный код доступен"
 
 msgid "Source path (not an import)"
 msgstr "Путь к исходнику (не импорт)"
@@ -18403,9 +18733,6 @@ msgstr "Начните диалог, чтобы сообщения появил�
 msgid "Start a fresh agent session seeded with this terminal's recent context. Workspace files remain the source of truth."
 msgstr "Запускает новую сессию агента с недавним контекстом этого терминала. Источником истины остаются файлы рабочего пространства."
 
-msgid "Start a new agent session each run"
-msgstr "Запускать новую сессию агента при каждом запуске"
-
 msgid "Start a new chat"
 msgstr "Начать новый чат"
 
@@ -18468,6 +18795,9 @@ msgstr "Начинайте работу откуда угодно"
 
 msgid "Start workspaces straight from Linear or GitHub issues in the Tasks view, with an agent already working on each one."
 msgstr "Запускайте рабочие области прямо из задач Linear или GitHub в разделе «Задачи», и в каждой из них уже работает агент."
+
+msgid "Start your first cloud workspace."
+msgstr "Запустите свою первую облачную рабочую область."
 
 msgid "Started"
 msgstr "Начато"
@@ -18660,6 +18990,9 @@ msgstr "Имя субагента"
 msgid "Subagents"
 msgstr "Субагенты"
 
+msgid "Subagents · {count}"
+msgstr "Субагенты · {count}"
+
 msgid "Subject contains..."
 msgstr "Тема содержит..."
 
@@ -18677,6 +19010,9 @@ msgstr "Отправить промпт"
 
 msgid "Submit prompt rate limiting is not configured"
 msgstr "Ограничение частоты отправки промптов не настроено"
+
+msgid "Submit your plugin"
+msgstr "Отправить плагин"
 
 msgid "Submitting…"
 msgstr "Отправка…"
@@ -19279,11 +19615,17 @@ msgstr "Агент копирует разговор; ветвь откроет�
 msgid "The agent crashed"
 msgstr "Агент аварийно завершился"
 
+msgid "The agent is signed out"
+msgstr "Агент вышел из системы"
+
 msgid "The agent lost this conversation"
 msgstr "Агент потерял этот разговор"
 
 msgid "The agent owns a task from ticket to diff. The human reviews the result, not the keystrokes. Attention shifts from writing code to specifying work and judging it. One engineer runs several agents at once in isolated workspaces."
 msgstr "Агент ведёт задачу от тикета до diff. Человек проверяет результат, а не нажатия клавиш. Внимание смещается с написания кода на постановку задач и оценку результата. Один инженер ведёт несколько агентов одновременно в изолированных рабочих областях."
+
+msgid "The agent picks up where the last run left off"
+msgstr "Агент продолжает с того места, где остановился последний запуск"
 
 msgid "The agent stopped responding"
 msgstr "Агент перестал отвечать"
@@ -19306,6 +19648,9 @@ msgstr "Приложение версии {appVersion}, но подключен�
 msgid "The associated device isn't reachable right now"
 msgstr "Связанное устройство сейчас недоступно"
 
+msgid "The automation and its run history are removed. This can't be undone."
+msgstr "Автоматизация и её история запусков будут удалены. Это действие нельзя отменить."
+
 msgid "The automation's owner can't use cloud workspaces in this organization anymore. Ask them to check their access, or run the automation on a device."
 msgstr "Владелец автоматизации больше не может использовать облачные рабочие области в этой организации. Попросите его проверить доступ или запустите автоматизацию на устройстве."
 
@@ -19327,8 +19672,8 @@ msgstr "Облачная рабочая область должна была з�
 msgid "The code expired. Start again."
 msgstr "Срок действия кода истёк. Начните заново."
 
-msgid "The commands Paradev runs to set up, run and archive this project's workspaces, from .superset/config.toml."
-msgstr "Команды, которые Paradev выполняет при подготовке, запуске и архивации рабочих областей этого проекта, из .superset/config.toml."
+msgid "The commands Paradev runs to set up, run and archive this project's workspaces, from the repository's config.toml."
+msgstr "Команды, которые Paradev выполняет при подготовке, запуске и архивации рабочих областей этого проекта, из config.toml репозитория."
 
 msgid "The company raised an $11.5M seed round led by Union Square Ventures, with Y Combinator and Paul Graham. TechCrunch named it one of the standout startups from YC Demo Day."
 msgstr "Компания привлекла 11,5 млн долларов в посевном раунде под руководством Union Square Ventures при участии Y Combinator и Пола Грэма. TechCrunch назвал её одним из самых заметных стартапов YC Demo Day."
@@ -19372,6 +19717,9 @@ msgstr "Конечная точка должна использовать https.
 msgid "The environment this automation starts cloud workspaces from was archived or has no repositories. Pick another environment in the automation's settings."
 msgstr "Окружение, из которого эта автоматизация запускает облачные рабочие области, архивировано или не содержит репозиториев. Выберите другое окружение в настройках автоматизации."
 
+msgid "The extension and its local data are deleted from this browser."
+msgstr "Расширение и его локальные данные удаляются из этого браузера."
+
 msgid "The factory"
 msgstr "Фабрика"
 
@@ -19392,6 +19740,9 @@ msgstr "В файле нет тем, пригодных для импорта."
 
 msgid "The first F4 teams"
 msgstr "Первые команды на F4"
+
+msgid "The first run makes one, later runs reuse it"
+msgstr "Первый запуск создаёт её, следующие используют её снова"
 
 msgid "The first teams, small ones, ship majority-agent code without reading every line, and their defect rates hold. Nothing mystical behind it: review layers, canaries, fast rollback, and a habit of writing specifications instead of code."
 msgstr "Первые команды, небольшие, выпускают код, написанный преимущественно агентами, не читая каждую строку, и их уровень дефектов держится. Ничего мистического: слои ревью, канареечные выкладки, быстрый откат и привычка писать спецификации вместо кода."
@@ -19444,10 +19795,6 @@ msgstr "Хост вернулся к предыдущей сборке."
 
 msgid "The human reads every line before it merges."
 msgstr "Человек читает каждую строку перед слиянием."
-
-#. Homepage headline, line 1 of 2. Line 2 is “Parallel Agents”; reorder the two lines if the language needs it.
-msgid "The IDE for"
-msgstr "IDE для"
 
 msgid "The image upload expired — attach it again"
 msgstr "Срок загрузки изображения истёк — прикрепите его снова"
@@ -19503,6 +19850,12 @@ msgstr "Название организации или команды"
 msgid "The network connection changed"
 msgstr "Сетевое соединение изменилось"
 
+msgid "The open-source workspace for Claude Code, Codex, and any coding agent."
+msgstr "Рабочая область с открытым исходным кодом для Claude Code, Codex и любого кодового агента."
+
+msgid "The open-source workspace for Claude Code, Codex, OpenCode, and any coding agent. Run tasks in parallel on separate branches, and review everything in one place."
+msgstr "Рабочее пространство с открытым исходным кодом для Claude Code, Codex, OpenCode и любого другого агента для кода. Запускайте задачи параллельно в отдельных ветках и проверяйте всё в одном месте."
+
 msgid "The overnight shift"
 msgstr "Ночная смена"
 
@@ -19542,6 +19895,9 @@ msgstr "Служба хоста Paradev неожиданно остановил�
 #. js-lingui-explicit-id
 msgid "serverError.plugins.pluginSourcePathOutside"
 msgstr "Путь должен оставаться внутри репозитория"
+
+msgid "The plugin change did not finish in {seconds} seconds."
+msgstr "Изменение плагина не завершилось за {seconds} с."
 
 msgid "The pool resets every month. Usage past it is billed per GB-hour at the rate shown on each plan."
 msgstr "Пул обновляется каждый месяц. Использование сверх него оплачивается за ГБ-час по ставке, указанной в каждом тарифе."
@@ -19587,6 +19943,9 @@ msgstr "То же приложение работает на iPad нативно
 msgid "The scorecard"
 msgstr "Таблица оценок"
 
+msgid "The selected element's context is too large to send"
+msgstr "Контекст выбранного элемента слишком велик для отправки"
+
 msgid "The self-driving software factory"
 msgstr "Самоуправляемая софтверная фабрика"
 
@@ -19622,6 +19981,9 @@ msgstr "Заголовок отображается везде, где указ�
 
 msgid "The turn failed"
 msgstr "Ход завершился ошибкой"
+
+msgid "The update can also:"
+msgstr "После обновления расширение также сможет:"
 
 msgid "The very beginning"
 msgstr "Самое начало"
@@ -19659,9 +20021,6 @@ msgstr "Карточка предпросмотра темы"
 msgid "Themes"
 msgstr "Темы"
 
-msgid "Themes and agents"
-msgstr "Темы и агенты"
-
 msgid "These commands run automatically when a workspace is created. <0>Read our docs<1/></0>"
 msgstr "Эти команды выполняются автоматически при создании рабочей области. <0>Читать документацию<1/></0>"
 
@@ -19670,9 +20029,6 @@ msgstr "В этих папках всё ещё есть ваши файлы, н�
 
 msgid "These ports are still in use"
 msgstr "Эти порты ещё используются"
-
-msgid "They will stop firing and their run history will be removed. This can't be undone."
-msgstr "Они перестанут запускаться, а история запусков будет удалена. Это действие нельзя отменить."
 
 msgid "Thinking"
 msgstr "Размышление"
@@ -19725,6 +20081,12 @@ msgstr "Эта автоматизация принадлежит организ�
 
 msgid "This automation has no instructions yet. Write a prompt in its settings before running it."
 msgstr "У этой автоматизации ещё нет инструкций. Напишите промпт в её настройках перед запуском."
+
+msgid "This automation is archived. It does not run."
+msgstr "Эта автоматизация архивирована. Она не запускается."
+
+msgid "This automation is archived. Restore it first."
+msgstr "Эта автоматизация архивирована. Сначала восстановите её."
 
 msgid "This automation is in another organization"
 msgstr "Эта автоматизация находится в другой организации"
@@ -20013,9 +20375,6 @@ msgstr "Этого субагента сейчас нельзя перевест
 
 msgid "This subagent is no longer tracked by the host. Its transcript stays on disk under the agent's session directory."
 msgstr "Хост больше не отслеживает этого субагента. Его стенограмма остаётся на диске в каталоге сессии агента."
-
-msgid "This task is in a channel you can't see"
-msgstr "Эта задача находится в канале, который вам не виден"
 
 msgid "This terminal has no output to hand over yet."
 msgstr "В этом терминале пока нет вывода, который можно передать."
@@ -20483,6 +20842,12 @@ msgstr "Превратите рутину в агентов, которые за
 msgid "Turn Fast mode on or off"
 msgstr "Включить или выключить быстрый режим"
 
+msgid "Turn off manual mode"
+msgstr "Отключить ручной режим"
+
+msgid "Turn off manual mode for {label}?"
+msgstr "Отключить ручной режим для {label}?"
+
 msgid "Turn on “Allow remote access to this device via relay”"
 msgstr "Включите «Разрешить удалённый доступ к этому устройству через реле»"
 
@@ -20497,6 +20862,9 @@ msgstr "Превращайте обсуждения в Slack в задачи, з
 
 msgid "turn the onboarding findings into a page"
 msgstr "сделай страницу из выводов по онбордингу"
+
+msgid "Turned off because its files changed"
+msgstr "Отключено, так как его файлы изменились"
 
 msgid "Two Hands"
 msgstr "Две руки"
@@ -20932,6 +21300,12 @@ msgstr "Перейти на {planName}"
 msgid "Upgrade to Pro"
 msgstr "Перейти на Pro"
 
+msgid "Upgrade to Team"
+msgstr "Перейти на Team"
+
+msgid "Upgrade your organization, connect GitHub, and pick Cloud in the new-workspace screen."
+msgstr "Повысьте план организации, подключите GitHub и выберите «Облако» на экране новой рабочей области."
+
 msgid "Upgrade your plan"
 msgstr "Повысьте тариф"
 
@@ -21025,6 +21399,12 @@ msgstr "Использовать общий по умолчанию"
 
 msgid "Use lowercase letters, numbers, dashes and underscores"
 msgstr "Используйте строчные буквы, цифры, дефисы и подчёркивания"
+
+msgid "Use manual sign-in"
+msgstr "Использовать ручной вход"
+
+msgid "Use more browser features: {features}"
+msgstr "Использовать дополнительные функции браузера: {features}"
 
 msgid "Use Move to to choose a status with the keyboard."
 msgstr "Используйте «Переместить в», чтобы выбрать статус с помощью клавиатуры."
@@ -21423,9 +21803,6 @@ msgstr "Мы нанимаем инженеров в Сан-Франциско. �
 msgid "We're hiring in San Francisco"
 msgstr "Мы нанимаем в Сан-Франциско"
 
-msgid "We're looking for design partners to help shape our cloud offering. Tell us about your workflow and we'll be in touch to explore working together."
-msgstr "Мы ищем партнёров по разработке, которые помогут создать наш облачный продукт. Расскажите о своём рабочем процессе, и мы свяжемся с вами, чтобы обсудить сотрудничество."
-
 msgid "We're rebuilding this feature. Check back soon."
 msgstr "Мы переделываем эту функцию. Загляните позже."
 
@@ -21574,9 +21951,6 @@ msgstr "Что мы строим"
 msgid "What we've shipped"
 msgstr "Что мы выпустили"
 
-msgid "What would you like to build with Paradev in the cloud?"
-msgstr "Что вы хотели бы создать с помощью Paradev в облаке?"
-
 msgid "What would you like to know?"
 msgstr "Что вы хотите узнать?"
 
@@ -21695,9 +22069,6 @@ msgstr "Логотип-надпись, чёрный"
 msgid "Wordmark, white"
 msgstr "Логотип-надпись, белый"
 
-msgid "Work email"
-msgstr "Рабочая электронная почта"
-
 msgid "Work from tickets"
 msgstr "Работа из тикетов"
 
@@ -21811,9 +22182,6 @@ msgstr "Рабочая область открыта, но терминал не
 
 msgid "Workspace path is not available"
 msgstr "Путь к рабочей области недоступен"
-
-msgid "Workspace path is not available yet"
-msgstr "Путь рабочего пространства пока недоступен"
 
 msgid "Workspace restored"
 msgstr "Рабочая область восстановлена"
@@ -21965,8 +22333,11 @@ msgstr "Да. Бесплатный тариф покрывает одного п
 msgid "Yes. On plans with cloud workspaces, owners can buy any amount of extra GB-hours at {packPrice} per GB-hour in Settings, Billing. Bought GB-hours are used after the monthly pool and never expire, and auto top-up can buy more when they run low."
 msgstr "Да. В планах с облачными рабочими пространствами владельцы могут купить любое количество дополнительных ГБ-часов по цене {packPrice} за ГБ-час в разделе Настройки, Оплата. Купленные ГБ-часы расходуются после месячного пула и не сгорают, а автопополнение может докупить их, когда они заканчиваются."
 
-msgid "Yes. Paradev has completed a SOC 2 Type II audit with an independent auditor, covering our security controls in operation over time. Request the report and review our security documentation at trust.superset.sh."
-msgstr "Да. Paradev прошёл аудит SOC 2 Type II у независимого аудитора, охватывающий работу наших мер безопасности во времени. Запросите отчёт и посмотрите документацию по безопасности на trust.superset.sh."
+msgid "Yes. Paradev has completed a SOC 2 Type II audit with an independent auditor, covering our security controls in operation over time. Request the report and review our security documentation at {trustHost}."
+msgstr "Да. Paradev прошёл аудит SOC 2 Type II у независимого аудитора, охватывающий работу наших мер безопасности во времени. Запросите отчёт и посмотрите документацию по безопасности на {trustHost}."
+
+msgid "Yes. Paradev is open source under the MIT License. The code is public on GitHub, and anyone can file issues, open pull requests, or fork it. Paradev is unrelated to Apache Superset, the business-intelligence tool."
+msgstr "Да. Код Paradev открыт под лицензией MIT. Он опубликован на GitHub, и любой может сообщать о проблемах, открывать pull request или делать форк. Paradev не связан с Apache Superset, инструментом бизнес-аналитики."
 
 msgid "Yes. Paradev is the workspace your agents run in, not a model provider. Bring Claude Code, Codex, OpenCode, or any CLI agent, and use your existing accounts or API keys on every plan."
 msgstr "Да. Paradev — это место, где работают ваши агенты, а не провайдер моделей. Приводите Claude Code, Codex, OpenCode или любого CLI-агента и используйте свои аккаунты или ключи API на любом тарифе."
@@ -22027,6 +22398,9 @@ msgstr "Вы просматриваете версию {version}, только �
 msgid "You can attach up to {MAX_ATTACHMENTS} files"
 msgstr "Можно прикрепить не более {MAX_ATTACHMENTS} файлов"
 
+msgid "You can change this later in Settings."
+msgstr "Это можно изменить позже в настройках."
+
 msgid "You can close this tab."
 msgstr "Эту вкладку можно закрыть."
 
@@ -22044,6 +22418,9 @@ msgstr "Его можно восстановить в разделе «Наст�
 
 msgid "You can see how we work before you talk to us."
 msgstr "Вы можете увидеть, как мы работаем, ещё до разговора с нами."
+
+msgid "You can view this page but not change it"
+msgstr "Вы можете просматривать эту страницу, но не изменять её"
 
 msgid "You can view this page but not comment on it"
 msgstr "Вы можете просматривать эту страницу, но не комментировать её"
@@ -22242,6 +22619,9 @@ msgstr "Ваш тариф не включает облачные окружен�
 
 msgid "Your plan switches to {planName} on {startDate}. Nothing is charged today."
 msgstr "Ваш план перейдёт на {planName} {startDate}. Сегодня ничего не списывается."
+
+msgid "Your prompt"
+msgstr "Ваш промпт"
 
 msgid "Your rank"
 msgstr "Ваше место"

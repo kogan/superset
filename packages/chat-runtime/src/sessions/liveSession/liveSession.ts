@@ -273,11 +273,8 @@ export class LiveSession {
 			(part) => !(part.type === "text" && part.hidden),
 		);
 		const sent = withHiddenWrapped(content);
-		const wantsSteer =
-			steerTurnId !== undefined ||
-			this.sessionState.awaitingBackground === true;
 		const running =
-			wantsSteer && this.queue.length === 0
+			steerTurnId !== undefined && this.queue.length === 0
 				? this.steerableTurn(steerTurnId)
 				: null;
 		if (running) {
@@ -690,7 +687,6 @@ export class LiveSession {
 				}
 				this.releaseCarriedFailure();
 				this.releaseHeldPrompts();
-				if (event.session.awaitingBackground) this.steerQueueIntoHeldTurn();
 				return;
 			case "delta":
 				this.options.publish({
@@ -914,16 +910,6 @@ export class LiveSession {
 		return { ...withoutQueued(item), startedAtMs: this.now() };
 	}
 
-	private steerQueueIntoHeldTurn(): void {
-		if (this.queuePaused) return;
-		const turn = this.steerableTurn();
-		if (!turn) return;
-		for (const queued of this.queue.splice(0)) {
-			if (this.steerTarget === queued.item.id) this.steerTarget = null;
-			this.injectInto(turn, { ...queued, item: this.delivered(queued.item) });
-		}
-	}
-
 	private injectInto(
 		turn: Turn,
 		prompt: PendingPrompt,
@@ -1041,7 +1027,10 @@ export class LiveSession {
 
 	private emitSession(partial: Partial<SessionState>): void {
 		const merged: SessionState = { ...this.sessionState, ...partial };
-		const status = this.hasPendingWork() ? "running" : merged.status;
+		const status =
+			this.hasPendingWork() && merged.status !== "awaiting_input"
+				? "running"
+				: merged.status;
 		this.sessionState = sessionStateSchema.parse({ ...merged, status });
 		this.appendDurable({ type: "session", session: this.sessionState });
 	}

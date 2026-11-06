@@ -2,6 +2,7 @@ import { afterEach, describe, expect, it } from "bun:test";
 import {
 	type AgentLifecyclePayload,
 	getEventBus,
+	peekEventBusConnectionStatus,
 	reconnectEventBusIfDown,
 } from "./eventBus";
 
@@ -211,6 +212,19 @@ describe("eventBus", () => {
 		// About 1.1s of the 1.3s backoff is still left here.
 		await waitFor(() => bus.getConnectionStatus().state === "open", 500);
 		expect(revived.clientCount()).toBe(1);
+	});
+
+	it("peekEventBusConnectionStatus reads a held connection and never dials one", async () => {
+		const host = makeHostServer();
+		cleanups.push(() => host.server.stop(true));
+		expect(peekEventBusConnectionStatus(host.hostUrl)).toBeUndefined();
+		await Bun.sleep(50);
+		expect(host.upgrades.length).toBe(0);
+
+		const bus = getEventBus(host.hostUrl, () => "tok");
+		cleanups.push(bus.retain());
+		await waitFor(() => bus.getConnectionStatus().state === "open");
+		expect(peekEventBusConnectionStatus(host.hostUrl)?.state).toBe("open");
 	});
 
 	it("reconnectEventBusIfDown leaves an open connection alone", async () => {
