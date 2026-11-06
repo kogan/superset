@@ -1,4 +1,12 @@
-import { afterEach, beforeEach, describe, expect, it, mock } from "bun:test";
+import {
+	afterEach,
+	beforeAll,
+	beforeEach,
+	describe,
+	expect,
+	it,
+	mock,
+} from "bun:test";
 import { execFileSync, spawnSync } from "node:child_process";
 import {
 	chmodSync,
@@ -33,7 +41,12 @@ mock.module("./notify-hook", () => ({
 }));
 
 mock.module("./paths", () => ({
-	resolveSupersetHomeDir: () => path.join(TEST_ROOT, "superset"),
+	APP_HOME_DIR_NAME: ".superestset",
+	resolveUserHomeDir: () => mockedHomeDir,
+	resolveAppHomeDir: () => path.join(TEST_ROOT, "superset"),
+	defaultAppHomeDir: () => path.join(TEST_ROOT, "superset"),
+	isDefaultAppHomeDir: (dir?: string) =>
+		!dir || path.resolve(dir) === path.join(TEST_ROOT, "superset"),
 	getBinDir: () => TEST_BIN_DIR,
 	getHooksDir: () => TEST_HOOKS_DIR,
 	getZshDir: () => TEST_ZSH_DIR,

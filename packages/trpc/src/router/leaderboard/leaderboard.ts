@@ -638,7 +638,7 @@ export const leaderboardRouter = createTRPCRouter({
 			.limit(1);
 
 		try {
-			return await dbWs.transaction(async (tx) => {
+			return await db.transaction(async (tx) => {
 				const [owned] = await tx
 					.select({ handle: handles.handle })
 					.from(handles)
@@ -692,75 +692,6 @@ export const leaderboardRouter = createTRPCRouter({
 			throw error;
 		}
 	}),
-
-			const organizationId = await requireActiveOrgMembership(ctx);
-
-			const [github] = await db
-				.select({ handle: userIdentities.handle })
-				.from(userIdentities)
-				.where(
-					and(
-						eq(userIdentities.userId, userId),
-						eq(userIdentities.provider, "github"),
-					),
-				)
-				.limit(1);
-
-			try {
-				return await db.transaction(async (tx) => {
-					const [owned] = await tx
-						.select({ handle: handles.handle })
-						.from(handles)
-						.where(eq(handles.userId, userId))
-						.limit(1);
-
-					if (!owned) {
-						await tx.insert(handles).values({
-							handle: input.handle,
-							ownerType: "user",
-							userId,
-						});
-					} else if (owned.handle !== input.handle) {
-						await tx
-							.update(handles)
-							.set({ handle: input.handle })
-							.where(eq(handles.userId, userId));
-					}
-
-					const [row] = await tx
-						.insert(publicProfiles)
-						.values({
-							userId,
-							handle: input.handle,
-							visibility: input.visibility,
-							organizationId,
-							githubHandle: github?.handle ?? null,
-						})
-						.onConflictDoUpdate({
-							target: publicProfiles.userId,
-							set: {
-								handle: input.handle,
-								visibility: input.visibility,
-								organizationId,
-								githubHandle: github?.handle ?? null,
-								optedInAt: new Date(),
-							},
-						})
-						.returning();
-
-					return row;
-				});
-			} catch (error) {
-				if (isUniqueViolation(error, HANDLE_CONSTRAINT)) {
-					throw userError({
-						code: "CONFLICT",
-						message: "That handle is taken.",
-						i18nKey: "serverError.leaderboard.thatHandleIsTaken",
-					});
-				}
-				throw error;
-			}
-		}),
 
 	suggestedHandle: personProcedure.query(async ({ ctx }) => {
 		const userId = ctx.session.user.id;

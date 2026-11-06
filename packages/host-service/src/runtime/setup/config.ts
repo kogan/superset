@@ -335,7 +335,7 @@ export function resolveScript(
 		? [args.worktreePath, args.repoPath]
 		: [args.repoPath];
 	for (const root of roots) {
-		const scriptPath = join(root, PROJECT_SUPERSET_DIR_NAME, `${key}.sh`);
+		const scriptPath = join(resolveProjectConfigDir(root), `${key}.sh`);
 		if (existsSync(scriptPath)) {
 			return { kind: "script", scriptPath, ...(cwd && { cwd }) };
 		}

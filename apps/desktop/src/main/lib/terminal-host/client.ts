@@ -30,6 +30,7 @@ import {
 	signalProcessTreeAndGroups,
 } from "@superset/pty-daemon/process-tree";
 import { app } from "electron";
+import { homedir } from "node:os";
 import { SUPERSET_DIR_NAME } from "shared/constants";
 import { terminalHostSocketPath } from "shared/terminal-host-socket";
 import { nodeExecutable } from "../node-executable";

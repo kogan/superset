@@ -23,6 +23,7 @@ import {
 } from "node:fs";
 import { createServer, type Server, Socket } from "node:net";
 import { join } from "node:path";
+import { homedir } from "node:os";
 import { SUPERSET_DIR_NAME } from "shared/constants";
 import { terminalHostSocketPath } from "shared/terminal-host-socket";
 import { isTerminalSpawnFailedError } from "../lib/terminal/errors";
