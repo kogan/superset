@@ -12541,9 +12541,6 @@ msgstr "No Chrome, Brave, Arc, or other Chromium browsers were found."
 msgid "No Claude or Codex usage found on this machine yet. Join now and you'll appear once you've used an agent."
 msgstr "No Claude or Codex usage found on this machine yet. Join now and you'll appear once you've used an agent."
 
-msgid "No cloud workspaces"
-msgstr "No cloud workspaces"
-
 msgid "No cloud workspaces match these filters"
 msgstr "No cloud workspaces match these filters"
 
@@ -12723,9 +12720,6 @@ msgstr "No listening agents"
 
 msgid "No live sessions"
 msgstr "No live sessions"
-
-msgid "No local workspaces"
-msgstr "No local workspaces"
 
 msgid "No log lines yet"
 msgstr "No log lines yet"

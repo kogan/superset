@@ -12541,9 +12541,6 @@ msgstr "Không tìm thấy Chrome, Brave, Arc hay trình duyệt Chromium nào k
 msgid "No Claude or Codex usage found on this machine yet. Join now and you'll appear once you've used an agent."
 msgstr "Chưa tìm thấy mức sử dụng Claude hay Codex nào trên máy này. Hãy tham gia ngay và bạn sẽ xuất hiện khi đã dùng một agent."
 
-msgid "No cloud workspaces"
-msgstr "Không có workspace đám mây"
-
 msgid "No cloud workspaces match these filters"
 msgstr "Không có workspace cloud nào khớp với các bộ lọc này"
 
@@ -12723,9 +12720,6 @@ msgstr "Không có tác nhân lắng nghe"
 
 msgid "No live sessions"
 msgstr "Không có phiên nào đang chạy"
-
-msgid "No local workspaces"
-msgstr "Không có workspace cục bộ"
 
 msgid "No log lines yet"
 msgstr "Chưa có dòng nhật ký nào"

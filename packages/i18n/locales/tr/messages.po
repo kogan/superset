@@ -12541,9 +12541,6 @@ msgstr "Chrome, Brave, Arc veya başka bir Chromium tarayıcısı bulunamadı."
 msgid "No Claude or Codex usage found on this machine yet. Join now and you'll appear once you've used an agent."
 msgstr "Bu makinede henüz Claude veya Codex kullanımı bulunamadı. Şimdi katılın; bir ajan kullandığınızda listede görüneceksiniz."
 
-msgid "No cloud workspaces"
-msgstr "Bulut çalışma alanı yok"
-
 msgid "No cloud workspaces match these filters"
 msgstr "Bu filtrelerle eşleşen bulut çalışma alanı yok"
 
@@ -12723,9 +12720,6 @@ msgstr "Dinleyen ajan yok"
 
 msgid "No live sessions"
 msgstr "Canlı oturum yok"
-
-msgid "No local workspaces"
-msgstr "Yerel çalışma alanı yok"
 
 msgid "No log lines yet"
 msgstr "Henüz günlük satırı yok"

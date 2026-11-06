@@ -12541,9 +12541,6 @@ msgstr "未找到Chrome、Brave、Arc或其他Chromium浏览器。"
 msgid "No Claude or Codex usage found on this machine yet. Join now and you'll appear once you've used an agent."
 msgstr "这台机器上还没有发现Claude或Codex的用量。现在加入，用过智能体后你就会出现在榜单上。"
 
-msgid "No cloud workspaces"
-msgstr "没有云工作区"
-
 msgid "No cloud workspaces match these filters"
 msgstr "没有符合这些筛选条件的云端工作区"
 
@@ -12723,9 +12720,6 @@ msgstr "没有监听智能体"
 
 msgid "No live sessions"
 msgstr "没有活动会话"
-
-msgid "No local workspaces"
-msgstr "没有本地工作区"
 
 msgid "No log lines yet"
 msgstr "暂无日志"

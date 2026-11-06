@@ -12541,9 +12541,6 @@ msgstr "Nebyl nalezen Chrome, Brave, Arc ani jiný prohlížeč založený na Ch
 msgid "No Claude or Codex usage found on this machine yet. Join now and you'll appear once you've used an agent."
 msgstr "Na tomto počítači zatím nebylo nalezeno žádné využití Claude ani Codex. Připojte se a objevíte se, jakmile použijete agenta."
 
-msgid "No cloud workspaces"
-msgstr "Žádné cloudové pracovní prostory"
-
 msgid "No cloud workspaces match these filters"
 msgstr "Těmto filtrům neodpovídají žádné cloudové pracovní prostory"
 
@@ -12723,9 +12720,6 @@ msgstr "Žádní naslouchající agenti"
 
 msgid "No live sessions"
 msgstr "Žádné živé relace"
-
-msgid "No local workspaces"
-msgstr "Žádné místní pracovní prostory"
 
 msgid "No log lines yet"
 msgstr "Zatím žádné řádky protokolu"

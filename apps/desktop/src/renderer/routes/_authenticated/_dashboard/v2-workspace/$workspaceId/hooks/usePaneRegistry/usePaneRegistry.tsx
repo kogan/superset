@@ -15,6 +15,7 @@ import {
 	CodeXml,
 	Files,
 	FileText,
+	Layers,
 	FolderTree,
 	GitCompareArrows,
 	GitPullRequest,
@@ -119,6 +120,7 @@ import { PendingCloudChatPane } from "./components/PendingCloudChatPane";
 import { PullRequestPane } from "./components/PullRequestPane";
 import { PullRequestPaneHeaderExtras } from "./components/PullRequestPane/components/PullRequestPaneHeaderExtras";
 import { ReviewPane } from "./components/ReviewPane";
+import { StackPane } from "./components/StackPane";
 import { SubagentPane } from "./components/SubagentPane";
 import { TerminalPaneHeaderExtras } from "./components/TerminalPane/components/TerminalPaneHeaderExtras";
 import { TerminalPaneIcon } from "./components/TerminalPane/components/TerminalPaneIcon";
@@ -925,6 +927,11 @@ export function usePaneRegistry({
 						message: "Mobile",
 					}),
 				renderPane: () => <MobilePane workspaceId={workspaceId} />,
+			},
+			stack: {
+				getIcon: () => <Layers className="size-3.5" />,
+				getTitle: () => t({ message: "Stack" }),
+				renderPane: () => <StackPane workspaceId={workspaceId} />,
 			},
 			[PENDING_CLOUD_CHAT_PANE_KIND]: {
 				getIcon: (ctx) => {

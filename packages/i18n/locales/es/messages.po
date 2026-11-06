@@ -12541,9 +12541,6 @@ msgstr "No se encontraron Chrome, Brave, Arc ni otros navegadores basados en Chr
 msgid "No Claude or Codex usage found on this machine yet. Join now and you'll appear once you've used an agent."
 msgstr "Todavía no se ha encontrado uso de Claude ni de Codex en este equipo. Únete ahora y aparecerás en cuanto uses un agente."
 
-msgid "No cloud workspaces"
-msgstr "No hay espacios de trabajo en la nube"
-
 msgid "No cloud workspaces match these filters"
 msgstr "Ningún espacio de trabajo en la nube coincide con estos filtros"
 
@@ -12723,9 +12720,6 @@ msgstr "No hay agentes que reciban comentarios"
 
 msgid "No live sessions"
 msgstr "No hay sesiones activas"
-
-msgid "No local workspaces"
-msgstr "No hay espacios de trabajo locales"
 
 msgid "No log lines yet"
 msgstr "Aún no hay líneas de registro"

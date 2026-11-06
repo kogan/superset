@@ -144,6 +144,10 @@ export interface ChangesListPaneData {
 	kind: "changes-list";
 }
 
+export interface StackPaneData {
+	kind: "stack";
+}
+
 export interface ReviewPaneData {
 	kind: "review";
 }
@@ -219,6 +223,7 @@ export type PaneViewerData =
 	| MobilePaneData
 	| FilesPaneData
 	| ChangesListPaneData
+	| StackPaneData
 	| ReviewPaneData
 	| PagesListPaneData
 	| NewTabPaneData

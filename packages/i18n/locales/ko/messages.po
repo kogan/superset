@@ -12541,9 +12541,6 @@ msgstr "Chrome, Brave, Arc 등 Chromium 기반 브라우저를 찾을 수 없습
 msgid "No Claude or Codex usage found on this machine yet. Join now and you'll appear once you've used an agent."
 msgstr "이 컴퓨터에서 아직 Claude 또는 Codex 사용량을 찾지 못했습니다. 지금 참여하면 에이전트를 사용한 뒤 순위에 표시됩니다."
 
-msgid "No cloud workspaces"
-msgstr "클라우드 워크스페이스 없음"
-
 msgid "No cloud workspaces match these filters"
 msgstr "이 필터와 일치하는 클라우드 워크스페이스가 없습니다"
 
@@ -12723,9 +12720,6 @@ msgstr "댓글 수신 에이전트 없음"
 
 msgid "No live sessions"
 msgstr "활성 세션 없음"
-
-msgid "No local workspaces"
-msgstr "로컬 워크스페이스 없음"
 
 msgid "No log lines yet"
 msgstr "아직 로그가 없습니다"
