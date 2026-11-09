@@ -18,18 +18,11 @@ export function defaultAppHomeDir(): string {
 	return path.join(resolveUserHomeDir(), APP_HOME_DIR_NAME);
 }
 
-/** Also true for the pre-rename `~/.superset`, which is a link to it once moved. */
 export function isDefaultAppHomeDir(dir: string | undefined): boolean {
 	if (!dir?.trim()) return true;
 	const resolved = path.resolve(dir);
-	const defaults = [
-		defaultAppHomeDir(),
-		path.join(resolveUserHomeDir(), ".superset"),
-	];
-	return (
-		defaults.includes(resolved) ||
-		defaults.map(realPath).includes(realPath(resolved))
-	);
+	const home = defaultAppHomeDir();
+	return resolved === home || realPath(resolved) === realPath(home);
 }
 
 function realPath(dir: string): string {

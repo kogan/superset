@@ -41,12 +41,7 @@ async function main(): Promise<void> {
 		`[host-service] starting (org=${env.ORGANIZATION_ID}, port=${env.PORT}, NODE_ENV=${process.env.NODE_ENV ?? "unset"})`,
 	);
 
-	const appHome = moveLegacyAppHome();
-	if (appHome.move === "moved" || appHome.move === "failed") {
-		console.log(
-			`[host-service] app home: ${appHome.homeDir} (${appHome.move})`,
-		);
-	}
+	moveLegacyAppHome();
 
 	// Resolve the shell-env snapshot in the background — it must not block the
 	// server from listening (the login-shell probe can burn the full 8s
