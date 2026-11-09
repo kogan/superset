@@ -7,7 +7,6 @@ import {
 	mkdirSync,
 	mkdtempSync,
 	readFileSync,
-	readlinkSync,
 	realpathSync,
 	renameSync,
 	rmSync,
@@ -16,14 +15,12 @@ import {
 } from "node:fs";
 import { tmpdir } from "node:os";
 import path from "node:path";
-import { claudeProjectDirName } from "./claude-project-links";
 import {
 	moveLegacyAppHome,
-	readLegacyHomeMove,
 	repairGitWorktrees,
 	rewriteLegacyHomePaths,
 } from "./legacy-home-move";
-import { isDefaultAppHomeDir } from "./paths";
+import { APP_HOME_DIR_NAME, isDefaultAppHomeDir } from "./paths";
 
 let home: string;
 const originalHome = process.env.HOME;
@@ -38,7 +35,7 @@ afterEach(() => {
 	process.env.HOME = originalHome;
 });
 
-const paradev = () => path.join(home, ".paradev");
+const appHome = () => path.join(home, APP_HOME_DIR_NAME);
 const superset = () => path.join(home, ".superset");
 
 function write(file: string, content: string) {
@@ -47,133 +44,49 @@ function write(file: string, content: string) {
 }
 
 describe("moveLegacyAppHome", () => {
-	it("uses ~/.paradev on a fresh machine", () => {
+	it("uses the app home on a fresh machine", () => {
 		const env: NodeJS.ProcessEnv = {};
 
 		expect(moveLegacyAppHome(env)).toEqual({
-			homeDir: paradev(),
+			homeDir: appHome(),
 			move: "nothing-to-move",
 		});
-		expect(env.SUPERSET_HOME_DIR).toBe(paradev());
+		expect(env.SUPERSET_HOME_DIR).toBe(appHome());
 	});
 
-	it("moves ~/.superset, leaves a symlink and records the move", () => {
-		write(path.join(superset(), "local.db"), "data");
-		const env: NodeJS.ProcessEnv = { SUPERSET_HOME_DIR: superset() };
+	it("uses the app home and leaves the official app's ~/.superset alone", () => {
+		write(path.join(superset(), "local.db"), "official");
+		write(path.join(appHome(), "local.db"), "ours");
+		const env: NodeJS.ProcessEnv = { SUPERSET_HOME_DIR: appHome() };
 
-		expect(moveLegacyAppHome(env).move).toBe("moved");
-		expect(env.SUPERSET_HOME_DIR).toBe(paradev());
-		expect(readFileSync(path.join(paradev(), "local.db"), "utf8")).toBe("data");
-		expect(readlinkSync(superset())).toBe(".paradev");
-		expect(readLegacyHomeMove(paradev())).toEqual({
-			from: superset(),
-			to: paradev(),
-		});
-		expect(moveLegacyAppHome({}).move).toBe("nothing-to-move");
-	});
-
-	it("carries pdev's files already in ~/.paradev", () => {
-		write(path.join(superset(), "local.db"), "data");
-		write(path.join(paradev(), "agent", "auth.json"), "{}");
-
-		expect(moveLegacyAppHome({}).move).toBe("moved");
-		expect(
-			readFileSync(path.join(paradev(), "agent", "auth.json"), "utf8"),
-		).toBe("{}");
-		expect(existsSync(path.join(paradev(), "local.db"))).toBe(true);
-	});
-
-	it("keeps ~/.superset for this run when a name exists in both", () => {
-		write(path.join(superset(), "agent", "x"), "app");
-		write(path.join(paradev(), "agent", "x"), "pdev");
-		const env: NodeJS.ProcessEnv = {};
-
-		expect(moveLegacyAppHome(env)).toEqual({
-			homeDir: superset(),
-			move: "failed",
-		});
-		expect(env.SUPERSET_HOME_DIR).toBe(superset());
-		expect(readFileSync(path.join(paradev(), "agent", "x"), "utf8")).toBe(
-			"pdev",
-		);
+		expect(moveLegacyAppHome(env).homeDir).toBe(appHome());
+		expect(env.SUPERSET_HOME_DIR).toBe(appHome());
 		expect(lstatSync(superset()).isDirectory()).toBe(true);
+		expect(readFileSync(path.join(superset(), "local.db"), "utf8")).toBe(
+			"official",
+		);
+		expect(readFileSync(path.join(appHome(), "local.db"), "utf8")).toBe("ours");
 	});
 
-	it("stops a host-service running from ~/.superset first", async () => {
-		const child = Bun.spawn(["bash", "-c", "exec -a host-service sleep 30"]);
-		await Bun.sleep(100);
-		write(
-			path.join(superset(), "host", "org-1", "manifest.json"),
-			JSON.stringify({ pid: child.pid }),
-		);
+	it("does not take over ~/.superset when the app home does not exist yet", () => {
+		write(path.join(superset(), "local.db"), "official");
 
-		expect(moveLegacyAppHome({}).move).toBe("moved");
-		expect(await child.exited).not.toBe(0);
-	});
-
-	it("leaves the host-service running when a name clash blocks the move", async () => {
-		const host = Bun.spawn(["bash", "-c", "exec -a host-service sleep 30"]);
-		await Bun.sleep(100);
-		write(
-			path.join(superset(), "host", "org-1", "manifest.json"),
-			JSON.stringify({ pid: host.pid }),
-		);
-		write(path.join(superset(), "agent", "x"), "app");
-		write(path.join(paradev(), "agent", "x"), "pdev");
-
-		expect(moveLegacyAppHome({}).move).toBe("failed");
-		await Bun.sleep(200);
-		expect(() => process.kill(host.pid, 0)).not.toThrow();
-		host.kill();
-	});
-
-	it("leaves a process alone when a stale manifest's pid was reused", async () => {
-		const unrelated = Bun.spawn(["sleep", "30"]);
-		write(
-			path.join(superset(), "host", "org-1", "manifest.json"),
-			JSON.stringify({ pid: unrelated.pid }),
-		);
-
-		expect(moveLegacyAppHome({}).move).toBe("moved");
-		await Bun.sleep(200);
-		expect(() => process.kill(unrelated.pid, 0)).not.toThrow();
-		unrelated.kill();
-	});
-
-	it("links Claude account folders kept in hidden dirs under home", () => {
-		write(path.join(superset(), "local.db"), "data");
-		const oldName = claudeProjectDirName(
-			path.join(superset(), "worktrees", "app", "main"),
-		);
-		mkdirSync(path.join(home, ".claude-work", "projects", oldName), {
-			recursive: true,
-		});
-
-		expect(moveLegacyAppHome({}).move).toBe("moved");
-		const newName = claudeProjectDirName(
-			path.join(paradev(), "worktrees", "app", "main"),
-		);
-		expect(
-			readlinkSync(path.join(home, ".claude-work", "projects", newName)),
-		).toBe(oldName);
+		expect(moveLegacyAppHome({}).homeDir).toBe(appHome());
+		expect(lstatSync(superset()).isDirectory()).toBe(true);
+		expect(existsSync(appHome())).toBe(false);
 	});
 
 	it("leaves a custom home alone", () => {
-		write(path.join(superset(), "local.db"), "data");
 		const custom = path.join(home, "dev-data");
 
 		expect(moveLegacyAppHome({ SUPERSET_HOME_DIR: custom })).toEqual({
 			homeDir: custom,
 			move: "custom-home",
 		});
-		expect(lstatSync(superset()).isDirectory()).toBe(true);
 	});
 
 	it("never runs under a test runner", () => {
-		write(path.join(superset(), "local.db"), "data");
-
 		expect(moveLegacyAppHome({ NODE_ENV: "test" }).move).toBe("test-runner");
-		expect(lstatSync(superset()).isDirectory()).toBe(true);
 	});
 });
 
@@ -252,12 +165,14 @@ describe("repairGitWorktrees", () => {
 });
 
 describe("isDefaultAppHomeDir", () => {
-	it("counts the pre-rename home and its link as the default", () => {
-		mkdirSync(paradev());
-		symlinkSync(".paradev", superset());
+	it("counts the app home and a link to it, but not ~/.superset", () => {
+		mkdirSync(appHome());
+		mkdirSync(superset());
+		const link = path.join(home, "home-link");
+		symlinkSync(APP_HOME_DIR_NAME, link);
 
-		expect(isDefaultAppHomeDir(superset())).toBe(true);
-		expect(isDefaultAppHomeDir(paradev())).toBe(true);
-		expect(isDefaultAppHomeDir(path.join(home, "elsewhere"))).toBe(false);
+		expect(isDefaultAppHomeDir(appHome())).toBe(true);
+		expect(isDefaultAppHomeDir(link)).toBe(true);
+		expect(isDefaultAppHomeDir(superset())).toBe(false);
 	});
 });

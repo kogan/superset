@@ -12,14 +12,6 @@ if (workspace && !process.env.SUPERSET_HOME_DIR?.trim()) {
 	);
 }
 const appHome = moveLegacyAppHome();
-if (appHome.move === "moved") {
-	console.log("[app-environment] Moved the app home to", appHome.homeDir);
-} else if (appHome.move === "failed") {
-	console.warn(
-		"[app-environment] Could not move the app home; using",
-		appHome.homeDir,
-	);
-}
 
 export const SUPERSET_HOME_DIR = appHome.homeDir;
 
